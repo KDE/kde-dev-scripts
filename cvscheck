@@ -117,6 +117,7 @@ sub processEntries
           next if ($e eq "autom4te.cache");
           next if ($e eq "autom4te.cache");
 	  next if ($e eq "Makefile.rules.in");
+	  next if ($e eq "Makefile.calls.in");
           next if ($e =~ /^.*\.moc$/);
           next if ($e =~ /^.+\.gmo$/);
           next if ($e =~ /^.+\.moc\.[^\.]+$/);
