@@ -441,11 +441,10 @@ Otherwise treat `\\' in NEWTEXT as special:
   (compile "make -k install-exec")
   )
 
-;;; ### TODO fails when the buffer-name is somefile.cpp<2>
 (defun makethisfile ()
   "Try to compile the currently opened file"
   (interactive)
-  (let ((f (buffer-name)))
+  (let ((f (file-name-nondirectory (buffer-file-name))))
     (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
     (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
     (compile (concat "make " f )))
