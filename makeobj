@@ -66,10 +66,10 @@ fi
 echo "makeobj[0]: Entering directory \`$PWD'"
 if test -z "$MAKE"; then
     using_new_unsermake=0
-    if head -n 1 $dir/$file | grep unsermake >/dev/null; then
+    if head -n 1 $file | grep unsermake >/dev/null; then
         using_new_unsermake=1
     fi
-    if head -n 1 $dir/$file | grep automake >/dev/null; then
+    if head -n 1 $file | grep automake >/dev/null; then
         using_new_unsermake=0
     fi
     if test $using_new_unsermake -eq 1; then
