@@ -309,6 +309,21 @@ if test "x$TWEAKCOMPILE" = xyes; then
   export CFLAGS CXXFLAGS
 fi
 
+# Preprocess configuration keys, expand keywords (DISTCC)
+#
+if echo $MAKE_OPTS_COMPILE | grep DISTCC > /dev/null; then
+	if [ -n "$DISTCC_HOSTS" ]; then
+		hosts=0
+		for host in $DISTCC_HOSTS; do
+			hosts=$((${hosts} + 1))
+		done
+		hosts=$((${hosts} * 2))
+	else
+		hosts=1
+	fi
+	MAKE_OPTS_COMPILE=`echo $MAKE_OPTS_COMPILE | sed -e "s,DISTCC,$hosts,"`
+fi
+
 # This checks whether the user wants a certain branch and generates the
 # command line. For cvsup users it even generates a supfile. :-)
 #

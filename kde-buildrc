@@ -138,6 +138,10 @@ MAKE_OPTS=""
 # compilation process. This is useful if you distribute the compilation
 # process over several computers, but need to link on one. So you would
 # define -j3 here and nothing above. 
+# You can also use the special "DISTCC" keyword here; if found, it will
+# be replaced by the number of hosts listed in the $DISTCC_HOSTS
+# environment variable, multiplied by two. Hence, 'DISTCC_HOSTS="a b c"' and
+# 'MAKE_OPTS_COMPILE="-jDISTCC"' will result in 'MAKE_OPTS_COMPILE="-j6"'.
 # If you set something here, the value will be used alone, otherwise
 # MAKE_OPTS will be used alone
 MAKE_OPTS_COMPILE=""
