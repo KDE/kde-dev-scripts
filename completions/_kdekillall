@@ -1,0 +1,8 @@
+#compdef kdekillall
+
+local progs
+progs=(`ps x | grep kdeinit: | grep -v Running | grep -v grep | sed 's,.*kdeinit: ,,' | sed 's, .*,,'`)
+
+_alternative \
+	'signals:: _signals -p' \
+	'compadd $progs'
