@@ -325,6 +325,12 @@ else
   cmd_compress=""
 fi
 
+if which sudo > /dev/null 2>&1; then
+  cmd_sudo="sudo"
+else
+  cmd_sudo="su -c"
+fi
+
 # Clean the installation directory if selected.
 #
 if test "x$INSTALLFROMSCRATCH" = xyes; then
@@ -693,8 +699,7 @@ for module in $modules; do
     test "x$NICECOMPILE" = xyes && cmd_make_install="nice $cmd_make_install"
     cmd_make_install="$cmd_make_install install"
     if test ! -w $KDEDIRS; then
-      echo -n "  To install module $module, please enter the root "
-      sudo $cmd_make_install
+      eval "$sudo $cmd_make_install
     else
       install_module
     fi
