@@ -32,6 +32,18 @@ $lastdir = '.';
  '`Dnd_\S*\' undeclared \(first use this function\)' => "drag",
  '`QTextStream\' undeclared \(first use this function\)' => "qtextstream",
  '`QTextStream\' was not declared in this scope' => "qtextstream",
+ 'incomplete type `QSocketNotifier\'' => "qsocketnotifier",
+ 'no matching function for call to `KConfig' => "kconfig",
+ 'variable `class KConfig \S*\' has initializer but incomplete type' => "kconfig",
+ 'warning: implicit declaration of function `int kdebug' => "kdebug",
+ '`QFile\' undeclared \(first use this function' => "qfile",
+ 'type `KConfigBase\' is not a base type for type `KConfig' => "kconfig",
+ 'invalid use of undefined type `class QAccel' => "qaccel",
+ 'aggregate `class KConfig \S*\' has incomplete type' => "kconfig",
+ '`stderr\' undeclared \(first use this function' => "stdio",
+ 'invalid use of undefined type `class KConfig' => "kconfig",
+ 'warning: implicit declaration of function `int f?printf' => "stdio",
+
 );
 
 %changes = ();
