@@ -14,3 +14,11 @@ cxxmetric	Counts lines of code, comments and blank space in C and C++
 
 fixheaders      Adds header files as it recognices make error output
 
+
+----------------
+Looking to add a script?
+
+Just add it to this README. For easy man pages see the perlpod manpage; the
+man page for many of these tools is in the script itself.
+
+$Id$
