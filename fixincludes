@@ -22,7 +22,6 @@ sub copy_file($$);
 $verbose = 0; # turns on debugging
 $modify = 0;  # if 1 it should try to fix the files as well
 $experimental = 0; # try&error if an include is obsolete (slow!!)
-$file_was_modified = 0; # 1 if file was modified before hand and we didn't yet warn about it
 
 # statistic variables
 $exp_success = 0;
@@ -199,16 +198,6 @@ sub find_removable_includes ($)
   return @includes;
 }
 
-sub warn_before_modifying ($)
-{
-  my $srcfile = shift @_;
-  if ($file_was_modified && $modify) {
-    print "$srcfile: WARNING: file was already modified. You might commit local changes by mistake.\n";
-    $file_was_modified = 0;
-  } else {
-    print "Program error, warn_before_modifying wrongly called\n";
-  }
-}
 # first parameter: srcfile
 # second parameter: include to remove
 # third parameter is the duplicate level: this include is removed $level times
@@ -335,7 +324,6 @@ sub fix_duplicates($)
     
     print "$srcfile: duplicate level ". $inclMap{$include} .": ". $include ."\n";
 
-    &warn_before_modifying($srcfile) if ($file_was_modified && $modify);
     &remove_include($srcfile, $include, $inclMap{$include} - 1) if($modify);
   }
 }
@@ -362,7 +350,6 @@ sub fix_compat_includes($)
   foreach $include (keys %inclMap) {
     if( defined $compatmap{$include}) {
       print "$srcfile: compat header: $include, to be replaced by ". $compatmap{$include} ."\n";
-      &warn_before_modifying($srcfile) if ($file_was_modified && $modify);
       &replace_include($srcfile, $include, $compatmap{$include}) if($modify);
     }
   }
@@ -520,6 +507,12 @@ sub fix_unnecessary($)
 
 # here is the main logic
 
+# warn about modified files
+if($modify) {
+  `cvscheck | grep $file | grep '^[MmC]'`;
+  print "WARNING: you have pending local changes.You might commit them by accident!\n" if($? >> 8);
+}
+
 # first generate a list of subdirectories
 @dirlist = (".");
 foreach $dir ( @dirlist ) {
@@ -548,25 +541,17 @@ foreach $dir(@dirlist) {
   @headers = &find_fixable_headers($dir);
   foreach $file(@headers) {
     print "Checking: $file\n" if($verbose);
-    `cvscheck | grep $file | grep '^[MmC]'`;
-    $file_was_modified = 1 - ($? >> 8); # $?=0 if modified, $?=1 if not
-    print "$file was modified $file_was_modified\n" if ($file_was_modified && $verbose);
     &fix_compat_includes($file);
     &fix_duplicates($file);
   }
   @sources = &find_fixable_sources($dir);
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
-    `cvscheck | grep $file | grep '^[MmC]'`;
-    $file_was_modified = 1 - ($? >> 8); # $?=0 if modified, $?=1 if not
-    print "$file was modified $file_was_modified\n" if ($file_was_modified && $verbose);
     &fix_compat_includes($file);
     &fix_duplicates($file);
     if ($experimental) {
-      &warn_before_modifying($file) if ($file_was_modified && $modify);
       &fix_unnecessary($file);
     }
-
     print "\n" if ($verbose);
   }
 }
