@@ -158,6 +158,7 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
+       print "// xgettext: no-c-format\n";
        print  q|i18n("|;
        print qq|$opt_context","|        if $opt_context;   # We have a I18N context
        print qq|$text"); // $file_name|;
