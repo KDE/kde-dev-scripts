@@ -111,7 +111,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'qtabdlg.h'     =>  "qtabdialog.h",
  'qtstream.h'    =>  "qtextstream.h",
  'qvector.h'     =>  "qptrvector.h",
- 'qwidcoll.h'    =>  "qwidgetlist.h\n\#include <qwidgetintdict.h",
+ 'qwidcoll.h'    =>  "qwidgetlist.h>\n\#include <qwidgetintdict.h",
  'qwindefs.h'    =>  "qwindowdefs.h",
 
 # and now the KDE specific compat includes
