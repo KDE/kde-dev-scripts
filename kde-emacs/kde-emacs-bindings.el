@@ -38,7 +38,8 @@
 ; F9 : Create a member method in the .cpp, the cursor being on the definition in the .h
 ; F10: Place point on a class name, and the respective (Qt) include file will be inserted.
 ; This works with all Qt classes but can easily be extended to KDE classes.
-; Shift-F10: Place point on a class name, and press Shift-F10, and konqueror will load
+; Shift-F10: Place point on a class name, and "class Blah" will be inserted near the top.
+; Meta-F10: Place point on a class name, and press Meta-F10, and konqueror will load
 ;            Qt documentation. Customize the location of the Qt documentation with the 
 ;            variable kdab-qt-documentation. XXX will be replace with the class name.
 ;            Example (setq kdab-qt-location "file:/packages/kde-src/qt-copy/doc/html/XXX.html")
@@ -105,7 +106,8 @@
 
 ; kde-emacs-headers:
 (define-key c++-mode-map [(f10)] 'kdab-insert-header)
-(define-key c++-mode-map [(shift f10)] 'kdab-lookup-qt-documentation)
+(define-key c++-mode-map [(shift f10)] 'kdab-insert-forward-decl)
+(define-key c++-mode-map [(meta f10)] 'kdab-lookup-qt-documentation)
 (define-key c++-mode-map [(control meta d)] 'insert-kdDebug)
 
 ; Standard Qt/KDE shortcuts: Ctrl+Backspace, Ctrl+Delete
