@@ -531,7 +531,7 @@ for module in $modules; do
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
 	use_compile_target=no
-	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$UNSERMAKE" && use_compile_target=yes
+	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$USE_UNSERMAKE" && use_compile_target=yes
 	if test "$use_compile_target" = yes && test -n "$MAKE_OPTS_COMPILE"; then
 	    cmd_make="$MAKE $MAKE_OPTS_COMPILE"
 	else
