@@ -14,13 +14,13 @@ set suffixes+=.lo,.o,.moc,.la,.closure,.loT
 " Search for headers here
 set path=.,/usr/include,/usr/local/include,
 if $QTDIR != ''
-	let &path = &path . $QTDIR . '/include/,'
+    let &path = &path . $QTDIR . '/include/,'
 endif
 if $KDEDIR != ''
-	let &path = &path . $KDEDIR . '/include/,'
+    let &path = &path . $KDEDIR . '/include/,'
 endif
 if $KDEDIRS != ''
-	let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include,', 'g' )
+    let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include,', 'g' )
 endif
 set path+=,
 
@@ -37,6 +37,13 @@ inoremap ( <C-R>=SmartParens( '(' )<CR>
 inoremap [ <C-R>=SmartParens( '[' )<CR>
 inoremap ] <C-R>=SmartParens( ']', '[' )<CR>
 inoremap ) <C-R>=SmartParens( ')', '(' )<CR>
+
+" Insert an #include statement for the current/last symbol
+inoremap <F5> <C-O>:call AddHeader()<CR>
+
+" Insert a forward declaration for the current/last symbol
+" FIXME: not implemented yet
+" inoremap <S-F5> <C-O>:call AddForward()<CR>
 
 " Switch between header and implementation files on ,h
 nmap <silent> ,h :call SwitchHeaderImpl()<CR>
@@ -67,88 +74,241 @@ set list
 set incsearch
 
 function! SmartTab()
-	if strpart( getline( '.' ), 0, col( '.' ) - 1 ) =~ '^\s*$'
-		return "\<Tab>"
-	else
-		return "\<C-N>"
-	endif
+    if strpart( getline( '.' ), 0, col( '.' ) - 1 ) =~ '^\s*$'
+        return "\<Tab>"
+    else
+        return "\<C-N>"
+    endif
 endfunction
 
 function! SmartParens( char, ... )
-	if ! ( &syntax =~ '^\(c\|cpp\|java\)$' )
-		return a:char
-	endif
-	let s = strpart( getline( '.' ), 0, col( '.' ) - 1 )
-	if s =~ '//'
-		return a:char
-	endif
-	let s = substitute( s, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
-	let s = substitute( s, "'[^']*'", '', 'g' )
-	let s = substitute( s, '"\(\\"\|[^"]\)*"', '', 'g' )
-	if s =~ "\\([\"']\\|/\\*\\)"
-		return a:char
-	endif
-	if a:0 > 0
-		if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == a:1 . ' '
-			return "\<BS>" . a:char
-		endif
-		if strpart( getline( '.' ), col( '.' ) - 2, 1 ) == ' '
-			return a:char
-		endif
-		return ' ' . a:char
-	endif
-	return a:char . ' '
+    if ! ( &syntax =~ '^\(c\|cpp\|java\)$' )
+        return a:char
+    endif
+    let s = strpart( getline( '.' ), 0, col( '.' ) - 1 )
+    if s =~ '//'
+        return a:char
+    endif
+    let s = substitute( s, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+    let s = substitute( s, "'[^']*'", '', 'g' )
+    let s = substitute( s, '"\(\\"\|[^"]\)*"', '', 'g' )
+    if s =~ "\\([\"']\\|/\\*\\)"
+        return a:char
+    endif
+    if a:0 > 0
+        if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == a:1 . ' '
+            return "\<BS>" . a:char
+        endif
+        if strpart( getline( '.' ), col( '.' ) - 2, 1 ) == ' '
+            return a:char
+        endif
+        return ' ' . a:char
+    endif
+    if a:char == '('
+        if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == 'if' ||
+          \strpart( getline( '.' ), col( '.' ) - 4, 3 ) == 'for' ||
+          \strpart( getline( '.' ), col( '.' ) - 6, 5 ) == 'while' ||
+          \strpart( getline( '.' ), col( '.' ) - 7, 6 ) == 'switch'
+            return ' ( '
+        endif
+    endif
+    return a:char . ' '
 endfunction
 
 function! SwitchHeaderImpl()
-	let fn = expand( '%' )
-	if fn =~ '\.\(cpp\|cc\|C\|c\)$'
-		let fn = substitute( fn, '\.\(cpp\|cc\|C\|c\)$', '.h', '' )
-		execute( "edit ".fn )
-	elseif fn =~ '\.h$'
-		let fn = substitute( fn, '\.h$', '.cpp', '' )
-		if filereadable( fn )
-			execute( "edit ".fn )
-			return
-		endif
-		let fn = substitute( fn, '\.cpp$', '.C', '' )
-		if filereadable( fn )
-			execute( "edit ".fn )
-			return
-		endif
-		let fn = substitute( fn, '\.C$', '.c', '' )
-		if filereadable( fn )
-			execute( "edit ".fn )
-			return
-		endif
-		let tmp = substitute( fn, '\.c$', '.cc', '' )
-		execute( "edit ".tmp )
-	endif
+    let fn = expand( '%' )
+    if fn =~ '\.\(cpp\|cc\|C\|c\)$'
+        let fn = substitute( fn, '\.\(cpp\|cc\|C\|c\)$', '.h', '' )
+        execute( "edit ".fn )
+    elseif fn =~ '\.h$'
+        let fn = substitute( fn, '\.h$', '.cpp', '' )
+        if filereadable( fn )
+            execute( "edit ".fn )
+            return
+        endif
+        let fn = substitute( fn, '\.cpp$', '.C', '' )
+        if filereadable( fn )
+            execute( "edit ".fn )
+            return
+        endif
+        let fn = substitute( fn, '\.C$', '.c', '' )
+        if filereadable( fn )
+            execute( "edit ".fn )
+            return
+        endif
+        let tmp = substitute( fn, '\.c$', '.cc', '' )
+        execute( "edit ".tmp )
+    endif
 endfunction
 
 function! IncludeGuard()
-	let guard = toupper( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ) )
-	call append( '^', '#define ' . guard )
-	+
-	call append( '^', '#ifndef ' . guard )
-	call append( '$', '#endif // ' . guard )
-	+
+    let guard = toupper( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ) )
+    call append( '^', '#define ' . guard )
+    +
+    call append( '^', '#ifndef ' . guard )
+    call append( '$', '#endif // ' . guard )
+    +
 endfunction
 
 function! SmartInclude()
-	let next = nr2char( getchar( 0 ) )
-	if next == '"'
-		return "#include \".h\"\<Left>\<Left>\<Left>"
-	endif
-	if next == '>'
-		return "#include <>\<Left>"
-	endif
-	return "#include <.h>\<Left>\<Left>\<Left>"
+    let next = nr2char( getchar( 0 ) )
+    if next == '"'
+        return "#include \".h\"\<Left>\<Left>\<Left>"
+    endif
+    if next == '>'
+        return "#include <>\<Left>"
+    endif
+    return "#include <.h>\<Left>\<Left>\<Left>"
+endfunction
+
+function! MapIdentHeader( ident )
+    " Qt stuff
+    if a:ident =~ 'Q.*Layout'
+        return '<qlayout.h>'
+    elseif a:ident == 'QListViewItem' ||
+          \a:ident == 'QCheckListItem' ||
+          \a:ident == 'QListViewItemIterator'
+        return '<qlistview.h>'
+    elseif a:ident == 'QIconViewItem' ||
+          \a:ident == 'QIconDragItem' ||
+          \a:ident == 'QIconDrag'
+        return '<qiconview.h>'
+    elseif a:ident =~ 'Q.*Drag' ||
+          \a:ident == 'QDragManager'
+        return '<qdragobject.h>'
+    elseif a:ident == 'QMimeSource' ||
+          \a:ident == 'QMimeSourceFactory' ||
+          \a:ident == 'QWindowsMime'
+        return '<qmime.h>'
+    elseif a:ident == 'QPtrListIterator'
+        return '<qptrlist.h>'
+    elseif a:ident =~ 'Q.*Event'
+        return '<qevent.h>'
+    elseif a:ident == 'QTime' ||
+          \a:ident == 'QDate'
+        return '<qdatetime.h>'
+    elseif a:ident == 'QTimeEdit' ||
+          \a:ident == 'QDateTimeEditBase' ||
+          \a:ident == 'QDateEdit'
+        return '<qdatetimeedit.h>'
+    elseif a:ident == 'QByteArray'
+        return '<qcstring.h>'
+    elseif a:ident == 'QWidgetListIt'
+        return '<qwidgetlist.h>'
+    elseif a:ident == 'QTab'
+        return '<qtabbar.h>'
+    elseif a:ident == 'QColorGroup'
+        return '<qpalette.h>'
+    elseif a:ident == 'QActionGroup'
+        return '<qaction.h>'
+    elseif a:ident =~ 'Q.*Validator'
+        return '<qvalidator.h>'
+    elseif a:ident =~ 'QListBox.*'
+        return '<qlistbox.h>'
+    elseif a:ident == 'QChar' ||
+          \a:ident == 'QCharRef' ||
+          \a:ident == 'QConstString'
+        return '<qstring.h>'
+    elseif a:ident =~ 'QCanvas.*'
+        return '<qcanvas.h>'
+    elseif a:ident =~ 'QGL.*'
+        return '<qgl.h>'
+    elseif a:ident == 'QTableSelection' ||
+          \a:ident == 'QTableItem' ||
+          \a:ident == 'QComboTableItem' ||
+          \a:ident == 'QCheckTableItem'
+        return '<qtable.h>'
+    elseif a:ident == 'qApp'
+        return '<qapplication.h>'
+
+    " KDE stuff
+    elseif a:ident =~ 'kd\(Debug|Warning|Error|Fatal|Backtrace\)'
+        return '<kdebug.h>'
+    elseif a:ident == 'kapp'
+        return '<kapplication.h>'
+    elseif a:ident == 'i18n' ||
+          \a:ident == 'I18N_NOOP'
+        return '<klocale.h>'
+    elseif a:ident == 'locate' ||
+          \a:ident == 'locateLocal'
+        return '<kstandarddirs.h>'
+
+    " Standard Library stuff
+    elseif a:ident =~ '\(std::\)?\(cout|cerr|endl\)'
+        return '<iostream>'
+    elseif a:ident =~ '\(std::\)?is\(alnum|alpha|ascii|blank|graph|lower|print|punct|space|upper|xdigit\)'
+        return '<cctype>'
+    endif
+
+    let header = tolower( substitute( a:ident, '::', '/', 'g' ) ) . '.h'
+    let check = header
+    while 1 
+        if filereadable( check )
+            return '"' . check '"'
+        endif
+        let slash = match( check, '/' )
+        if slash == -1
+            return '<' . header . '>'
+        endif
+        let check = strpart( check, slash + 1 )
+    endwhile
+endfunction
+
+" This is a rather dirty hack, but seems to work somehow :-) (malte)
+function! AddHeader()
+    let s = getline( '.' )
+    let i = col( '.' ) - 1
+    while i > 0 && strpart( s, i, 1 ) !~ '[A-Za-z0-9_:]'
+        let i = i - 1
+    endwhile
+    while i > 0 && strpart( s, i, 1 ) =~ '[A-Za-z0-9_:]'
+        let i = i - 1
+    endwhile
+    let ident = matchstr( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    let include = '#include ' . MapIdentHeader( ident )
+
+    let line = 1
+    let incomment = 0
+    let appendpos = 0
+    let codestart = 0
+    while line <= line( '$' )
+        let s = getline( line )
+        if incomment == 1
+            let end = matchend( s, '\*/' )
+            if end == -1
+                let line = line + 1
+                continue
+            else
+                let s = strpart( s, end )
+                let incomment = 0
+            endif
+        endif
+        let s = substitute( s, '//.*', '', '' )
+        let s = substitute( s, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+        if s =~ '/\*'
+            let incomment = 1
+        elseif s =~ '^' . include
+            break
+        elseif s =~ '^#include' && s !~ '\.moc"'
+            let appendpos = line
+        elseif codestart == 0 && s !~ '^$'
+            let codestart = line
+        endif
+        let line = line + 1
+    endwhile
+    if line == line( '$' ) + 1
+        if appendpos == 0
+            call append( codestart - 1, include )
+            call append( codestart, '' )
+        else
+            call append( appendpos, include )
+        endif
+    endif
 endfunction
 
 function! RunDiff()
-	echo 'Diffing....'
-	read! cvs diff -bB -I \\\#include | egrep -v '(^Index:|^=+$|^RCS file:|^retrieving revision|^diff -u|^[+-]{3})'
+    echo 'Diffing....'
+    read! cvs diff -bB -I \\\#include | egrep -v '(^Index:|^=+$|^RCS file:|^retrieving revision|^diff -u|^[+-]{3})'
 endfunction
 
 function! CreateChangeLogEntry()
@@ -160,15 +320,15 @@ function! CreateChangeLogEntry()
         let mail = $EMAIL
     else
         let mail = inputdialog( "Enter Name/Email for Changelog entry: " ) 
-	if mail == ""
-	    echo "Aborted ChangeLog edit..."
-	    return
-	endif
-	let g:EMAIL = mail
+    if mail == ""
+        echo "Aborted ChangeLog edit..."
+        return
+    endif
+    let g:EMAIL = mail
     endif
 
     if bufname( "ChangeLog" ) != "" && bufwinnr( bufname( "ChangeLog" ) ) != -1
-	execute bufwinnr( bufname( "ChangeLog" ) ) . " wincmd w"
+    execute bufwinnr( bufname( "ChangeLog" ) ) . " wincmd w"
     else
         execute "split ChangeLog"
     endif
@@ -197,40 +357,40 @@ function! CreateChangeLogEntry()
 endfunction
 
 function! AddQtSyntax()
-	if expand( "<amatch>" ) == "cpp"
-		syn keyword qtKeywords     signals slots emit
-		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT
-		syn keyword qtCast         qt_cast
-		syn keyword kdeKeywords    k_dcop k_dcop_signals
-		syn keyword kdeMacros      K_DCOP ASYNC
+    if expand( "<amatch>" ) == "cpp"
+        syn keyword qtKeywords     signals slots emit
+        syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT
+        syn keyword qtCast         qt_cast
+        syn keyword kdeKeywords    k_dcop k_dcop_signals
+        syn keyword kdeMacros      K_DCOP ASYNC
 
-		hi def link qtKeywords          Statement
-		hi def link qtMacros            Type
-		hi def link qtCast              Statement
-		hi def link kdeKeywords         Statement
-		hi def link kdeMacros           Type
-	endif
+        hi def link qtKeywords          Statement
+        hi def link qtMacros            Type
+        hi def link qtCast              Statement
+        hi def link kdeKeywords         Statement
+        hi def link kdeMacros           Type
+    endif
 endfunction
 
 function! InsertMethodTracer()
-	:normal [[kf(yBjokdDebug() << ""()" << endl;
+    :normal [[kf(yBjokdDebug() << ""()" << endl;
 endfunction
 
 function! UpdateMocFiles()
-	if &syntax == "cpp"
-		let i = 1
-		while i < 80
-			let s = getline( i )
-			if s =~ '^#include ".*\.moc"'
-				let s = substitute( s, '.*"\(.*\)\.moc"', '\1.h', '' )
-				if stridx( &complete, s ) == -1
-					let &complete = &complete . ',k' . s
-				endif
-				break
-			endif
-			let i = i + 1
-		endwhile
-	endif
+    if &syntax == "cpp"
+        let i = 1
+        while i < 80
+            let s = getline( i )
+            if s =~ '^#include ".*\.moc"'
+                let s = substitute( s, '.*"\(.*\)\.moc"', '\1.h', '' )
+                if stridx( &complete, s ) == -1
+                    let &complete = &complete . ',k' . s
+                endif
+                break
+            endif
+            let i = i + 1
+        endwhile
+    endif
 endfunction
 
 autocmd Syntax * call AddQtSyntax()
