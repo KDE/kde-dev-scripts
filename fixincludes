@@ -1,22 +1,26 @@
 #!/usr/bin/perl -w
 # tries to reduce the number of includes in KDE source files
-# (c) 2001 Dirk Mueller <mueller@kde.org>
+# (c) 2001-2003 Dirk Mueller <mueller@kde.org>
 
 use File::Basename;
 use Cwd;
 
 # declaration of useful subroutines
+sub find_src_includes($);
 sub find_fixable_sources ($);
 sub find_fixable_headers($);
 sub find_removable_includes ($);
 sub warn_before_modifying ($);
 sub remove_include ($$$);
 sub replace_include ($$$);
+sub replace_include_type ($$);
 sub fix_duplicates($);
 sub fix_compat_includes($);
 sub fix_unnecessary($);
+sub fix_include_type($);
 sub copy_file($$);
 sub process_source_file($);
+sub extract_gcc_error($);
 
 # some global variables
 $verbose = 0; # turns on debugging
@@ -32,7 +36,7 @@ while (defined ($ARGV[0]))
 {
   $_ = shift;
   if (/^--help$|^-h$/)  {
-    print "Usage: fixincludes [--verbose | -v] [--experimental | -e ] [--modify | -m ]\n";
+    print "Usage: fixkdeincludes [--verbose | -v] [--experimental | -e ] [--modify | -m ]\n";
     exit 0;
   }
   elsif (/^--verbose$|^-v$/) {
@@ -96,7 +100,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'qprndlg.h'     =>  "qprintdialog.h",
  'qprogbar.h'    =>  "qprogressbar.h",
  'qprogdlg.h'    =>  "qprogressdialog.h",
- 'qpsprn.h'      =>  "<private/qpsprinter_p.h>",
+ 'qpsprn.h'      =>  "private/qpsprinter_p.h",
  'qpushbt.h'     =>  "qpushbutton.h",
  'qqueue.h'      =>  "qptrqueue.h",
  'qradiobt.h'    =>  "qradiobutton.h",
@@ -118,6 +122,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'kcolorbtn.h'   =>  "kcolorbutton.h",
  'kcolordlg.h'   =>  "kcolordialog.h",
  'kxmlgui.h'     =>  "kxmlguifactory.h",
+ 'kdebugclasses.h' => "kdebug.h",
 );
 
 
@@ -207,6 +212,27 @@ sub find_removable_includes ($)
   return @includes;
 }
 
+sub find_installed_headers($)
+{
+  my $sdir = shift @_;
+  my @includes = ();
+
+  open(I, "<$sdir/Makefile.am") || die "couldn't open $sdir/Makefile.am $!";
+
+  my $data = join('', <I>);
+  $data =~ s/\\\s*\n/ /g;
+
+  # now search for not installed headers
+  foreach my $line (split /^/, $data) {
+    if($line =~ /^(\w+)_HEADERS\s*=(.*)$/) {
+      next if $1 eq "noinst";
+      push @includes, split (' ', $2);
+    }
+  }
+  close(I);
+  return @includes;
+}
+
 # first parameter: srcfile
 # second parameter: include to remove
 # third parameter is the duplicate level: this include is removed $level times
@@ -246,8 +272,8 @@ sub remove_include ($$$)
       next;
     }
 
-    #if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*$/) {
-    if ($cpplevel == 0 && (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
+    if ($level && $cpplevel == 0 && 
+       (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       $level = $level - 1;
       # skipping the line..
       next;
@@ -298,8 +324,9 @@ sub replace_include ($$$)
       next;
     }
 
-    #if ($cpplevel == 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
-    if ($cpplevel == 0 && (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
+    if ($cpplevel == 0 &&
+      (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))
+    {
       print "HAH! found $include to replace in $srcfile!\n" if($verbose);
       $line =~ s/(\#include\s*[\"<])$include([\">]\S*)/$1$destinclude$2/;
     }
@@ -310,6 +337,24 @@ sub replace_include ($$$)
   # now we have the fixed contents in @contents
   open(O, "> $srcfile") || die "replace_include: couldn't open '$srcfile' for writing\n";
   print O reverse @contents;
+  close (O);
+}
+
+# fixes #include <foo.h> -> #include "foo.h"
+sub replace_include_type ($$)
+{
+  my ($srcfile, $include) = @_;
+
+  die "$srcfile is not read/writeable!\n" if( ! -r $srcfile || ! -w $srcfile);
+  open(I, "< $srcfile") or die "replace_include: couldn't open '$srcfile'\n";
+  my @contents = <I>;
+  close(I);
+
+  grep(s/^(\#include)\s*<$include>(.*)$/$1 \"$include\"$2/, @contents);
+
+  # now we have the fixed contents in @contents
+  open(O, "> $srcfile") || die "replace_include: couldn't open '$srcfile' for writing\n";
+  print O @contents;
   close (O);
 }
 
@@ -341,6 +386,27 @@ sub fix_duplicates($)
   }
 }
 
+sub extract_gcc_error($)
+{
+  my $out = shift;
+ 
+ # print "out: $out\n";
+
+  while ($out =~ m/^(.*?):([0-9]+):(.*)$/mg) # filename:lineno:message
+  {
+      my $field1 = $1 || "";
+      my $field2 = $2 || "";
+      my $field3 = $3 || "";
+
+ #     print "f1: $field1, f2: $field2, f3: $field3\n";
+
+      next if ($field3 =~ m/\s+warning:.*/);
+      next if ($field3 =~ m/^\s*$/);
+      return basename($field1);
+  }
+  return "BUG!";
+}
+
 sub fix_compat_includes($)
 {
   my $srcfile = shift @_;
@@ -365,6 +431,25 @@ sub fix_compat_includes($)
       print "$srcfile: compat header: $include, to be replaced by ". $compatmap{$include} ."\n";
       &replace_include($srcfile, $include, $compatmap{$include}) if($modify);
     }
+  }
+}
+
+sub fix_include_type($)
+{
+  my $srcfile = shift @_;
+  my $srcdir = dirname($srcfile);
+
+  open(I, "<$srcfile") || die "couldn't open $srcfile in _fix_include_type";
+  my @bracketincs = grep s/^\s*\#include\s*<([^>]+)>\s*$/$1/, <I>;
+  close(I);
+
+  foreach my $include (@bracketincs) {
+    next if (!(-r "$srcdir/$include"));
+    next if (grep (/^$include$/, @instheaders));
+    next if ($include eq "config.h"); # oh don't get me started on that
+
+    print "$srcfile: #include <$include> should use #include \"...\"\n";
+    &replace_include_type($srcfile, $include) if($modify);
   }
 }
 
@@ -409,7 +494,7 @@ sub fix_unnecessary($)
   if (defined $ENV{"OBJ_REPLACEMENT"})
   {
     # we have to use sed here, because perl can't do s#a#b#
-    $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
+    $builddir = `echo $srcdir | sed -e "\$OBJ_REPLACEMENT"`;
     chomp $builddir;
     $makecmd = "makeobj";
   }
@@ -429,21 +514,32 @@ sub fix_unnecessary($)
   print "Checking for initial compilation: ";
   chdir($builddir);
   my $objextension = "BUG";
-  unlink "$blanksrc.lo";
-  my $output = `$makecmd $blanksrc.lo 2>&1`;
-  $objextension = ".lo" if ( 0 == ($? >> 8));
-  if($objextension eq "BUG") {
-    print "failed with .lo... ";
-    unlink "$blanksrc.o";
-    $output = `$makecmd $blanksrc.o 2>&1`;
-    $objextension = ".o" if ( 0 == ($? >> 8));
+  if($srcfile =~ /\.$hExt$/o) {
+    $output = `$makecmd all 2>&1`;
+    $objextension = "all" if ( 0 == ($? >> 8));
+  }
+  else {
+    unlink "$blanksrc.lo";
+    my $output = `$makecmd $blanksrc.lo 2>&1`;
+    $objextension = ".lo" if ( 0 == ($? >> 8));
+    if($objextension eq "BUG") {
+      print "failed with .lo... ";
+      unlink "$blanksrc.o";
+      $output = `$makecmd $blanksrc.o 2>&1`;
+      $objextension = ".o" if ( 0 == ($? >> 8));
+    }
+    if($srcfile =~ /$hExt/) {
+      $output = `$makecmd $blanksrc.o 2>&1`;
+      $objextension = ".o" if ( 0 == ($? >> 8));
+    }
   }
   if($objextension eq "BUG") {
-    warn "can't figure out right compile command for $srcfile :-(\n??? unused, or didn't compile in the first place?\n";
-    warn "$output";
+    warn "can't figure out right compile command for $srcfile :-(\n" .
+         "??? unused, or didn't compile in the first place?\n" .
+         "$output";
     chdir($origdir);
-    return;
-  } 
+    exit 1;
+  }
 
   print "worked with $objextension\n";
 
@@ -457,17 +553,20 @@ sub fix_unnecessary($)
     # so that it's easy to add kdDebug calls
     next if( $include eq "kdebug.h");
     # avoid this one as it might cause
-    # certain code parts to be disabled from compilation       
+    # certain code parts to be disabled from compilation
     next if( $include eq "qmodules.h");
+    # don't remove this one either. causes conditional
+    # code to be compiled incorrectly
+    next if( $include eq "kdeversion.h");
     # check if it is its own header file
     my $blankhdr = $include;
     $blankhdr =~ s/(.*)\.[^\.]+/$1/;
     next if ($blankhdr eq $blanksrc);	
-    
+
     chdir($srcdir);
 
-    local $localbackup = $srcfile . "#fixincludes";
-    
+    local $localbackup = $srcfile . "#fixkdeincludes";
+
     # preserve timestamp if possible for CVS
     unlink $localbackup;
     rename $srcfile, $localbackup;
@@ -479,8 +578,16 @@ sub fix_unnecessary($)
     # check if it still compiles
     if($verbose) {
       chdir($builddir);
-      unlink "$builddir/$blanksrc$objextension";
-      `$makecmd $blanksrc$objextension 2>&1`;
+      # testing headers? need to compile everything
+      if($objextension eq "all") {
+        # wait a second for makefile timestamp comparisons
+        sleep 1;
+        `$makecmd all 2>&1`;
+      }
+      else {
+        unlink "$blanksrc$objextension";
+        `$makecmd $blanksrc$objextension 2>&1`;
+      }
       die "unexpected error $output\nexitcode=" . ($? >> 8) if($? >> 8);
       chdir($srcdir);
     }
@@ -488,12 +595,18 @@ sub fix_unnecessary($)
     # duplicates have to be nuked here , so it will be dropped maximum once
     print "trying without $include: ";
     &remove_include($srcfile, $include, 1);
-    
+
     chdir($builddir);
 
     # try if it compiles
-    unlink "$builddir/$blanksrc$objextension";
-    $output=`$makecmd $blanksrc$objextension 2>&1`;
+    if($objextension eq "all") {
+      sleep 1;
+      $output=`$makecmd $objextension 2>&1`;
+    }
+    else {
+      unlink "$builddir/$blanksrc$objextension";
+      $output=`$makecmd $blanksrc$objextension 2>&1`;
+    }
     my $retcode = ($? >> 8);
     #print "retcode=$retcode\n$output" if ($verbose);
 
@@ -506,8 +619,19 @@ sub fix_unnecessary($)
       $exp_success = $exp_success + 1;
     }
     else {
-      # better luck next time
-      print "failed\n";
+      # is this a fixable error?
+      if($objextension eq "all" and 
+         &extract_gcc_error($output) ne $srcfile) {
+        print "failed (error in " . &extract_gcc_error($output) . ")\n";
+        # FIXME: implement fixup of the compilation error
+        # so that we can be much more agressive in removing
+        # unneeded includes from headers
+      }
+      else
+      {
+        # better luck next time
+        print "FATALLY failed\n";
+      }
       unlink $srcfile;
       rename $localbackup, $srcfile;
       $SIG{'INT'} = 'DEFAULT';
@@ -524,21 +648,59 @@ sub fix_unnecessary($)
 sub process_source_file($)
 {
   local $file = shift @_;
+  my $pure = basename($file);
   print "Checking: $file\n" if($verbose);
+  &fix_include_type($file);
   &fix_compat_includes($file);
   &fix_duplicates($file);
-  if ($experimental) {
-    &fix_unnecessary($file);
-  }
+  &fix_unnecessary($file) if ($experimental && !grep (/^$pure$/, @instheaders));
   print "\n" if ($verbose);
 }
 
+sub check_for_automake_srcdir($)
+{
+  my $dir = shift;
+
+  return 0 if !( -r "$dir/Makefile.am");
+  return 1 if !( -r "$dir/Makefile");
+
+  # ok, now its either srcdir with srcdir==builddir, or its builddir,
+  # which we don't want. 
+
+  open(I, "<$dir/Makefile") || die "couldn't read $dir/Makefile";
+  while(<I>) {
+    if(/^srcdir\s*=\s*(\S+)/) {
+      close(I);
+
+      if($1 ne ".") {
+        print "Skipping build dir: $dir\n" if($verbose);
+        return 0;
+      }
+      return 1;
+    }
+  }
+  
+  close(I);
+  # ok, this makefile isn't generated by automake, we don't want that
+  return 0;
+}
+
+#############################################################################
 # here is the main logic
+#
 
 # warn about modified files
 if($modify) {
   `cvscheck | grep '^[MmC]'`;
-  print "WARNING: you have pending local changes.You might commit them by accident!\n" if($? >> 8 == 0);
+  print "WARNING: you have pending local changes. You might commit them by accident!\n\n" if($? >> 8 == 0);
+}
+
+if($experimental) {
+  print "WARNING: The experimental mode is indeed experimental.\n";
+  print "It tries to reduce includes by testing if it would compile\n";
+  print "without a particular include. It might introduce subtle bugs\n";
+  print "or break compilation for make check or make final.\n\n";
+  print "This operation mode is known to be unsafe. You've been warned.\n";
 }
 
 # process files from the command line, if any
@@ -550,13 +712,18 @@ if ( $#explicitfiles >= 0 ) {
 }
 
 # first generate a list of subdirectories
-@dirlist = (".");
+@dirlist = ();
+push @dirlist, "." if (&check_for_automake_srcdir("."));
+die "current directory isn't srcdir!" if (!scalar @dirlist);
 foreach $dir ( @dirlist ) {
  opendir (DIR, "$dir") || warn "Couldn't read '$dir'";
  my $subdir = "";
  while( $subdir = readdir(DIR)) {
-   next if ($subdir =~ /^\..*/);
-   push @dirlist, "$dir/$subdir" if ( -d "$dir/$subdir");
+   next if ($subdir =~ /^\./);
+   next if !( -d "$dir/$subdir");
+   next if (! &check_for_automake_srcdir("$dir/$subdir"));
+
+   push @dirlist, "$dir/$subdir";
  }
  closedir(DIR);
 }
@@ -575,10 +742,9 @@ foreach $dir(@dirlist) {
   }
 
   @headers = &find_fixable_headers($dir);
+  @instheaders = &find_installed_headers($dir);
   foreach $file(@headers) {
-    print "Checking: $file\n" if($verbose);
-    &fix_compat_includes($file);
-    &fix_duplicates($file);
+    &process_source_file($file);
   }
   @sources = &find_fixable_sources($dir);
   foreach $file(@sources) {
