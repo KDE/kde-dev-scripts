@@ -18,7 +18,9 @@ cxxmetric	Counts lines of code, comments and blank space in C and C++
 fixheaders      Adds header files as it recognices make error output
 
 cvslastchange   launches "cvs diff -u" to display the last applied changes for a
-                given file
+                given file. HEAD branch only.
+
+cvslastlog      Shows the log associated with the last change on a given file.
 
 ----------------
 Looking to add a script?
