@@ -1428,6 +1428,7 @@ With arg, to it arg times."
               QShowEvent QHideEvent QContextMenuEvent QIMEvent QDropEvent
               QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
               QChildEvent QCustomEvent)
+    (qdatetime.h QTime QDateTime QDate)
     
     ; Qt/Embeded
     (qcopchannel_qws.h QCopChannel)
@@ -1507,6 +1508,7 @@ With arg, to it arg times."
            (header (cond
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
+                    ((string-match "^qxml" word) "qxml.h")
                     (t (concat word ".h")))))
       (beginning-of-buffer)
       (if (not (re-search-forward (concat "#include *<" header ">") nil t))
