@@ -4,7 +4,7 @@ bin_SCRIPTS = \
   cheatmake makeobj kde-build build-progress.sh \
   cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
   noncvslist pruneemptydirs cvs-clean \
-  cvs2pack cvs2dist  cvsblame \
+  cvs2dist  cvsblame \
   kdedoc qtdoc extractrc zonetab2pot.py \
   licensecheck fixkdeincludes includemocs create_cvsignore \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py
@@ -14,7 +14,7 @@ man1_MANS = \
   kde-build.1 \
   cvsversion.1 cvscheck.1 \
   noncvslist.1 \
-  cvs2pack.1  cvsblame.1 \
+  cvsblame.1 \
   includemocs.1 
 
 CLEANFILES = $(man1_MANS)
@@ -40,8 +40,6 @@ cvsversion.1: cvsversion
 cvscheck.1: cvscheck
 	pod2man $< $@
 noncvslist.1: noncvslist
-	pod2man $< $@
-cvs2pack.1: cvs2pack
 	pod2man $< $@
 cvsblame.1: cvsblame
 	pod2man $< $@
