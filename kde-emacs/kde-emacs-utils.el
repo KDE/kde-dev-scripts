@@ -228,15 +228,38 @@
 (defun scroll-me-down-a-bit () (interactive) (scroll-down 1))
 
 ; Compilation
-(defun makeclean () (interactive) (compile "make clean"))
-(defun make () (interactive) (compile "make"))
-(defun makeinstall () (interactive) (compile "make install"))
-(defun makeinstallexec () (interactive) (compile "make install-exec"))
-(defun makethisfile () (interactive)
-    (let ((f (buffer-name)))
-      (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
-      (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
-      (compile (concat "make " f ))))
+(defun makeclean ()
+  "Executes a \"make clean\" in the current directory"
+  (interactive)
+  (compile "make clean")
+  )
+
+(defun make ()
+  "Executes a \"make\" in the current directory"
+  (interactive)
+  (compile "make")
+  )
+
+(defun makeinstall ()
+  "Executes a \"make install\" in the current directory"
+  (interactive)
+  (compile "make install")
+  )
+
+(defun makeinstallexec ()
+  "Executes a \"make install-exec\" in the current directory"
+  (interactive)
+  (compile "make install-exec")
+  )
+
+(defun makethisfile ()
+  "Try to compile the currently opened file"
+  (interactive)
+  (let ((f (buffer-name)))
+    (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
+    (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
+    (compile (concat "make " f )))
+  )
 
 ;; pc-like textmarking
 (load "pc-select")
