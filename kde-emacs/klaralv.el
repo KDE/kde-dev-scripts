@@ -120,6 +120,7 @@
 
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
+    (kconfig.h KConfigGroup)
 
     ; KDGear - http://www.klaralvdalens-datakonsult.se
     (KDCheckableGroupBox.h KDCheckableGroupBox)
