@@ -28,16 +28,16 @@ fi
 
 if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
    builddir=$OBJ_SUBDIR
-fi 
+fi
 cd $builddir
 srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
 
 case $1 in
   hidechange )
     if [ $# -ne 2 ]; then usage; fi
-    deps=`make -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'`;
+    deps=`make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'`;
     if [ -n "$deps" ]; then
-      oldestdep=`ls -t $deps| tail -1`
+      oldestdep=`ls -t $deps 2>/dev/null | tail -1`
       thefile=$2
       if [ -f $srcdir/$thefile ]; then
           thefile=$srcdir/$thefile
@@ -49,11 +49,11 @@ case $1 in
     ;;
   show )
     if [ $# -ne 1 ]; then usage; fi
-    make -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
+    make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
     ;;
   why )
     if [ $# -ne 2 ]; then usage; fi
-    make -n -d $2 | egrep -e "(newer than target \`$2'|Must)"
+    make SUBDIRS='' -n -d $2 | egrep -e "(newer than target \`$2'|Must)"
     ;;
   * ) usage ;;
 esac
