@@ -28,7 +28,7 @@ i18n() calls so that xgettext can parse them.
                  --attr=Title,data --attr=Description,data,Stencils
 
 --context=name : Give i18n calls a context name: i18n("name", ...)
---lines        : Include source line numbers in comments
+--lines        : Include source line numbers in comments (deprecated, it is switched on by default now)
 --help|?       : Display this summary
 
 EOF
@@ -150,10 +150,9 @@ sub write_i18n
   
   $context ||= $opt_context;
 
+  print "//i18n: file $file_name line $.\n";
   print qq|i18n("|;
   print qq|$context", "|            if $context;
-  print qq|$text"); // $file_name|;
-  print qq| $.|                     if $opt_lines;
-  print qq|\n|;
+  print qq|$text");\n|;
 }
 
