@@ -75,8 +75,9 @@ set list
 
 set incsearch
 
-function! SmartTab()
-    if strpart( getline( '.' ), 0, col( '.' ) - 1 ) =~ '^\s*$'
+function SmartTab()
+    let col = col('.') - 1
+    if !col || getline('.')[col-1] !~ '\k'
         return "\<Tab>"
     else
         return "\<C-P>"
