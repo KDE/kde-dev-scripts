@@ -261,6 +261,30 @@ check_libltdl() {
   fi
 }
 
+make_makefile_cvs() {
+  cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
+  if [ "$NICECOMPILE" = yes ]; then
+    cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
+  fi
+  unset UNSERMAKE || true
+  if [ -n "$USE_UNSERMAKE" ] && ! echo $NO_UNSERMAKE_MODULES \
+      | grep $module > /dev/null 2>&1; then
+     if [ -f Makefile.am.in ] || ! grep TOPSUBDIRS Makefile.am; then
+        export UNSERMAKE=$USE_UNSERMAKE
+     fi
+  fi
+
+  if [ "$INCREMENTAL_BUILD" = "yes" -a -e "Makefile.in" ]; then
+    cmd_make_makefile_cvs="echo Warning: no Makefile.cvs for module $module - as requested"
+  fi
+
+  if log_cmd "$cmd_make_makefile_cvs"; then
+    echo "$str_okay"
+  else
+    echo "$str_error"
+  fi
+}
+
 # Disable zsh feature
 CDPATH=
 
@@ -509,7 +533,7 @@ for module in $modules; do
     echo -n "Checking module $module (no cvs update)..."
     cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
   else
-    if test -n "$BRANCH"; then
+    if [ -n "$BRANCH" ]; then
       echo -n "Updating module $module ($BRANCH)..."
     else
       echo -n "Updating module $module ..."
@@ -555,27 +579,7 @@ for module in $modules; do
   fi
 
   check_admin
-  cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
-  if [ "$NICECOMPILE" = yes ]; then
-    cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
-  fi
-  unset UNSERMAKE || true
-  if [ -n "$USE_UNSERMAKE" ] && ! echo $NO_UNSERMAKE_MODULES \
-      | grep $module > /dev/null 2>&1; then
-     if [ -f Makefile.am.in ] || ! grep TOPSUBDIRS Makefile.am; then
-        export UNSERMAKE=$USE_UNSERMAKE
-     fi
-  fi
-
-  if [ "$INCREMENTAL_BUILD" = "yes" -a -e "Makefile.in" ]; then
-    cmd_make_makefile_cvs="echo Warning: no Makefile.cvs for module $module - as requested"
-  fi
-
-  if log_cmd "$cmd_make_makefile_cvs"; then
-    echo "$str_okay"
-  else
-    echo "$str_error"
-  fi
+  make_makefile_cvs
 
   log_endsection "Updating"
 done
@@ -642,6 +646,7 @@ for module in $modules; do
   [ "$NICECOMPILE" = yes ] && cmd_configure="nice $cmd_configure"
   configure_skipped=0
   if [ "$INCREMENTAL_BUILD" = "yes" -a -e "Makefile" ]; then
+    cmd_configure_orig=$cmd_configure
     cmd_configure="echo Warning: no configure for module $module - as requested"
     configure_skipped=1
   fi
@@ -674,11 +679,30 @@ for module in $modules; do
       echo $cmd_make_makefile >> $logfile
     fi
     if ! log_cmd "$cmd_make_makefile"; then
-      echo "$str_error"
-      move_logfile
-      [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
-      [ $critical -eq 0 ] || exit $err_compile_fail
-      continue
+      echo -n " Falling back to normal Makefile.cvs ..."
+      worked=0
+
+      if [ -n "$KDEBUILDDIR" ]; then
+        cd $KDESRCDIR/$module # get back to the supermarket
+      fi
+      rm Makefile.in
+      make_makefile_cvs
+      if [ -n "$KDEBUILDDIR" ]; then
+        cd $KDEBUILDDIR/$module # got the sugar, honey?
+      fi
+      echo -n "  Configuring..."
+      if log_cmd "$cmd_configure_orig"; then
+        if log_cmd "$cmd_make_makefile"; then
+	    worked=1 
+        fi
+      fi
+      if [ $worked -ne 1 ]; then
+         echo "$str_error"
+         move_logfile
+         [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
+         [ $critical -eq 0 ] || exit $err_compile_fail
+         continue
+      fi
     fi
 
     log_endsection "Updating Makefile"
