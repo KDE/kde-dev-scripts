@@ -112,8 +112,14 @@ EXCLUDE=""
 CVS_CLEAN="no"
 
 # Flags to be passed to the 'configure' script.
+# A note: --enable-debug adds minimum debug symbols while an appended
+# =full gives you the full power and fills up your beloved hdd much better
+# --disable-closure is actually prefered if it works for you. It will
+# not create closure targets but link with some compiler flags to make
+# sure the compiler will fail when undefined symbols are there - which
+# is much faster if it works for you.
 #
-CONFIGUREFLAGS="--disable-debug"
+CONFIGUREFLAGS="--enable-debug --disable-closure"
 
 # You can define module-specific configure flags using
 # CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. These are appended to the
