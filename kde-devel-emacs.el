@@ -1406,7 +1406,145 @@ With arg, to it arg times."
           (t
            (error "%s is neither .h, .cc, .C or .cpp" n)))))
 
-;; ----- Second part, contributed by various KDE developers
+;; ----- Second part, contrinuted by Klaralvdalens Datakonsult
+(defvar kdab-qt-documentation
+  "http://doc.trolltech.com/3.0/XXX.html"
+  "URL for Qt documentation. XXX must be in the string. 
+  Example: file:/packages/kde-src/qt-copy/doc/html/XXX.html")
+
+
+;; special case for include files
+;; Please notify blackie@klaralvdalens-datakonsult.se with any modification to this variable!
+(defvar kdab-special-includes
+  '( 
+    (qlayout.h QHBoxLayout QVBoxLayout QGridLayout QBoxLayout)
+    (qlistview.h QListViewItem QCheckListItem QListViewItemIterator)
+    (qiconview.h QIconViewItem QIconDragItem QIconDrag)
+    (qdragobject.h QTextDrag QStoredDrag QUriDag QColorDrag QImageDrag QDragManager)
+    (qmime.h QMimeSource QMimeSourceFactory QWindowsMime)
+    (qptrlist.h QPtrListIterator)
+    (qevent.h QTimerEvent QMouseEvent QWheelEvent QTabletEvent QKeyEvent 
+              QFocusEvent QPaintEvent QMoveEvent QResizeEvent QCloseEvent 
+              QShowEvent QHideEvent QContextMenuEvent QIMEvent QDropEvent
+              QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
+              QChildEvent QCustomEvent)
+    
+    ; Qt/Embeded
+    (qcopchannel_qws.h QCopChannel)
+    (qdirectpainter_qws.h QDirectPainter)
+    (qfontfactorybdf_qws.h QFontFactoryBDF)
+    (qfontfactoryttf_qws.h QFontFactoryFT)
+    (qfontmanager_qws.h QGlyphMetrics QGlyph QRenderedFont QDiskFont QFontManager QFontFactory)
+    (qgfx_qws.h QScreenCursor QPoolEntry QScreen QGfx)
+    (qgfxlinuxfb_qws.h QLinuxFbScreen)
+    (qgfxmatroxdefs_qws.h QQnxFbGfx QQnxScreen)
+    (qgfxraster_qws.h QGfxRasterBase QGfxRaster)
+    (qgfxvnc_qws.h QRfbRect QRfbPixelFormat QRfbServerInit QRfbSetEncodings 
+                   QRfbFrameBufferUpdateRequest QRfbKeyEvent QRfbPointerEvent QRfbClientCutText QVNCServer)
+    (qkeyboard_qws.h QWSKeyboardHandler)
+    (qlock_qws.h QLock QLockHolder)
+    (qmemorymanager_qws.h QMemoryManagerPixmap QMemoryManager)
+    (qsoundqss_qws.h QWSSoundServer QWSSoundClient QWSSoundServerClient QWSSoundServerSocket)
+    (qwindowsystem_qws.h QWSInternalWindowInfo QWSScreenSaver QWSWindow QWSSoundServer 
+                         QWSServer QWSServer KeyboardFilter QWSClient)
+    (qwsbeosdecoration_qws.h QWSBeOSDecoration)
+    (qwscursor_qws.h QWSCursor)
+    (qwsdecoration_qws.h QWSDecoration)
+    (qwsdefaultdecoration_qws.h QWSDefaultDecoration)
+    (qwsdisplay_qws.h QWSWindowInfo QWSDisplay)
+    (qwshydrodecoration_qws.h QWSHydroDecoration)
+    (qwskde2decoration_qws.h QWSKDE2Decoration)
+    (qwskdedecoration_qws.h QWSKDEDecoration)
+    (qwsmanager_qws.h QWSManager QWSButton)
+    (qwsmouse_qws.h QWSPointerCalibrationData QWSMouseHandler QCalibratedMouseHandler 
+                    QAutoMouseHandlerPrivate QWSMouseHandlerPrivate QVrTPanelHandlerPrivate 
+                    QTPanelHandlerPrivate QYopyTPanelHandlerPrivate QCustomTPanelHandlerPrivate 
+                    QVFbMouseHandlerPrivate)
+    (qwsproperty_qws.h QWSPropertyManager)
+    (qwsregionmanager_qws.h QWSRegionManager)
+    (qwssocket_qws.h QWSSocket QWSServerSocket)
+    (qwswindowsdecoration_qws.h QWSWindowsDecoration))
+    "List of special include files which do not follow the normal scheme")
+
+;; Lookup class `cls' in kdab-special-includes and return the associate include file name
+(defun kdab-map-special (cls)
+  (let ((list kdab-special-includes)
+        (found nil))
+    (while (and list (not found))
+      (let* ( (elm (car list))
+              (include-file (car elm))
+              (classes (cdr elm)))
+        ( while (and classes (not found))
+          (if (string= (downcase cls) (downcase (symbol-name (car classes))))
+              (setq found include-file)
+            (setq classes (cdr classes)))))
+      (setq list (cdr list)))
+    (if found
+        (symbol-name found)
+      nil)  ; return value
+    ))
+        
+
+(defun kdab-word-under-point ()
+  (save-excursion
+    (let* ((start (if (= (preceding-char) ?\ )
+                      (point)
+                    (progn (backward-word 1) (point))))
+           (end (progn (forward-word 1) (point))))
+      (buffer-substring start end))))
+    
+
+;--------------------------------------------------------------------------------
+; Insert include file.
+; Place point anywhere on a class, and invoke this function. A result of
+; this is that an include line is added (if it does not already exists) for
+; the given class.
+;--------------------------------------------------------------------------------
+(defun kdab-insert-header ()
+  (interactive "")
+  (save-excursion
+    (let* ((word (downcase (kdab-word-under-point)))
+           (header (cond
+                    ((kdab-map-special word) (kdab-map-special word))
+                    ((string-match "^qdom" word) "qdom.h")
+                    (t (concat word ".h")))))
+      (beginning-of-buffer)
+      (if (not (re-search-forward (concat "#include *<" header ">") nil t))
+          (progn
+                                        ; No include existsed
+            (goto-char (point-max)) ; Using end-of-buffer makes point move, dispete save-excursion
+            (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
+                (beginning-of-buffer)
+              (progn (end-of-line) (forward-char 1)))
+            (if (file-exists-p header)
+                (progn 
+                  ; See this as a local file.
+                  (insert "#include \"" header "\"\n")
+                  (message (concat "inserted " "#include \"" header "\"")))
+              (progn
+                (insert "#include <" header ">\n")
+                (message (concat "inserted " "#include <" header ">")))))
+        (message (concat "header file \"" header "\" is already included"))))))
+
+
+
+
+;--------------------------------------------------------------------------------
+; Start konqueror with documentation for the class under point.
+; set `kdab-qt-documentation' to specify the replacement for the documentation
+;--------------------------------------------------------------------------------
+(defun kdab-lookup-qt-documentation ()
+  (interactive "")
+  (save-excursion
+    (let* ((word (downcase (kdab-word-under-point)))
+          (url (if (not (string-match "XXX" kdab-qt-documentation))
+                   (error "didn't find three X's in kdab-qt-documentation")
+                 (replace-match word t t kdab-qt-documentation))))
+      (start-process "qt documentation" nil "kfmclient" "openURL" url)
+      (message (concat "Loading " url)))))
+
+
+;; ----- Third part, contributed by various KDE developers
 
 ;;; func-menu is a package that scans your source file for function definitions
 ;;; and makes a menubar entry that lets you jump to any particular function
@@ -1654,6 +1792,8 @@ With arg, to it arg times."
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
 ;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
+(define-key global-map [(f10)] 'kdab-insert-header)
+(define-key global-map [(shift f10)] 'kdab-lookup-qt-documentation)
 (define-key global-map [(control meta d)] 'insert-kdDebug)
 
 ; currently no binding for header-protection and add-file-to-makefile-am,
@@ -1675,6 +1815,12 @@ With arg, to it arg times."
 ; F6 : Switch from .cpp/.cc to .h and vice-versa
 ; F7 : The same, but try to find the current method in the other file
 ; F9 (if enabled) : Create a member method in the .cpp, the cursor being on the definition in the .h
+; F10: Place point on a class name, and the respective (Qt) include file will be inserted.
+; This works with all Qt classes but can easily be extended to KDE classes.
+; Shift-F10: Place point on a class name, and press Shift-F10, and konqueror will load
+;            Qt documentation. Customize the location of the Qt documentation with the 
+;            variable kdab-qt-documentation. XXX will be replace with the class name.
+;            Example (setq kdab-qt-location "file:/packages/kde-src/qt-copy/doc/html/XXX.html")
 ;
 ; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
 ; [the new hide-all-windows shortcut conflicts with that, you may have to
