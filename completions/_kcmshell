@@ -1,15 +1,17 @@
 #compdef kcmshell=kcmshell appletproxy=appletproxy
 
-local i tmp dir flags
+local i resource tmp dir flags
 if [ "$service" = "kcmshell" ]; then
-	dir="applnk/Settings";
+	resource="apps";
+	dir="/Settings";
 	flags=":t:r";
 else
-	dir="apps/kicker/applets";
+	resource="data";
+	dir="/kicker/applets";
 	flags=":t"
 fi
-for i in `echo $KDEDIRS | sed 's,:, ,'` $KDEHOME; do
-	tmp=($i/share/$dir/**/*.desktop($flags))
+for i in `kde-config --path $resource| sed -e 's/:/ /g'`; do
+	tmp=($i/$dir/**/*.desktop($flags))
 	compadd -a tmp
 done
 
