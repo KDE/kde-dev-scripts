@@ -173,7 +173,7 @@ do
         break ;;
     --version)
         # Show version
-        echo "$0 version 0.1"
+        echo "$0 version 0.8.15"
         exit $err_no_error ;;
     --no-update)
         docvsupdate=0 ;;
