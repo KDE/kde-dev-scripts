@@ -45,7 +45,7 @@ return (\"test.cpp\" t)."
 	    (setq ret (cons (concat nname "." elt) t)))
 	)
       (if (not ret)
-	  (setq ret (cons (concat nname "." (car kde-source-files)) nil ))
+	  (setq ret (cons (concat nname "." kde-prefered-source-extension) nil ))
 	))
      ((member ext kde-source-files)
       (dolist (elt kde-header-files nil)
