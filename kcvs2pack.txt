@@ -1,0 +1,30 @@
+NAME
+    kcvs2pack - Creates standalone dist tarballs for apps in KDE
+    CVS.
+
+SYNOPSIS
+    kcvs2pack <module dir> <packagedir> [<version>]
+
+DESCRIPTION
+    The following steps are performed:
+
+    Create a dist package dir and following files are copied:
+    the packagedir
+    All non-dir files in the module dir
+    the admin dir
+    README, INSTALL and AUTHORS are copied from package
+                    dir to the dist dir toplevel, if they exist.
+    All files in <module dir>/<packagedir>/pack are copied
+                    to the dist dir.
+    Makefile.cvs is run.
+    .tar.gz and .tar.bz2 archives are created for the directory.
+EXAMPLES
+    # kcvs2pack ~/baseline/kdeutils karm 1.2
+
+REQUIRED
+    Perl 5 is required. bzip2 is required for creation of .tar.bz2
+    files.
+
+AUTHORS
+    Sirtaj Singh Kang <taj@kde.org>, Jan 1999.
+

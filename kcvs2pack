@@ -1,0 +1,219 @@
+#!/usr/local/bin/perl
+
+require 5.000;
+
+use File::Copy qw( copy );
+use File::Path qw( mkpath );
+use File::Find qw( find );
+
+# kcvs2pack -- Sirtaj Singh Kang <taj@kde.org>, Dec 1998
+# For the K Desktop Environment.
+
+=head1 NAME
+
+kcvs2pack - Creates standalone dist tarballs for apps in KDE CVS.
+
+=head1 SYNOPSIS
+
+kcvs2pack <module dir> <packagedir> [<version>]
+
+=cut
+
+
+($myname = $0) =~ s#.*/##g;
+($basedir,$package) = @ARGV;
+$version = undef;
+$packagedir = "$package-$version";
+@fromfiles = ();
+
+@override	= ( "README", "INSTALL", "AUTHORS", "AUTHOR", "COPYING" );
+@remove		= ( "config.cache", "config.log", "config.status", "Makefile", 
+		"configure", "inst-apps" );
+$copydir	= "pack";
+
+# start
+
+if ( $#ARGV < 0 ) {
+	die <<EOF;
+
+$myname -- Creates standalone tar.gz packages for apps in KDE CVS modules.
+
+usage:
+	$myname <baseline dir> <packagedir>
+EOF
+
+}
+
+main();
+
+#end
+
+sub main
+{
+# Figure out version
+
+	if ( $#ARGV >= 2 ) {
+		$version = $ARGV[ 2 ]
+	}
+	else {
+		$version = getVersion();
+	}
+
+	if ( !defined $version ) {
+		$version = "0.0"
+	}
+
+	print "$myname: Version: $version\n";
+
+# dependent pathnames
+
+	$packagedir = "$package-$version";
+	$origdir = $basedir."/".$package;
+
+	mkpath ( $packagedir );
+	push @fromfiles, "\"$origdir\"";
+	
+# base dir stuff
+	push @fromfiles, basedirFiles();
+
+# admin files
+	push @fromfiles, "\"$basedir/admin\"";
+
+# override files
+	my $overp;
+	my $over;
+	
+	foreach $over ( @override ) {
+		$overp = $origdir."/".$over;
+		
+		if ( -f $overp ) {
+			print "$myname: Overriding $over\n";
+			push @fromfiles, '"'.$overp.'"' ;
+		}
+	}
+
+# pack
+	$packpath = $origdir."/".$copydir;
+	if ( -d $packpath ) {
+		push @fromfiles, $packpath."/*";
+	}
+
+# copy all queued files
+
+	my $src = join( " ", @fromfiles );
+	$src =~ s/\n/ /g;
+
+	print "$myname: No. files in copy queue: ", $#fromfiles + 1,"\n";
+	system "cp -a $src \"$packagedir\"";
+
+# files to remove
+
+	foreach $file ( @remove ) {
+		unlink $packagedir."/".$file;
+	}
+
+	open (RM, "find \"$packagedir\" -name .deps |" );
+
+	my @rem = ();
+	while ( <RM> ) {
+		chop;
+		print "$myname: removing $_\n";
+		push @rem, $_;
+	}
+
+	system "rm -rf \"".join ( "\" \"", @rem )."\""
+		unless $#rem < 0;
+	
+	close RM;
+
+# Run Makefile.cvs
+	print "$myname: Running Makefile.cvs...\n";
+	system "cd \"$packagedir\" && make -f Makefile.cvs".
+		" && cd .. && tar cf \"$packagedir\".tar \"$packagedir\""
+		|| die;
+
+# Create tar.gz file
+	print "$myname: tarring... ";
+	system "gzip -9 < \"$packagedir.tar\" > \"$packagedir.tar.gz\" ";
+
+	print "$packagedir.tar.gz\n$myname: bzipping... ";
+	system "bzip2 < \"$packagedir.tar\" > \"$packagedir.tar.bz2\" ";
+	print "$packagedir.tar.bz2\n"
+
+}
+
+sub basedirFiles
+{
+	my $files = `find '$basedir' -maxdepth 1 ! -type d`;
+	chop $files;
+
+	return '"'.join( '" "', split( /\n/, $files )).'"';
+}
+
+sub getVersion
+{
+	open ( CONFIN, $basedir."/configure.in" )
+		|| die "Can't read $basedir/configure.in\n";
+
+	while ( <CONFIN> ) {
+		if( /AM_INIT_AUTOMAKE\((.*?),(.*?)\)/ ) {
+			close( CONFIN );
+			my $v = $2;
+			$v =~ s/\s//g;
+			
+			return $v;
+		}
+	}
+
+	close( CONFIN );
+	return undef;
+}
+
+sub MakefileCVS
+{
+}
+
+
+=head1 DESCRIPTION
+
+The following steps are performed:
+
+=over 4
+
+=item	Create a dist package dir and following files are copied:
+
+=over 4
+
+=item	the packagedir
+
+=item	All non-dir files in the module dir
+
+=item	the F<admin> dir
+
+=back
+
+=item	F<README>, F<INSTALL> and F<AUTHORS> are copied from package
+	 	dir to the dist dir toplevel, if they exist.
+
+=item	All files in <module dir>/<packagedir>/F<pack> are copied
+		to the dist dir.
+
+=item Makefile.cvs is run.
+
+=item .tar.gz and .tar.bz2 archives are created for the directory.
+
+=back
+
+=head1 EXAMPLES
+
+# kcvs2pack ~/baseline/kdeutils karm 1.2
+
+=head1 REQUIRED
+
+Perl 5 is required. bzip2 is required for creation of .tar.bz2 files.
+
+=head1 AUTHORS
+
+Sirtaj Singh Kang <taj@kde.org>, Jan 1999.
+
+=cut
