@@ -14,7 +14,7 @@
 ;;
 ;; You should have received a copy of the GNU General Public License along
 ;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; Inc., 675 Mass Ave., Cambridge, MA 02111-1307, USA.
 
 
 ;; ------------------------------ INSTALLATION ------------------------------
