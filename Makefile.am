@@ -2,9 +2,9 @@
 bin_SCRIPTS = create_makefile create_makefiles cvs2pack cvschanged \
 	cvslastchange cvslastlog cvsversion cxxmetric extend_dmalloc \
 	gendebug kdedoc qtdoc kdelnk2desktop.py licensecheck adddebug \
-	pruneemptydirs noncvslist kde-build kdekillall
+	pruneemptydirs noncvslist kde-build kdekillall extractrc
 
-# not installed : extractrc fixheaders add_trace.pl kDebug2kdDebug
+# not installed : fixheaders add_trace.pl kDebug2kdDebug
 
 #doc: cvs2pack.1 cvs2pack.txt
 
