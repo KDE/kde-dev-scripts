@@ -1056,6 +1056,12 @@ With arg, to it arg times."
 ;; Indentation: 4 characters.
 (setq c-basic-offset 4)
 
+; Move in other window
+(defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; eheh :)
+(define-key global-map [(meta up)] 'scroll-other-up)
+(defun scroll-other-down () (interactive) (scroll-other-window 1))
+(define-key global-map [(meta down)] 'scroll-other-down)
+
 ;; Some example bindings, feel free to customize :)
 (define-key global-map [(f3)] 'fume-list-functions)
 (define-key global-map [(meta f3)] 'fume-prompt-function-goto)
@@ -1066,5 +1072,4 @@ With arg, to it arg times."
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
-(define-key global-map [(f9)] 'make) ; for VC++ people :)
 (define-key global-map [(control meta d)] 'insert-kdDebug)
