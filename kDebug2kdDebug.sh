@@ -27,7 +27,7 @@ while (<>)
 	#print "Reading line : " . $_ . "\n";
 	$statement .= $_;
     }
-    elsif ( /kdebug\s*\(/ || /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ )
+    elsif ( /kdebug\s*\(/ || /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ || /qWarning\s*/ )
     {
 	# Very old kdebug stuff :)
 	s/kdebug\s*\(\s*KDEBUG_INFO,/kDebugInfo\(/;
@@ -51,13 +51,14 @@ while (<>)
 	    ## 1 - Parse
 	    if (s/(^.*kDebug[a-zA-Z]*)\s*\(\s*//) {
 	      $line=$1; # has the indentation, //, and the kDebug* name
-            } elsif (s/(^.*qDebug)\s*\(\s*//) {
+            } elsif (s/(^.*qDebug)\s*\(\s*// || s/(^.*qWarning)\s*\(\s*//) {
               $line=$1;
-            } else { die "parse error on kDebug/qDebug..."; }
+            } else { die "parse error on kDebug/qDebug/qWarning..."; }
 	    $line=$1; # has the indentation, //, and the kDebug* name
 	    $line =~ s/kDebugInfo/kdDebug/;
 	    $line =~ s/kDebugArea/kdDebug/;
 	    $line =~ s/qDebug/kdDebug/;
+	    $line =~ s/qWarning/kdWarning/;
 	    $line =~ s/kDebugWarning/kdWarning/;
 	    $line =~ s/kDebugError/kdError/;
 	    $line =~ s/kDebugFatal/kdFatal/;
