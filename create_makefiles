@@ -4,8 +4,11 @@
 # Will re-create all Makefiles in dir and its subdirs
 # Needs create_makefile in the path.
 #
-# Stupid, but handy.
 # David Faure <faure@kde.org>
-#
-find $1 -type d | grep -v '\.libs' | grep -v '\.deps' | grep -v CVS | while read a; do create_makefile $a ; done
+
+srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+ 
+( cd $srcdir ; find $1 -name Makefile.am ) | \
+  sed -e 's/Makefile\.am/Makefile/' |
+  while read a; do create_makefile $a ; done
 
