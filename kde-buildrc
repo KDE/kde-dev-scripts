@@ -36,7 +36,7 @@ COMPRESSLOGS="no"
 # 'kdelibs' and 'kdebase' here since the kde-build script will care about them
 # automatically.
 #
-KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeaddons kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kde-i18n"
+KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kdeaddons kde-i18n"
 
 # If you only want to cvs update the listed modules, set it to yes
 # 
@@ -102,6 +102,9 @@ CVS_CLEAN="no"
 # Flags to be passed to the 'configure' script.
 #
 CONFIGUREFLAGS="--disable-debug"
+
+# You can define module-specific configure flags using
+# CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc.
 
 # set it to the path for unsermake if you want to test it instead of
 # automake

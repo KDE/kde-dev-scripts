@@ -455,9 +455,13 @@ for module in $modules; do
       #
       echo -n "  Configuring..."
       set_title "Configuring module $module..."
-      cmd_configure="$KDESRCDIR/$module/configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
-      test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
-      if test "x$KDELOGDIR" != x; then
+      configureflags=$CONFIGUREFLAGS;
+      varname="CONFIGUREFLAGS_`echo $module|tr a-z A-Z`"; # e.g. CONFIGUREFLAGS_ARTS etc.
+      varvalue=`eval echo '$'$varname`
+      test -n "$varvalue" && configureflags="$configureflags $varvalue"
+      cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      test "$NICECOMPILE" = yes && cmd_configure="nice $cmd_configure"
+      if test -n "$KDELOGDIR"; then
         logfile="$KDELOGDIR/$module-build-$dateformat"
         echo "-> Configuration <--------------------------------------------------------------" >> $logfile
         cmd_configure="$cmd_configure >> $logfile 2>&1"
