@@ -189,7 +189,8 @@ sub find_removable_includes ($)
       $cpplevel = $cpplevel - 1;
       next;
     }
-    if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<]([qk]\S*\.h)[\">]\S*/) {
+    #if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<]([qk]\S*\.h)[\">]\S*/) {
+    if ($cpplevel == 0 && (($_ =~ m/^\#include\s*\"(\S+\.h)\"\S*/) || ($_ =~ m/^\#include\s*\<([qk]\S+.h)\>\S*/)))  {
       push @includes, $1;
       next;
     }
@@ -227,6 +228,7 @@ sub remove_include ($$$)
   # note the logic is reversed because it operates
   # on reversed lines :)
   my $cpplevel = 0;
+  $cpplevel = -1 if ($srcfile=~m/^.*\.$hExt$/); # plan for header-protection #ifndef/#define/#endif
   foreach $line (@revcontents) {
     if ($line =~ m/^\#if/) {
       $cpplevel = $cpplevel - 1;
@@ -240,7 +242,8 @@ sub remove_include ($$$)
       next;
     }
 
-    if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*$/) {
+    #if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*$/) {
+    if ($cpplevel == 0 && (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       $level = $level - 1;
       # skipping the line..
       next;
@@ -277,6 +280,7 @@ sub replace_include ($$$)
   # note the logic is reversed because it operates
   # on reversed lines :)
   my $cpplevel = 0;
+  $cpplevel = -1 if ($srcfile=~m/^.*\.$hExt$/); # plan for header-protection #ifndef/#define/#endif
   foreach $line (@revcontents) {
     if ($line =~ m/^\#if/) {
       $cpplevel = $cpplevel - 1;
@@ -290,7 +294,8 @@ sub replace_include ($$$)
       next;
     }
 
-    if ($cpplevel == 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
+    #if ($cpplevel == 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
+    if ($cpplevel == 0 && (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       print "HAH! found $include to replace in $srcfile!\n" if($verbose);
       $line =~ s/(\#include\s*[\"<])$include([\">]\S*)/$1$destinclude$2/;
     }
@@ -448,7 +453,7 @@ sub fix_unnecessary($)
     # so that it's easy to add kdDebug calls
     next if( $include eq "kdebug.h");
     # avoid this one as it might cause
-    # certain code parts to be disabled from compilation	
+    # certain code parts to be disabled from compilation       
     next if( $include eq "qmodules.h");
     # check if it is its own header file
     my $blankhdr = $include;
