@@ -78,6 +78,11 @@ CVSCLIENT="cvs"
 #
 ACCOUNT=""
 
+#  For CVS users only: set this to "yes" in case you access cvs.kde.org via
+# SSH. Otherwise, set this to "no."
+#
+SSHACCOUNT="no"
+
 # In case you left the ACCOUNT value empty (and thus use anonymous CVS
 # access), you can specify an anoncvs mirror here. Check
 # http://developer.kde.org/source/anoncvs.html for a list of mirror servers.

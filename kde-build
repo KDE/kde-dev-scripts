@@ -404,7 +404,13 @@ if [ "$CVSCLIENT" = cvs ]; then
     if [ -z "$ACCOUNT" ]; then
       cmd_update="$cmd_update -d:$ANONCVSROOT"
     else
-      cmd_update="$cmd_update -d:pserver:$ACCOUNT@cvs.kde.org:/home/kde"
+      cmd_update="$cmd_update -d"
+      if [ "$SSHACCOUNT" = "yes" ]; then
+        cmd_update="$cmd_update $ACCOUNT@cvs.kde.org:/home/kde"
+        CVS_RSH="ssh"; export CVS_RSH
+      else
+        cmd_update="$cmd_update :pserver:$ACCOUNT@cvs.kde.org:/home/kde"
+      fi
     fi
   fi
   cmd_update="$cmd_update up"
