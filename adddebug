@@ -8,7 +8,7 @@ for i in $*; do
   case $i in
     -k) keep=1;;
     -r) mxdp=;;
-    *) echo "Usage: adddebug [-k] [-r]"; exit 1;;
+    *) echo -e "Usage: adddebug [-k] [-r]\n  -k: keep optimizations (removed by default)\n  -r: recursive (process all subdirectories)"; exit 1;;
   esac
 done
 
