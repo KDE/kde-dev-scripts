@@ -23,7 +23,13 @@
 ;*---------------------------------------------------------------------*/
 
 (defcustom kde-tab-behavior 'default
-  "Specifies the current tab behavior"
+  "Specifies the current tab behavior. default will expand try to complete
+the symbol at point if at the end of something that looks like an indentifier else
+it will indent the current line if the pointer is at the beginning of the line it will
+be moved the the start of the indention. abbrev-indent behaves like default, but the 
+cursor isn't moved to the beginning of the indention with tab is pressed when the cursor
+is at the beginning of the line. indent simply indents the line without trying to 
+complete the symbol"
   :group 'kde-devel
   :version "0.1"
   :type `(choice (const default) (const abbrev-indent) (const indent)))
@@ -118,7 +124,8 @@ With arg, do it arg times."
   ;;FIXME: 1) fume functions not available on GNU/Emacs
   ;;       2) insert-tab-mode no longer present (free variable)
   ;;       3) c-hangin-commment-under-p no longer present (free variable)
-			 (c-tab-always-indent . nil)
+			 (if (not (eq kde-tab-behavior 'indent))
+			     (c-tab-always-indent . nil))
 					; (insert-tab-mode nil)
 			 (indent-tabs-mode . nil)
 			 (if (eq kde-emacs-type 'xemacs)
