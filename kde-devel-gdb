@@ -81,6 +81,24 @@ document printqcolor
   Usage: 'printqcolor <QColor col>
 end
 
+define printqmemarray
+    # Maybe we could find it out the type by parsing "whatis $arg0"?
+    set $arr = $arg0
+    set $sz = sizeof($arg1)
+    set $len = $arr->shd->len / $sz
+    output $len
+    printf " items in the array\n"
+    set $i = 0
+    while $i < $len
+       # print "%s[%d] = %s\n", $arr, $i, *($arg1 *)(($arr->vec)[$i])
+       print *($arg1 *)(($arr->shd->data) + ($i * $sz))
+       set $i++
+    end
+end
+document printqmemarray
+  Prints the contents of a QMemArray. Pass the type as second argument.
+end
+
 define printqptrvector
     # Maybe we could find it out the type by parsing "whatis $arg0"?
     set $arr = $arg0
