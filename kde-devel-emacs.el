@@ -1105,84 +1105,99 @@ With arg, to it arg times."
 
 ; Makes '(' insert '( ' or ' ( ' where appropiate
 (defun insert-parens (arg) (interactive "*P")
-  (let ((n nil))
-    (save-excursion
-      (setq n (or (progn (forward-char -2) (looking-at "if"))
-                  (progn (forward-char -1) (looking-at "for"))
-                  (progn (forward-char -1) (looking-at "case"))
-                  (progn (forward-char -1) (looking-at "while"))
-                  )
-            )
-      )
-    (cond
-     (n (progn
-          (insert " ")
+  (if (not (c-in-literal))
+      (let ((n nil))
+        (save-excursion
+          (setq n (or (progn (forward-char -2) (looking-at "if"))
+                      (progn (forward-char -1) (looking-at "for"))
+                      (progn (forward-char -1) (looking-at "case"))
+                      (progn (forward-char -1) (looking-at "while"))
+                      )
+                )
+          )
+        (cond
+         (n (progn
+              (insert " ")
+              (self-insert-command (prefix-numeric-value arg))
+              (insert " ")
+              ))
+         (t ;else
           (self-insert-command (prefix-numeric-value arg))
           (insert " ")
-          ))
-     (t ;else
-      (self-insert-command (prefix-numeric-value arg))
-      (insert " ") ))))
+          )))
+    (self-insert-command (prefix-numeric-value arg)))
+  )
 
-; Makes ')' insert ' )', unless we just typed '('
 (defun insert-parens2 (arg) (interactive "*P")
-  (let ((remv nil) (nospac nil))
-    (forward-char -2) 
-    (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
-    (forward-char 1) 
-    (setq nospac (or (looking-at " ") (looking-at "(")) ) ; no space to be added
-    (forward-char 1) 
-    (cond
-     (remv (progn
-	     (delete-backward-char 1)
-	     (self-insert-command (prefix-numeric-value arg)))) ; the () case
-     (nospac (self-insert-command (prefix-numeric-value arg))) ; no space to be added
-     (t ;else
-      (if abbrev-mode ; XEmacs
-          (expand-abbrev))
-      (insert " ") 
-      (self-insert-command (prefix-numeric-value arg))
-      ))) ; normal case, prepend a space
-  ;(blink-matching-open) ; show the matching parens
+  (if (not (c-in-literal))
+      (let ((remv nil) (nospac nil))
+        (forward-char -2)
+        (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
+        (forward-char 1)
+        (setq nospac (or (looking-at " ") (looking-at "(")) ) ; no space to be added
+        (forward-char 1)
+        (cond
+         (remv (progn
+                 (delete-backward-char 1)
+                 (self-insert-command (prefix-numeric-value arg)))) ; the () case
+         (nospac (self-insert-command (prefix-numeric-value arg))) ; no space to be added
+         (t ;else
+          (if abbrev-mode ; XEmacs
+              (expand-abbrev))
+          (insert " ")
+          (self-insert-command (prefix-numeric-value arg))
+          ))) ; normal case, prepend a space
+    ;;(blink-matching-open) ; show the matching parens
+    (self-insert-command (prefix-numeric-value arg)))
   )
 
 ; Makes ',' insert ', '
 (defun insert-comma (arg)
   (interactive "*P")
-  (if 
-   (or (looking-at " ") 
-       arg)
-      (progn 
-        (self-insert-command (prefix-numeric-value arg)))
-    (progn 
-      (self-insert-command 1)
-      (insert " "))))
+  (let* ((ch (char-after))
+         (spacep (not (or (eq ch ? )
+                          (c-in-literal)
+                          arg))))
+    (self-insert-command (prefix-numeric-value arg))
+    (if spacep
+        (insert " "))))
 
-(defun insert-curly-brace (arg) (interactive "*P") 
-  (let ((n nil) (o nil))
-    (save-excursion
-      (forward-char -2) 
-      (setq n (looking-at " )"))
-      (setq o (looking-at "()"))
+(defun insert-curly-brace (arg) (interactive "*P")
+  (if (not (c-in-literal))
+      (let ((n nil) (o nil))
+        (save-excursion
+          (forward-char -2)
+          (setq n (looking-at " )"))
+          (setq o (looking-at "()"))
+          )
+        (cond
+         (n (progn
+              (insert " ")
+              (self-insert-command (prefix-numeric-value arg))
+              (newline-and-indent)
+             (save-excursion
+              (insert "\n}")
+              (c-indent-line)
+              )))
+         (o (progn
+              (newline)
+              (self-insert-command (prefix-numeric-value arg))
+              (newline-and-indent)))
+         (t (progn ;else
+              (self-insert-command (prefix-numeric-value arg))
+              (save-excursion
+                (beginning-of-line)
+                (c-indent-command))))
+         ))
+    (self-insert-command (prefix-numeric-value arg))
     )
-    (cond
-     (n (progn
-	  (insert " ")
-          (self-insert-command (prefix-numeric-value arg))
-          (newline-and-indent)))
-     (o (progn
-          (newline)
-          (self-insert-command (prefix-numeric-value arg))
-          (newline-and-indent)))
-     (t (progn ;else
-          (self-insert-command (prefix-numeric-value arg))
-          (save-excursion
-            (beginning-of-line)
-            (c-indent-command))))
-    )
-  )
-;;  (c-electric-brace nil)
 )
+
+;; have PelDel mode work
+(put 'insert-parens 'pending-delete t)
+(put 'insert-parens2 'pending-delete t)
+(put 'insert-comma 'pending-delete t)
+(put 'insert-curly-brace 'pending-delete t)
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
 (defun scroll-me-up () (interactive) (scroll-up 3))
