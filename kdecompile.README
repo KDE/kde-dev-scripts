@@ -1,6 +1,6 @@
 
   kdecompile is a python script which 
-  
+
   -checks out a kde package from CVS
   -configures and compiles it
   -pops up a dialog box, asking if it needs to be installed
@@ -8,7 +8,7 @@
   
   kdecompile is a work in progress and currently makes a number of
 assumptions about your build system. Future versions will be more 
-configurable. 
+configurable.
   
 
 * It assumes Linux or a similarly behaved system. 
@@ -37,7 +37,7 @@ configurable.
 * It assumes that you have a CVS account or you are using anonymous CVS.
 You should set the CVSROOT variable to the right account, or
 
-* For the install functionality, you need to run kdecompile with the 
+* For the install functionality, you need to run kdecompile with the
 corresponding rights - for example:  sudo kdecompile
 
 * There are various options, which can be found out by typing
@@ -54,5 +54,9 @@ Syntax: kdecompile [options] [packagename]
         --remove-admin-dir      Remove the admin dir before cvs checkout
         --no-cvs-checkout       Do not do cvs checkout
         --no-configure          Do not run configure
-        --disable-compile       Do not compile   
+        --disable-compile       Do not compile
 
+Changes:
+0.3.11
+   - optimization is default
+   -allows you to run it from the cvs dir

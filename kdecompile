@@ -5,7 +5,7 @@
 # Python script for compiling and installing
 # a KDE package.
 #
-# written by Lotzi Boloni, 2000
+# written by Lotzi Boloni, 2000, 2001
 #
 # ************************************************
 
@@ -20,8 +20,11 @@ import pickle
 class Config:
     # these will be saved in the config file
 
+    configfile = "~/.kdecompile"
+
     verbose = 1
-    noOptimizations = 1
+    noOptimizations = 0
+    useEnableFinal = 0
     installWithoutAsking = 0
     noDebug = 0
     removeAdminDir = 0
@@ -31,6 +34,13 @@ class Config:
     installDir = "/opt/kde"
     cvsRoot = os.environ['CVSROOT']
     xmessage = "kmessage"
+    kdepackages=["kdesupport", "kdelibs", "kdebase", "kdeutils",
+                 "kdenetwork","kdemultimedia", "kdegraphics",
+                 "kdepim", "kdeadmin", "kdebindings",
+                 "kdetoys", "kdegames", "koffice",
+                 "kdevelop", "kdesdk",
+                 "quanta"
+                ]
 
     # these wont
     packagename = ""
@@ -49,13 +59,14 @@ class Config:
 
     def load(self):
 	try:
-	    filetoload = open(".kdecompile")
+	    filetoload = open(self.configfile)
 	    configs = pickle.load(filetoload)
-	    print configs
+	    # print configs
 	except:
-	    print "Could not load config from .kdecompile"
+	    print "Could not load config from "+self.configfile
 	try:
 	    self.noOptimizations = configs["noOptimizations"]
+            self.useEnableFinal = configs["useEnableFinal"]
 	    self.installWithoutAsking = configs["installWithoutAsking"]
 	    self.noDebug = configs["noDebug"]
 	    self.removeAdminDir = configs["removeAdminDir"]
@@ -71,6 +82,7 @@ class Config:
     def save(self):
 	configs = {}
 	configs["noOptimizations"] = self.noOptimizations
+        configs["useEnableFinal"] = self.useEnableFinal
 	configs["installWithoutAsking"] = self.installWithoutAsking
 	configs["noDebug"] = self.noDebug
 	configs["removeAdminDir"] = self.removeAdminDir
@@ -79,13 +91,13 @@ class Config:
 	configs["installDir"] = self.installDir
 	configs["cvsRoot"] = self.cvsRoot
 
-	try: 
-            filetosave = open(".kdecompile","w")
+	try:
+            filetosave = open(self.configfile ,"w")
 	    pickle.dump(configs, filetosave)
 	except:
 	    print "Could not save!"
 	    pass
-	    
+
 	print "Here comes the config"
 	# sys.stdout.writeLines(configlist)
 
@@ -109,6 +121,14 @@ class Config:
 	    if x == "-d":
 		print "Will compile without debug info"
 		self.noDebug = 1
+                continue
+	    if x == "--enable-final":
+		print "\t-compile with enable final"
+		self.useEnableFinal = 1
+                continue
+	    if x == "--disable-final":
+		print "\t-compile without enable final"
+		self.useEnableFinal = 1
                 continue
 	    if x == "-o":		
 		print "Optimizations enabled"
@@ -139,12 +159,13 @@ class Config:
 	  print "\t--install\t\tInstall without asking"
 	  print "\t-d\t\t\tDisable debug info"
 	  print "\t-o\t\t\tEnable optimization"
+	  print "\t-f\t\t\tCompile with --enable-final "
 	  print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
 	  print "\t--no-cvs-checkout\tDo not do cvs checkout"
 	  print "\t--no-configure\t\tDo not run configure"    
 	  print "\t--disable-compile\tDo not compile"
           print ""
-		
+
 ## end of configuration class 
 
 
@@ -202,7 +223,10 @@ def runConfigure(compiledir, packagename, kdedir="/opt/kde"):
     os.chdir(compiledir)
     commandline = "../../"+packagename+"/configure --prefix="+kdedir
     if config.noDebug:
-	commandline = commandline + " --disable-debug"    
+	commandline = commandline + " --disable-debug"
+    if config.useEnableFinal:
+	commandline = commandline + " --enable-final"
+
     value = os.system(commandline)
     if (value != 0):
         print "Configuration was not successful. Aborting"
@@ -247,6 +271,7 @@ def runCompile(compiledir):
     if (config.verbose):
         print "Compilation went fine."
     os.chdir(currdir)
+    return value
 
 #
 #  Compiling the package in a separate thread
@@ -266,7 +291,7 @@ def runCompileThread(compiledir):
             print "There was a compilation error."
             if (config.verbose):
                 print "Compilation went fine."
-                os.chdir(currdir)
+                os.chdir(currdir)		
         sys.exit(0)
     else:
         pid2 = os.fork()
@@ -340,7 +365,7 @@ def countDirs(cvsdir):
         compileDirsPre.append(temp[:-1])
     os.chdir(currdir)
     
-  
+
 #
 #  Installing the package
 #
@@ -358,19 +383,19 @@ def runInstall(compiledir):
 
 
 #
-#   Version 
+#   Version
 #
 def version():
-    return "kdecompile v.0.3.9 as of December 29, 2000"
+    return "kdecompile v.0.3.12 as of April 15, 2001"
 
 #
-#
+#  Wrapper arount the creation of a directory
 #
 def createDir(dir):
     try:
         os.mkdir(dir)
     except:
-        pass    
+        pass
 
 
 #
@@ -394,10 +419,32 @@ def doAll(packagename, currdir, cvsdir):
 
 
 #
+#   Function for putting up a choice
+#
+def visualMessage(text):
+   programs = ("kmessage", "xmessage")
+   # xmess = config.xmessage
+   execline = "kmessage"
+   for execline in programs:
+      messageline = execline + " "+text
+      print messageline
+      choice = os.system(messageline)
+      if (choice != 32512): # seems this is what the shell says
+         return choice
+   print "\n\n"+text+"\n\n";
+   #    system.beep()
+   return 32512
+
+
+#
 # And here comes the main function
 #
+
+#visualMessage("Hello")
+# system.exit(0)
+
 print version()
-config=Config()    
+config=Config()
 # config.interactive()
 compileddirs = []
 compileDirsPre = []
@@ -411,14 +458,34 @@ if config.packagename=="":
     # guess the packagename from the current dir
     currdir = os.getcwd()
     direlems = re.split("/", currdir)
-    if (direlems[-2] != "compile") :
-	print "You are not in the compile directory!"
-	sys.exit(2)
-    newdir = direlems[1:-2] #+ direlems[-2:]
-    cvsdir = ""
-    packagename = direlems[-1]
-    for x in newdir:
-	cvsdir = cvsdir + "/"+x
+    if (direlems[-2] != "compile"):
+        print "You are not in the compile directory!"
+        # let's attempt to move there:
+        # FIXME: what if I am not in the source dir either?
+        packagename = direlems[-1]
+
+        try:
+            config.kdepackages.index(packagename)
+        except:
+            visualMessage("You are neither in the compile, neither in the source directory!")
+            sys.exit(1)
+        temp = ""
+        for x in direlems[1:-1]:
+                temp = temp + "/"+x
+        cvsdir = temp
+        currdir = temp + "/compile/" + packagename
+        print "currdir="+currdir + " cvsdir " + cvsdir
+        try:
+                os.chdir(currdir)
+        except:
+                createDir(currdir)
+                os.chdir(currdir) # this time it must succeed
+    else:
+        newdir = direlems[1:-2] #+ direlems[-2:]
+        cvsdir = ""
+        packagename = direlems[-1]
+        for x in newdir:
+                cvsdir = cvsdir + "/"+x
 else:
     packagename = config.packagename;
     currdir = os.getcwd()+"/"+packagename
@@ -430,7 +497,7 @@ else:
     cvsdir = ""
     packagename = direlems[-1]
     for x in newdir:
-	cvsdir = cvsdir + "/"+x    
+	cvsdir = cvsdir + "/"+x
 
 
 
@@ -441,8 +508,6 @@ print "\n"
 
 doAll(packagename, currdir, cvsdir)
 
-xmessline = config.xmessage + "-buttons ThatsAll:0,Install:1 "
-xmessline = xmessline + "\"Compilation of " + packagename + " terminated\""
 
 logfile = open("../compile_log", "a+")
 currenttime = time.strftime("%B %d, %Y %H:%M", time.localtime(time.time()))
@@ -452,11 +517,8 @@ logfile.close();
 if (config.installWithoutAsking):
     runInstall(currdir)
 else:
-    choice = os.system(xmessline)
-#    print choice
-    if (choice == 256):
-        print "Ok, here will come the installation"
-        runInstall(currdir)
+     xmessline = "\"Compilation of " + packagename + " terminated\""
+     choice = visualChoice(xmessline)
 print "That's it for now."
 
 
