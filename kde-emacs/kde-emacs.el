@@ -54,6 +54,7 @@
 (require 'kde-emacs-general)
 (require 'klaralv)
 (require 'kde-emacs-utils)
+(require 'dirvars)
 
 ;; load this only if semantic package is present
 (when (featurep 'semantic)
