@@ -198,7 +198,7 @@ This function does not do any hidden buffer changes."
         (namespace "")
         (class "")
         (function "")
-	(save)
+        found
 	)
     (if (or (string-match "\\.cc$" n)
             (string-match "\\.cpp$" n)
@@ -225,17 +225,35 @@ This function does not do any hidden buffer changes."
 	  (let ((mup (method-under-point))
 		(sig "")
 		(pos 0))
-            ;(setq namespace (car mup))
+        (setq namespace (car mup))
 	    (setq class (car (cdr mup)))
 	    (setq function (cdr (cdr mup)))
 	    (kde-switch-cpp-h)
+
+        ;; First search with namespace prefixed
 	    (goto-char 0)
-	    (setq sig (kde-function-impl-sig namespace class function))
+	    (setq sig (agulbra-remove-newline (kde-function-impl-sig namespace class function)))
 	    (if (string-match "(.*" sig) ; remove args
-		(setq sig (replace-match "" nil t sig)))
-	    (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t)
-	    ))
-)))
+            (setq sig (replace-match "" nil t sig)))
+	    (setq found (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) )
+
+        (if (not found)
+            (progn
+              ; Now search without name space prefix
+
+              (goto-char 0)
+              (setq sig (agulbra-remove-newline (kde-function-impl-sig "" class function)))
+              
+              (if (string-match "(.*" sig) ; remove args
+                  (setq sig (replace-match "" nil t sig)))
+              (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) ) )
+	    )))))
+
+(defun agulbra-remove-newline (str) 
+  (let ((res str))
+    (while (string-match "\n" res )
+    (setq res (replace-match " " nil t res)))
+  res))
 
 ; Initial implementation by Arnt Gulbransen
 ; Current maintainer: David Faure
