@@ -1,0 +1,12 @@
+# This file defines handy gdb macros
+# To use it, add this line to your ~/.gdbinit :
+# source /path/to/kde/sources/kdesdk/scripts/kde-devel-gdb
+
+# Prints the contents of a QString
+define printqstring
+       set $i=0
+       while $i < $arg0.d->len
+         p $arg0.d->unicode[$i++].cl
+       end
+end
+
