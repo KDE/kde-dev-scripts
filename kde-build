@@ -97,9 +97,8 @@ dateformat="`date +%Y%m%d`"
 # xterm, etc.. Thanks have to go to Malte Starostik
 # <malte@kde.org> for the code :-)
 set_title() {
-  [ "`uname`" = "FreeBSD" ] && return
   if ([ "$TERM" = "xterm" ] || [ "$TERM" = "xterm-color" ] || [ "$TERM" = "screen" ]) && tty -s; then
-    echo -ne "\033]0;$1\007"
+    printf "\033]0;$1\007"
   fi
 }
 
