@@ -553,6 +553,7 @@ my %fix = (
 	 "infomation" => "information",
 	 "informatation" => "information",
 	 "informationon" => "information",
+	 "informations" => "information",
 	 "informaion" => "information",
 	 "insde" => "inside",
 	 "inital" => "initial",
