@@ -9,7 +9,7 @@ set print static-members off
 define printqstring
        set $i=0
        while $i < ($arg0).d->len
-         p ($arg0).d->unicode[$i++].cl
+         p (char)(($arg0).d->unicode[$i++].ucs & 0xff)
        end
 end
 
