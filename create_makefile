@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Create Makefile.in and Makefile in a directory (containing a Makefile.am !)
 # Saves time compared to re-running configure completely
