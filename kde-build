@@ -177,7 +177,7 @@ doconfigure=1
 dousage=0
 specifiedModules=""
 
-if test "$INCREMENTAL_BUILD" != "no"; then
+if test "$INCREMENTAL_BUILD" = "yes"; then
   domakefilecvs=0
   doconfigure=0
 fi

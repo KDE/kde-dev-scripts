@@ -113,7 +113,7 @@ EXCLUDE=""
 CVS_CLEAN="no"
 
 # Rely on the dependencies for Makefiles and configure?
-# If you trust the build system, set it to yes ;-)
+# If you dare to trust the build system, set it to "yes" ;-)
 #
 INCREMENTAL_BUILD="no"
 
