@@ -139,6 +139,8 @@ sub processEntries
           next if ($e eq ".memdump");
           next if ($e eq "autom4te.cache");
           next if ($e eq "autom4te.cache");
+	  next if ($e eq "Makefile.rules");
+	  next if ($e eq "Makefile.calls");
 	  next if ($e eq "Makefile.rules.in");
 	  next if ($e eq "Makefile.calls.in");
           next if ($e =~ /^.*\.moc$/);
@@ -154,7 +156,6 @@ sub processEntries
           next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
           next if ($e =~ /^.+\.kidl$/);
           next if ($e =~ /^.+_skel\.[^\.]+$/);
-	  next if ($e eq "Makefile.rules.in");
 
           $dirunknown{$e} = 1;
         }
