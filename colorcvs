@@ -110,7 +110,7 @@ sub loadPreferences
 # Main program
 #
 
-# Set up default values for colors and compilers.
+# Set up default values for colors and cvs path.
 initDefaults();
 
 # Read the configuration file, if there is one.
@@ -140,13 +140,13 @@ if (! -t STDOUT || $commit == 1 || $nocolor{$terminal})
 		or die("Couldn't exec");
 }
 
-# Keep the pid of the compiler process so we can get its return
+# Keep the pid of the cvs process so we can get its return
 # code and use that as our return code.
 $cvs_pid = open3('<&STDIN', \*CVSOUT, \*CVSOUT, $cvsPath, @ARGV);
 $cvsName = $cvsPath;
 $cvsName =~ s,.*/(.*)$,\1,;
 
-# Colorize the output from the compiler.
+# Colorize the output from the cvs program.
 while(<CVSOUT>)
 {
 	chomp;
@@ -170,6 +170,6 @@ while(<CVSOUT>)
 	print "\n";
 }
 
-# Get the return code of the compiler and exit with that.
-waitpid($compiler_pid, 0);
+# Get the return code of the cvs program and exit with that.
+waitpid($cvs_pid, 0);
 exit ($? >> 8);
