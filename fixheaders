@@ -39,6 +39,7 @@ $lastdir = '.';
  'invalid use of undefined type `class KAboutData' => "kaboutdata",
  'incomplete type `KAboutData\'' => "kaboutdata",
  'incomplete type `QGrid\'' => "qgrid",
+ 'invalid use of undefined type `class QGrid\'' => "qgrid",
  'aggregate `class KConfig \S*\' has incomplete type' => "kconfig",
  '`stderr\' undeclared \(first use this function' => "stdio",
  'invalid use of undefined type `class KConfig' => "kconfig",
