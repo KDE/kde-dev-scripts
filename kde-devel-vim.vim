@@ -126,12 +126,16 @@ function! SwitchHeaderImpl()
     endif
     while strlen( list ) > 0
         let file = substitute( list, "\n.*", '', '' )
-        let list = substitute( list, ".*\n", '', '' )
+        let list = substitute( list, "[^\n]*", '', '' )
+        let list = substitute( list, "^\n", '', '' )
         if ( fn =~ headers && file =~ impl ) || ( fn =~ impl && file =~ headers )
             execute( "edit " . file )
             return
         endif
     endwhile
+    " The error message should be flagged as such (red or something), but I don't know
+    " how to do this. luis pedro
+    echo "File switch failed!"
 endfunction
 
 function! IncludeGuard()
