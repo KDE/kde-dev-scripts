@@ -538,6 +538,7 @@ for module in $modules; do
 
   # Nothing to do for kde-common
   test "x$module" = "xkde-common" && continue
+  logfile="$KDELOGDIR/$module-build-$dateformat.log"
 
   critical=0
   for m in $critical_modules; do if test $m = $module; then critical=1; fi; done
