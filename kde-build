@@ -134,25 +134,18 @@ log_endsection() {
   [ -z "$logfile" ] && return 0
   compute_time
   echo "----------------------------------------------------------------------------" >> $logfile 2>&1
-  echo "$1 for module $module done. Time needed: $hours:$minutes:$seconds" >> $logfile 2>&1
+  printf "%s for module %s done. Time needed: %02d:%02d:%02d\n" $1 $module $hours $minutes $seconds >> $logfile 2>&1
   echo "" >> $logfile 2>&1
 }
 
 # This function computes the time which was needed for a certain task, using
-# bc (instead of shell-specific features) for portability. If bc is not
-# available, bogus values are returned in $hours, $minutes and $seconds.
+# expr (instead of shell-specific features) for portability.
 #
 compute_time() {
-  if which bc > /dev/null 2>&1; then
-    duration=`echo \`date +%s\` - $starttime | bc`
-    hours=`echo $duration / 3600 | bc | sed -e "s/^[0-9]\$/0&/"`
-    minutes=`echo $duration % 3600 | bc | sed -e "s/^[0-9]\$/0&/"`
-    seconds=`echo $duration % 60 | bc | sed -e "s/^[0-9]\$/0&/"`
-  else
-    hours="??"
-    minutes="??"
-    seconds="??"
-  fi
+  duration=`expr \`date +%s\` - $starttime`
+  hours=`expr $duration / 3600`
+  minutes=`expr $duration % 3600 / 60`
+  seconds=`expr $duration % 60`
 }
 
 # This function installs a compiled CVS module.
