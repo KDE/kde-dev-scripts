@@ -18,18 +18,26 @@ else
     exit
   fi
 
+  # Find out srcdir
   srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+
+  # Handle arg with missing "/Makefile"
+  relpath=$1
+  if ! ( echo $relpath | grep -q 'Makefile$' ) ; then 
+    relpath="$relpath/Makefile"
+  fi
+
   (  
     if cd $srcdir ; then 
-     automake $* || exit
-     if test -f admin/am_edit; then perl admin/am_edit $*.in ;\
+     automake $relpath || exit
+     if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
      else 
-       if test -f admin/automoc; then perl admin/automoc $*.in ; \
+       if test -f admin/automoc; then perl admin/automoc $relpath.in ; \
        else
-         if test -f automoc; then perl automoc -v $*.in; fi
+         if test -f automoc; then perl automoc -v $relpath.in; fi
        fi
      fi
     fi
   )
-  CONFIG_FILES=$* CONFIG_HEADERS= ./config.status
+  CONFIG_FILES=$relpath CONFIG_HEADERS= ./config.status
 fi
