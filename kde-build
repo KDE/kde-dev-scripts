@@ -74,6 +74,14 @@ err_no_temp_supfile="10"
 #
 err_no_config="11"
 
+# You can't mix CVS_CLEAN and INCREMENTAL_BUILD
+#
+err_cvsclean_incremental="12"
+
+# You can't mix BUILD_CLEAN and INCREMENTAL_BUILD
+#
+err_buildclean_incremental="13"
+
 # Certain modules depend on others - those "base" modules which are required
 # by others to compile and/or run should be listed here to ensure that the
 # script is aborted in case on of these modules doesn't build.
@@ -194,18 +202,22 @@ if test ! -e ./kde-buildrc; then
     echo "ERROR: Cannot load configuration file ./kde-buildrc!"; exit $err_no_config
   fi
 fi
+
+INCREMENTAL_BUILD="no"
+
 . ./kde-buildrc
 
+if test "${INCREMENTAL_BUILD}" = "yes" -a "${CVS_CLEAN}" = "yes" ; then
+    echo "ERROR: Cannot use CVS_CLEAN=\"yes\" and INCREMENTAL_BUILD=\"yes\" together!"; exit $err_cvsclean_incremental
+fi
+
+if test "${INCREMENTAL_BUILD}" = "yes" -a "${BUILD_CLEAN}" = "yes" ; then
+    echo "ERROR: Cannot use BUILD_CLEAN=\"yes\" and INCREMENTAL_BUILD=\"yes\" together!"; exit $err_buildclean_incremental
+fi
+
 docvsupdate=1
-domakefilecvs=1
-doconfigure=1
 dousage=0
 specifiedModules=""
-
-if test "$INCREMENTAL_BUILD" = "yes"; then
-  domakefilecvs=0
-  doconfigure=0
-fi
 
 # Parse args
 #
@@ -223,11 +235,11 @@ do
     --no-update)
         docvsupdate=0 ;;
     --incremental)
-        domakefilecvs=0
-        doconfigure=0 ;;
+        INCREMENTAL_BUILD="yes"
+        ;;
     --full)
-        domakefilecvs=1
-        doconfigure=1 ;;
+        INCREMENTAL_BUILD="no"
+        ;;
     -*)
         echo "Unhandled option $arg"
         dousage=1
@@ -241,10 +253,11 @@ done
 # Show help info
 if test "$dousage" -eq 1; then
   echo "usage: $0 [--options] [modules]"
-  echo "--no-update    do not update from cvs"
-  echo "--incremental  start make right after update - risky"
-  echo "--full         do full setup even when INCREMENTAL_BUILD is set"
-  echo "--help         this message"
+  echo "--no-update    Do not update from cvs."
+  echo "--incremental  Start make right after update - risky. This also"
+  echo "               disables the BUILD_CLEAN and CVS_CLEAN options."
+  echo "--full         Do full setup even when INCREMENTAL_BUILD is set."
+  echo "--help         Show this message."
   exit $err_no_error
 fi
 
@@ -494,7 +507,7 @@ for module in $modules; do
     check_admin
   fi
 
-  if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
+  if test "${CVS_CLEAN}" = "yes" -a -e admin/Makefile.common -a "${INCREMENTAL_BUILD}" != "yes" ; then
     cmd_make_cvs_clean="$MAKE -f admin/Makefile.common cvs-clean"
   fi
 
@@ -519,7 +532,7 @@ for module in $modules; do
      fi
   fi
 
-  if test $domakefilecvs -eq 0 -a -e "Makefile.in"; then
+  if test "${INCREMENTAL_BUILD}" = "yes" -a -e "Makefile.in" ; then
     cmd_make_makefile_cvs="echo Warning: no Makefile.cvs for module $module - as requested"
   fi
 
@@ -571,7 +584,7 @@ for module in $modules; do
 
   if test -n "$KDEBUILDDIR"; then
 
-    if test "x$BUILD_CLEAN" = "xyes"; then
+    if test "${BUILD_CLEAN}" = "yes" -a "${INCREMENTAL_BUILD}" != "yes" ; then
       if test -d $KDEBUILDDIR/$module; then
         echo -n "  Removing build dir..."
         set_title "Removing build dir for module $module..."
@@ -598,9 +611,9 @@ for module in $modules; do
   fi
   test "$NICECOMPILE" = yes && cmd_configure="nice $cmd_configure"
   configure_okay="$str_okay"
-  if test $doconfigure -eq 0 -a -e "Makefile"; then
+  if test "${INCREMENTAL_BUILD}" = "yes" -a -e "Makefile" ; then
     cmd_configure="echo Warning: no configure for module $module - as requested"
-    configure_okay="skipped." # see below if you change hte string here
+    configure_okay="skipped." # see below if you change the string here
   fi
   log_section "Configuration"
   if test -n "$KDELOGDIR"; then
