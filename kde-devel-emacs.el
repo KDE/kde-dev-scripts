@@ -9,7 +9,10 @@
 
 ; Tip: also add (gnuserv-start), to be able to use gnuclient to open new files from a shell
 
-; See the end of this file for customizing key bindings
+; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
+; to enable the magic keys in C++ mode (auto-insertion of spaces and newlines).
+
+; See the end of this file for the list of key bindings and for customizing them
 
 ; This file is maintained by David Faure <faure@kde.org>
 
@@ -1159,6 +1162,10 @@ With arg, to it arg times."
 (setq-default require-final-newline t)
 (setq-default next-line-add-newlines nil)
 
+;; pc-like textmarking
+(load "pc-select")
+(pc-select-mode)
+
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
 (define-key global-map [(meta up)] 'scroll-other-up)
@@ -1166,10 +1173,11 @@ With arg, to it arg times."
 (define-key global-map [(meta down)] 'scroll-other-down)
 
 ;; Some example bindings, feel free to customize :)
+(define-key global-map [(f2)] 'grep)
 (define-key global-map [(f3)] 'fume-list-functions)
-(define-key global-map [(meta f3)] 'fume-prompt-function-goto)
+(define-key global-map [(shift f3)] 'fume-prompt-function-goto)
 (define-key global-map '(shift button3) 'mouse-function-menu)
-(define-key global-map [(meta f4)] 'makeclean)
+(define-key global-map [(shift f4)] 'makeclean)
 (define-key global-map [(f4)] 'make)
 (define-key global-map [(f5)] 'makeinstall)
 (define-key global-map [(shift f5)] 'makeinstallexec)
@@ -1179,10 +1187,21 @@ With arg, to it arg times."
 ;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(control meta d)] 'insert-kdDebug)
 
-; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
-; to enable the magic keys in C++ mode (auto-insertion of spaces and newlines).
-
-;; pc-like textmarking
-(load "pc-select")
-(pc-select-mode)
-
+; The above list defines the following bindings:
+;
+; F2 : offer a grep command
+;
+; F3/Shift-F3/F8/Shift-RMB : different ways to see the list of methods in the current buffer
+;
+; F4 : make
+; Shift-F4 : make clean
+; F5 : make install
+; Shift-F5 : make install-exec
+;
+; F6 : Switch from .cpp/.cc to .h and vice-versa
+; F7 : The same, but try to find the current method in the other file
+; F9 (if enabled) : Create a member method in the .cpp, the cursor being on the definition in the .h
+;
+; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
+;
+; Meta Up/Down : scroll the other window (when window is split)
