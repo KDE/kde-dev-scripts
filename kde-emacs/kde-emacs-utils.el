@@ -232,7 +232,7 @@ This function does not do any hidden buffer changes."
 
         ;; First search with namespace prefixed
 	    (goto-char 0)
-	    (setq sig (agulbra-remove-newline (kde-function-impl-sig namespace class function)))
+	    (setq sig (kde-remove-newline (kde-function-impl-sig namespace class function)))
 	    (if (string-match "(.*" sig) ; remove args
             (setq sig (replace-match "" nil t sig)))
 	    (setq found (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) )
@@ -242,14 +242,14 @@ This function does not do any hidden buffer changes."
               ; Now search without name space prefix
 
               (goto-char 0)
-              (setq sig (agulbra-remove-newline (kde-function-impl-sig "" class function)))
+              (setq sig (kde-remove-newline (kde-function-impl-sig "" class function)))
               
               (if (string-match "(.*" sig) ; remove args
                   (setq sig (replace-match "" nil t sig)))
               (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) ) )
 	    )))))
 
-(defun agulbra-remove-newline (str) 
+(defun kde-remove-newline (str) 
   (let ((res str))
     (while (string-match "\n" res )
     (setq res (replace-match " " nil t res)))
