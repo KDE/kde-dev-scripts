@@ -28,6 +28,16 @@
 ;*    Functions  ...                                                   */
 ;*---------------------------------------------------------------------*/
 
+;; Helper for kde-file-get-cpp-h
+(defun kde-find-file (filename basedir)
+  "Looks for \"filename\" under \"basedir\""
+  (if basedir
+      (let ((path (concat basedir "/" filename)))
+	(if (file-readable-p path)
+	    path))
+    )
+)
+
 (defun kde-file-get-cpp-h ()
   "Function returns a corresponding source or header file. The returned
 variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
@@ -37,21 +47,40 @@ return (\"test.cpp\" t)."
   (let* ((name (buffer-file-name))
 	 (nname (file-name-sans-extension name))
 	 (ext (file-name-extension name))
+	 (path nil)
 	 (ret nil))
     (cond
      ((member ext kde-header-files)
       (dolist (elt kde-source-files nil)
-	(if (file-readable-p (concat nname "." elt))
-	    (setq ret (cons (concat nname "." elt) t)))
+	(setq path (concat nname "." elt))
+	(if (file-readable-p path)
+	    (setq ret (cons path t))
+	); else
+        ; look in kde-source-directory
+	(setq path (kde-find-file (file-name-nondirectory path) kde-source-directory))
+	(if path
+	    (setq ret (cons path t))
+	  )
 	)
+      ; not found, will create one
       (if (not ret)
 	  (setq ret (cons (concat nname "." kde-prefered-source-extension) nil ))
 	))
+
      ((member ext kde-source-files)
       (dolist (elt kde-header-files nil)
-	(if (file-readable-p (concat nname "." elt))
-	    (setq ret (cons (concat nname "." elt) t)))
+	(setq path (concat nname "." elt))
+        ; look in current dir
+	(if (file-readable-p path)
+	    (setq ret (cons path t))
+	  ); else
+        ; look in kde-include-directory
+	(setq path (kde-find-file (file-name-nondirectory path) kde-include-directory))
+	(if path
+	    (setq ret (cons path t))
+	  )
 	)
+      ; not found, will create one
       (if (not ret)
 	  (setq ret (cons (concat nname "." (car kde-header-files)) nil ))
 	))

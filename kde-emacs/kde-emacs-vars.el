@@ -124,6 +124,16 @@ magic-keys-mode is set to true. "
   :group 'kde-devel
   :type 'string)
 
+(defcustom kde-include-directory nil
+  "Set this to the directory holding the includes for the current module/project/whatever."
+  :group 'kde-devel
+  :type 'string)
+
+(defcustom kde-source-directory nil
+  "Set this to the directory holding the sources for the current module/project/whatever."
+  :group 'kde-devel
+  :type 'string)
+
 ; a grep in the part of kde-source I have gives: 
 ; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
 (defconst kde-prefered-source-extension "cpp"
