@@ -64,6 +64,7 @@ else
 	 exit 1
        fi
        $UNSERMAKE $relpath
+       exit 2
      else
        # Suck in AUTOCONF/AUTOMAKE detection code
        . admin/detect-autoconf.sh
@@ -75,9 +76,22 @@ else
        fi
      fi
     fi
-  ) || exit 1
+  )
+  case $? in
+    1)
+      exit 1
+      ;;
+    2)
+      createrulesfile="true"
+      ;;
+    *)
+      ;;
+  esac
   if test -f `dirname $relpath`; then 
 	rm `dirname $relpath`
   fi
   CONFIG_FILES=$relpath CONFIG_HEADERS= ./config.status
+  if test "$createrulesfile" = "true"; then
+    CONFIG_FILES=$relpath".rules" CONFIG_HEADERS= ./config.status
+  fi
 fi
