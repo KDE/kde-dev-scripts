@@ -8,8 +8,9 @@
 # Original author (of cvs2pack.sh) was Sebastian Stein <seb.stein@hpfsc.de>
 # Heavy, heavy modifications by Jason Katz-Brown <jason@katzbrown.com>
 # Some modifications for i18n inclusion by Dominique Devriese <devriese@kde.org>
+# Added --no-i18n-lang and --replace-files by Michael Buesch <mbuesch@freenet.de>
 # License: GPL (http://www.gnu.org/)
-# Last modification: 2004/10/03
+# Last modification: 2004/10/10
 
 cmdline="$@"
 
@@ -38,7 +39,7 @@ test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
 # --log has optional argument
 TEMP=`getopt \
 -o v:n:r:e:a:B:dhmbgol \
---long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,no-i18n-lang:,cvs-root:,debug \
+--long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,no-i18n-lang:,cvs-root:,debug,replace-files: \
 -n cvs2dist -- $extraoptions "$@"`
 
 if [ $? != 0 ]; then
@@ -52,6 +53,7 @@ log="/dev/null"
 calclog=0
 doi18n="yes"
 noi18nlang=""
+replace_files=""
 cvsroot=""
 debug=""
 
@@ -95,6 +97,7 @@ while true; do
 
 				    shift 2 ;;
 			esac ;;
+		--replace-files) replace_files="$2"; shift 2 ;;
 		--) shift
 			break ;;
 		*) echo "Aborted."
@@ -149,6 +152,15 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "  -e --required-header-error-message <message>"
 	echo "                                     Error message for above."
 	echo "  -d --remove-hidden Remove hidden files/directories from packages"
+	echo "  --replace-files <file-pair-list>"
+	echo "       <file-pair-list> is a comma separated list of file pairs"
+	echo "       which should be replaced in the final distribution package."
+	echo "       Each element of a pair is separated by an @"
+	echo -n "       Example: --replace-files take_this_file@and_move_it_here,"
+	echo "configure.in.bot.dist@configure.in.bot"
+	echo "       The filenames are all relative to your package root."
+	echo "       Please be careful! Try to avoid the usage of .. in the path. It"
+	echo "       may break stuff! There can not be blank characters in the paths."
 	echo "  -h --help Show this help"
 	echo ""
 	echo "	Name defaults to the last part of the directory."
@@ -447,6 +459,46 @@ for file in $appaddfiles; do
 done
 
 echo "--------" >> $log
+
+# replace all user requested files
+if [ -n "$replace_files" ]; then
+	echo "Replace user requested files" >> $log
+	pair_list="`echo $replace_files | sed -e 's/,/ /g'`"
+	for pair in $pair_list; do
+		pair_tmp="`echo $pair | sed -e 's/@/ /g'`"
+		from="`echo $pair_tmp | awk '//{print $1}'`"
+		to="`echo $pair_tmp | awk '//{print $2}'`"
+		if [ -z "$from" ] || [ -z "$to" ]; then
+			echo "bogus pair \"$from@$to\"" >> $log
+			continue
+		fi
+		echo "Replacing \"$to\" by \"$from\"" >> $log
+		from_path="$temp_dist/$name/$from"
+		to_path="$temp_dist/$name/$to"
+		if [ ! -f "$from_path" ]; then
+			echo "$from_path does not exist!" >> $log
+			echo ""
+			echo "Warning: \"$from\" does not exist!"
+			echo -n "Please enter the path in --replace-files relative "
+			echo "to the package root of your project."
+			echo "Your package root is: \"$module/$directory\""
+			echo ""
+			continue
+		fi
+		rm -f "$to_path" && \
+		mv "$from_path" "$to_path"
+		if [ $? -ne 0 ]; then
+			echo -n "Moving \"$from_path\" failed! " >> $log
+			echo -n "This should not happen." >> $log
+			if [ -f "$to_path" ]; then
+				echo ""
+			else
+				echo " No \"$to\" will exist in the archive!" >> $log
+			fi
+		fi
+	done
+	echo "--------" >> $log
+fi
 
 # version file, if it doesn't exist
 test ! -z $version && test ! -e VERSION && echo "$name version $version" > VERSION
