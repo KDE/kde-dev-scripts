@@ -121,10 +121,10 @@ endfunction
 
 function! IncludeGuard()
 	let guard = toupper( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ) )
-	call append( '^', '#ifndef ' . guard )
+	call append( '^', '#define ' . guard )
 	+
-	call append( '^.', '#define ' . guard )
-	call append( '$', '#endif' )
+	call append( '^', '#ifndef ' . guard )
+	call append( '$', '#endif // ' . guard )
 	+
 endfunction
 
