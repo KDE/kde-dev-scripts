@@ -49,6 +49,7 @@
 
 (require 'cc-mode) ;; needed by kde-emacs-core's test on c-version
 
+(require 'kde-emacs-compat)
 (require 'kde-emacs-core)
 (require 'kde-emacs-general)
 (require 'klaralv)
