@@ -23,8 +23,12 @@ $string = "";
 $intext = 0;
 
 open(FILE, $filename);
+
 while ( <FILE> ) {
    $linenr++;
+   if ($linenr == 1 && ! /<!DOCTYPE/) {
+   	exit 0;
+   }
 
    $string .= $_;   
    chomp($string);
