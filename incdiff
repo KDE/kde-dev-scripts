@@ -97,7 +97,7 @@ cvs up
 
 cd ..
 
-diff -ur "${DIR}~" "${DIR}" > "${NEW_PATCH_FILE}"
+diff -ur "${DIR}" "${DIR}~" > "${NEW_PATCH_FILE}"
 
 # Cleanup
 rm -rf "${DIR}~"
