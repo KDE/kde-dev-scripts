@@ -169,15 +169,20 @@ fi
 if test ! -d "$QTDIR" -o ! -d "$QTDIR/lib" -o ! -d "$QTDIR/bin" -o ! -d "$QTDIR/include"; then
   echo "ERROR: Invalid Qt directory specified!"; exit $err_inv_qtdir
 fi
-if which bzip2 > /dev/null 2>&1; then
-  cmd_compress="`which bzip2` -f "
-else
-  if which gzip > /dev/null 2>&1; then
-    cmd_compress="`which gzip` -f "
+
+if test "x$COMPRESSLOGS" = xyes; then
+  if which bzip2 > /dev/null 2>&1; then
+    cmd_compress="`which bzip2` -f "
   else
-    echo "WARNING: Neither bzip2 nor gzip was found, disabling compression of logfiles."
-    cmd_compress=""
+    if which gzip > /dev/null 2>&1; then
+      cmd_compress="`which gzip` -f "
+    else
+      echo "WARNING: Neither bzip2 nor gzip was found, disabling compression of logfiles."
+      cmd_compress=""
+    fi
   fi
+else
+  cmd_compress=""
 fi
 
 # Clean the installation directory if selected.
