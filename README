@@ -113,6 +113,9 @@ zone		Reads timezone list as its first argument or from
 		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
 		 template
 
+rc2kcfgxt.pl	Reads an existing KConfig rc file and creates a best-guess
+		version of a KConfigXT XML file.
+
 ----------------
 Looking to add a script?
 
