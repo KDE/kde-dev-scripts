@@ -78,7 +78,7 @@ err_no_config="11"
 # script is aborted in case on of these modules doesn't build.
 # These modules needs to be build and installed in this specific order!
 #
-critical_modules="kdesupport arts kdelibs kdebase"
+critical_modules="arts kdelibs kdebase"
 
 # Internal variable, do not change.
 #
@@ -224,7 +224,11 @@ if test -n "$specifiedModules"; then
    modules=$specifiedModules
 else
    if test "x$ONLYLISTEDMODULES" = xyes; then
-      modules="$critical_modules $KDEMODULES"
+      if test "x$USEKDESUPPORT" = xyes; then
+          modules="kdesupport $critical_modules $KDEMODULES"
+      else
+          modules="$critical_modules $KDEMODULES"
+      fi
    else
 
      # This generates in 'modules' a list of the modules which shall be updated.
