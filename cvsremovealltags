@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <filename>"
+  echo "This script removes _all_ cvs tags from a file (use with care!!!)."
+  echo "Use this after 'renaming' a file by copying on the server, for instance."
+  echo "This way it won't appear in branches, only in HEAD."
+  exit 1
+fi
+file=$1
+tags=`cvs log -h $file | grep '^	' | sed -e 's/:.*//g'`
+for tag in `echo $tags`; do
+  echo -n "Removing tag $tag.... "
+  cvs tag -d $tag $file
+done
+
