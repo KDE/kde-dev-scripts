@@ -13,7 +13,7 @@
 # David Faure <faure@kde.org>, script under public domain
 
 force=0;
-if [ $# -eq 1 -a "$1" == "-f" ]; then force=1; fi
+[ $# -eq 1 ] && [ "$1" = "-f" ] && force=1
 
 # Look for toplevel dirs
 files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$`
