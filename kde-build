@@ -344,7 +344,7 @@ for module in $KDEMODULES; do
       # Configure the module.
       #
       echo -n "  Configuring..."
-      setTitle "Configuring module $module..."
+      set_title "Configuring module $module..."
       cmd_configure="./configure $COMPFLAGS --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
       if test "x$KDELOGDIR" != x; then
