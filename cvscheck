@@ -143,21 +143,19 @@ sub processEntries
               }
               next;
             }
-            next if not $dirunknown{$entry};
-
-            $dirunknown{$1} = 0;
+            $dirunknown{$entry} = 0;
           }
           close(CVSIGNORE);
         }
 
 	if ( !open( ENTRIES, $dir."/CVS/Entries" ) ) {
-          print "CVS/Entries missing in $dir\n";
+          print "I CVS/Entries missing in $dir\n";
           return;
         }
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
           if($line =~ /^T(.+)$/) {
-            print "$dir has sticky tag $1\n" if($standardtag ne $1);
+            print "I $dir has sticky tag $1\n" if($standardtag ne $1);
             $standardtag = $1;
           }
           else {
@@ -180,7 +178,7 @@ sub processEntries
           $fname = $1;
           $ver = $2;
           $stamp = $3;
-          print "unusual value in 4th field of CVS: $4\n" if(defined $4);
+          print "I unusual value in 4th field of CVS: $4\n" if(defined $4);
           $tag = $5;
 
           $dirunknown{$fname} = 0;
@@ -202,7 +200,7 @@ sub processEntries
           if ( $state =~ /merge/ ) {
             # modified version merged with update from server
             # check for a conflict
-            open (F, "$dir/$fname") || warn "couldn't open $dir/$fname";
+            open (F, "$dir/$fname") || warn "I couldn't open $dir/$fname";
             my @conflict = grep /^<<<<<<</, <F>;
             close (F);
             if( @conflict ) {
@@ -224,7 +222,7 @@ sub processEntries
               push @uncommitted, "$dir/$fname$taginfo";
             }
             else {
-              warn "Bad mod time for $dir/$fname: $stamp\n";
+              warn "I Bad mod time for $dir/$fname: $stamp\n";
             }
             next;
           }
