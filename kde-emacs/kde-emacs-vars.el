@@ -95,7 +95,7 @@
   :group 'kde-devel
   :type 'string)
 
-(defcustom kde-use-pc-select nil
+(defcustom kde-use-pc-select 't
   "Set this to nil if you really hate PC Select Mode..."
   :group 'kde-devel
   :type 'boolean)
