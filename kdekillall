@@ -10,6 +10,11 @@ if [ $# = 0 ]; then
 	echo "see kill -l for a list of possible signals"
 else
     list=$(ps auwx | grep $USER | awk "/[k]deinit: $1/ {print \$2}")
+    if test -z "$list"; then
+        # on newer Linux kernels (>= 2.6.10) KDE is able to use 
+        # prctl(PR_SET_NAME) to change the process name...
+        list=$(ps auwx | grep $USER | awk "/\[kdeinit\] $1/ {print \$2}")
+    fi
     if test -n "$list"; then 
         kill $signal $list
     else
