@@ -153,8 +153,14 @@ sub write_i18n
   $text =~ s/&apos;/\'/g;
   $text =~ s/&quot;/\"/g;
   $text =~ s/&amp;/&/g;
-  $text =~ s/\"/\\\"/g;
 
+  # Escape characters exactly like uic does it
+  # (As extractrc needs it, we follow the same rule to avoid to be different.)
+  $text =~ s/\\/\\\\/g; # escape \
+  $text =~ s/\"/\\\"/g; # escape "
+  $text =~ s/\r//g; # remove CR (Carriage Return)
+  $text =~ s/\n/\\n\"\n\"/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
+  
   $context ||= $opt_context;
 
   print qq|i18n("|;
