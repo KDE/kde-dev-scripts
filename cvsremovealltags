@@ -1,18 +1,24 @@
 #!/bin/sh
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 <filename>"
+  echo "Usage: $0 <files or dirs>"
   echo "This script removes _all_ cvs tags from a file (use with care!!!)."
+  echo "It is also recursive for directories."
   echo "Use this after 'renaming' a file by copying on the server, for instance."
   echo "This way it won't appear in branches, only in HEAD."
   exit 1
 fi
 while test $# -gt 0 ; do
   file=${1}
-  tags=`cvs log -h $file | grep '^	' | sed -e 's/:.*//g' | sort -u`
-  for tag in `echo $tags`; do
-    echo -n "Removing tag $tag... "
-    cvs tag -r $tag -d $tag $file
-  done
+  if [ -d $file -a $file != "CVS" ]; then
+    # Call recursively for dirs
+    $0 $file/* $file/.cvsignore
+  elif [ -f $file ]; then
+    tags=`cvs log -h $file | grep '^	' | sed -e 's/:.*//g' | sort -u`
+    for tag in `echo $tags`; do
+      echo -n "Removing tag $tag... "
+      cvs tag -r $tag -d $tag $file
+    done
+  fi
   shift
 done
 
