@@ -1,13 +1,14 @@
 
 bin_SCRIPTS = create_makefile create_makefiles cvs2pack cvschanged \
 	cvslastchange cvslastlog cvsversion cxxmetric extend_dmalloc \
-	gendebug kdedoc qtdoc kdelnk2desktop.py licensecheck adddebug
+	gendebug kdedoc qtdoc kdelnk2desktop.py licensecheck adddebug \
+	noncvslist
 
 # not installed : extractrc fixheaders add_trace.pl kDebug2kdDebug
 
 #doc: cvs2pack.1 cvs2pack.txt
 
-man1_DATA = cvs2pack.1 cvschanged.1 cvsversion.1
+man1_DATA = cvs2pack.1 cvschanged.1 cvsversion.1 noncvslist.1
 man1dir = $(mandir)/man1
 
 #cvs2pack.1: cvs2pack
