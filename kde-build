@@ -433,7 +433,7 @@ for module in $modules; do
           check_admin
           cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
           test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
-          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
+          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE" && ! echo $NO_UNSERMAKE_MODULES | grep $module > /dev/null 2>&1; then
               export UNSERMAKE=$USE_UNSERMAKE
           else
               unset UNSERMAKE || :
@@ -548,7 +548,7 @@ for module in $modules; do
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
 	use_compile_target=no
-	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$USE_UNSERMAKE" && use_compile_target=yes
+	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$USE_UNSERMAKE" && ! echo $NO_UNSERMAKE_MODULES | grep $module > /dev/null 2>&1 && use_compile_target=yes
 	if test "$use_compile_target" = yes && test -n "$MAKE_OPTS_COMPILE"; then
 	    cmd_make="$MAKE $MAKE_OPTS_COMPILE"
 	else

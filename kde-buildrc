@@ -123,6 +123,10 @@ CONFIGUREFLAGS="--disable-debug"
 # automake
 USE_UNSERMAKE=""
 
+# List modules here for which unsermake should not be used.
+#
+NO_UNSERMAKE_MODULES="kdemultimedia kdenonbeta"
+
 # if you use an extra build dir (KDEBUILDDIR), then set it to yes to
 # remove the module's directory before calling configure
 BUILD_CLEAN=no
