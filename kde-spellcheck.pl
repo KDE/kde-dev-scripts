@@ -280,6 +280,7 @@ my %fix = (
 	 "currenty" => "current",
 	 "curren" => "current",
 	 "curteousy" => "courtesy",
+	 "cutsom" => "custom",
 	 "customise" => "customize",
 	 "Customise" => "Customize",
 	 "customised" => "customized",
