@@ -356,10 +356,21 @@ sub copy_file($$)
   close(O);
 }
 
+# interrupt handler for fix_unnecessary
+sub sighandler_fix_unnecessary()
+{
+  my($sig) = @_;
+  print "Caught a SIG$sig--shutting down after restoring $srcfile\n";
+  chdir($srcdir);
+  unlink $srcfile || warn "couldn't unlink $srcfile";
+  rename $localbackup, $srcfile || warn "couldn't rename $localbackup to $srcfile";
+  exit(1);
+}
+
 sub fix_unnecessary($)
 {
-  my $srcfile = shift @_;
-  my $srcdir = dirname($srcfile);
+  local $srcfile = shift @_;
+  local $srcdir = dirname($srcfile);
 
   # find canonical path for srcdir
   my $origdir = cwd;
@@ -368,11 +379,10 @@ sub fix_unnecessary($)
   print "srcdir=$srcdir\n" if($verbose);
 
   my $builddir = $srcdir;
-  my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
   my $makecmd = "make";
-  # we have to use sed here, because perl can't do s#a#b#
-  if (defined $objreplacement)
+  if (defined $ENV{"OBJ_REPLACEMENT"})
   {
+    # we have to use sed here, because perl can't do s#a#b#
     $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
     chomp $builddir;
     $makecmd = "makeobj";
@@ -417,16 +427,21 @@ sub fix_unnecessary($)
     # it will break the application if removed even
     # if it continues to compile
     next if( $include eq "kdatastream.h");
+    # I also like to have kdebug.h still in
+    # so that it's easy to add kdDebug calls
     next if( $include eq "kdebug.h");
     
     chdir($srcdir);
 
-    my $localbackup = $srcfile . "#fixincludes";
+    local $localbackup = $srcfile . "#fixincludes";
     
     # preserve timestamp if possible for CVS
     unlink $localbackup;
     rename $srcfile, $localbackup;
     copy_file($localbackup, $srcfile);
+
+    # revert to backup in case of interrupt (Ctrl+C)
+    $SIG{'INT'} = \&sighandler_fix_unnecessary;
 
     # check if it still compiles
     if($verbose) {
@@ -453,6 +468,7 @@ sub fix_unnecessary($)
     if($retcode == 0) {
       # wow, it worked, lets continue!
       print "SUCCESS!\n";
+      $SIG{'INT'} = 'DEFAULT';
       unlink $localbackup;
       $exp_success = $exp_success + 1;
     }
@@ -461,6 +477,7 @@ sub fix_unnecessary($)
       print "failed\n";
       unlink $srcfile;
       rename $localbackup, $srcfile;
+      $SIG{'INT'} = 'DEFAULT';
 
       $exp_failure = $exp_failure + 1;
     }
