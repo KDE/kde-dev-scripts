@@ -1,5 +1,5 @@
 " To use this file, add this line to your ~/.vimrc:, w/o the dquote
-" source /path/to/kde/sources/kdesdk/kde-devel-vim.vim
+" source /path/to/kde/sources/kdesdk/scripts/kde-devel-vim.vim
 
 " Don't include these in filename completions
 set suffixes+=.lo,.o,.moc,.la,.closure,.loT
