@@ -85,16 +85,16 @@ print OUTPUT <<EOF;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title></title>
+    <title>Blame annotation for $file</title>
   </head>
   <script>
     function poplog(event, rev) {
       var popup = document.layers['popup'];
       popup.left = event.target.x;
       popup.top = event.target.y;
-      popup.document.write("<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=6><TR><TD BGCOLOR='#CC9DB5'<tt>");
+      popup.document.write("<table border=0 cellspacing=0 cellpadding=10><tr><td bgcolor='#FFCC99'<tt>");
       popup.document.write(rev);
-      popup.document.write("</TD></TR></TABLE>");
+      popup.document.write("</td></tr></table>");
       popup.document.close();
       popup.visibility = "show";
       return true;
@@ -134,16 +134,17 @@ close LOG;
 
 print OUTPUT <<EOF;
   </script>
-  <body>
-     <layer name='popup' onmouseout="this.visibility='hide';" LEFT=0 TOP=0 BGCOLOR='#CCCCC0' visibility='hide'></layer>
+  <body bgcolor="#EEEEE0">
+     <layer name='popup' onmouseout="this.visibility='hide';" visibility='hide'></layer>
     <h1>$file</h1>
-      <pre>
+    <table border=0 cellpadding=0 cellspacing=0 width="100%">
 EOF
 
 #
 # Information from cvs annotate
 #
 
+$color = 1;
 $lineno = 1;
 $oldrevision = "";
 $oldlineno = "";
@@ -175,13 +176,16 @@ while (<ANNOTATE>) {
 	      $revauthor = "";
 	  }
       } else {
+          $color = ($color == 0)? 1 : 0;
 	  $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
 	  $linkendstr = "</a>";
 	  $revauthor = "$author $revision";
 	  $oldlineno = $lineno;
 	  $oldrevision = $revision;
       }
-      print OUTPUT sprintf "%-6i$linkstr%-16s$linkendstr$content\n", $lineno, $revauthor;
+      print OUTPUT "<tr><td bgcolor=\"", ($color==1)? "#EEEEE0" : "#FFFFCC", "\"><pre>";
+      print OUTPUT sprintf "%-5i$linkstr%-14s$linkendstr$content", $lineno, $revauthor;
+      print OUTPUT "</td></tr>\n";
       $lineno++;
 }
 close ANNOTATE;
@@ -191,7 +195,7 @@ close ANNOTATE;
 #
 
 print OUTPUT <<EOF;
-    </pre>
+    </table>
   </body>
 </html>
 EOF
