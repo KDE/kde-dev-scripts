@@ -4,5 +4,5 @@
 # Requires cvsversion
 # David Faure, faure@kde.org
 
-cvs log -r`cvsversion $1` $1
+cvs log -N -r`cvsversion $1` $1
 
