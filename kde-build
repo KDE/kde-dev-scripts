@@ -868,7 +868,7 @@ for module in $modules; do
   if [ $retval -eq 0 ]; then
     # Install the module.
     #
-    cmd_make_install="$MAKE"
+    cmd_make_install="$MAKE $MAKE_OPTS"
     [ $critical -eq 0 ] && cmd_make_install="$cmd_make_install -k"
     [ "$NICECOMPILE" = yes ] && cmd_make_install="nice $cmd_make_install"
     cmd_make_install="$cmd_make_install install"
