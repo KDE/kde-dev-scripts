@@ -246,7 +246,7 @@ function! MapIdentHeader( ident )
     let check = header
     while 1 
         if filereadable( check )
-            return '"' . check '"'
+            return '"' . check . '"'
         endif
         let slash = match( check, '/' )
         if slash == -1
