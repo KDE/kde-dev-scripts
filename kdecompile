@@ -518,7 +518,7 @@ if (config.installWithoutAsking):
     runInstall(currdir)
 else:
      xmessline = "\"Compilation of " + packagename + " terminated\""
-     choice = visualChoice(xmessline)
+     choice = visualMessage(xmessline)
 print "That's it for now."
 
 
