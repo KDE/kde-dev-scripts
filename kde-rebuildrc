@@ -1,0 +1,66 @@
+################################################################################
+# Configures the kde-rebuild script.                                           #
+# 2000 by Frerich Raabe <raabe@kde.org>                                        #
+################################################################################
+
+# Where are your KDE sources?
+#
+KDESRCDIR=""
+
+# Where shall I put the binaries?
+#
+KDEDIRS=""
+
+# Where is your Qt 2.2.0?
+#
+QTDIR=""
+
+# If you would like logfiles of the compilation process, specify a directory
+# here in which the logfiles will be saved. If you want to disable logfile
+# generation, leave this blank.
+#
+KDELOGDIR="$KDESRCDIR/log"
+
+# It has been a good idea to remove the configuration directories of the
+# previous KDE desktop by deleting ~.kde back when KDE was Alpha. Now that
+# it's Beta quality and starts to become more stable this shouldn't be
+# necessary anymore but if you feel like doing so, add the home directories
+# of the users whose KDE configuration should be resetted to this space
+# seperated list.
+# NOTE: This removes the whole configuration, e.g. KMail's filters, Kicker's
+# settings, your addressbook etc.!
+#
+HOMEDIR=""
+
+# Do you want the logfiles to be compressed? Set this variable to "yes" to
+# make the script compress the logfiles using bzip2 (using gzip as a
+# fallback is bzip2 cannot be found) and thereby save some diskspace.
+#
+COMPRESSLOGS="yes"
+
+# Add modules you want to get compiled to this space-seperated list. Please
+# note that the modules kde-qt-addon, kdesuppor, kdelibs, and kdebase
+# (if you want a KDE2 desktop and not just develope applications for it)
+# must be compiled in exactly that order. Any other modules are optional.
+#
+KDEMODULES="kde-qt-addon kdesupport kdelibs kdebase"
+
+# Do you want a clean install? This is recommended but please note that
+# you cannot use your previous KDE2 desktop while the compilation is
+# running. Set this to "no" to install the new snapshot over the previous
+# one, otherwise set it to "yes".
+#
+INSTALLFROMSCRATCH="no"
+
+# Do you plan to use this box otherwise while compiling? If so, you'd
+# probably set this variable to "yes". If this is set to "no", the
+# compilation process will try to eat up all the ressources, which speeds up
+# the overall progress but makes it a PITA to work on this box. ;)
+#
+COMPILENICE="yes"
+
+# Set this variable to "yes" to activate certain cheap tweaks to speed up the
+# compilation process. Those tweaks mainly consist of lowering the
+# optimization of the resulting binary code.
+#
+TWEAKCOMPILE="yes"
