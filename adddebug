@@ -36,8 +36,17 @@ fi
 top_builddir=`grep '^top_builddir' Makefile | sed -e 's/^.*= *//'`
 
 if test "$using_unsermake" = "new"; then
-  # It all comes from the toplevel Makefile - fix it
-  perl -pi -e "$xpr" $top_builddir/Makefile
+  # the idea: grab the cxxflags from MakeVars, modify them, and write them down
+  # in every Makefile after the line that says .FORWARDS
+  toplevelMakefile=$top_builddir/Makefile
+  if [ -f $toplevelMakefile ]; then
+    # warning this uses sed, so the '?' in the perl regexp above doesn't work here
+    cxxflags=`grep ^CXXFLAGS $toplevelMakefile | sed -e 's/[\t ]-O[1-9]\b//g;s/[\t ]-march=\S+\b//g;s/[\t ]-DNDEBUG\b//g;s/[\t ]-DNO_DEBUG\b//g'`
+    xpr="s/^CXXFLAGS\s*=.*//; if ( /^\.FORWARDS:/) { "'$_'" .= \"\n$cxxflags -g3\"; }"
+    find . $mxdp -name Makefile -exec perl -pi -e "$xpr" {} \;
+  else
+    echo "ERROR: top_builddir is $top_builddir but $makevars not found"
+  fi
 
 elif test "$using_unsermake" = "old"; then
   # the idea: grab the cxxflags from MakeVars, modify them, and write them down
