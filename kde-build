@@ -231,13 +231,15 @@ else
       fi
    else
 
+     modules="$critical_modules"
      # This generates in 'modules' a list of the modules which shall be updated.
      #
      potential_modules=`find $KDESRCDIR -type d -mindepth 1 \
          -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
      for module in $potential_modules; do
        if test -d $KDESRCDIR/$module/CVS -a -w $KDESRCDIR/$module \
-             && !(echo $EXCLUDE | grep -q $module); then
+             && !(echo $EXCLUDE | grep -q $module) \
+             && !(echo $modules | grep -q $module) ; then
          modules="$modules $module"
        fi
      done
