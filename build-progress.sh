@@ -9,7 +9,7 @@ if ([ "$TERM" = "xterm" ] || [ "$TERM" = "xterm-color" ] || [ "$TERM" = "screen"
 fi
 }
 . ./kde-buildrc
-set_title "Progres of kde-build script..."
+set_title "Progress of kde-build script..."
 
 cd $KDELOGDIR
 while true; do 
