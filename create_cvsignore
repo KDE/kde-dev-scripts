@@ -1,4 +1,9 @@
 #!/bin/sh
+# This script makes a preliminary .cvsignore in the current dir by
+# adding some standard stuff according to Makefile.am. People with
+# srcdir==builddir will hopefully get another useful but untested
+# feature.. ;-) [rastajoe]
+
 function addignore() {
 	test -f .cvsignore || \
 	( touch .cvsignore && echo "created new .cvsignore" && cvs add .cvsignore )
