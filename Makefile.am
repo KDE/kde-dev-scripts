@@ -1,12 +1,33 @@
+# sorted by function
+bin_SCRIPTS = \
+  create_makefile create_makefiles adddebug \
+  cheatmake makeobj kde-build build-progress.sh \
+  cvsversion cvscheck cvschanged cvslastchange cvslastlog cvsrevertlast \
+  noncvslist pruneemptydirs cvs-clean \
+  cvs2pack cvs2dist  cvsblame \
+  kdedoc qtdoc extractrc zonetab2pot.py \
+  licensecheck fixincludes includemocs create_cvsignore \
+  cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py
 
-bin_SCRIPTS = create_makefile create_makefiles cvs2pack create_cvsignore \
-	cvslastchange cvslastlog cvsversion cvscheck cxxmetric extend_dmalloc \
-	kdedoc qtdoc kdelnk2desktop.py licensecheck adddebug \
-	pruneemptydirs noncvslist kde-build kdekillall extractrc makeobj includemocs \
-	cvsrevertlast cvsblame cheatmake fixincludes zonetab2pot.py cvs2dist build-progress.sh
+# sorted by bin_SCRIPTS reference
+man1_MANS = \
+  kde-build.1 \
+  cvsversion.1 cvscheck.1 cvschanged.1 \
+  noncvslist.1 \
+  cvs2pack.1  cvsblame.1 \
+  includemocs.1 
 
-# not installed : add_trace.pl kDebug2kdDebug colorcvs
+CLEANFILES = $(man1_MANS)
 
-#doc: cvs2pack.1 cvs2pack.txt
+# sorted alphabetically
+noinst_SCRIPTS = \
+  add_trace.pl alldcop.rb authors2xml.pl check_licenses colorcvs \
+  cvsaddcurrentdir fixheaders kDebug2kdDebug.sh kdecompile
 
-man1_MANS = cvs2pack.1 cvsversion.1 noncvslist.1 kde-build.1 cvsblame.1 cvscheck.1
+EXTRA_DIST = completions kde-emacs \
+  colorcvsrc-sample gettext.patch kde-buildrc \
+  kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
+  kde.supp kdecompile.README 
+
+%.1: %
+	pod2man $< $@
