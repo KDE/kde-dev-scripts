@@ -1,5 +1,12 @@
 " To use this file, add this line to your ~/.vimrc:, w/o the dquote
 " source /path/to/kde/sources/kdesdk/scripts/kde-devel-vim.vim
+"
+" For CreateChangeLogEntry() : If you don't want to re-enter your
+" Name/Email in each vim session then make sure to have the viminfo
+" option enabled in your ~/.vimrc, with the '!' flag, enabling persistent
+" storage of global variables. Something along the line of
+" set   viminfo=%,!,'50,\"100,:100,n~/.viminfo
+" should do the trick.
 
 " Don't include these in filename completions
 set suffixes+=.lo,.o,.moc,.la,.closure,.loT
@@ -135,8 +142,8 @@ endfunction
 function CreateChangeLogEntry()
     let currentBuffer = expand( "%" )
 
-    if exists( "g:email" )
-        let mail = g:email
+    if exists( "g:EMAIL" )
+        let mail = g:EMAIL
     elseif exists( "$EMAIL" )
         let mail = $EMAIL
     else
@@ -145,7 +152,7 @@ function CreateChangeLogEntry()
 	    echo "Aborted ChangeLog edit..."
 	    return
 	endif
-	let g:email = mail
+	let g:EMAIL = mail
 	" ### emacs is more clever by storing that information persistently
 	" in .emacs 
     endif
