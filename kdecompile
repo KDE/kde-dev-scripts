@@ -39,7 +39,7 @@ class Config:
                  "kdepim", "kdeadmin", "kdebindings",
                  "kdetoys", "kdegames", "koffice",
                  "kdevelop", "kdesdk",
-                 "quanta"
+                 "quanta", "kdeartwork", "kdeaddons"
                 ]
 
     # these wont
