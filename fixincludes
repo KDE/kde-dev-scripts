@@ -16,12 +16,13 @@ sub fix_duplicates($);
 sub fix_compat_includes($);
 sub fix_unnecessary($);
 sub copy_file($$);
-                    
+sub process_source_file($);
 
 # some global variables
 $verbose = 0; # turns on debugging
 $modify = 0;  # if 1 it should try to fix the files as well
 $experimental = 0; # try&error if an include is obsolete (slow!!)
+@explicitfiles = (); # filled in if passing files on the command line
 
 # statistic variables
 $exp_success = 0;
@@ -43,6 +44,9 @@ while (defined ($ARGV[0]))
   elsif (/^--experimental$|^-e$/) {
     $modify = 1;
     $experimental = 1;
+  }
+  elsif (!/^-/) {
+    push @explicitfiles, $_;
   }
 }
 
@@ -517,12 +521,32 @@ sub fix_unnecessary($)
   chdir($origdir);
 }
 
+sub process_source_file($)
+{
+  local $file = shift @_;
+  print "Checking: $file\n" if($verbose);
+  &fix_compat_includes($file);
+  &fix_duplicates($file);
+  if ($experimental) {
+    &fix_unnecessary($file);
+  }
+  print "\n" if ($verbose);
+}
+
 # here is the main logic
 
 # warn about modified files
 if($modify) {
   `cvscheck | grep '^[MmC]'`;
   print "WARNING: you have pending local changes.You might commit them by accident!\n" if($? >> 8 == 0);
+}
+
+# process files from the command line, if any
+if ( $#explicitfiles >= 0 ) {
+  foreach $file( @explicitfiles ) {
+    &process_source_file( $file );
+  }
+  exit 0;
 }
 
 # first generate a list of subdirectories
@@ -558,12 +582,6 @@ foreach $dir(@dirlist) {
   }
   @sources = &find_fixable_sources($dir);
   foreach $file(@sources) {
-    print "Checking: $file\n" if($verbose);
-    &fix_compat_includes($file);
-    &fix_duplicates($file);
-    if ($experimental) {
-      &fix_unnecessary($file);
-    }
-    print "\n" if ($verbose);
+    &process_source_file($file);
   }
 }
