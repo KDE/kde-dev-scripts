@@ -5,13 +5,13 @@
 
 # Where are your KDE sources?
 #
-KDESRCDIR="/home/devel/src/kde-cvs"
+KDESRCDIR="/home/frerich/src/kde-cvs"
 
 # Where shall I put the binaries?
 #
 KDEDIRS="/opt/kde2"
 
-# Where is your Qt 2.2.0?
+# Where is your Qt 2.2.x?
 #
 QTDIR="/usr/local/lib/qt"
 
@@ -43,14 +43,14 @@ COMPRESSLOGS="yes"
 # (if you want a KDE2 desktop and not just develope applications for it)
 # must be compiled in exactly that order. Any other modules are optional.
 #
-KDEMODULES="kdesupport kdelibs kdebase kdegraphics kdenetwork kdemultimedia"
+KDEMODULES="kdegraphics kdenetwork kdemultimedia kdegames"
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
 # running. Set this to "no" to install the new snapshot over the previous
 # one, otherwise set it to "yes".
 #
-INSTALLFROMSCRATCH="yes"
+INSTALLFROMSCRATCH="no"
 
 # Do you plan to use this box otherwise while compiling? If so, you'd
 # probably set this variable to "yes". If this is set to "no", the
@@ -63,7 +63,7 @@ COMPILENICE="yes"
 # compilation process. Those tweaks mainly consist of lowering the
 # optimization of the resulting binary code.
 #
-TWEAKCOMPILE="yes"
+TWEAKCOMPILE="no"
 
 # Which command is used to update your sources?
 # anoncvs and cvs users: set this to "cvs"
@@ -91,7 +91,7 @@ CVSUPSERVER="cvsup.kde.org"
 # If there are any modules in $KDESRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
 #
-EXCLUDE="qt-copy kdenonbeta"
+EXCLUDE="qt-copy kdenonbeta kde-i18n kdesupport kdelibs kdebase kdenetwork kdegraphics kdemultimedia kdesdk www kdeutils kde-common kdegames"
 
 # If you would like a virgin cvs copy set this field to "yes", otherwise set
 # this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'
@@ -102,3 +102,4 @@ EXCLUDE="qt-copy kdenonbeta"
 # order to make sure there aren't any remains of a previous compile.
 #
 CVS_CLEAN="yes"
+
