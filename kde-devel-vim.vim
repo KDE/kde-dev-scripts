@@ -48,6 +48,7 @@ nmap ,i :call IncludeGuard()<CR>o
 
 " Expand #i to #include <.h> or #include ".h". The latter is chosen
 " if the character typed after #i is a dquote
+" If the character is > #include <> is inserted (standard C++ headers w/o .h)
 iab #i <C-R>=SmartInclude()<CR>
 
 " Insert a stripped down CVS diff
@@ -128,8 +129,12 @@ function! IncludeGuard()
 endfunction
 
 function! SmartInclude()
-	if nr2char( getchar( 0 ) ) == '"'
+	let next = nr2char( getchar( 0 ) )
+	if next == '"'
 		return "#include \".h\"\<Left>\<Left>\<Left>"
+	endif
+	if next == '>'
+		return "#include <>\<Left>"
 	endif
 	return "#include <.h>\<Left>\<Left>\<Left>"
 endfunction
@@ -139,7 +144,7 @@ function! RunDiff()
 	read! cvs diff -bB -I \\\#include | egrep -v '(^Index:|^=+$|^RCS file:|^retrieving revision|^diff -u|^[+-]{3})'
 endfunction
 
-function CreateChangeLogEntry()
+function! CreateChangeLogEntry()
     let currentBuffer = expand( "%" )
 
     if exists( "g:EMAIL" )
@@ -183,4 +188,18 @@ function CreateChangeLogEntry()
 
     execute "normal 3G$"
 endfunction
+
+function! AddQtSyntax()
+	if expand( "<amatch>" ) == "cpp"
+		syn keyword qtKeywords     signals slots emit
+		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY
+		syn keyword qtCast         qt_cast
+
+		hi def link qtKeywords          Statement
+		hi def link qtMacros            Type
+		hi def link qtCast              Statement
+	endif
+endfunction
+
+autocmd Syntax * call AddQtSyntax()
 
