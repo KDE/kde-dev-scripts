@@ -22,6 +22,8 @@ cvslastchange   launches "cvs diff -u" to display the last applied changes for a
 
 cvslastlog      Shows the log associated with the last change on a given file.
 
+gendebug        Generate C++/Qt code for printing debug output.
+
 ----------------
 Looking to add a script?
 
