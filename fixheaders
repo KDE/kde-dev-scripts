@@ -5,17 +5,31 @@
 
 %files = ();
 
-$topdir=`pwd`;
+if ($ARGV[0]) {
+  $topdir = $ARGV[0];
+} else {
+  $topdir=`pwd`;
+}
 chomp $topdir;
 
 $lastdir = '';
 
+
+# this is the important part. Left from the '=>' you find the regular
+# expression for the g++ output and right from '=>' the header file to
+# include
 %messages = 
 (
  'warning: implicit declaration of function `int i18n\(\.\.\.\)\'' => "klocale",
  'variable `class QPixmap \S*\' has initializer but incomplete type' => "qpixmap",
- '`kapp\' undeclared \(first use this function\)' => "kapp"
- 
+ '`kapp\' undeclared \(first use this function\)' => "kapp",
+ 'no matching function for call to `KLocale::' => "klocale",
+ '`DndURL\' undeclared \(first use this function\)' => "drag",
+ 'no matching function for call to `KDNDDropZone::' => "drag",
+ '`klocale\' undeclared \(first use this function\)' => "klocale",
+ '`KDNDIcon\' was not declared in this scope' => "drag",
+ 'no matching function for call to `QPopupMenu::' => "qpopupmenu",
+ '`Dnd_\S*\' undeclared \(first use this function\)' => "drag",
 );
 
 %changes = ();
@@ -62,7 +76,7 @@ sub fixFile
   
   while (<FILE>) {
     $flines .= $_;
-    if ($_ =~ m/(#include\s*[\"<]\S*\.h[\">])/) {
+    if ($_ =~ m/^(#include\s*[\"<]\S*\.h[\">]\S*)/) {
        $lastinclude = $1;
     }
   }
@@ -70,13 +84,22 @@ sub fixFile
   close FILE;
   
   my $success;
-  
+
+  if (!$lastinclude) {
+    print STDERR "ERROR: no include found!\n";
+    return;
+  }
+
+  if ($flines =~ m/#include\s*[\"<]$adding\.h\s*\n/) {
+    print STDERR "ERROR: $adding.h already included!\n";
+    $success = 0;
+  }
   if ($flines =~ /(\n$lastinclude)/) {
     $flines =~ s/$lastinclude/$lastinclude\n#include <$adding.h>/;
-      print STDERR "ADDED to \"$lastinclude\" $adding.h\n";
+      print STDERR "ADDED after \"$lastinclude\" $adding.h\n";
     $success = 1;
   } else {
-    print STDERR "ERROR: can't find includement of $old\.h in $file\n";
+    print STDERR "ERROR: can't find $lastinclude in $file\n";
     $success = 0;
   }
 	    
