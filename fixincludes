@@ -365,7 +365,8 @@ sub fix_unnecessary($)
   my $origdir = cwd;
   chdir($srcdir);
   $srcdir = cwd;
-  #print "srcdir=$srcdir\n";
+  print "srcdir=$srcdir\n";
+  chdir($origdir);
 
   my $builddir = $srcdir;
   my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
