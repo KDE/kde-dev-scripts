@@ -124,6 +124,8 @@
 (if kde-emacs-newline-semicolon 
     (define-key c++-mode-map "\;" 'insert-semicolon))
 (define-key c++-mode-map [(f6)] 'kde-switch-cpp-h)
+(define-key c-mode-map [(f6)] 'kde-switch-cpp-h)
+(define-key global-map [(shift f7)] 'next-error)
 (define-key c++-mode-map [(f7)] 'switch-to-function-def)
 (define-key c++-mode-map [(f9)] 'agulbra-make-member)
 
