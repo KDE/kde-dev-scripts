@@ -318,7 +318,7 @@ else
 fi
 
 if [ -n "$KDELOGDIR" ]; then
-  str_error="$str_error\nCheck the logfile in $KDELOGDIR for further information."
+  str_error="$str_error Check the logfile in $KDELOGDIR for further information."
 fi
 
 if [ ! -d "$KDESRCDIR" ]; then
