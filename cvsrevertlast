@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # (C) 2001 Charles Samuels <charles@kde.org>
 #
 # This script reverts all the files given on the command
