@@ -21,7 +21,7 @@
   (cond
    ((and (save-excursion
            (forward-char -1)
-           (looking-at "[A-Za-z0-9:>_\\-\\&\\.()]")))
+           (looking-at "[A-Za-z0-9:>_\\-\\&\\.(){}\\*\\+/]")))
     (dabbrev-expand arg))
    (t
     (c-indent-command))))
