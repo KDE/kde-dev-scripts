@@ -27,9 +27,10 @@ class Config:
     removeAdminDir = 0
     RunConfigure = 1
     RunCVSCheckOut = 1
+    RunCompile = 1
     installDir = "/opt/kde"
     packagename = ""
-    cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"
+    cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"    
 
     def load():
         print "Config.load not implemented yet"
@@ -37,37 +38,52 @@ class Config:
         print "Config.save not implemented yet"
 
 	# hmm? why do i need the z here
-    def parseArguments(obj):
+    def parseArguments(self):
         readpackage = 0
 	for x in sys.argv[1:]:
 	    # print x
 	    if readpackage:
-		obj.packagename = x
+		self.packagename = x
 		readpackage = 0
-		print "Package is:"+obj.packagename
+		print "Package is:"+self.packagename
 	    if (x == "-h") or (x == "--help"):
-		printHelp()
+		self.printHelp()
 		sys.exit(0)
 	    if x == "-i":
 		print "Will install without asking"
-		obj.installWithoutAsking = 1
+		self.installWithoutAsking = 1
 	    if x == "-d":
 		print "Will compile without debug info"
-		obj.noDebug = 1
+		self.noDebug = 1
 	    if x == "-o":		
 		print "Optimizations enabled"
-		obj.noOptimizations = 0
+		self.noOptimizations = 0
 	    if x == "--remove-admin-dir":
 		print "Will remove admin dir before cvs checkout"
-		obj.removeAdminDir = 1
+		self.removeAdminDir = 1
 	    if x == "--no-cvs-checkout":
 		print "Will not do CVS checkout"
-		obj.RunCVSCheckOut = 0
+		self.RunCVSCheckOut = 0
 	    if x == "--no-configure":
 		print "Will not run configure"
-		obj.RunConfigure = 0
+		self.RunConfigure = 0
+	    if x == "--disable-compile":
+		print "Compilation disabled"
+		self.RunCompile = 0
 	    if x == "--packagename":
 		readpackage = 1
+
+    def printHelp(self):
+	  print version()
+	  print "\t-h\t\t\tPrint this help"
+	  print "\t-i\t\t\tInstall without asking"
+	  print "\t-d\t\t\tDisable debug info"
+	  print "\t-o\t\t\tEnable optimization"
+	  print "\t-packagename package\tCompile the specified package"
+	  print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
+	  print "\t--no-cvs-checkout\tDo not do cvs checkout"
+	  print "\t--no-configure\tDo not run configure"    
+	  print "\t--disable-compile\tDo not compile"
 		
 ## end of configuration class 
 
@@ -285,20 +301,8 @@ def runInstall(compiledir):
 #   Version 
 #
 def version():
-    return "kdecompile v.0.3.5 as of November 28, 2000"
+    return "kdecompile v.0.3.6 as of November 29, 2000"
 
-#
-#   Print help
-#
-def printHelp():
-    print version()
-    print "\t-h\t\t\tPrint this help"
-    print "\t-i\t\t\tInstall without asking"
-    print "\t-d\t\t\tDisable debug info"
-    print "\t-o\t\t\tEnable optimization"
-    print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
-    print "\t--no-cvs-checkout\tDo not do cvs checkout"
-    print "\t--no-configure\tDo not run configure"    
 
 #
 # And here comes the main function
@@ -318,7 +322,10 @@ def doAll(packagename, currdir, cvsdir):
     if config.noOptimizations:
 	runRemoveO2(currdir)
     #runCompile(currdir);
-    runCompileThread(currdir)
+    if config.RunCompile:
+	runCompileThread(currdir)
+    else:
+	print "Package "+packagename+" was checked out and configured"
 
     
 config=Config()    
@@ -354,24 +361,12 @@ else:
 	cvsdir = cvsdir + "/"+x    
 
 
-#print cvsdir
 print "\n\nCompiling package: "+packagename
 print "Compilation directory: "+currdir
 print "Source directory: "+cvsdir
 print "\n"
 
 doAll(packagename, currdir, cvsdir)
-
-#if config.RunCVSCheckOut:
-#    runCVSCheckOut(cvsdir, packagename)
-#if config.RunConfigure:
-#    runAutoConf(cvsdir+"/"+packagename)
-#    runConfigure(currdir, packagename, config.installDir)
-#countDirs(cvsdir+"/"+packagename)
-#if config.noOptimizations:
-#    runRemoveO2(currdir)
-#runCompile(currdir);
-#runCompileThread(currdir)
 
 xmessline = "xmessage -buttons ThatsAll:0,Install:1 "
 xmessline = xmessline + "\"Compilation of " + packagename + " terminated\""
