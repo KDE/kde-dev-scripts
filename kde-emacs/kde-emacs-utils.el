@@ -183,6 +183,7 @@
 	     ))
 	   (insert insertion-string)
 	   (forward-char -3)
+	   (c-indent-command)
 	   (save-excursion
 	     (and (string-match ".*/" file)
 		  (setq file (replace-match "" t nil file)))
