@@ -1,6 +1,5 @@
 #! /usr/bin/perl
 
-$linenr = 0;
 $filename = "";
 @filenames = ();
 
@@ -21,6 +20,7 @@ if (! $filename) {
 
 $string = "";
 $intext = 0;
+$linenr = 0;
 
 open(FILE, $filename);
 
