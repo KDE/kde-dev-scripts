@@ -34,7 +34,7 @@ variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
 test.h file and having test.cpp file readable in the same directory it will
 return (\"test.cpp\" t)."
   (interactive)
-  (let* ((name (buffer-file-name))
+  (let* ((name (buffer-name))
 	 (nname (file-name-sans-extension name))
 	 (ext (file-name-extension name))
 	 (ret nil))
@@ -59,14 +59,12 @@ return (\"test.cpp\" t)."
     ret
     ))
 
-; TODO: look at buffers too, not only files, so that it's possible to switch
-; between two new buffers, not saved yet.
 (defun kde-switch-cpp-h ()
   "Switches between the source and the header file 
 (both directions)."
   (interactive)
   (let ((file (kde-file-get-cpp-h)))
-    (if (cdr file)
+    (if (car file)
 	(find-file (car file))
       (error "Coresponding source file doesn't exist.")
     )
