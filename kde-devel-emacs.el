@@ -1072,18 +1072,24 @@ With arg, to it arg times."
 
 ; Makes '(' insert '( '
 (defun insert-parens () (interactive) (insert "( "))
-; Makes '(' insert ') ', unless we just typed '('
+; Makes '(' insert ') ', unless there's already a ' '
 (defun insert-parens2 () (interactive)
-  (let ((n ""))
-    (save-excursion
-      (forward-char -2) 
-      (setq n (looking-at "( ")) )
+  (let ((remv 0) (nospac 0))
+    (forward-char -2) 
+    (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
+    (forward-char 1) 
+    (setq nospac (or (looking-at " ") (looking-at "(")) ) ; no space to be added
+    (forward-char 1) 
     (cond
-     (n (progn
-	  (delete-backward-char 1)
-	  (insert ")")))
+     (remv (progn
+	     (delete-backward-char 1)
+	     (insert ")"))) ; the () case
+     (nospac (insert ")")) ; no space to be added
      (t ;else
-      (insert " )") ))))
+      (insert " )") ))) ; normal case, prepend a space
+  (blink-matching-open) ; show the matching parens
+  )
+
 ; Makes ',' insert ', '
 (defun insert-comma () (interactive) (insert ", "))
 (defun insert-curly-brace () (interactive) 
