@@ -39,7 +39,14 @@ if ( $#ARGV < 0 ) {
 $myname -- Creates standalone tar.gz packages for apps in KDE CVS modules.
 
 usage:
-	$myname <baseline dir> <packagedir>
+        $myname <module dir> <packagedir> [<version>]
+        
+example:
+        $myname kdebase kioslave/smb 3.1 
+        
+This will create a package smb-3.1.tar.[gz|bz2] containing the sources 
+from kdebase/kioslave/smb/ and the admin/ dir from kdebase/
+        
 EOF
 
 }
@@ -67,7 +74,9 @@ sub main
 
 # dependent pathnames
 
-	$packagedir = "$package-$version";
+        @subdirs = split(/\//,$package);
+        $packagedir="@subdirs[$#subdirs]-$version";
+
 	$origdir = $basedir."/".$package;
 
 	mkpath ( $packagedir );
