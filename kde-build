@@ -105,7 +105,7 @@ compute_time() {
 #
 install_module() {
   echo -n "  Installing..."
-  setTitle "Installing module $module..."
+  set_title "Installing module $module..."
   if test "x$KDELOGDIR" != x; then
     echo "-> Installation <---------------------------------------------------------------" >> $logfile
     cmd_make_install="$cmd_make_install >> $logfile 2>&1"
@@ -280,7 +280,7 @@ for module in $modules; do
     echo "Update for module $module skipped."
   else
     echo -n "Updating module $module..."
-    setTitle "Updating module $module..."
+    set_title "Updating module $module..."
     if test "x$KDELOGDIR" != x; then
       echo "-> Update <---------------------------------------------------------------" >> $logfile
       cmd_update_raw="$cmd_update >> $logfile 2>&1"
@@ -350,7 +350,7 @@ for module in $KDEMODULES; do
       # Configure the module.
       #
       echo -n "  Configuring..."
-      setTitle "Configuring module $module..."
+      set_title "Configuring module $module..."
       cmd_configure="./configure --enable-debug --enable-profile --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
       if test "x$KDELOGDIR" != x; then
@@ -372,7 +372,7 @@ for module in $KDEMODULES; do
         # Compile the module.
         #
         echo -n "  Compiling..."
-        setTitle "Compiling module $module..."
+        set_title "Compiling module $module..."
         cmd_make="make"
         echo "$critical_modules" | grep -q $module || cmd_make="$cmd_make -k"
         if test "x$KDELOGDIR" != x; then
@@ -417,7 +417,7 @@ for module in $KDEMODULES; do
   fi
 done
 
-setTitle "KDE build finished."
+set_title "KDE build finished."
 
 exit $err_no_error
 
