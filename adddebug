@@ -25,11 +25,23 @@ if test -z $ndebug; then
 fi
 find . $mxdp -name Makefile -exec perl -pi -e "$xpr" {} \;
 
-# unsermake support
-if [ -f Makefile.rules ]; then
+using_unsermake=
+if head -n 1 Makefile | grep unsermake >/dev/null; then
+    using_unsermake=new
+fi
+if head -n 1 Makefile | grep automake >/dev/null; then
+    using_unsermake=old
+fi
+
+top_builddir=`grep '^top_builddir' Makefile | sed -e 's/^.*= *//'`
+
+if test "$using_unsermake" = "new"; then
+  # It all comes from the toplevel Makefile - fix it
+  perl -pi -e "$xpr" $top_builddir/Makefile
+
+elif test "$using_unsermake" = "old"; then
   # the idea: grab the cxxflags from MakeVars, modify them, and write them down
   # in every Makefile after the line that includes MakeVars
-  top_builddir=`grep '^top_builddir' Makefile | sed -e 's/^.*= *//'`
   makevars=$top_builddir/MakeVars
   if [ -f $makevars ]; then
     # warning this uses sed, so the '?' in the perl regexp above doesn't work here
