@@ -160,6 +160,8 @@ check_libltdl() {
   fi
 }
 
+# Disable zsh feature
+CDPATH=
 
 # Get current configuration, bail out if it couldn't be found.
 #
