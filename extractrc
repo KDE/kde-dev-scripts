@@ -116,7 +116,7 @@ for my $file_name ( @ARGV )
      
      # 'database', 'associations' properties contain strings that shouldn't be translated
 
-     if ( $in_skipped_prop == 0 and $string =~ /<property name=\"(?:database|associations)\"/ )
+     if ( $in_skipped_prop == 0 and $string =~ /<property name=\"(?:database|associations|populationText)\"/ )
      {
        $in_skipped_prop = 1;
      }
