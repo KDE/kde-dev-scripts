@@ -432,6 +432,8 @@ for module in $modules; do
           else
             echo -e "$str_error"
           fi
+        else
+          echo "$str_okay"
         fi
       else
         echo -e "$str_error"
