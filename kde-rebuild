@@ -22,6 +22,13 @@ QTDIR=/usr/local/lib/qt
 #
 LOGDIR=$SRCDIR/log
 
+# It is a good idea to remove the configuration directories of the previous
+# KDE desktop by deleting ~/.kderc and ~/.kde. If you would like to have this
+# script do this automatically for you, add the home directories of the users
+# whose KDE configuration should be resetted to this space seperated list.
+#
+HOMEDIR="/home/devel"
+
 # Do you want the logfiles to be compressed? Set this variable to "yes" to
 # make the script compress the logfiles using bzip2 (using gzip as a
 # fallback is bzip2 cannot be found) and thereby save some diskspace
@@ -115,6 +122,40 @@ CRITICAL_MODULES="kde-qt-addon kdesupport kdelibs kdebase"
 # Internal variable, do not change.
 #
 DATE=`date +%Y%m%d`
+
+# This function computes the time which was needed for a certain task.
+#
+compute_time() {
+  DURATION=$[$(date +%s)-$STARTTIME]
+  HOURS=$[$DURATION / 3600]
+  MINUTES=$[$[$DURATION % 3600] / 60]
+  SECONDS=$[$DURATION % 60]
+}
+
+# This function installs a compiled CVS module.
+#
+install_module() {
+  echo -n "  Installing..."
+  test $LOGDIR && STARTTIME=`date +%s`
+  if eval "$MAKE_INSTALL"; then
+    if test $LOGDIR; then
+      compute_time()
+      echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
+    fi
+    test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
+    echo -e $STR_OKAY
+    echo "Module $MODULE successfully installed in $KDE2DIR!"
+    if test "$MODULE" = kdebase -a -n $HOMEDIR; then
+      for HOME in $HOMEDIR; do
+        test -d $HOME/.kde -a -w $HOME/.kde && rm -rf $HOME/.kde
+        test -e $HOME/.kderc -a -w $HOME/.kderc && rm -f $HOME/.kderc
+      done
+    fi
+  else
+    echo -e $STR_ERROR
+    echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_INSTALL_FAIL
+  fi
+}
 
 # Various checks to ensure that valid data has been specified, creates the
 # directory for the logfile in case it doesn't exist already.
@@ -211,10 +252,7 @@ for MODULE in $MODULES; do
 
       if eval "$CONFIGURE"; then
         if test $LOGDIR; then
-          DURATION=$[$(date +%s)-$STARTTIME]
-          HOURS=$[$DURATION / 3600]
-          MINUTES=$[$[$DURATION % 3600] / 60]
-          SECONDS=$[$DURATION % 60]
+          compute_time()
           echo "Time needed for configuration of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $CONFIGURE_LOG
         fi
         test $CMD_COMPRESS && $CMD_COMPRESS $CONFIGURE_LOG
@@ -234,10 +272,7 @@ for MODULE in $MODULES; do
 
         if eval "$MAKE"; then
           if test $LOGDIR; then
-            DURATION=$[$(date +%s)-$STARTTIME]
-            HOURS=$[$DURATION / 3600]
-            MINUTES=$[$[$DURATION % 3600] / 60]
-            SECONDS=$[$DURATION % 60]
+            compute_time()
             echo "Time needed for compilation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_LOG
           fi
           test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_LOG
@@ -245,7 +280,7 @@ for MODULE in $MODULES; do
 
           # Install the module.
           #
-          export INSTALL="/usr/bin/install -c -p"          
+          export INSTALL="/usr/bin/install -c -p"
           MAKE_INSTALL="make install"
           MAKE_INSTALL_LOG="$LOGDIR/$MODULE-install-$DATE"
           test $LOGDIR && MAKE_INSTALL="$MAKE_INSTALL > $MAKE_INSTALL_LOG 2>&1"
@@ -253,41 +288,9 @@ for MODULE in $MODULES; do
           if test ! -w $KDE2DIR; then
             echo "  Please enter the root password to install module $MODULE."
             echo -n "  "
-            su -c"echo -n '  Installing...';
-            test $LOGDIR && STARTTIME=$(date +%s)
-            if eval $MAKE_INSTALL; then
-              if test $LOGDIR; then
-                DURATION=$[$(date +%s)-$STARTTIME]
-                HOURS=$[$DURATION / 3600]
-                MINUTES=$[$[$DURATION % 3600] / 60]
-                SECONDS=$[$DURATION % 60]
-                echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
-              fi
-              test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
-              echo -e $STR_OKAY;
-              echo Module $MODULE successfully installed in $KDE2DIR!;
-              else
-              echo -e $STR_ERROR;
-              echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_INSTALL_FAIL;
-            fi"
+            su -c"install_module()"
           else
-            echo -n "  Installing..."
-            test $LOGDIR && STARTTIME=$(date +%s)
-            if eval "$MAKE_INSTALL"; then
-              if test $LOGDIR; then
-                DURATION=$[$(date +%s)-$STARTTIME]
-                HOURS=$[$DURATION / 3600]
-                MINUTES=$[$[$DURATION % 3600] / 60]
-                SECONDS=$[$DURATION % 60]
-                echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
-              fi
-              test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
-              echo -e $STR_OKAY
-              echo "Module $MODULE successfully installed in $KDE2DIR!"
-            else
-              echo -e $STR_ERROR
-              echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_INSTALL_FAIL
-            fi
+            install_module()
           fi
         else
           echo -e $STR_ERROR
@@ -302,3 +305,65 @@ for MODULE in $MODULES; do
 done
 
 exit $ERR_NO_ERROR
+
+=head1 NAME
+
+kde-rebuild - Recompiles a tree of KDE CVS modules
+
+=head1 SYNOPSIS
+
+        kde-rebuild
+
+=head1 DESCRIPTIONS
+
+kde-rebuild is intended to recompile a tree of KDE source modules. Those
+modules have to be saved in a common directory, e.g. /kde-cvs/kdelibs,
+/kde-cvs/kdebase, /kde-cvs/kdegraphics etc. The script will take care
+of compiling them in the correct order, checks for dependencies and
+solves them. Before first invokation, the variables at the top of the
+file should be filled with appropriate values to reflect the local
+setup.
+
+Please note that KDE sources which have been downloaded via cvs,
+anoncvs or cvsup have to be prepared in a special matter (e.g. execute
+'make -f Makefile.cvs' and, for cvsup, link kde-common/admin to
+./admin) to be compile ready. Sources which have been aquired from
+tarballs or source RPMs should be compile-ready. Refer to the
+according documentation at http://www.kde.org/cvsup.html for detailed
+information.
+
+=head1 RETURN VALUE
+
+The following error codes are returned by the script.
+
+0 - No error seems to have occured
+
+1 - The script could not change into the directory of a module
+
+2 - The script could not open the file 'Makefile.in' of a module
+
+3 - The configuration of a module failed
+
+4 - The compilation of a module failed
+
+5 - The installation of a module failed
+
+6 - An invalid source directory was specified
+
+7 - An invalid Qt directory was specified
+
+=head1 EXAMPLES
+
+        cd /home/devel/src/scripts; kde-rebuild
+
+=head1 BUGS
+
+Lots, mostly that the script wasn't written with portability in mind
+and therefore won't run very nice on platforms other than Linux.
+
+=head1 AUTHOR
+
+Frerich Raabe <raabe@kde.org>
+
+=cut
+
