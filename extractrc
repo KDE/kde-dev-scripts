@@ -41,7 +41,7 @@ READING: while ( <FILE> ) {
    $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label)>';
 
    # The 'database' property contains strings that shouldn't be translated
-   if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/)) {
+   if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/ || $string=~ /<property name=\"associations\"/)) {
      $inskippedprop = 1;
    } elsif ($inskippedprop == 1 && ($string =~ /<\/property/)) {
      $inskippedprop = 0;
