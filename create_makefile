@@ -67,7 +67,7 @@ else
      else
        # Suck in AUTOCONF/AUTOMAKE detection code
        . admin/detect-autoconf.sh
-       /bin/sh admin/missing --run $AUTOMAKE --version $relpath || exit
+       /bin/sh admin/missing --run $AUTOMAKE $relpath || exit
        if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
        else 
          if test -f ../admin/am_edit; then perl ../admin/am_edit $relpath.in ; \
