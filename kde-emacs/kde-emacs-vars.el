@@ -73,6 +73,7 @@
   :version "0.1"
   :type 'string)
 
-
+(defvar magic-keys-mode nil
+  "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate...")
 
 (provide 'kde-emacs-vars)
