@@ -66,6 +66,7 @@ With arg, to it arg times."
          (font-lock-mode)
          (c-set-style "bsd")
          (setq c-tab-always-indent nil
+	       insert-tab-mode nil
                c-basic-offset 4
                c-access-key "\\<\\(signals\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
                c-hanging-comment-ender-p nil
@@ -1076,4 +1077,6 @@ With arg, to it arg times."
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
+;;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(control meta d)] 'insert-kdDebug)
+
