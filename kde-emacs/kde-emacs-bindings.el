@@ -21,7 +21,7 @@
 ; you need to call them from M-x
 
 ; -----------------------------------------------------------------
-; The above list defines the following bindings:
+; The list below defines the following bindings:
 ;
 ; F2 : offer a grep command
 ;
@@ -35,7 +35,7 @@
 ; Shift-F6 : compile this file [assumes libtool is being used]
 ; F6 : Switch from .cpp/.cc to .h and vice-versa
 ; F7 : The same, but try to find the current method in the other file
-; F9 (if enabled) : Create a member method in the .cpp, the cursor being on the definition in the .h
+; F9 : Create a member method in the .cpp, the cursor being on the definition in the .h
 ; F10: Place point on a class name, and the respective (Qt) include file will be inserted.
 ; This works with all Qt classes but can easily be extended to KDE classes.
 ; Shift-F10: Place point on a class name, and press Shift-F10, and konqueror will load
@@ -94,6 +94,7 @@
 (define-key global-map [(shift f6)] 'makethisfile)
 (define-key global-map [(f6)] 'kde-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
+(define-key global-map [(f9)] 'agulbra-make-member)
 
 ; kde-emacs-headers:
 (define-key global-map [(f10)] 'kdab-insert-header)

@@ -68,6 +68,124 @@
           )
 )))
 
+; Credits to Arnt
+(defun agulbra-make-member ()
+  "make a skeleton member function in the .cpp or .cc file"
+  (interactive)
+  (let ((class nil)
+        (function nil)
+        (file (buffer-file-name))
+        (insertion-string nil)
+        (start nil))
+    (save-excursion
+      (and (re-search-backward "^class[ \t]" nil t)
+           (progn
+             (forward-word 1)
+             (while (looking-at "[ \t]*Q_EXPORT")
+               (forward-word 2))
+             (while (looking-at "[ \t]")
+               (forward-char 1))
+             (setq start (point))
+             (while (looking-at "[A-Za-z0-9_]")
+               (forward-char 1))
+             (setq class (buffer-substring start (point))))))
+    (progn
+      (and (looking-at "$")
+           (progn
+             (search-backward ")" nil t)
+             (forward-char)
+             (backward-sexp)))
+      (and (stringp class)
+           (re-search-backward "^[ \t]")
+           (progn
+             (while (looking-at "[ \t]")
+               (forward-char 1))
+             (setq start (point))
+             (and (search-forward "(" nil t)
+                  (progn
+                    (forward-char -1)
+                    (forward-sexp)))
+             (and (looking-at "[ \t]+const")
+                  (forward-word 1))
+             (and (looking-at ";")
+                  (setq function (buffer-substring start (point))))
+             (re-search-forward "(" nil t))))
+    (and (stringp function)
+         (progn ;; get rid of virtual, static, multiple spaces, default values.
+           (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
+                (setq function (replace-match " " t t function)))
+           (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
+                (setq function (replace-match "" t t function)))
+           (and (string-match "^\\(static\\>\\)?[ \t]*" function)
+                (setq function (replace-match "" t t function)))
+           (while (string-match "  +" function)
+             (setq function (replace-match " " t t function)))
+           (while (string-match "\t+" function)
+             (setq function (replace-match " " t t function)))
+           (while (string-match " ?=[^,)]+" function)
+             (setq function (replace-match " " t t function)))
+           (while (string-match " +," function)
+             (setq function (replace-match "," t t function)))))
+    (and (stringp function)
+         (stringp class)
+         (stringp file)
+         (progn
+           (cond ((string-match (concat "^ *" class "[ \\t]*(") function)
+                  (progn
+                  (setq insertion-string
+                        (concat
+                         (replace-match
+                          (concat class "::" class "(")
+                          t t function)
+                         "\n{\n    \n}\n"))))
+                  ((string-match (concat "^ *~" class "[ \\t]*(") function)
+                   (progn
+                     (setq insertion-string
+                           (concat
+                            (replace-match
+                             (concat class "::~" class "(")
+                             t t function)
+                            "\n{\n    \n}\n"))))
+                  ((string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function)
+                   (progn
+                     (setq insertion-string
+                           (concat
+                            (replace-match
+                             (concat " " class "::" "\\1(")
+                             t nil function)
+                            "\n{\n    \n}\n"))))
+                  (t
+                   (error (concat "Can't parse declaration ``"
+                                  function "'' in class ``" class
+                                  "'', aborting"))))
+           (stringp insertion-string))
+         (string-match "\\.h$" file)
+         (setq f (replace-match ".cpp" t t file))
+         (if (file-readable-p f )
+               (message "")
+           (progn
+              (string-match "\\.h$" file)
+              (setq f (replace-match ".cc" t t file))
+              ))
+         (find-file f)
+         (progn
+           (goto-char (point-max))
+	   ; TODO: go up above #include "blah.moc" if there's one
+           (insert insertion-string)
+           (forward-char -3)
+           (save-excursion
+             (and (string-match ".*/" file)
+                  (setq file (replace-match "" t nil file)))
+             (or (re-search-backward
+                  (concat "^#include *\"" file "\"$") nil t)
+                 (progn
+                   (goto-char (point-min))
+                   (re-search-forward "^$" nil t)
+                   (insert "\n#include \"" file "\"\n")))))))
+  (fume-rescan-buffer)
+)
+
+
 
 ; Adds the current file to Makefile.am.
 ; Written by David.
