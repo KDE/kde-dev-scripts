@@ -32,6 +32,14 @@ fi
 cd $builddir
 srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
 UNSERMAKE=`type -p unsermake`
+using_unsermake=
+if head -n 1 Makefile | grep unsermake >/dev/null; then
+    using_unsermake=new
+fi
+if head -n 1 Makefile | grep automake >/dev/null; then
+    using_unsermake=old
+fi
+
 
 case $1 in
   hidechange )
@@ -51,12 +59,12 @@ case $1 in
     ;;
   show )
     if [ $# -ne 1 ]; then usage; fi
-    if test -z "$UNSERMAKE"; then
+    if test "$using_unsermake" != "new"; then
       # Look at the commands that make will issue, and extract "-o output".
       # The only trouble, with libtool, is that this gives us .libs/foo.o instead of foo.lo
       make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
     else
-      # Solve the above problem (when using unsermake) by watching the "echo" lines for creating .lo files
+      # Solve the above problem (when using new-unsermake) by watching the "echo" lines for creating .lo files
       # separately from the rest of the "-o target" lines (for libs and binaries)
       # (For libs and bins another way would be to grep for "linking")
       # The "ls" is for sorting by date
