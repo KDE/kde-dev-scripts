@@ -441,6 +441,7 @@ Otherwise treat `\\' in NEWTEXT as special:
   (compile "make -k install-exec")
   )
 
+;;; ### TODO fails when the buffer-name is somefile.cpp<2>
 (defun makethisfile ()
   "Try to compile the currently opened file"
   (interactive)
