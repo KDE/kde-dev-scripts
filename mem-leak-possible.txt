@@ -1,0 +1,11 @@
+Potential mem leak in KDE
+-------------------------
+Test these class:
+	* QFontDatabase
+	* QFile
+	* QFileInfo
+	* QTimer
+	* KTempFile
+	* QTextStream
+	* QSocket
+
