@@ -524,6 +524,9 @@ sub fix_unnecessary($)
     # avoid this one as it might cause
     # certain code parts to be disabled from compilation       
     next if( $include eq "qmodules.h");
+    # don't remove this one either. causes conditional
+    # code to be compiled incorrectly
+    next if( $include eq "kdeversion.h");
     # check if it is its own header file
     my $blankhdr = $include;
     $blankhdr =~ s/(.*)\.[^\.]+/$1/;
