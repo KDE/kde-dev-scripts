@@ -57,6 +57,9 @@ fixheaders      Adds header files as it recognices make error output
 
 fixkdeincludes	Tries to reduce the number of includes in KDE source files
 
+fixuifiles	Fixes up Qt Designer .ui files (version, accels, generated names)
+		To use before any commit of a .ui file.
+
 cvslastchange   launches "cvs diff -u" to display the last applied changes for a
                 given file. HEAD branch only.
 

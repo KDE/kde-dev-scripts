@@ -1,0 +1,175 @@
+#!/usr/bin/perl -w
+# fixuifiles processes .ui files and removes some insanity:
+# * Too high minimum Qt version (see $minversion_* in the top of the script)
+# * Hardcoded untranslatable Alt+Letter accels
+# * TODO: generated form names
+
+# This script is licensed under the GPL version 2.
+# (c) 2004 David Faure <faure@kde.org>
+# Based on fixkdeincludes, (c) 2001-2003 Dirk Mueller <mueller@kde.org>
+
+use File::Basename;
+use Cwd;
+
+# Fix the version number in .ui files if it's bigger than this:
+$minversion_maj = 3;
+$minversion_min = 2;
+
+# declaration of useful subroutines
+sub process_ui_file($);
+sub find_ui_files($);
+
+# some global variables
+$verbose = 0; # turns on debugging
+@explicitfiles = (); # filled in if passing files on the command line
+
+while (defined ($ARGV[0]))
+{
+  $_ = shift;
+  if (/^--help$|^-h$/)  {
+    print "Usage: fixuifiles [--verbose | -v] files...\n";
+    exit 0;
+  }
+  elsif (/^--verbose$|^-v$/) {
+    $verbose = 1;
+  }
+  elsif (!/^-/) {
+    push @explicitfiles, $_;
+  }
+}
+
+# Find .ui files in the given dir
+sub find_ui_files($)
+{
+  my ( $dir ) = @_;
+
+  opendir (DIR, "$dir") || die "Couldn't read '$dir'\n";
+  my @files = grep { /^.*\.ui$/ } readdir(DIR);
+  closedir(DIR);
+
+  print "found files: [ " . join(' ', @files) . " ] in $dir\n" if ($verbose);
+
+  # prefix them with $dir
+  my @retfiles = ();
+  foreach $file(@files) {
+    push @retfiles, "$dir/$file";
+  }
+
+  return @retfiles;
+}
+
+sub fix_version($)
+{
+  my $srcfile = shift @_;
+  open(SRC, "< $srcfile") || die "fix_version: couldn't open '$srcfile'\n";
+  my @contents = <SRC>;
+  my @fixedcontents = ();
+  close(SRC);
+  my $needfix = 0;
+  my $foundversion = 0;
+  foreach $line (@contents) {
+      if (!$foundversion && $line =~ m/version=\"([0-9]+)\.([0-9]+)\"/) {
+	  my $version_maj = $1;
+	  my $version_min = $2;
+	  if ( $version_maj > $minversion_maj ||
+	       ( $version_maj == $minversion_maj && $version_min > $minversion_min ) ) {
+	      $line =~ s/version=\"[0-9]+\.[0-9]+\"/version=\"$minversion_maj.$minversion_min\"/o;
+	      $needfix = 1;
+	      print "$srcfile: version was $version_maj.$version_min, set to $minversion_maj.$minversion_min\n";
+	  }
+	  $foundversion = 1;
+      }
+      push @fixedcontents, $line;
+  }
+  if ($needfix) {
+      open(SRC, "> $srcfile") || die "fix_version: couldn't open '$srcfile' for writing\n";
+      print SRC @fixedcontents;
+      close(SRC);
+  }
+}
+
+sub fix_accels($)
+{
+  my $srcfile = shift @_;
+  open(SRC, "< $srcfile") || die "fix_accels: couldn't open '$srcfile'\n";
+  my @contents = <SRC>;
+  close(SRC);
+  return if ( !grep( /<string>Alt\+[A-Z]<\/string>/, @contents ));
+
+  my $firstline;
+  my $accelsremoved = 0;
+  my $inside_accel = 0;
+  # inside_accel is 0 before <property>
+  # 1 after <property> and before <string>
+  # 2 after <string> if alt+letter, and before </property>
+  foreach $line (@contents) {
+      if ( $inside_accel == 1 ) {
+	  if ( $line =~ m/<string>(Alt\+[A-Z])<\/string>/ ) {
+	      print "$srcfile: accel $1 removed\n" if ($verbose);
+	      $inside_accel = 2;
+	      $accelsremoved++;
+	  } else { # Not alt+letter, keep accel
+	      push @fixedcontents, $firstline;
+	      $inside_accel = 0;
+	  }
+      }
+      if ($line =~ m/property name=\"accel\"/) {
+	  $inside_accel = 1;
+	  $firstline = $line;
+      }
+      if ($inside_accel == 0) {
+	  push @fixedcontents, $line;
+      }
+      $inside_accel = 0 if ($inside_accel && $line =~ m/<\/property>/);
+  }
+  if ($accelsremoved) {
+      print "$srcfile: $accelsremoved accels removed\n" if ($verbose);
+      open(SRC, "> $srcfile") || die "fix_accels: couldn't open '$srcfile' for writing\n";
+      print SRC @fixedcontents;
+      close(SRC);
+  }
+}
+
+# Process one .ui file
+sub process_ui_file($)
+{
+  local $file = shift @_;
+  my $pure = basename($file);
+  print "Checking: $file\n" if($verbose);
+  &fix_version($file);
+  &fix_accels($file);
+}
+
+#############################################################################
+# here is the main logic
+#
+
+# process files from the command line, if any
+if ( $#explicitfiles >= 0 ) {
+  foreach $file( @explicitfiles ) {
+    &process_ui_file( $file );
+  }
+  exit 0;
+}
+
+# first generate a list of subdirectories
+@dirlist = ();
+push @dirlist, ".";
+foreach $dir ( @dirlist ) {
+ opendir (DIR, "$dir") || warn "Couldn't read '$dir'";
+ my $subdir = "";
+ while( $subdir = readdir(DIR)) {
+   next if ($subdir =~ /^\./);
+   next if !( -d "$dir/$subdir");
+   push @dirlist, "$dir/$subdir";
+ }
+ closedir(DIR);
+}
+
+# now iterate over all subdirs
+foreach $dir(@dirlist) {
+  @uifile = find_ui_files($dir);
+  foreach $file(@uifile) {
+    &process_ui_file($file);
+  }
+}
