@@ -1,5 +1,5 @@
 ;; ------------------------------ COPYRIGHT NOTICE ------------------------------
-;; klaralv.el version 1.2
+;; klaralv.el version 1.3
 ;; Copyright Klaralvdalens Datakonsult AB.
 ;;
 ;; This program is free software; you can redistribute it and/or modify it
