@@ -5,7 +5,7 @@
 # the right directory for calling /usr/bin/make
 # (C) Stephan Kulow
 
-# You may need to set OBJ_REPLECEMENT variable to get it to work.
+# You may need to set OBJ_REPLACEMENT variable to get it to work.
 # In the variable use the sed syntax to switch directories, for example
 # export OBJ_REPLACEMENT="s:/home/zack/cvs/kde:/home/zack/build:"
 # will assure that the builds are performed under /home/zack/build
