@@ -74,7 +74,8 @@ end
 # Prints the contents of a QFont
 define printqfont
        print *($arg0).d
-       printqstring ($arg0).d->req.family
+       printqstring ($arg0).d->request.family
+       print ($arg0).d->request.pointSize
 end
 
 # Prints the contents of a QColor
