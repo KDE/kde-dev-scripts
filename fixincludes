@@ -371,8 +371,12 @@ sub fix_unnecessary($)
   my $builddir = $srcdir;
   my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
   # we have to use sed here, because perl can't do s#a#b#
-  $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT` if (defined $objreplacement);
-  print "builddir=$builddir\n";
+  if (defined $objreplacement)
+  {
+    $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
+    chomp $builddir;
+  }
+  #print "builddir=$builddir\n";
 
   my @includes = &find_removable_includes($srcfile);
 
@@ -393,7 +397,7 @@ sub fix_unnecessary($)
   my $output = `$makecmd $blanksrc.lo 2>&1`;
   $objextension = ".lo" if ( 0 == ($? >> 8));
   if($objextension eq "BUG") {
-    print "failed with .lo... \n";
+    print "failed with .lo... ";
     $output = `$makecmd $blanksrc.o 2>&1`;
     $objextension = ".o" if ( 0 == ($? >> 8));
   }
@@ -425,9 +429,9 @@ sub fix_unnecessary($)
     # check if it still compiles
     if($verbose) {
       chdir($builddir);
-      unlink "$blanksrc$objextension";
+      unlink "$builddir/$blanksrc$objextension";
       `$makecmd $blanksrc$objextension 2>&1`;
-      die "unexpected error $output\nexitcode=($? >> 8)" if($? >> 8);
+      die "unexpected error $output\nexitcode=" . ($? >> 8) if($? >> 8);
       chdir($srcdir);
     }
 
@@ -438,7 +442,8 @@ sub fix_unnecessary($)
     chdir($builddir);
 
     # try if it compiles
-    unlink "$blanksrc$objextension";
+    unlink "$builddir/$blanksrc$objextension";
+    print "$builddir/$blanksrc$objextension\n";
     $output=`$makecmd $blanksrc$objextension 2>&1`;
     my $retcode = ($? >> 8);
     #print "retcode=$retcode\n$output" if ($verbose);
