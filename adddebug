@@ -34,9 +34,7 @@ if [ -f Makefile.rules ]; then
   if [ -f $makevars ]; then
     # warning this uses sed, so the '?' in the perl regexp above doesn't work here
     cxxflags=`grep ^CXXFLAGS $makevars | sed -e 's/[\t ]-O[1-9]\b//g;s/[\t ]-march=\S+\b//g;s/[\t ]-DNDEBUG\b//g;s/[\t ]-DNO_DEBUG\b//g'`
-#    echo "$cxxflags"
-    xpr="if ( /^include .*MakeVars$/) { "'$_'" .= \"\n$cxxflags\"; }"
-    echo "$xpr"
+    xpr="s/^CXXFLAGS\s*=.*//; if ( /^include .*MakeVars$/) { "'$_'" .= \"\n$cxxflags\"; }"
     find . $mxdp -name Makefile -exec perl -pi -e "$xpr" {} \;
   else
     echo "ERROR: top_builddir is $top_builddir but $makevars not found"
