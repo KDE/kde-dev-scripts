@@ -234,7 +234,6 @@ This function does not do any hidden buffer changes."
 	    (if (string-match "(.*" sig) ; remove args
 		(setq sig (replace-match "" nil t sig)))
 	    (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t)
-	    (message c-syntactic-context)
 	    ))
 )))
 
