@@ -11,7 +11,7 @@ bin_SCRIPTS = \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py
 
 # sorted by bin_SCRIPTS reference
-man1_MANS = \
+man_MANS = \
   kde-build.1 \
   cvsversion.1 cvscheck.1 \
   noncvslist.1 \
