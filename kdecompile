@@ -44,7 +44,7 @@ class Config:
 	    if readpackage:
 		obj.packagename = x
 		readpackage = 0
-		print "Package is:"+z.packagename
+		print "Package is:"+obj.packagename
 	    if (x == "-h") or (x == "--help"):
 		printHelp()
 		sys.exit(0)
