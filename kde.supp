@@ -11,13 +11,13 @@
 
 {
     pthread_mutex_unlock
-    PThread
+    core:PThread
     fun:__pthread_mutex_unlock
 }
 
 {
     pthread_error/pthread_mutex_destroy
-    PThread
+    core:PThread
     fun:pthread_error
     fun:__pthread_mutex_destroy
 }
@@ -28,7 +28,7 @@
 
 {
     strchr/decompose_rpath/_dl_map_object
-    Cond
+    MemCheck:Cond
     fun:strchr
     fun:decompose_rpath
     fun:_dl_map_object
@@ -36,7 +36,7 @@
 
 {
     strchr/libc/_dl_catch_error
-    Cond
+    MemCheck:Cond
     fun:strchr
     obj:*libc-2.2.?.so
     fun:_dl_catch_error
@@ -44,7 +44,7 @@
 
 {
     strrchr/_dl_map_object_from_fd/_dl_map_object
-    Cond
+    MemCheck:Cond
     fun:strrchr
     fun:_dl_map_object_from_fd
     fun:_dl_map_object
@@ -56,14 +56,14 @@
 
 {
     libXft(Cond)
-    Cond
+    MemCheck:Cond
     obj:/usr/X11R6/lib/libXft.so.1.1
     obj:/usr/X11R6/lib/libXft.so.1.1
 }
 
 {
     write(buf)/libc/libICE
-    Param
+    Addrcheck,Memcheck:Param
     write(buf)
     obj:*libc-2.2.?.so
     obj:/usr/X11R6/lib/libICE.so.6.3
@@ -71,7 +71,7 @@
 
 {
     write(buf)/libc/libX11
-    Param
+    Addrcheck,Memcheck:Param
     write(buf)
     obj:*libc-2.2.?.so
     obj:/usr/X11R6/lib/libX11.so.6.2
@@ -79,7 +79,7 @@
 
 {
     writev(vector[...])/libc/libX11
-    Param
+    Addrcheck,Memcheck:Param
     writev(vector[...])
     obj:*libc-2.2.?.so
     obj:/usr/X11R6/lib/libX11.so.6.2
