@@ -1104,25 +1104,29 @@ With arg, to it arg times."
 
 
 ; Makes '(' insert '( ' or ' ( ' where appropiate
-(defun insert-parens () (interactive) 
-  (let ((n 0))
+(defun insert-parens (arg) (interactive "*P")
+  (let ((n nil))
     (save-excursion
       (setq n (or (progn (forward-char -2) (looking-at "if"))
                   (progn (forward-char -1) (looking-at "for"))
                   (progn (forward-char -1) (looking-at "case"))
                   (progn (forward-char -1) (looking-at "while"))
-               )
+                  )
+            )
       )
-    )
     (cond
      (n (progn
-          (insert " ( ")))
+          (insert " ")
+          (self-insert-command (prefix-numeric-value arg))
+          (insert " ")
+          ))
      (t ;else
-      (insert "( ") ))))
+      (self-insert-command (prefix-numeric-value arg))
+      (insert " ") ))))
 
 ; Makes ')' insert ' )', unless we just typed '('
-(defun insert-parens2 () (interactive)
-  (let ((remv 0) (nospac 0))
+(defun insert-parens2 (arg) (interactive "*P")
+  (let ((remv nil) (nospac nil))
     (forward-char -2) 
     (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
     (forward-char 1) 
@@ -1131,22 +1135,31 @@ With arg, to it arg times."
     (cond
      (remv (progn
 	     (delete-backward-char 1)
-	     (insert ")"))) ; the () case
-     (nospac (insert ")")) ; no space to be added
+	     (self-insert-command (prefix-numeric-value arg)))) ; the () case
+     (nospac (self-insert-command (prefix-numeric-value arg))) ; no space to be added
      (t ;else
-      (insert " )") ))) ; normal case, prepend a space
-  (blink-matching-open) ; show the matching parens
+      (if abbrev-mode ; XEmacs
+          (expand-abbrev))
+      (insert " ") 
+      (self-insert-command (prefix-numeric-value arg))
+      ))) ; normal case, prepend a space
+  ;(blink-matching-open) ; show the matching parens
   )
 
 ; Makes ',' insert ', '
-(defun insert-comma () (interactive)
-  (cond 
-   ((looking-at " ") (progn (insert ",")))
-   (t (progn (insert ", ")))
-  )
-)
-(defun insert-curly-brace () (interactive) 
-  (let ((n 0) (o 0))
+(defun insert-comma (arg)
+  (interactive "*P")
+  (if 
+   (or (looking-at " ") 
+       arg)
+      (progn 
+        (self-insert-command (prefix-numeric-value arg)))
+    (progn 
+      (self-insert-command 1)
+      (insert " "))))
+
+(defun insert-curly-brace (arg) (interactive "*P") 
+  (let ((n nil) (o nil))
     (save-excursion
       (forward-char -2) 
       (setq n (looking-at " )"))
@@ -1154,14 +1167,15 @@ With arg, to it arg times."
     )
     (cond
      (n (progn
-	  (insert " {")
+	  (insert " ")
+          (self-insert-command (prefix-numeric-value arg))
           (newline-and-indent)))
      (o (progn
           (newline)
-          (insert "{")
+          (self-insert-command (prefix-numeric-value arg))
           (newline-and-indent)))
      (t (progn ;else
-          (insert "{") 
+          (self-insert-command (prefix-numeric-value arg))
           (save-excursion
             (beginning-of-line)
             (c-indent-command))))
