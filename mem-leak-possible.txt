@@ -15,4 +15,4 @@ Test these class:
 	* KConfig
 	* KSimpleConfig
 	* QDataStream
-	 
+	* QBuffer 
