@@ -40,7 +40,7 @@
            (untabify (point-min) (point-max))
            (set-buffer-modified-p bmp)
            (and (buffer-modified-p)
-                  (write-file))))))
+                  (basic-save-buffer))))))
 
 (defun agulbra-c++-clean-out-spaces ()
   "Remove spaces at ends of lines and untabifies, only in c++ mode"
