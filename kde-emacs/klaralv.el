@@ -140,13 +140,13 @@
     (KDStream.h KDStream)
     (KDTimeWidget.h KDTimeWidget)
 
-    ; Fake entries, which is usefull
+    ; Useful fake entries
     (qapplication.h qApp)
     (kapplication.h kapp)
     (klocale.h i18n I18N_NOOP)
     (kstandarddirs.h locate locateLocal)
     (stdlib.h getenv)
-    (unistd.h unlink)
+    (unistd.h unlink sleep usleep)
     (iostream.h cout cerr)
     (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
 
