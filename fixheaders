@@ -43,7 +43,10 @@ $lastdir = '.';
  '`stderr\' undeclared \(first use this function' => "stdio",
  'invalid use of undefined type `class KConfig' => "kconfig",
  'warning: implicit declaration of function `int f?printf' => "stdio",
-
+ 'no method `KGlobal::' => "kglobal",
+ '`KGlobal\' undeclared \(first use this function\)' => "kglobal",
+ 'warning: implicit declaration of function `int locate\(\.\.\.\)' => "kstddirs",
+ 
 );
 
 %changes = ();
@@ -56,9 +59,13 @@ while(<>)
     print STDERR "entering $lastdir\n";
     next;
   }
-  if (/^(.*):\d*: (.*)$/) {
-    $file = "$lastdir/$1";
+  if (/^([^:]*):\d*: (.*)$/) {
+    $file = $1;
     $line = $2;
+    if ($file !~ m,^\/,) {
+      $file = "$lastdir/$file";
+    }
+    
   } else {
     print STDERR $_;
     next;
