@@ -167,18 +167,20 @@ sub processEntries
         closedir(DIR);
         if( open(CVSIGNORE, $dir."/.cvsignore") ) {
           while(<CVSIGNORE>) {
-            next if (! /^(\S+)\s*$/ );
-            my $entry = $1;
-            if ($entry =~ /[\*\?]/) {
-              my $pattern = quotemeta $entry;
-              $pattern =~ s/\\\*/.*/g;
-              $pattern =~ s/\\\?/./g;
-              foreach $m (keys (%dirunknown)) {
-                $dirunknown{$m} = 0 if ($m =~ /^$pattern$/);
+            s/\s*$//;
+            my $line = $_;
+            foreach my $entry ( split(/ /,$line) ) {
+              if ($entry =~ /[\*\?]/) {
+                my $pattern = quotemeta $entry;
+                $pattern =~ s/\\\*/.*/g;
+                $pattern =~ s/\\\?/./g;
+                foreach $m (keys (%dirunknown)) {
+                  $dirunknown{$m} = 0 if ($m =~ /^$pattern$/);
+                }
+                next;
               }
-              next;
+              $dirunknown{$entry} = 0;
             }
-            $dirunknown{$entry} = 0;
           }
           close(CVSIGNORE);
         }
