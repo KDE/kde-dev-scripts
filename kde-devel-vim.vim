@@ -120,7 +120,7 @@ function! SwitchHeaderImpl()
 endfunction
 
 function! IncludeGuard()
-	let guard = substitute( expand( '%' ), '\([^.]*\)\.h', '__\1_h__', '' )
+	let guard = toupper( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ) )
 	call append( '.', '#ifndef ' . guard )
 	+
 	call append( '.', '#define ' . guard )
