@@ -67,6 +67,7 @@ $lastdir = '.';
  '`QButton\' undeclared \(first use this function\)' => "qbutton",
  'no method `QCursor::pos' => "qcursor",
  '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
+ '`BarIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`UserIcon\' undeclared \(first use this function\)' => "kiconloader",
  'implicit declaration of function `int UserIcon\(...\)\'' => "kiconloader",
