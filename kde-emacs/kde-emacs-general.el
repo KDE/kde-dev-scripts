@@ -34,7 +34,7 @@ variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
 test.h file and having test.cpp file readable in the same directory it will
 return (\"test.cpp\" t)."
   (interactive)
-  (let* ((name (buffer-name))
+  (let* ((name (file-name-nondirectory (buffer-file-name)))
 	 (nname (file-name-sans-extension name))
 	 (ext (file-name-extension name))
 	 (ret nil))
