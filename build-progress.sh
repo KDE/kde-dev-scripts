@@ -13,7 +13,7 @@ set_title "Progress of kde-build script..."
 
 cd $KDELOGDIR
 while true; do 
-    dir=`ls -t | head -1 | xargs grep "Entering directory" | tail -1 | awk "{print \\$4}" | sed "s'$KDESRCDIR/''g"`
+    dir=`ls -t | head -n 1 | xargs grep "Entering directory" | tail -n 1 | awk "{print \\$4}" | sed "s'$KDESRCDIR/''g"`
     set_title "Building $dir"
     clear
     grep --no-filename -i "time needed" *build* | \
