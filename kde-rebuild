@@ -9,8 +9,8 @@
 # These strings are defined as variables to make the output look more
 # consistent.
 #
-STR_OKAY="done!"
-STR_ERROR="failed!"
+str_okay="done!"
+str_error="failed!"
 
 # The variables whose name is prefixed with ERR_ hold the error codes which
 # are returned by the script and depend on the reason for aborting the
@@ -18,84 +18,93 @@ STR_ERROR="failed!"
 #
 # No error has been noticed, everything seems to be fine.
 #
-ERR_NO_ERROR="0"
+err_no_error="0"
 
 # Could not change into a directory of a module - wrong owner/access
 # settings?
 #
-ERR_CHANGE_INTO_MOD_DIR="1"
+err_change_into_mod_dir="1"
 
 # Could not find the file 'Makefile.in' for a module, mostly happens if
 # 'make -f Makefile.cvs' hasn't been executed for a module.
 #
-ERR_NO_MAKEFILE_IN="2"
+err_no_makefile_in="2"
 
 # The 'configure' command failed for a module because the system doesn't
 # support certain features - I hope you activated logfile generation... ;)
 #
-ERR_CONFIGURE_FAIL="3"
+err_configure_fail="3"
 
 # The compilation of a module failed - if the module is defined in
-# $CRITICAL_MODULES (see below) the execution is aborted, otherwise the script
+# $critical_modules (see below) the execution is aborted, otherwise the script
 # will continue with the next module.
 #
-ERR_COMPILE_FAIL="4"
+err_compile_fail="4"
 
 # The installation of a module failed - this mostly happens if there's not
 # enough free disk space on the partition which $KDEDIRS is mounted to.
 #
-ERR_INSTALL_FAIL="5"
+err_install_fail="5"
 
 # The $KDESRCDIR variable wasn't set or contains a non-existant directory.
 #
-ERR_INV_KDESRCDIR="6"
+err_inv_kdesrcdir="6"
 
 # The $QTDIR variable wasn't set, points to a non-existant directory or
 # doesn't contain a bin/, lib/, or include/ subdirectory.
 #
-ERR_INV_QTDIR="7"
+err_inv_qtdir="7"
 
 # Certain modules depend on others - those "base" modules which are required
 # by others to compile and/or run should be listed here to ensure that the
 # script is aborted.
 #
-CRITICAL_MODULES="kde-qt-addon kdesupport kdelibs kdebase"
+critical_modules="kde-qt-addon kdesupport kdelibs kdebase"
 
 # Internal variable, do not change.
 #
-DATE="`date +%Y%m%d`"
+dateformat="`date +%Y%m%d`"
 
 # This function computes the time which was needed for a certain task.
 #
 compute_time() {
-  DURATION=$[`date +%s`-$STARTTIME]
-  HOURS=$[$DURATION / 3600]
-  MINUTES=$[$[$DURATION % 3600] / 60]
-  SECONDS=$[$DURATION % 60]
+  duration=$[`date +%s`-$starttime]
+  hours=`echo $[$duration / 3600] | sed -e "s/^[0-9]\$/0&/"`
+  minutes=`echo $[$[$duration % 3600] / 60] | sed -e "s/^[0-9]\$/0&/"`
+  seconds=`echo $[$duration % 60] | sed -e "s/^[0-9]\$/0&/"`
 }
 
 # This function installs a compiled CVS module.
 #
 install_module() {
   echo -n "  Installing..."
-  test x"$KDELOGDIR" != x && STARTTIME=`date +%s`
-  if eval ${MAKE_INSTALL}; then
-    if test x"$KDELOGDIR" != x; then
+  if test "x$KDELOGDIR" != x; then
+    echo "-> Installation <---------------------------------------------------------------" >> $logfile
+    cmd_make_install="$cmd_make_install >> $logfile 2>&1"
+    starttime=`date +%s`
+   fi
+
+  if eval ${cmd_make_install}; then
+    if test "x$KDELOGDIR" != x; then
       compute_time
-      echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
+      echo "--------------------------------------------------------------------------------" >> $logfile
+      echo "Time needed for installation of module $module: $hours:$minutes:$seconds" >> $logfile
+      echo "" >> $logfile
+      echo "Build of module $module successfully finished at `date +%c`" >> $logfile
+      test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
     fi
-    test x"$CMD_COMPRESS" != x && $CMD_COMPRESS $MAKE_INSTALL_LOG
-    echo -e "$STR_OKAY"
-    echo "Module $MODULE successfully installed in $KDEDIRS!"
-    if test x"$MODULE" = xkdebase -a x"$HOMEDIR" != x; then
+    echo -e "$str_okay"
+    echo "Module $module successfully installed in $KDEDIRS!"
+    if test "x$module" = xkdebase -a "x$HOMEDIR" != x; then
       for HOME in $HOMEDIR; do
         test -d $HOME/.kde -a -w $HOME/.kde && rm -rf $HOME/.kde
         test -e $HOME/.kderc -a -w $HOME/.kderc && rm -f $HOME/.kderc
       done
     fi
   else
-    echo -e "$STR_ERROR"
-    echo "$CRITICAL_MODULES" | grep -q $MODULE && exit $ERR_INSTALL_FAIL
+    echo -e "$str_error"
+    test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
+    echo "$critical_modules" | grep -q $module && exit $err_install_fail
   fi
 }
 
@@ -106,40 +115,40 @@ test -e ./kde-rebuildrc && . ./kde-rebuildrc
 # Various checks to ensure that valid data has been specified, creates the
 # directory for the logfile in case it doesn't exist already.
 #
-if test x"$KDELOGDIR" != x -a ! -d "$KDELOGDIR"; then
+if test "x$KDELOGDIR" != x -a ! -d "$KDELOGDIR"; then
   if ! mkdir -p "$KDELOGDIR" > /dev/null 2>&1; then
     echo "WARNING: Could not create logfile-directory."
     echo "WARNING: Logfile generation deactivated."
     KDELOGDIR=""
   fi
 else
-  if test x"$KDELOGDIR" != x -a ! -w "$KDELOGDIR"; then
+  if test "x$KDELOGDIR" != x -a ! -w "$KDELOGDIR"; then
     echo "WARNING: Could not obtain write access to specified logfile-directory."
     echo "WARNING: Logfile generation deactivated."
     KDELOGDIR=""
   fi
 fi
-test x"$KDELOGDIR" != x && STR_ERROR="$STR_ERROR\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further info."
+test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further info."
 if test ! -d "$KDESRCDIR"; then
-  echo "ERROR: Invalid source directory specified!"; exit $ERR_INV_KDESRCDIR
+  echo "ERROR: Invalid source directory specified!"; exit $err_inv_kdesrcdir
 fi
 if test ! -d "$QTDIR" -o ! -d "$QTDIR/lib" -o ! -d "$QTDIR/bin" -o ! -d "$QTDIR/include"; then
-  echo "ERROR: Invalid Qt directory specified!"; exit $ERR_INV_QTDIR
+  echo "ERROR: Invalid Qt directory specified!"; exit $err_inv_qtdir
 fi
 if which bzip2 > /dev/null 2>&1; then
-  CMD_COMPRESS="`which bzip2` -f "
+  cmd_compress="`which bzip2` -f "
 else
   if which gzip > /dev/null 2>&1; then
-    CMD_COMPRESS="`which gzip` -f "
+    cmd_compress="`which gzip` -f "
   else
     echo "WARNING: Neither bzip2 nor gzip was found, disabling compression of logfiles."
-    CMD_COMPRESS=""
+    cmd_compress=""
   fi
 fi
 
 # Clean the installation directory if selected.
 #
-if test x"$INSTALLFROMSCRATCH" = xyes; then
+if test "x$INSTALLFROMSCRATCH" = xyes; then
   if test ! -w $KDEDIRS; then
     echo "Enter the root password to clean the installation directory."
     echo "WARNING: All files and directories in $KDEDIRS will be deleted!"
@@ -152,7 +161,7 @@ fi
 
 # Optionally activate cheap tweaks.
 #
-if test x"$TWEAKCOMPILE" = xyes; then
+if test "x$TWEAKCOMPILE" = xyes; then
   CFLAGS="-O0"
   CXXFLAGS="-O0"
   export CFLAGS CXXFLAGS
@@ -160,95 +169,106 @@ fi
 
 # Actually start doing something.
 #
-for MODULE in $KDEMODULES; do
-  if ! cd $KDESRCDIR/$MODULE; then
-    if echo "$CRITICAL_MODULES" | grep -q $MODULE; then
-      echo "ERROR: Could not change into directory $KDESRCDIR/$MODULE!"
-      exit $ERR_CHANGE_INTO_MOD_DIR
+for module in $KDEMODULES; do
+  if ! cd $KDESRCDIR/$module; then
+    if echo "$critical_modules" | grep -q $module; then
+      echo "ERROR: Could not change into directory $KDESRCDIR/$module!"
+      exit $err_change_into_mod_dir
     else
-      echo "WARNING: Could not change into directory $KDESRCDIR/$MODULE."
-      echo "WARNING: Skipping module $MODULE."
+      echo "WARNING: Could not change into directory $KDESRCDIR/$module."
+      echo "WARNING: Skipping module $module."
     fi
   else
-    cd $KDESRCDIR/$MODULE
+    cd $KDESRCDIR/$module
 
     # Check whether 'make -f Makefile.cvs' has been called.
     #
     if test ! -e Makefile.in; then
-      if echo "$CRITICAL_MODULES" | grep -q $MODULE; then
+      if echo "$critical_modules" | grep -q $module; then
         echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
-        exit $ERR_NO_MAKEFILE_IN
+        exit $err_no_makefile_in
       else
         echo "WARNING: 'make -f Makefile.cvs' seems not to be executed for this"
         echo "WARNING: module, skipping compilation."
       fi
     else
-      echo "Building module: $MODULE"
+      echo "Building module: $module"
+      if test "x$KDELOGDIR" != x; then
+        logfile="$KDELOGDIR/$module-build-$dateformat"
+        echo "================================================================================" > $logfile
+        echo "Build log of module $module, started on `date +%c`" >> $logfile
+        echo "================================================================================" >> $logfile
+        echo "" >> $logfile
+      fi
 
       # Configure the module.
       #
       echo -n "  Configuring..."
-      CONFIGURE="configure --enable-debug --enable-profile --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
-      test x"$NICECOMPILE" = xyes && CONFIGURE="nice $CONFIGURE"
-      CONFIGURE_LOG="$KDELOGDIR/$MODULE-configure-$DATE"
-      if test x"$KDELOGDIR" != x; then
-        CONFIGURE="$CONFIGURE > $CONFIGURE_LOG 2>&1"
-        STARTTIME=`date +%s`
+      cmd_configure="./configure --enable-debug --enable-profile --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
+      if test "x$KDELOGDIR" != x; then
+        echo "-> Configuration <--------------------------------------------------------------" >> $logfile
+        cmd_configure="$cmd_configure >> $logfile 2>&1"
+        starttime=`date +%s`
       fi
 
-      if eval ${CONFIGURE}; then
-        if test x"$KDELOGDIR" = x; then
+      if eval ${cmd_configure}; then
+        if test "x$KDELOGDIR" != x; then
           compute_time
-          echo "Time needed for configuration of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $CONFIGURE_LOG
+          echo "--------------------------------------------------------------------------------" >> $logfile
+          echo "Time needed for configuration of module $module: $hours:$minutes:$seconds" >> $logfile
+          echo "" >> $logfile
         fi
-        test x"$CMD_COMPRESS" != x && $CMD_COMPRESS $CONFIGURE_LOG
-        echo -e "$STR_OKAY"
+        echo -e "$str_okay"
 
         # Compile the module.
         #
         echo -n "  Compiling..."
-        MAKE="make"
-        MAKE_LOG="$KDELOGDIR/$MODULE-build-$DATE"
-        echo "$CRITICAL_MODULES" | grep -q $MODULE || MAKE="$MAKE -k"
-        if test x"$KDELOGDIR" != x; then
-          MAKE="$MAKE > $MAKE_LOG 2>&1"
-          STARTTIME=`date +%s`
+        cmd_make="make"
+        echo "$critical_modules" | grep -q $module || cmd_make="$cmd_make -k"
+        if test "x$KDELOGDIR" != x; then
+          echo "-> Compilation <----------------------------------------------------------------" >> $logfile
+          cmd_make="$cmd_make >> $logfile 2>&1"
+          starttime=`date +%s`
         fi
-        test x"$NICECOMPILE" = xyes && MAKE="nice $MAKE"
+        test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
 
-        if eval ${MAKE}; then
-          if test x"$KDELOGDIR" != x; then
+        if eval ${cmd_make}; then
+          if test "x$KDELOGDIR" != x; then
             compute_time
-            echo "Time needed for compilation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_LOG
+            echo "--------------------------------------------------------------------------------" >> $logfile
+            echo "Time needed for compilation of module $module: $hours:$minutes:$seconds" >> $logfile
+            echo "" >> $logfile
           fi
-          test x"$CMD_COMPRESS" != x && $CMD_COMPRESS $MAKE_LOG
-          echo -e "$STR_OKAY"
+          echo -e "$str_okay"
 
           # Install the module.
           #
-          MAKE_INSTALL="make install"
-          MAKE_INSTALL_LOG="$KDELOGDIR/$MODULE-install-$DATE"
-          test x"$KDELOGDIR" != x && MAKE_INSTALL="$MAKE_INSTALL > $MAKE_INSTALL_LOG 2>&1"
-          test x"$NICECOMPILE" = xyes && MAKE_INSTALL="nice $MAKE_INSTALL"
+          cmd_make_install="make"
+          echo "$critical_modules" | grep -q $module || cmd_make_install="$cmd_make_install -k "
+          test "x$NICECOMPILE" = xyes && cmd_make_install="nice $cmd_make_install"
+          cmd_make_install="$cmd_make_install install"
           if test ! -w $KDEDIRS; then
-            echo -n "  To install module $MODULE, please enter the root "
+            echo -n "  To install module $module, please enter the root "
             su -c"install_module"
           else
             install_module
           fi
         else
-          echo -e "$STR_ERROR"
-          echo "$CRITICAL_MODULES" | grep -q $MODULE && exit $ERR_COMPILE_FAIL
+          echo -e "$str_error"
+          test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
+          echo "$critical_modules" | grep -q $module && exit $err_compile_fail
         fi
       else
-        echo -e "$STR_ERROR"
-        echo "$CRITICAL_MODULES" | grep -q $MODULE && exit $ERR_CONFIGURE_FAIL
+        echo -e "$str_error"
+        test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
+        echo "$critical_modules" | grep -q $module && exit $err_configure_fail
       fi
     fi
   fi
 done
 
-exit $ERR_NO_ERROR
+exit $err_no_error
 
 =head1 NAME
 
