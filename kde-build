@@ -674,9 +674,9 @@ for module in $modules; do
 
   log_section "Compilation $cmd_make"
   log_cmd "$cmd_make"
-  compile_ret=$?
+  retval=$?
 
-  if [ $compile_ret -eq 0 ]; then
+  if [ $retval -eq 0 ]; then
     log_endsection "Compilation"
     echo -e "$str_okay"
 
@@ -690,17 +690,15 @@ for module in $modules; do
 
       log_section "Linking $cmd_make"
       log_cmd "$cmd_make"
-      link_ret=$?
-      if [ "$link_ret" -eq 0 ]; then
+      retval=$?
+      if [ $retval -eq 0 ]; then
         log_endsection "Linking"
         echo -e "$str_okay"
-      else
-        compile_ret=$link_ret
       fi
     fi
   fi
 
-  if [ $compile_ret -eq 0 ]; then
+  if [ $retval -eq 0 ]; then
     # Install the module.
     #
     cmd_make_install="$MAKE"
