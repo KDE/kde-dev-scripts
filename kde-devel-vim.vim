@@ -44,7 +44,7 @@ nmap ,i :call IncludeGuard()<CR>o
 iab #i <C-R>=SmartInclude()<CR>
 
 " Insert a stripped down CVS diff
-iab <silent>DIFF <Esc>:call RunDiff()<CR>
+iab DIFF <Esc>:call RunDiff()<CR>
 
 function! SmartTab()
 	if strpart( getline( '.' ), 0, col( '.' ) - 1 ) =~ '^\s*$'
