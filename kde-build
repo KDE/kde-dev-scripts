@@ -93,6 +93,71 @@ critical_modules="arts kdelibs kdebase"
 #
 dateformat="`date +%Y%m%d`"
 
+# Private variables fro controlling kppp
+#
+we_started_kppp="FALSE"
+
+# Connects to the internet using kppp if desired
+#
+kppp_connect()
+{
+if [ "$USE_KPPP" = "TRUE" ]; then
+	kppp_process=`dcopfind -a kppp-*`
+	if [ "$kppp_process" = "" ]; then
+		#kppp not running
+		kppp &> /dev/null &
+		sleep $KPPP_LOAD_TIME
+		`dcop $(dcopfind -a kppp-*) KpppIface beginConnect`
+		#wait for a while
+		sleep $KPPP_CONNECT_TIME
+		kppp_connected=`dcop $(dcopfind -a kppp-*) KpppIface isConnected`
+		if [ "$kppp_connected" = "true" ]; then
+			we_started_kppp="TRUE"
+			echo Connected OK
+		else
+			echo Could not connect, maybe you need to increase KPPP_CONNECT_TIME
+		fi
+		
+	else
+		kppp_connected=`dcop $(dcopfind -a kppp-*) KpppIface isConnected`
+		if [ "$kppp_connected" = "false" ]; then
+			#Start a connection
+			`dcop $(dcopfind -a kppp-*) KpppIface beginConnect`
+			#wait for a while
+			sleep $KPPP_CONNECT_TIME
+			kppp_connected=`dcop $(dcopfind -a kppp-*) KpppIface isConnected`
+			if [ "$kppp_connected" = "true" ]; then
+				we_started_kppp="TRUE"
+				echo Connected OK
+			else
+				echo Could not connect, maybe you need to increase KPPP_CONNECT_TIME
+			fi
+		else
+			echo Kppp is already connected to the internet
+		fi
+	fi
+fi
+}
+
+# Disconnects from the internet using kppp if desired
+#
+kppp_disconnect()
+{
+if [ "$USE_KPPP" = "TRUE" ]; then
+	if [ $(dcopfind -a kppp-*) = "" ]; then
+		#kppp not running
+		echo Kppp was not running so cannot be disconnected
+	else
+		if [ "$we_started_kppp" = "TRUE" ]; then
+			echo Disconnecting kppp
+			`dcop $(dcopfind -a kppp-*) KpppIface disconnect`
+		else
+			echo We didnt connect using kppp so we wont disconnect
+		fi
+	fi
+fi
+}
+
 # This method gives some kind of status message in the title bar of Konsole,
 # xterm, etc.. Thanks have to go to Malte Starostik
 # <malte@kde.org> for the code :-)

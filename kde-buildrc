@@ -20,6 +20,18 @@ KDEDIRS="/opt/kde"
 #
 QTDIR="/usr/lib/qt3"
 
+# Should kppp be used to connect to the internet?
+#
+USE_KPPP="FALSE"
+
+#Set this higher if it takes a long time to load kppp on your machine
+#
+KPPP_LOAD_TIME="5"
+
+#Set this higher if it takes a long time for you to connect
+#
+KPPP_CONNECT_TIME="50"
+
 # If you would like logfiles of the compilation process, specify a directory
 # here in which the logfiles will be saved. If you want to disable logfile
 # generation, leave this blank.
