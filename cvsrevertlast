@@ -9,7 +9,7 @@
 for i in $@ ;
 do
 
-	text=`cvs log "$i" | grep 'revision[^s]'`
+	text=`cvs log "$i" | grep '^revision[^s]'`
 	current=`echo $text | awk '{print $2}'`
 	previous=`echo $text | awk '{print $4}'`
 	echo $i... "(reverting from $current to $previous)"
