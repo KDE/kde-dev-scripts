@@ -45,9 +45,7 @@ else
      automake $relpath || exit
      if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
      else 
-       if test -f admin/automoc; then perl admin/automoc $relpath.in ; \
-       else
-         if test -f automoc; then perl automoc -v $relpath.in; fi
+       if test -f ../admin/am_edit; then perl ../admin/am_edit $relpath.in ; \
        fi
      fi
     fi
