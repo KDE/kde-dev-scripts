@@ -112,8 +112,8 @@ for my $file_name ( @ARGV )
 
      chomp;
 
-     $string .= '\n' . $_;
-
+     $string .= "\n" . $_;
+     
      # 'database', 'associations' properties contain strings that shouldn't be translated
 
      if ( $in_skipped_prop == 0 and $string =~ /<property name=\"(?:database|associations)\"/ )
@@ -130,7 +130,7 @@ for my $file_name ( @ARGV )
      {
        if ( $string =~ /<$text_string/o )
        {
-         $string        =~ s/^.*<$text_string//o;
+         $string        =~ s/^.*<$text_string//so;
          $in_text       =  1;
          $start_line_no =  $.;
        }
@@ -154,7 +154,7 @@ for my $file_name ( @ARGV )
      $text =~ s/\\/\\\\/g; # escape \
      $text =~ s/\"/\\\"/g; # escape "
      $text =~ s/\r//g; # remove CR (Carriage Return)
-     ### TODO: line feed: $text =~ s/\n/\\n/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
+     $text =~ s/\n/\\n\"\n\"/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
 
      if ( $text cmp "" )
      {
