@@ -404,7 +404,7 @@ fi
 # all the modules make use of the most recent unsermake version.
 #
 if test -n "$USE_UNSERMAKE"; then
-  unsermake_dir=`echo $USE_UNSERMAKE | sed -e "s,/[^/]*$,,"`
+  unsermake_dir=`dirname $USE_UNSERMAKE`
   echo -n "Updating unsermake copy in $unsermake_dir..."
   if test -d "$unsermake_dir/CVS"; then
     cd "$unsermake_dir"
