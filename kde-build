@@ -312,10 +312,10 @@ fi
 #
 if test "x$CVSCLIENT" = xcvs; then
   cmd_update="cvs up"
-  if test "x$BRANCH" != x; then
-    cmd_update="$cmd_update -dPr $BRANCH"
-  elif test "$BRANCH" = "HEAD"; then
+  if test "$BRANCH" = "HEAD"; then
     cmd_update="$cmd_update -dPA"
+  elif test -n "$BRANCH"; then
+    cmd_update="$cmd_update -dPr $BRANCH"
   else
     cmd_update="$cmd_update -dP"
   fi
@@ -408,7 +408,7 @@ for module in $modules; do
           check_libltdl
           cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
           test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
-          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
+          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE" && test "x$module" != xkdepim; then
               export UNSERMAKE=$USE_UNSERMAKE
           else
               unset UNSERMAKE || :
