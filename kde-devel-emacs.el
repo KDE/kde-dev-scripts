@@ -1154,6 +1154,11 @@ With arg, to it arg times."
 (defun make () (interactive) (compile "make"))
 (defun makeinstall () (interactive) (compile "make install"))
 (defun makeinstallexec () (interactive) (compile "make install-exec"))
+(defun makethisfile () (interactive)
+    (let ((f (buffer-file-name)))
+      (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
+      (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
+      (compile (concat "make " f ))))
 
 ;; Indentation: 4 characters, no tabs.
 (setq c-basic-offset 4)
@@ -1181,6 +1186,7 @@ With arg, to it arg times."
 (define-key global-map [(f4)] 'make)
 (define-key global-map [(f5)] 'makeinstall)
 (define-key global-map [(shift f5)] 'makeinstallexec)
+(define-key global-map [(shift f6)] 'makethisfile)
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
@@ -1198,6 +1204,7 @@ With arg, to it arg times."
 ; F5 : make install
 ; Shift-F5 : make install-exec
 ;
+; Shift-F6 : compile this file [assumes libtool is being used]
 ; F6 : Switch from .cpp/.cc to .h and vice-versa
 ; F7 : The same, but try to find the current method in the other file
 ; F9 (if enabled) : Create a member method in the .cpp, the cursor being on the definition in the .h
