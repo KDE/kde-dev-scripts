@@ -116,6 +116,11 @@ zone		Reads timezone list as its first argument or from
 rc2kcfgxt.pl	Reads an existing KConfig rc file and creates a best-guess
 		version of a KConfigXT XML file.
 
+cvslastreferenced Goes through the whole history of a file to find all modifications
+                referencing a specific string.  It's useful if you want to know
+                when a function has been removed/modified/added to a file if a
+                recent cvs annotate doesn't reference it anymore. 
+
 ----------------
 Looking to add a script?
 
