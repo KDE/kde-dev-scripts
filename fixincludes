@@ -384,8 +384,11 @@ sub fix_unnecessary($)
     `make $blanksrc.lo &>/dev/null`;
     $objextension = ".lo" if ( 0 == $?);
   }
-
-  die "can't figure out right compile command :-(\n" if ($objextension eq "BUG");
+  if($objextension eq "BUG") {
+    warn "can't figure out right compile command :-(\n??? unused?\n";
+    chdir($origdir);
+    return;
+  } 
 
   print "found objextension: $objextension\n" if($verbose);
 
