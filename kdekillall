@@ -16,5 +16,6 @@ else
         for i in $list; do kill $signal $i; done; 
     else
         echo 'No process killed'
+        exit 1
     fi
 fi
