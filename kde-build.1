@@ -93,7 +93,7 @@
 .nr % 0
 .rr F
 .\}
-.TH KDE-BUILD 1 "perl 5.005, patch 03" "2/Oct/2000" "K Desktop Environment"
+.TH KDE-BUILD 1 "perl 5.005, patch 03" "4/Oct/2000" "K Desktop Environment"
 .UC
 .if n .hy 0
 .if n .na
@@ -194,26 +194,26 @@ kde-build \- Updates and recompiles a tree of KDE CVS modules
 .Vb 1
 \&        kde-build
 .Ve
-.SH "DESCRIPTIONS"
+.SH "DESCRIPTION"
 kde-build has been designed to keep a local copy of several KDE CVS
 modules up to date and recompile them. Those modules have to be saved in a
 common directory, e.g. something like
 .PP
 .Vb 7
-\&    ~/kde-src/
+\&    ~/F<kde-src>/
 \&      |
-\&      \e-> kdelibs/
+\&      +-> F<kdelibs>/
 \&      |
-\&      \e-> kdebase/
+\&      +-> F<kdebase>/
 \&      |
-\&      \e-> kdenetwork/
+\&      \e-> F<kdenetwork>/
 .Ve
 In this case, the KDE source directory would be ~/kde-src/. The script will
 take care of compiling them in the correct order, checks for dependencies
 and resolves them as far as possible.
 .PP
 Please not that, prior to first invokation of the script, the configuration
-file \*(L'kde-buildrc\*(R' has to be modified to reflect the local environment,
+file \*(L'\fIkde-buildrc\fR\*(R' has to be modified to reflect the local environment,
 such as paths etc.
 .SH "RETURN VALUE"
 The following error codes are returned by the script.
@@ -237,12 +237,16 @@ The following error codes are returned by the script.
 8 \- An invalid CVS client was specified.
 .PP
 9 \- No cvsup server was specified.
+.PP
+10 \- The temporary CVSUP configuration file couldn't be created.
+.PP
+11 \- The configuration file \fIkde-buildrc\fR couldn't be loaded.
 .SH "EXAMPLES"
 .PP
 .Vb 3
-\&        cd ~/scripts
-\&        vi kde-buildrc
-\&        kde-build
+\&        cd ~/scripts/
+\&        vi ./kde-buildrc
+\&        ./kde-build
 .Ve
 .SH "BUGS"
 Lots, mostly that the script wasn't written with portability in mind
@@ -260,7 +264,7 @@ Frerich Raabe <raabe@kde.org>
 
 .IX Header "SYNOPSIS"
 
-.IX Header "DESCRIPTIONS"
+.IX Header "DESCRIPTION"
 
 .IX Header "RETURN VALUE"
 
