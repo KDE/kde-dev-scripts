@@ -1,6 +1,9 @@
 
 Stuff in this directory:
 
+create_makefile Create the Makefile in a directory containing a Makefile.am
+                Saves time compared to re-running configure completely 
+
 cvs2pack	Create a standalone source distribution tarball for an app
 		in a KDE CVS module.
 

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Create Makefile.in and Makefile in a directory (containing a Makefile.am !)
+# Must be run from the toplevel directory (i.e. the one containing configure)
+# Saves time compared to re-running configure completely
+
+if [ $# -ne 1 ]; then 
+  echo "$0 : creates a Makefile from a Makefile.am"
+  echo
+  echo "Usage : $0 relativepath/Makefile"
+  echo "So the argument is the file you want to create."
+  echo
+else
+  automake $* &&
+  (
+   ( [ -f admin/am_edit ] && perl admin/am_edit $*.in ) ||
+   ( [ -f admin/automoc ] && perl admin/automoc $*.in ) ||
+   ( [ -f automoc ] && perl automoc -v $*.in ) ) &&
+  CONFIG_FILES=$* CONFIG_HEADERS= config.status
+fi
