@@ -386,6 +386,7 @@ sub fix_unnecessary($)
   $blanksrc =~ s/(.*)\.[^\.]+/$1/;
 
   print "Checking for initial compilation: ";
+  chdir($builddir);
   my $objextension = "BUG";
   my $makecmd = "make";
   $makecmd = "makeobj" if (defined $objreplacement);
