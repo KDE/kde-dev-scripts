@@ -9,7 +9,7 @@ if [ $# = 0 ]; then
 	echo "if <signal> is not specified, it defaults to SIGTERM,"
 	echo "see kill -l for a list of possible signals"
 else
-    list=$(ps auwx | gawk "/[k]deinit: $1/ {print \$2}")
+    list=$(ps auwx | grep $USER | awk "/[k]deinit: $1/ {print \$2}")
     if test -n "$list"; then 
         kill $signal $list
     else
