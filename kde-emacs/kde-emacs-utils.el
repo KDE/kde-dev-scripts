@@ -423,7 +423,9 @@
   (load "pc-select")
   (if (eq kde-emacs-type 'xemacs)
       (funcall 'pc-select-mode)
-    (funcall 'pc-selection-mode)))
+    (when (not (and (eq emacs-major-version 21)
+		    (eq emacs-minor-version 3)))
+      (funcall (function pc-selection-mode)))))
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)

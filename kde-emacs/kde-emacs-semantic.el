@@ -49,6 +49,12 @@
 ;*---------------------------------------------------------------------*/
 ;*    User configuration ...                                           */
 ;*---------------------------------------------------------------------*/
+(defcustom kde-summary-function 'semantic-uml-prototype-nonterminal
+  "*Function to use when showing info about the token"
+  :group 'kde-devel
+  :type semantic-token->text-custom-list
+  )
+
 (defcustom kde-generate-docs-with-stubs nil
   "*Should function documentation be generated with the stubs."
   :group 'kde-devel

@@ -19,7 +19,7 @@
 ;; 02111-1307, USA.							    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst kde-emacs-version "0.1"
+(defconst kde-emacs-version "0.2"
   "KDE Emacs package version number.")
 (defun kde-emacs-version ()
   "Returns the version of KDE Emacs package."
@@ -73,21 +73,38 @@
   :version "0.1"
   :type 'string)
 
-(defcustom magic-keys-mode nil
-  "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate...")
+(defcustom kde-cvs-root (concat (getenv "HOME") "/cvs/kde")
+  "*Root Directory of KDE CVS Respiratory"
+  :group 'kde-devel
+  :type 'string)
 
+(defcustom magic-keys-mode nil
+  "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate..."
+  :group 'kde-devel
+  :type 'boolean)
+
+;;Make styles a list of the format (radio (const kde-c++) (const kde-c) style)
+;;and assign it to type.
 (defcustom kde-c++-style "kde-c++"
-  "Set this variable to the CC Mode style you would like loaded when you open a C++ KDE source code file...")
+  "Set this variable to the CC Mode style you would like loaded when you open a C++ KDE source code file..."
+  :group 'kde-devel
+  :type 'string)
 
 (defcustom kde-c-style "kde-c"
-  "Set this variable to the CC Mode style you would like loaded when you open a C KDE source code file...")
+  "Set this variable to the CC Mode style you would like loaded when you open a C KDE source code file..."
+  :group 'kde-devel
+  :type 'string)
 
 (defcustom kde-use-pc-select t
-  "Set this to nil if you really hate PC Select Mode...")
+  "Set this to nil if you really hate PC Select Mode..."
+  :group 'kde-devel
+  :type 'boolean)
 
-(defvar kde-header-protection-parts-to-show 1
+(defcustom kde-header-protection-parts-to-show 1
   "Set this variable to the number of parts from the file name you want to be used for the defined word in the 
 header-protection function..  E.g. setting this to 3 makes header-protection define KIG_MISC_NEWTYPE_H for a 
-file named /home/domi/src/kdenonbeta/kig/misc/newtype.h")
+file named /home/domi/src/kdenonbeta/kig/misc/newtype.h"
+  :group 'kde-devel
+  :type 'integer)
 
 (provide 'kde-emacs-vars)
