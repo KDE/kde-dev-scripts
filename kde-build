@@ -119,6 +119,15 @@ log_cmd() {
   return $?
 }
 
+module_variable() {
+  eval "$1=\$BASE_$1"
+  varname="$1_"`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`; # e.g. $1_ARTS etc.
+  varvalue=`eval echo '$'$varname`
+  if test -n "$varvalue"; then
+    eval "$1=$varvalue"
+  fi
+}
+
 # Inserts a "-> blah <---" style separator into $logfile, and starts a timer
 log_section() {
   [ -z "$logfile" ] && return 0
@@ -146,6 +155,63 @@ compute_time() {
   hours=`expr $duration / 3600`
   minutes=`expr $duration % 3600 / 60`
   seconds=`expr $duration % 60`
+}
+
+prepare_update() {
+  # This checks whether the user wants a certain branch and generates the
+  # command line. For cvsup users it even generates a supfile. :-)
+  #
+  if [ "$CVSCLIENT" = cvs ]; then
+    cmd_update="cvs"
+    if [ -z "$CVSROOT" ]; then
+      if [ -z "$ACCOUNT" ]; then
+        cmd_update="$cmd_update -d $ANONCVSROOT"
+      else
+        cmd_update="$cmd_update -d"
+        if [ "$SSHACCOUNT" = "yes" ]; then
+          cmd_update="$cmd_update $ACCOUNT@cvs.kde.org:/home/kde"
+          CVS_RSH="ssh"; export CVS_RSH
+        else
+          cmd_update="$cmd_update :pserver:$ACCOUNT@cvs.kde.org:/home/kde"
+        fi
+      fi
+    fi
+    cmd_update="$cmd_update up"
+    if [ "$BRANCH" = "HEAD" ]; then
+      cmd_update="$cmd_update -dPA"
+    elif [ -n "$BRANCH" ]; then
+      cmd_update="$cmd_update -dPr $BRANCH"
+    else
+      cmd_update="$cmd_update -dP"
+    fi
+  else
+    if [ -z "$CVSUPSERVER" ]; then
+      echo "ERROR: No cvsup server specified!"
+      exit $err_inv_cvsup_server
+    fi
+    supfile=`mktemp /tmp/$0.XXXXXX`
+    if [ $? -ne 0 ]; then
+      echo "ERROR: Could not create temporare cvsup configuration file in /tmp!"
+      exit $err_no_temp_supfile
+    fi
+    cmd_update="cvsup $supfile"
+    echo "*default host=$CVSUPSERVER" >> $supfile
+    echo "*default base=$KDESRCDIR" >> $supfile
+    echo "*default prefix=$KDESRCDIR" >> $supfile
+    echo "*default release=cvs" >> $supfile
+    echo "*default delete" >> $supfile
+    echo "*default compress" >> $supfile
+    if [ -n "$BRANCH" ]; then
+      echo "*default tag=$BRANCH" >> $supfile
+    else
+      echo "*default tag=." >> $supfile
+    fi
+    echo "*default use-rel-suffix" >> $supfile
+    if [ -d $KDESRCDIR/$module/CVS ] && \
+  		!(echo $EXCLUDE | grep -q $module); then
+      echo "$module" >> $supfile
+    fi
+  fi	
 }
 
 # This function installs a compiled CVS module.
@@ -397,63 +463,6 @@ if echo $MAKE_OPTS_COMPILE | grep TEAMBUILDER > /dev/null; then
   MAKE_OPTS_COMPILE=`echo $MAKE_OPTS_COMPILE | sed -e "s,TEAMBUILDER,$hosts,"`
 fi
 
-# This checks whether the user wants a certain branch and generates the
-# command line. For cvsup users it even generates a supfile. :-)
-#
-if [ "$CVSCLIENT" = cvs ]; then
-  cmd_update="cvs"
-  if [ -z "$CVSROOT" ]; then
-    if [ -z "$ACCOUNT" ]; then
-      cmd_update="$cmd_update -d $ANONCVSROOT"
-    else
-      cmd_update="$cmd_update -d"
-      if [ "$SSHACCOUNT" = "yes" ]; then
-        cmd_update="$cmd_update $ACCOUNT@cvs.kde.org:/home/kde"
-        CVS_RSH="ssh"; export CVS_RSH
-      else
-        cmd_update="$cmd_update :pserver:$ACCOUNT@cvs.kde.org:/home/kde"
-      fi
-    fi
-  fi
-  cmd_update="$cmd_update up"
-  if [ "$BRANCH" = "HEAD" ]; then
-    cmd_update="$cmd_update -dPA"
-  elif [ -n "$BRANCH" ]; then
-    cmd_update="$cmd_update -dPr $BRANCH"
-  else
-    cmd_update="$cmd_update -dP"
-  fi
-else
-  if [ -z "$CVSUPSERVER" ]; then
-    echo "ERROR: No cvsup server specified!"
-    exit $err_inv_cvsup_server
-  fi
-  supfile=`mktemp /tmp/$0.XXXXXX`
-  if [ $? -ne 0 ]; then
-    echo "ERROR: Could not create temporare cvsup configuration file in /tmp!"
-    exit $err_no_temp_supfile
-  fi
-  cmd_update="cvsup $supfile"
-  echo "*default host=$CVSUPSERVER" >> $supfile
-  echo "*default base=$KDESRCDIR" >> $supfile
-  echo "*default prefix=$KDESRCDIR" >> $supfile
-  echo "*default release=cvs" >> $supfile
-  echo "*default delete" >> $supfile
-  echo "*default compress" >> $supfile
-  if [ -n "$BRANCH" ]; then
-    echo "*default tag=$BRANCH" >> $supfile
-  else
-    echo "*default tag=." >> $supfile
-  fi
-  echo "*default use-rel-suffix" >> $supfile
-  for module in $modules; do
-    if [ -d $KDESRCDIR/$module/CVS ] && \
-			!(echo $EXCLUDE | grep -q $module); then
-      echo "$module" >> $supfile
-    fi
-  done
-fi
-
 # Guess what? We'll finally start checking out the modules. :-)
 #
 # If we want to use unsermake, update that at the very beginning, so that
@@ -472,7 +481,12 @@ if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
   fi
 fi
 
+BASE_CONFIGUREFLAGS=$CONFIGUREFLAGS
+BASE_BRANCH=$BRANCH
+
 for module in $modules; do
+  module_variable BRANCH
+
   if [ -n "$KDELOGDIR" ]; then
     rm -f $KDELOGDIR/$module-build-*
     rm -f $KDELOGDIR/$module-failed-*
@@ -493,7 +507,12 @@ for module in $modules; do
     echo -n "Checking module $module (no cvs update)..."
     cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
   else
-    echo -n "Updating module $module..."
+    if test -n "$BRANCH"; then
+      echo -n "Updating module $module ($BRANCH)..."
+    else
+      echo -n "Updating module $module ..."
+    fi
+    prepare_update
     cmd_update_raw="$cmd_update"
   fi
 
@@ -560,6 +579,7 @@ for module in $modules; do
 done
 
 for module in $modules; do
+  module_variable CONFIGUREFLAGS
 
   # Nothing to do for kde-common
   [ "$module" = "kde-common" ] && continue
@@ -612,14 +632,10 @@ for module in $modules; do
   #
   echo -n "  Configuring..."
   set_title "Configuring module $module..."
-  configureflags=$CONFIGUREFLAGS;
-  varname="CONFIGUREFLAGS_`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`"; # e.g. CONFIGUREFLAGS_ARTS etc.
-  varvalue=`eval echo '$'$varname`
-  [ -n "$varvalue" ] && configureflags="$configureflags $varvalue"
   if [ -n "$KDEBUILDDIR" ]; then
-    cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
+    cmd_configure="$KDESRCDIR/$module/configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
   else
-    cmd_configure="./configure $configureflags --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
+    cmd_configure="./configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
   fi
   [ "$NICECOMPILE" = yes ] && cmd_configure="nice $cmd_configure"
   configure_skipped=0

@@ -90,12 +90,15 @@ SSHACCOUNT="no"
 ANONCVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
 
 # Do you want any special branch? If so, specify its tag here e.g.
-# KDE_2_2_BRANCH  or KDE_3_0_ALPHA_1. If you want the
+# KDE_2_2_BRANCH  or KDE_3_2_0_ALPHA_1. If you want the
 # checked out branch, leave this empty. Use "HEAD" if you want
 # the development branch for sure (leaving it empty will simply update
 # whatever is there)
+# 
+# you can specify a module specific branch in through BRANCH_ARTS
 #
 BRANCH=""
+# BRANCH_ARTS=ARTS_1_1_BRANCH
 
 # For cvsup users only: specify your preferred cvsup mirror here, check
 # http://www.kde.org/cvsupmirrors.html for a list of cvsup mirrors.
@@ -129,11 +132,15 @@ INCREMENTAL_BUILD="no"
 # not create closure targets but link with some compiler flags to make
 # sure the compiler will fail when undefined symbols are there - which
 # is much faster if it works for you.
+#
 # You can define module-specific configure flags using
-# CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. These are appended to the
-# general $CONFIGUREFLAGS value
+# CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. 
+# NOTE: These used to be appended to the general $CONFIGUREFLAGS value.
+# This is no longer true, you need to use $CONFIGUREFLAGS in the _MODNAME
+# version
 #
 CONFIGUREFLAGS="--enable-debug --disable-closure"
+# example: CONFIGUREFLAGS_KDEPIM="$CONFIGUREFLAGS --enable-debug=full"
 
 # Set it to the path for unsermake if you want to test it instead of
 # automake.
