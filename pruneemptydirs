@@ -6,19 +6,38 @@
 # Works better with srcdir!=builddir (since it will not remove directories
 # containing the old executable...)
 
-# NOTE: the script doesn't remove anything, just prints what to do
+# NOTE: by default the script doesn't remove anything, just prints what to do
 # Copy and paste, or use eval in scripts.
+# Use '-f' to force it to happen (use with care, no warranties, etc.!)
 
-# David Faure <faure@kde.org>, licensed under the one-for-one license
-# (all rights granted, if you like it send me a script of yours)
+# David Faure <faure@kde.org>, script under public domain
+
+force=0;
+if [ $# -eq 1 -a "$1" == "-f" ]; then force=1; fi
 
 # Look for toplevel dirs
 files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$`
+toremove="rm -rf";
 for i in $files; do if test -d $i; then
   # List their contents and filter out generated files
   realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
   if [ -z "$realfiles" ]; then
-    echo "rm -rf $i;"
+    toremove="$toremove $i"
   fi
 fi; done
+
+if [ "$toremove" != "rm -rf" ]; then
+  # Do the same in the builddir, if srcdir != builddir
+  if [ -n "$OBJ_REPLACEMENT" ]; then
+    bdcmd="( cd `echo $PWD | sed -e $OBJ_REPLACEMENT` ; $toremove )"
+  fi
+  # Print it or do it
+  if [ $force -eq 1 ]; then
+    eval $toremove
+    eval $bdcmd
+  else
+    echo $toremove
+    echo $bdcmd
+  fi
+fi
 
