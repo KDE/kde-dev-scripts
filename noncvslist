@@ -37,7 +37,9 @@ sub processEntries
         open( IGNORE, $dir."/.cvsignore" ) || return;
 
         while( <IGNORE> ) {
-                chop;
+                chomp;
+                s/^\s+//;
+                s/\s+$//;
                 $entries{ "$dir/$_" } = "ignored";
         }
 
