@@ -107,10 +107,10 @@ With arg, to it arg times."
          (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
 
          ;; keybindings for adding spaces around parenthesises
-         ;(define-key c++-mode-map [\(] 'insert-parens)
-         ;(define-key c++-mode-map [\)] 'insert-parens2)
-         ;(define-key c++-mode-map [,] 'insert-comma)
-         ;(define-key c++-mode-map [\{] 'insert-curly-brace)
+         (define-key c++-mode-map [\(] 'insert-parens)
+         (define-key c++-mode-map [\)] 'insert-parens2)
+         (define-key c++-mode-map [,] 'insert-comma)
+         (define-key c++-mode-map [\{] 'insert-curly-brace)
 ))
 
 
@@ -1129,7 +1129,7 @@ With arg, to it arg times."
             (c-indent-command))))
     )
   )
-  (c-electric-brace nil)
+;;  (c-electric-brace nil)
 )
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
@@ -1147,7 +1147,9 @@ With arg, to it arg times."
 ;; Indentation: 4 characters, no tabs.
 (setq c-basic-offset 4)
 (setq insert-tab-mode nil)
-(c-set-style "bsd")
+(c-set-style "stroustrup")
+(setq-default require-final-newline t)
+(setq-default next-line-add-newlines nil)
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
