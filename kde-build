@@ -161,6 +161,7 @@ check_libltdl() {
 
 docvsupdate=1
 domakefilecvs=1
+doconfigure=1
 dousage=0
 specifiedModules=""
 # Parse args
@@ -179,7 +180,8 @@ do
     --no-update)
         docvsupdate=0 ;;
     --incremental) ### This is experimental, don't use
-        domakefilecvs=0 ;;
+        domakefilecvs=0
+        doconfigure=0 ;;
     -*)
         echo "Unhandled option $arg"
         dousage=1
@@ -470,6 +472,11 @@ for module in $modules; do
       test -n "$varvalue" && configureflags="$configureflags $varvalue"
       cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "$NICECOMPILE" = yes && cmd_configure="nice $cmd_configure"
+      configure_okay="$str_okay"
+      if test $doconfigure -eq 0 -a -e "Makefile"; then
+        cmd_configure="echo Warning: no configure for module $module - as requested"
+        configure_okay="skipped."
+      fi
       if test -n "$KDELOGDIR"; then
         logfile="$KDELOGDIR/$module-build-$dateformat"
         echo "-> Configuration <--------------------------------------------------------------" >> $logfile
@@ -484,7 +491,7 @@ for module in $modules; do
           echo "Time needed for configuration of module $module: $hours:$minutes:$seconds" >> $logfile
           echo "" >> $logfile
         fi
-        echo -e "$str_okay"
+        echo -e "$configure_okay"
 
         # Compile the module.
         #
