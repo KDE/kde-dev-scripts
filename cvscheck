@@ -29,6 +29,7 @@ if ( $ARGV[0] eq "--help") {
   exit;
 }
 
+# default is HEAD
 $standardtag = "";
 @dirqueue = @ARGV;
 @merged = ();
@@ -123,6 +124,8 @@ sub processEntries
           next if ($e =~ /^.+\.all_C\.C$/);
           next if ($e =~ /^.+\.all_cc\.cc$/);
           next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
+          next if ($e =~ /^.+\.kidl$/);
+          next if ($e =~ /^.+_skel\.[^\.]+$/);
           $dirunknown{$e} = 1;
         }
         closedir(DIR);
@@ -148,6 +151,7 @@ sub processEntries
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
           if($line =~ /^T(.+)$/) {
+            print "$dir has sticky tag $1\n" if($standardtag ne $1);
             $standardtag = $1;
           }
           else {
@@ -171,10 +175,10 @@ sub processEntries
           $ver = $2;
           $stamp = $3;
           $tag = $5;
-          my $taginfo="";
 
           $dirunknown{$fname} = 0;
 
+          my $taginfo="";
           if ( $tag ne $standardtag ) {
             if ($tag eq "") {
               $taginfo = " (HEAD)";
@@ -235,8 +239,6 @@ sub processEntries
         my @unknownlist = sort keys (%dirunknown);
         foreach $entry (@unknownlist) {
           next if ($dirunknown{$entry} == 0);
-          next if ($entry =~ /^\.#.+$/);
-          
           push @unknown, "$dir/$entry";
         }
 }
@@ -309,7 +311,7 @@ therefore being extremely fast.
 
 =head1 AUTHOR
 
-Sirtaj Singh Kang <taj@kde.org>
 Dirk Mueller <mueller@kde.org>
+based on cvschanged by Sirtaj Singh Kang <taj@kde.org>
 
 =cut
