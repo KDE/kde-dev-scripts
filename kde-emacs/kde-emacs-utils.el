@@ -243,17 +243,37 @@
   (insert " << endl;")
   )
 
+; finds a string to be used in the header-protection function ( see below )
+(defun kde-header-protection-definable-string ()
+   (let* ((definablestring "")
+	  (f (buffer-file-name))
+	  (parts (nreverse (split-string f "/")))
+	  (i)
+	  (first-iter t)
+	  (iters (max (length parts) kde-header-protection-parts-to-show)))
+     (dotimes (i iters)
+       (let ((part (pop parts)))
+	 (setq definablestring
+	       (concat
+		(upcase (replace-in-string part "[\\.-]" "_"))
+		(if (not first-iter) "_" "")
+		definablestring
+		)
+	       )
+	 (setq first-iter nil)
+	 )
+       )
+     definablestring
+     )
+   )
+
 ; Creates the ifndef/define/endif statements necessary for a header file
 (defun header-protection ()
   (interactive)
-  (let ((f (buffer-file-name)))
-    (if (string-match "^.*/" f)
-      (setq f (replace-match "" t t f)))
-    (while (string-match "\\." f)
-      (setq f (replace-match "_" t t f)))
+  (let ((s (kde-header-protection-definable-string)))
     (save-excursion
       (goto-char (point-min))
-      (insert "#ifndef " (upcase f) "\n#define " (upcase f) "\n\n")
+      (insert "#ifndef " s "\n#define " s "\n\n")
       (goto-char (point-max))
       (insert "\n#endif\n")
       )

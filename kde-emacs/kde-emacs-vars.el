@@ -85,4 +85,9 @@
 (defcustom kde-use-pc-select t
   "Set this to nil if you really hate PC Select Mode...")
 
+(defvar kde-header-protection-parts-to-show 1
+  "Set this variable to the number of parts from the file name you want to be used for the defined word in the 
+header-protection function..  E.g. setting this to 3 makes header-protection define KIG_MISC_NEWTYPE_H for a 
+file named /home/domi/src/kdenonbeta/kig/misc/newtype.h")
+
 (provide 'kde-emacs-vars)
