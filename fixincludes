@@ -118,6 +118,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'kcolorbtn.h'   =>  "kcolorbutton.h",
  'kcolordlg.h'   =>  "kcolordialog.h",
  'kxmlgui.h'     =>  "kxmlguifactory.h",
+ 'kdebugclasses.h' => "kdebug.h",
 );
 
 
