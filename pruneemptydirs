@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 # Cleans up a local CVS tree, by removing directories containing
 # remanants of old stuff which has been removed from CVS
 # Those stale dirs often break compilation...
