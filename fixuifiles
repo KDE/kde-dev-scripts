@@ -201,13 +201,13 @@ sub fix_captions($)
   }
 }
 
-# Find a .kde_minversion in $dir or any parent directory.
+# Find a .qt_minversion in $dir or any parent directory.
 sub read_required_version($)
 {
   my $dir = Cwd::abs_path( shift @_ );
 
-  my $minversion_maj = $default_minversion_maj;
-  my $minversion_min = $default_minversion_min;
+  $minversion_maj = $default_minversion_maj;
+  $minversion_min = $default_minversion_min;
   while ( length($dir) > 1 ) {
       my $versfile = "$dir/.qt_minversion";
       my $version;
