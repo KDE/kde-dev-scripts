@@ -138,17 +138,16 @@ Free Documentation License\"."
 		      kde-full-name " <"kde-email">\n\n"))
     ))
 
-(defun kde-license-insert ()
+(defun kde-license-insert (license)
   "Inserts the chosen license header at the top of the current
 buffer."
-  (interactive)
+  (interactive (list (completing-read
+		      "Which license do you want to use? "
+		      '(("GNU GPL" 1) ("GNU LGPL" 2) ("GNU FDL" 3))
+		      nil t nil)))
   (save-excursion
     (let ((start (point-min))
 	  (end)
-	  (license (completing-read
-		    "Which license do you want to use? "
-		    '(("GNU GPL" 1) ("GNU LGPL" 2) ("GNU FDL" 3))
-		    nil t nil))
 	   )
       ;; FIXME : maybe change this?
       (setq comment-style 'box)
