@@ -2,6 +2,9 @@
 ''' $RCSfile$$Revision$$Date$
 '''
 ''' $Log$
+''' Revision 1.3  1999/01/16 02:11:36  ssk
+''' Makes .gz properly
+'''
 '''
 .de Sh
 .br
@@ -96,7 +99,7 @@
 .TH KCVS2PACK 1 "perl 5.004, patch 01" "8/Jan/99" "K Desktop Environment"
 .IX Title "KCVS2PACK 1"
 .UC
-.IX Name "kcvs2pack - Creates standalone dist tarballs for apps in KDE CVS."
+.IX Name "cvs2pack - Creates standalone dist tarballs for apps in KDE CVS."
 .if n .hy 0
 .if n .na
 .ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
@@ -191,10 +194,10 @@
 .rm #[ #] #H #V #F C
 .SH "NAME"
 .IX Header "NAME"
-kcvs2pack \- Creates standalone dist tarballs for apps in KDE CVS.
+cvs2pack \- Creates standalone dist tarballs for apps in KDE CVS.
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-kcvs2pack <module dir> <packagedir> [<version>]
+cvs2pack <module dir> <packagedir> [<version>]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 The following steps are performed:
@@ -216,7 +219,7 @@ The following steps are performed:
 .IX Item ".tar.gz and .tar.bz2 archives are created for the directory."
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
-# kcvs2pack ~/baseline/kdeutils karm 1.2
+# cvs2pack ~/baseline/kdeutils karm 1.2
 .SH "REQUIRED"
 .IX Header "REQUIRED"
 Perl 5 is required. bzip2 is required for creation of .tar.bz2 files.

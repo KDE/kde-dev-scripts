@@ -1,5 +1,5 @@
 
-TARGET = kcvs2pack
+TARGET = cvs2pack
 
 bin_SCRIPTS = $(TARGET) cxxmetric
 

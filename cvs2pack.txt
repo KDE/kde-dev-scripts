@@ -1,9 +1,9 @@
 NAME
-    kcvs2pack - Creates standalone dist tarballs for apps in KDE
+    cvs2pack - Creates standalone dist tarballs for apps in KDE
     CVS.
 
 SYNOPSIS
-    kcvs2pack <module dir> <packagedir> [<version>]
+    cvs2pack <module dir> <packagedir> [<version>]
 
 DESCRIPTION
     The following steps are performed:
@@ -19,7 +19,7 @@ DESCRIPTION
     Makefile.cvs is run.
     .tar.gz and .tar.bz2 archives are created for the directory.
 EXAMPLES
-    # kcvs2pack ~/baseline/kdeutils karm 1.2
+    # cvs2pack ~/baseline/kdeutils karm 1.2
 
 REQUIRED
     Perl 5 is required. bzip2 is required for creation of .tar.bz2

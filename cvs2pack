@@ -6,16 +6,16 @@ use File::Copy qw( copy );
 use File::Path qw( mkpath );
 use File::Find qw( find );
 
-# kcvs2pack -- Sirtaj Singh Kang <taj@kde.org>, Dec 1998
+# cvs2pack -- Sirtaj Singh Kang <taj@kde.org>, Dec 1998
 # For the K Desktop Environment.
 
 =head1 NAME
 
-kcvs2pack - Creates standalone dist tarballs for apps in KDE CVS.
+cvs2pack - Creates standalone dist tarballs for apps in KDE CVS.
 
 =head1 SYNOPSIS
 
-kcvs2pack <module dir> <packagedir> [<version>]
+cvs2pack <module dir> <packagedir> [<version>]
 
 =cut
 
@@ -211,7 +211,7 @@ The following steps are performed:
 
 =head1 EXAMPLES
 
-# kcvs2pack ~/baseline/kdeutils karm 1.2
+# cvs2pack ~/baseline/kdeutils karm 1.2
 
 =head1 REQUIRED
 
