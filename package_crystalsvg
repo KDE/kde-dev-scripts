@@ -111,7 +111,10 @@ The "FILES" file gives information about the location they come from.
 
 Most come from: kdelibs/pics/crystalsvg  You can visit this cvs directory using webcvs:
 http://webcvs.kde.org/cgi-bin/cvsweb.cgi/kdelibs/pics/crystalsvg
-Due to the naming the SVGs are at the end of the list. They are in the form of .svgz, which can be renamed to svg.gz and openend with gzip -d myIcon.svg.gz
+Due to the naming the SVGs are at the end of the list.
+
+They are in the form of .svgz, which can be renamed to svg.gz and opened with gzip -d *.svg.gz
+
 Application icons may also be found with the application sources:  /<kde_app_suite>/<kde_app_name>/pics e.g. /kdebase/konqueror/pics or /kdeedu/kmplot/pics
 
 The package_svg_files script collected the sources automatically.
@@ -126,11 +129,10 @@ The most up to date info for kde artists can be found at the wiki:
 http://kde.ground.cz/tiki-index.php?page=KDE+Artists
 
 MISSING SOURCES
-
-Unfortunately,the sources are not complete. Up till now, Everaldo did not release his sources. KDE has often asked him to release them. Not having all these sources is causing a lot of extra work, and making the icon set hard to maintain.
-
-If you ever made a Crystal SVG icon, and see the source is not in this package, please send the vector source to: icons --at-- kde --dot-- org
+Most of the icons are made by Everaldo, initiator and visionairy of the set, while Torsten is highly productive too. Besides Everaldo and Torsten, other artists added icons to the Crystal icon set. For whatever reason, some of these sources are missing. If you ever made a Crystal SVG icon, and see the source is not in this archive, please send the vector source to: icons --at-- kde --dot-- org
 If you want feedback on an icon you made: kde-artists --at-- kde --dot-- org
+And of course, Everaldo too is interested in your Crystal icons:
+"Everaldo" <everaldo --at--everaldo --dot-- com>
 
 Suse has published some Crystal Icons raw material. See the Icon Guide for more information about this. http://kde.ground.cz/tiki-index.php?page=Icon+Guide
 
@@ -142,8 +144,7 @@ BUGLIST
 Inspired? Take a look at the buglist!
 http://bugs.kde.org/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&long_desc_type=allwordssubstr&long_desc=&product=artwork&component=general&version=unspecified&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&bugidtype=include&bug_id=&votes=&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&changedin=&chfieldfrom=&chfieldto=Now&chfieldvalue=&order=Reuse+same+sort+as+last+time&cmdtype=doit&newqueryname=
 
-AUTHORS, LICENSE & QUESTIONS
-Besides Everaldo, many artists contributed to Crystal SVG. See:  http://kde.ground.cz/tiki-index.php?page=KDE+Artists
+LICENSE & QUESTIONS
 License: see LICENSE.crystalsvg
 Questions?  Write an e-mail to  kde-artists --at-- kde --dot-- org
 
