@@ -32,7 +32,18 @@ INSTALLFROMSCRATCH=yes
 
 ################################################################################
 
+STR_OKAY="done!"
+STR_ERROR="failed!\012\015\040\040Check the logfile in $LOGDIR for further info."
+
+ERR_NO_ERROR=0
+ERR_CHANGE_INTO_MOD_DIR=1
+ERR_NO_MAKEFILE_IN=2
+ERR_CONFIGURE_FAIL=3
+ERR_COMPILE_FAIL=4
+ERR_INSTALL_FAIL=5
+
 DATE=`date +%x`
+
 test ! -d $LOGDIR && mkdir -p $LOGDIR
 
 if test "$INSTALLFROMSCRATCH" = yes; then
@@ -44,67 +55,48 @@ if test "$INSTALLFROMSCRATCH" = yes; then
   fi
 fi
 
-for MODULE in $BASEMODS; do
+for MODULE in $BASEMODS $OTHERMODS; do
   if test -d $SRCDIR/$MODULE; then
     cd $SRCDIR/$MODULE
   else
     echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
-    exit 1
+    exit $ERR_CHANGE_INTO_MOD_DIR
   fi
 
   if test ! -e Makefile.in; then
     echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
-    exit 2
+    exit $ERR_NO_MAKEFILE_IN
   fi
 
   echo "* Building module: $MODULE"
-  ( echo -n "  Configuring..."
-    configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE
-  ) &&
-  ( echo "done!"
+  echo -n "  Configuring..."
+  if configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE; then
+    echo -e $STR_OKAY
     echo -n "  Compiling..."
-    make &> $LOGDIR/$MODULE-build-$DATE
-  ) &&
-  ( echo "done!"
-    if test ! -w $KDE2DIR; then
-      echo "  Please enter the root password to install module $MODULE."
-      su -c"make install" &> /dev/null && echo "* Module $MODULE successfully installed in $KDE2DIR!"
+    if make &> $LOGDIR/$MODULE-build-$DATE; then
+      echo -e $STR_OKAY
     else
-      echo -n "  Installing..."
-      make install &> /dev/null && (echo "done!"; echo "Module $MODULE successfully installed in $KDE2DIR!")
+      echo -e $STR_ERROR
+      exit $ERR_COMPILE_FAIL
     fi
-  )
-done
-
-for MODULE in $OTHERMODS; do
-  if test -d $SRCDIR/$MODULE; then
-    cd $SRCDIR/$MODULE
   else
-    echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
-    exit 1
+    echo -e $STR_ERROR
+    exit $ERR_CONFIGURE_FAIL
   fi
 
-  if test ! -e Makefile.in; then
-    echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
-    exit 2
-  fi
-
-  echo "* Building module: $MODULE"
-  ( echo -n "  Configuring..."
-    configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE
-  ) &&
-  ( echo "done!"
-    echo -n "  Compiling..."
-    make -k &> $LOGDIR/$MODULE-build-$DATE
-  ) &&
-  ( echo "done!"
-    if test ! -w $KDE2DIR; then
-      echo "  Please enter the root password to install module $MODULE."
-      su -c"make -k install" &> /dev/null && echo "* Module $MODULE successfully installed in $KDE2DIR!"
+  if test ! -w $KDE2DIR; then
+    echo "  Please enter the root password to install module $MODULE."
+    su -c"echo -n '  Installing...'; if make install &> $LOGDIR/$MODULE-install-$DATE; then echo -e $STR_OKAY; echo Module $MODULE successfully installed in $KDE2DIR!; else echo -e $STR_ERROR; exit $ERR_INSTALL_FAIL; fi"
+  else
+    echo -n "  Installing..."
+    if make install &> $LOGDIR/$MODULE-install-$DATE; then
+      echo -e $STR_OKAY
+      echo "Module $MODULE successfully installed in $KDE2DIR!"
     else
-      echo -n "  Installing..."
-      make -k install &> /dev/null && (echo "done!"; echo "Module $MODULE successfully installed in $KDE2DIR!")
+      echo -e $STR_FAIL
+      exit $ERR_INSTALL_FAIL
     fi
-  )
+  fi
 done
 
+exit $ERR_NO_ERROR
