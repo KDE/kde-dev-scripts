@@ -1,5 +1,19 @@
 #!/bin/sh
-# Modifies the Makefile in the current directory, to add
-# debug info (-g), and to remove stripping (-s) and optimizations (-O2)
+# Modifies the Makefile in the current directory (and optionally its subdirs),
+# - to add debug info (-g)
+# - optionally (default) remove optimizations (-O[1-9]?)
 
-perl -pi -e 's|(^CXXFLAGS[ \t]*=[ \t]*.*)$|\1 -g|;s|-O2||;s|(^LDFLAGS[ \t]*=[ \t]*.*)$|\1 -g|;' Makefile
+mxdp="-maxdepth 1"
+for i in $*; do
+  case $i in
+    -k) keep=1;;
+    -r) mxdp=;;
+    *) echo "Usage: adddebug [-k] [-r]"; exit 1;;
+  esac
+done
+
+xpr='s/^((C|CXX|LD)FLAGS[ \t]*=.*)$/\1 -g/'
+if test -z $keep; then
+  xpr="$xpr;"'s/[\t ]-O[1-9]?\b//g'
+fi
+find . $mxdp -name Makefile -exec perl -pi -e "$xpr" {} \;
