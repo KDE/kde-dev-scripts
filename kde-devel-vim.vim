@@ -92,21 +92,14 @@ function! SwitchHeaderImpl()
 	let fn = expand( '%' )
 	if fn =~ '\.\(cpp\|cc\|C\|c\)$'
 		let fn = substitute( fn, '\.\(cpp\|cc\|C\|c\)$', '.h', '' )
-		if filereadable( fn )
-			execute( "edit ".fn )
-		endif
+		execute( "edit ".fn )
 	elseif fn =~ '\.h$'
 		let fn = substitute( fn, '\.h$', '.cpp', '' )
 		if filereadable( fn )
 			execute( "edit ".fn )
 			return
 		endif
-		let fn = substitute( fn, '\.cpp$', '.cc', '' )
-		if filereadable( fn )
-			execute( "edit ".fn )
-			return
-		endif
-		let fn = substitute( fn, '\.cc$', '.C', '' )
+		let fn = substitute( fn, '\.cpp$', '.C', '' )
 		if filereadable( fn )
 			execute( "edit ".fn )
 			return
@@ -116,6 +109,8 @@ function! SwitchHeaderImpl()
 			execute( "edit ".fn )
 			return
 		endif
+		let tmp = substitute( fn, '\.c$', '.cc', '' )
+		execute( "edit ".tmp )
 	endif
 endfunction
 
