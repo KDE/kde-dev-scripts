@@ -1,7 +1,7 @@
 
 TARGET = kcvs2pack
 
-bin_SCRIPTS = $(TARGET)
+bin_SCRIPTS = $(TARGET) cxxmetric
 
 doc: $(TARGET).1 $(TARGET).txt
 
