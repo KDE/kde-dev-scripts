@@ -289,11 +289,6 @@ modulename=`echo $modulename | sed -e 's#^.*/##'`
 
 remove="$remove $modulename.lsm"
 
-# kdeextra gear I think needs this, it drops trailing numbers with hyphens
-# domi: I absolutely don't see why it would need this, so I'm
-#       disabling it, since it breaks download of po-files etc.
-# modulename="`echo $modulename | sed 's/-[0-9]*//g'`"
-
 # we check out kde-i18n/subdirs in temp_dir/kde-i18n..
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
