@@ -22,7 +22,6 @@ while (<>)
     }
     elsif ( /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ )
     {
-        print STDERR "Found one $_";
 	$inkdebug = 1;
 	chop;
 	$statement = $_;
