@@ -321,7 +321,7 @@ if test "x$CVSCLIENT" = xcvs; then
   fi
   if test "x$CVSROOT" = x; then
     if test "x$ACCOUNT" = x; then
-      CVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
+      CVSROOT=":pserver:anonymous@$ANONCVSSERVER.kde.org:/home/kde"
     else
       CVSROOT=":pserver:$ACCOUNT@cvs.kde.org:/home/kde"
     fi

@@ -75,7 +75,13 @@ CVSCLIENT="cvs"
 # For CVS users only: Do you have a CVS account? If so, set this variable to
 # the correct name, otherwise leave this blank to use anonymous CVS.
 #
-ACCOUNT="anonymous"
+ACCOUNT=""
+
+# In case you left the ACCOUNT value empty (and thus use anonymous CVS
+# access), you can specify an anoncvs mirror here. Check
+# http://www.kde.org/anoncvs.html for a list of mirror servers.
+#
+ANONCVSSERVER="anoncvs.kde.org"
 
 # Do you want any special branch? If so, specify its tag here e.g.
 # KDE_2_2_BRANCH  or KDE_3_0_ALPHA_1. If you want the
