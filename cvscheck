@@ -10,7 +10,7 @@ use Time::Local qw( timegm );
 # based on cvschanged by
 # Sirtaj Singh Kang <taj@kde.org> Nov 1998.
 
-if ( $ARGV[0] eq "--help") {
+if ( defined $ARGV[0] && $ARGV[0] eq "--help") {
   print "cvscheck (c) 2001 Dirk Mueller <mueller\@kde.org>\n\nUsage:\n";
   print "   cvscheck <dir>\n\n";
   print "Prints information about the status of your local CVS checkout without\n";
@@ -126,19 +126,28 @@ sub processEntries
           next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
           next if ($e =~ /^.+\.kidl$/);
           next if ($e =~ /^.+_skel\.[^\.]+$/);
+
+          # ignore unusual files
+          next if (-l "$dir/$e" );
+
           $dirunknown{$e} = 1;
         }
         closedir(DIR);
-
-        foreach $unknown (keys (%dirunknown)) {
-          next if ($dirunknown{$unknown} == 0);
-        }
-
         if( open(CVSIGNORE, $dir."/.cvsignore") ) {
           while(<CVSIGNORE>) {
             next if (! /^(\S+)\s*$/ );
-            # FIXME: handle shell-like wildcards
-            next if not $dirunknown{$1};
+            my $entry = $1;
+            if ($entry =~ /[\*\?]/) {
+              my $pattern = quotemeta $entry;
+              $pattern =~ s/\\\*/.*/g;
+              $pattern =~ s/\\\?/./g;
+              foreach $m (keys (%dirunknown)) {
+                $dirunknown{$m} = 0 if ($m =~ /^$pattern$/);
+              }
+              next;
+            }
+            next if not $dirunknown{$entry};
+
             $dirunknown{$1} = 0;
           }
           close(CVSIGNORE);
@@ -174,6 +183,7 @@ sub processEntries
           $fname = $1;
           $ver = $2;
           $stamp = $3;
+          print "unusual value in 4th field of CVS: $4\n" if(defined $4);
           $tag = $5;
 
           $dirunknown{$fname} = 0;
@@ -188,9 +198,10 @@ sub processEntries
             }
           }
           my $state = $stamp;
-          $state =~ s/^(.*)\+(.*)/$1/ if ($stamp =~ m/^.+\+.+$/);
-          $stamp =~ s/^(.*)\+(.*)/$2/ if ($stamp =~ m/^.+\+.+$/);
-
+          if( $stamp =~ m(^(.+)\+(.+)$) ) {
+            $state = $1;
+            $stamp = $2;
+          }
           if ( $state =~ /merge/ ) {
             # modified version merged with update from server
             # check for a conflict
@@ -239,6 +250,7 @@ sub processEntries
         my @unknownlist = sort keys (%dirunknown);
         foreach $entry (@unknownlist) {
           next if ($dirunknown{$entry} == 0);
+          next if ($entry =~ /^\.\#.+$/);
           push @unknown, "$dir/$entry";
         }
 }
