@@ -15,7 +15,7 @@ KDEBUILDDIR="/build/coolo"
 #
 KDEDIRS="/home/coolo/prod/KDE"
 
-# Where is your Qt 3.0.x?
+# Where is your Qt 3.1.x?
 #
 QTDIR="/home/coolo/prod/qt-copy"
 
