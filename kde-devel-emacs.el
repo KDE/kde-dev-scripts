@@ -1031,7 +1031,7 @@ With arg, to it arg times."
   (interactive)
   (insert "kdDebug() << \"")
   (insert (fume-function-before-point))
-  (insert "\" << endl(); ")
+  (insert "\" << endl; ")
   )
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
