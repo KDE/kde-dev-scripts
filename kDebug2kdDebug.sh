@@ -49,6 +49,7 @@ while (<>)
             } else { die "parse error on kDebug/qDebug..."; }
 	    $line=$1; # has the indentation, //, and the kDebug* name
 	    $line =~ s/kDebugInfo/kdDebug/;
+	    $line =~ s/kDebugArea/kdDebug/;
 	    $line =~ s/qDebug/kdDebug/;
 	    $line =~ s/kDebugWarning/kdWarning/;
 	    $line =~ s/kDebugError/kdError/;
@@ -56,6 +57,10 @@ while (<>)
 	    $area = "";
 	    if ( s/^([0-9]+)\s*,\s*//) # There is an area
 	    {
+		$area = $1;     # Store it
+		$line .= "(" . $area . ")";
+	    } elsif ( s/^(KBABEL[^,]*)\s*,\s*//)
+	    {     # Example of support for #defined area (here KBABEL.*)
 		$area = $1;     # Store it
 		$line .= "(" . $area . ")";
 	    } else
