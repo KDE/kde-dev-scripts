@@ -8,7 +8,7 @@
 ## Written by David Faure <faure@kde.org>, licensed under GPL.
 ## 17/03/2000
 
-find $1 -name '*[cCph]' -type f | xargs grep -i 'ebug(\|warning(' \
+find $1 -name '*[cCph]' -type f | xargs grep -H -i 'ebug(\|warning(' \
 | grep -v 'kdDebug\|kdWarning' \
 | grep -v include \
 | sed -e "s#:.*##" \
