@@ -2,14 +2,31 @@
 # tries to reduce the number of includes in KDE source files
 # (c) 2001 Dirk Mueller <mueller@kde.org>
 
+# declaration of useful subroutines
+sub find_fixable_sources ($);
+sub find_removable_includes ($);
+sub remove_include ($$$);
+sub replace_include ($$$);
+sub fix_duplicates($);
+sub fix_compat_includes($);
+
+# some global variables
 $verbose = 0; # turns on debugging
-$modify = 1;  # if 1 it should try to fix the files as well
+$modify  = 0;  # if 1 it should try to fix the files as well
 
 $cppExt     = "(cpp|cc|cxx|C|c\\+\\+)";
 #$hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
 
+# list of compat headers. scroll down ... much of boring stuff here..
+%compatmap = (
+ 'qapp.h'            => 'qapplication.h'          ,
 
-sub find_fixable_sources ()
+);
+
+
+# now it starts to get interesting again
+
+sub find_fixable_sources ($)
 {
   # for now I grep the directory (requires srcdir==builddir)
   # actually it should read the Makefile and
@@ -103,11 +120,63 @@ sub remove_include ($$$)
       next;
     }
 
-    if ($cpplevel == 0 && $level > 0 && $line =~ m/^(\#include\s*[\"<]$include[\">]\S*)/) {
-      print "HAH! found $include in $srcfile!\n" if($verbose);
+    if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
+      print "HAH! found $include to remove in $srcfile!\n" if($verbose);
       $level = $level - 1;
       # skipping the line..
       next;
+    }
+
+    push @contents, $line;
+  }
+
+  # now we have the fixed contents in @contents, although in wrong order
+  open(O, "> $srcfile") || die "couldn't open '$srcfile' for writing\n";
+  print O reverse @contents;
+  close (O);
+}
+
+# first parameter: srcfile
+# second parameter: include to replace
+# third parameter the include file to replace it with
+sub replace_include ($$$)
+{
+  my $srcfile = shift @_;
+  my $include = quotemeta(shift @_);
+  my $destinclude = shift @_;
+
+  die "$srcfile is not read/writeable!\n" if( ! -r $srcfile || ! -w $srcfile);
+  open(I, "< $srcfile") or die "couldn't open '$srcfile'\n";
+  my @contents = <I>;
+  close(I);
+
+  # ok, CPU time doesn't count so we do it the lazy way
+  # we should remove the last occurence of the include in the
+  # file because in case its a duplicate removing the first
+  # one could make a difference. 
+  my @revcontents = reverse @contents;
+  @contents = ();
+
+  # we skip all inludes that are somehow ifdefed
+  # note the logic is reversed because it operates
+  # on reversed lines :)
+  my $cpplevel = 0;
+  foreach $line (@revcontents) {
+    if ($line =~ m/^\#if/) {
+      $cpplevel = $cpplevel - 1;
+      push @contents, $line;
+      next;
+    }
+
+    if ($line =~ m/^\#endif/) {
+      $cpplevel = $cpplevel + 1;
+      push @contents, $line;
+      next;
+    }
+
+    if ($cpplevel == 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
+      print "HAH! found $include to replace in $srcfile!\n" if($verbose);
+      $line =~ s/(\#include\s*[\"<])$include([\">]\S*)/$1$destinclude$2/;
     }
 
     push @contents, $line;
@@ -119,8 +188,7 @@ sub remove_include ($$$)
   close (O);
 }
 
-
-sub fix_duplicates($) 
+sub fix_duplicates($)
 {
   my $srcfile = shift @_;
 
@@ -148,6 +216,33 @@ sub fix_duplicates($)
   }
 }
 
+sub fix_compat_includes($)
+{
+  my $srcfile = shift @_;
+
+  my @includes = &find_removable_includes($srcfile);
+
+  my %inclMap = ();
+
+  # initialize
+  foreach $include (@includes) {
+    $inclMap{$include} = 0;
+  }
+  
+  # count number of occurences
+  foreach $include (@includes) {
+    $inclMap{$include} = $inclMap{$include} + 1;
+  }
+  
+  # check for compat headers
+  foreach $include (keys %inclMap) {
+    if( defined $compatmap{$include}) {
+      print "$srcfile: compat header: $include, to be replaced by ". $compatmap{$include} ."\n";
+      &replace_include($srcfile, $include, $compatmap{$include}) if($modify);
+    }
+  }
+}
+
 
 # here is the main logic
 
@@ -169,6 +264,7 @@ foreach $dir(@dirlist) {
 
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
+    &fix_compat_includes($file);
     &fix_duplicates($file);
 
     print "\n" if ($verbose);
