@@ -17,6 +17,9 @@ cvs2pack	Create a standalone source distribution tarball for an app
 cvschanged	Check for edited or merged files in a checked out CVS module,
 		without connecting to the CVS server.
 
+noncvslist	List all files in a checked out CVS module that are unknown to
+		to the CVS server.
+
 cvsversion      Display CVS version of a file without connecting to the server.
 
 cxxmetric	Counts lines of code, comments and blank space in C and C++
