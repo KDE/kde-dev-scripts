@@ -1,0 +1,110 @@
+#!/bin/bash
+################################################################################
+# Compiles a KDE2 snapshot.                                                    #
+# 2000 by Frerich Raabe <raabe@kde.org>                                        #
+################################################################################
+
+# Where are your KDE sources?
+SRCDIR=/home/devel/src/kde-cvs
+
+# Where shall I put the binaries?
+KDE2DIR=/opt/kde2
+
+# Where is your Qt 2.2.0?
+QTDIR=/usr/local/lib/qt
+
+# Where shall I put the logfiles of the compilation process? The default
+# value is $SRCDIR/log.
+LOGDIR=$SRCDIR/log
+
+# These modules are a must-have, don't change this line!
+BASEMODS="kde-qt-addon kdesupport kdelibs kdebase"
+
+# These modules are optional, add any modules you checked out here to have
+# them included in the compilation process.
+OTHERMODS="kdegraphics kdenetwork kdesdk kdeutils kde-i18n"
+
+# Do you want a clean install? This is recommended but please note that
+# you cannot use your previous KDE2 desktop while the compilation is
+# running. Set this to "no" to install the new snapshot over the previous
+# one, otherwise set it to "yes".
+INSTALLFROMSCRATCH=yes
+
+################################################################################
+
+DATE=`date +%x`
+test ! -d $LOGDIR && mkdir -p $LOGDIR
+
+if test "$INSTALLFROMSCRATCH" = yes; then
+  if test ! -w $KDEDIR; then
+    echo "Enter the root password to remove your current KDE2 desktop."
+    su -c"rm -rf $KDE2DIR/*"
+  else
+    rm -rf $KDE2DIR/*
+  fi
+fi
+
+for MODULE in $BASEMODS; do
+  if test -d $SRCDIR/$MODULE; then
+    cd $SRCDIR/$MODULE
+  else
+    echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
+    exit 1
+  fi
+
+  if test ! -e Makefile.in; then
+    echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
+    exit 2
+  fi
+
+  echo "* Building module: $MODULE"
+  ( echo -n "  Configuring..."
+    configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE
+  ) &&
+  ( echo "done!"
+    echo -n "  Compiling..."
+    make &> $LOGDIR/$MODULE-build-$DATE
+  ) &&
+  ( echo "done!"
+    if test ! -w $KDE2DIR; then
+      echo "  Please enter the root password to install module $MODULE."
+      su -c"make install" &> /dev/null && echo "* Module $MODULE successfully installed in $KDE2DIR!"
+    else
+      echo -n "  Installing..."
+      make install &> /dev/null && (echo "done!"; echo "Module $MODULE successfully installed in $KDE2DIR!")
+    fi
+  )
+done
+
+for MODULE in $OTHERMODS; do
+  if test -d $SRCDIR/$MODULE; then
+    cd $SRCDIR/$MODULE
+  else
+    echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
+    exit 1
+  fi
+
+  if test ! -e Makefile.in; then
+    echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
+    exit 2
+  fi
+
+  echo "* Building module: $MODULE"
+  ( echo -n "  Configuring..."
+    configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE
+  ) &&
+  ( echo "done!"
+    echo -n "  Compiling..."
+    make -k &> $LOGDIR/$MODULE-build-$DATE
+  ) &&
+  ( echo "done!"
+    if test ! -w $KDE2DIR; then
+      echo "  Please enter the root password to install module $MODULE."
+      su -c"make -k install" &> /dev/null && echo "* Module $MODULE successfully installed in $KDE2DIR!"
+    else
+      echo -n "  Installing..."
+      make -k install &> /dev/null && (echo "done!"; echo "Module $MODULE successfully installed in $KDE2DIR!")
+    fi
+  )
+done
+

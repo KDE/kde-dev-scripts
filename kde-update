@@ -1,0 +1,19 @@
+#!/bin/bash
+################################################################################
+# Updates a local CVS tree with KDE sources                                    #
+# 2000 by Frerich Raabe <raabe@kde.org>                                        #
+################################################################################
+
+# Where are all your CVS modules stored?
+SRCDIR=/home/devel/src/kde-cvs
+
+################################################################################
+
+for MODULE in `ls $SRCDIR`; do
+  cd $SRCDIR/$MODULE
+  echo "========================> Updating module '$MODULE'..."
+  test -d CVS && cvs up
+  echo "========================> Update finished successfully"
+  test -e admin/Makefile.common && make -f admin/Makefile.common cvs-clean
+  test -e Makefile.cvs && make -f Makefile.cvs
+done
