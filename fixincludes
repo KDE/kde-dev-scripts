@@ -144,7 +144,7 @@ sub find_fixable_sources ($)
 sub find_removable_includes ($)
 {
   my $srcfile = shift @_;
-  open(SRC, "< $srcfile") || die "couldn't open '$srcfile'\n";
+  open(SRC, "< $srcfile") || die "find_removable_includes: couldn't open '$srcfile'\n";
   
   my @includes = ();
 
@@ -193,7 +193,7 @@ sub remove_include ($$$)
   my $level = shift @_;
 
   die "$srcfile is not read/writeable!\n" if( ! -r $srcfile || ! -w $srcfile);
-  open(I, "< $srcfile") or die "couldn't open '$srcfile'\n";
+  open(I, "< $srcfile") or die "remove_include: couldn't open '$srcfile'\n";
   my @contents = <I>;
   close(I);
 
@@ -231,7 +231,7 @@ sub remove_include ($$$)
   }
 
   # now we have the fixed contents in @contents, although in wrong order
-  open(O, "> $srcfile") || die "couldn't open '$srcfile' for writing\n";
+  open(O, "> $srcfile") || die "remove_include: couldn't open '$srcfile' for writing\n";
   print O reverse @contents;
   close (O);
 }
@@ -246,7 +246,7 @@ sub replace_include ($$$)
   my $destinclude = shift @_;
 
   die "$srcfile is not read/writeable!\n" if( ! -r $srcfile || ! -w $srcfile);
-  open(I, "< $srcfile") or die "couldn't open '$srcfile'\n";
+  open(I, "< $srcfile") or die "replace_include: couldn't open '$srcfile'\n";
   my @contents = <I>;
   close(I);
 
@@ -280,7 +280,7 @@ sub replace_include ($$$)
   }
 
   # now we have the fixed contents in @contents
-  open(O, "> $srcfile") || die "couldn't open '$srcfile' for writing\n";
+  open(O, "> $srcfile") || die "replace_include: couldn't open '$srcfile' for writing\n";
   print O reverse @contents;
   close (O);
 }
@@ -371,7 +371,7 @@ sub fix_unnecessary($)
   my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
   # we have to use sed here, because perl can't do s#a#b#
   $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT` if (defined $objreplacement);
-  #print "builddir=$builddir\n";
+  print "builddir=$builddir\n";
 
   my @includes = &find_removable_includes($srcfile);
 
