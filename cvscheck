@@ -126,6 +126,7 @@ sub processEntries
           next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
           next if ($e =~ /^.+\.kidl$/);
           next if ($e =~ /^.+_skel\.[^\.]+$/);
+	  next if ($e eq "Makefile.rules.in");
 
           $dirunknown{$e} = 1;
         }
