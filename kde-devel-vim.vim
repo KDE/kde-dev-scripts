@@ -153,8 +153,6 @@ function CreateChangeLogEntry()
 	    return
 	endif
 	let g:EMAIL = mail
-	" ### emacs is more clever by storing that information persistently
-	" in .emacs 
     endif
 
     if bufname( "ChangeLog" ) != "" && bufwinnr( bufname( "ChangeLog" ) ) != -1
