@@ -34,6 +34,9 @@ cvslastchange   launches "cvs diff -u" to display the last applied changes for a
 
 cvslastlog      Shows the log associated with the last change on a given file.
 
+cvsremovealltags Remove all tags from a CVS file. Use with care, and for instance
+		after copying a file on the server.
+
 gendebug        Generate C++/Qt code for printing debug output.
 
 pruneemptydirs	Detects stale source dirs in a CVS tree
