@@ -32,8 +32,6 @@ the first column and the respective mail address in the second.
 
 =over 4
 
-=item Does not really work for files with html tags
-
 =item Does not really work for filenames which are not in the current directory
 
 =item Is a hack. Really.
@@ -122,7 +120,7 @@ while (<LOG>) {
              if ($mail{$author}) {
 		 $author = "<a href=mailto:$mail{$author}>$author</a>";
              }
-             $content = "<b>$revision</b> $author <b>$date<b>";
+             $content = "<b>$revision</b>&nbsp;&nbsp;$author&nbsp;&nbsp;<b>$date<b>";
       } elsif ($line eq "----------------------------" && !($revision eq "")) {
              print OUTPUT "$revstr = \"$content\";\n";
       } elsif ($line eq "=============================================================================" && !($revision eq "")) {
@@ -148,6 +146,8 @@ EOF
 
 $lineno = 1;
 $oldrevision = "";
+$oldlineno = "";
+$oldrevstr = "";
 open (ANNOTATE, "cvs annotate $file 2>/dev/null|");
 while (<ANNOTATE>) {
       chop;
@@ -158,20 +158,31 @@ while (<ANNOTATE>) {
       $author =~ s/\s//g;
       $date = substr $line, 23, 9;
       $content = substr $line, 35;
+      $content =~ s/\&/&amp;/g;
+      $content =~ s/\</&lt;/g;
+      $content =~ s/\>/&gt;/g;
       $revstr = "log$revision";
       $revstr =~ s/\./_/g;
       if ($revision eq $oldrevision) {
-            $linkstr = "";
-            $linkendstr = "";
-            $revauthor = "";
+	  if ($lineno == $oldlineno+20) {
+	      $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
+	      $linkendstr = "</a>";
+              $revauthor = "$author $revision";
+              $oldlineno = $lineno;
+	  } else {
+	      $linkstr = "";
+	      $linkendstr = "";
+	      $revauthor = "";
+	  }
       } else {
-            $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
-            $linkendstr = "</a>";
-            $revauthor = "$author $revision";
+	  $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
+	  $linkendstr = "</a>";
+	  $revauthor = "$author $revision";
+	  $oldlineno = $lineno;
+	  $oldrevision = $revision;
       }
       print OUTPUT sprintf "%-6i$linkstr%-16s$linkendstr$content\n", $lineno, $revauthor;
       $lineno++;
-      $oldrevision = $revision;
 }
 close ANNOTATE;
 
