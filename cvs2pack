@@ -161,7 +161,7 @@ sub getVersion
 		|| die "Can't read $basedir/configure.in\n";
 
 	while ( <CONFIN> ) {
-		if( /AM_INIT_AUTOMAKE\((.*?),(.*?)\)/ ) {
+		if( /AM_INIT_AUTOMAKE\((.*?),[ "]*(.*?)[ "]*\)/ ) {
 			close( CONFIN );
 			my $v = $2;
 			$v =~ s/\s//g;
