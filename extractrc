@@ -35,6 +35,7 @@ while ( <FILE> ) {
      if ($string =~ /<$textstring/) {
        $string =~ s/^.*<$textstring//;
        $intext = 1;
+	   $starting_linenr = $linenr;
      } else {
        $string = "";
      }
@@ -47,6 +48,9 @@ while ( <FILE> ) {
      writeoutstring($text); 
      $string =~ s/^.*<\/$textstring//;
      $intext = 0;
+	 if ($linenr != $starting_linenr) {
+		print STDERR "there is <text> floating\n";
+     }
    }
 
 }
