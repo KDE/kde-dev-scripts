@@ -1,11 +1,11 @@
 
 TARGET = cvs2pack
 
-bin_SCRIPTS = $(TARGET) cxxmetric
+bin_SCRIPTS = $(TARGET) cxxmetric cvschanged
 
 doc: $(TARGET).1 $(TARGET).txt
 
-man1_DATA = $(TARGET).1
+man1_DATA = $(TARGET).1 cvschanged.1
 man1dir = $(mandir)/man1
 
 $(TARGET).1: $(TARGET)
@@ -14,3 +14,5 @@ $(TARGET).1: $(TARGET)
 $(TARGET).txt: $(TARGET)
 	pod2text $(TARGET) > $(TARGET).txt
 
+cvschanged.1: cvschanged
+	pod2man -center="K Desktop Environment" cvschanged > cvschanged.1

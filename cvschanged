@@ -1,0 +1,139 @@
+#!/usr/bin/perl
+
+use POSIX qw(mktime ctime);
+use Time::Local qw( timegm );
+
+# Offline check for changed, merged or missing files in a checked-out
+# CVS module. Sirtaj Singh Kang <taj@kde.org> Nov 1998.
+# Usage:
+# 	cvschanged <module dir>...
+
+@dirqueue = @ARGV;
+@merged = ();
+
+@monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+ "Sep", "Oct", "Nov", "Dec" );
+%months = ();
+
+
+# convert text stamp to GMT
+sub strToTime
+{
+	my( $timestr ) = @_;
+
+	if( ! ($timestr =~ 
+		/^(\w+)\s*(\w+)\s*(\d+)\s*(\d+):(\d+):(\d+)\s*(\d+)/) ) {
+
+		return -1;
+	}
+
+	# CVS timestamps are in GMT.
+
+	my( $tm ) = timegm( $6, $5, $4, $3, $months{ $2 }, $7 - 1900);
+
+	return $tm;
+}
+
+sub processEntries
+{
+	my ( $dir ) = @_;
+
+	open( ENTRIES, $dir."/CVS/Entries" ) 
+		|| warn "Couldn't read '$dir/CVS/Entries'";
+
+	while( <ENTRIES> ) {
+		if ( m#^\s*D/([^/]+)/# ) {
+			push ( @dirqueue, "$dir/$1" );
+			next;
+		}
+
+		next if !m#^\s*/([^/]+)/([\d\.]*)/([^/]+)/#;
+
+		$fname = $1;
+		$ver = $2;
+		$stamp = $3;
+		
+		if ( $stamp =~ /merge/ ) {
+			push @merged, "$dir/$fname";
+			next;
+		}
+
+		$mtm = strToTime( $stamp );
+
+		if( $mtm < 0 ) {
+			warn "Bad mod time for $dir/$fname: $stamp\n";
+			next;
+		}
+
+		@sparams = stat( "$dir/$fname" );
+
+		if ( $#sparams < 0 ) {
+			warn "$dir/$fname: file missing\n";
+		}
+
+		if( $mtm < $sparams[ 9 ] ) {
+			print "$dir/$fname\n";
+		}
+	}
+
+	close( ENTRIES );
+}
+
+# month assoc array for name -> index lookups
+$mctr = 0;
+
+foreach $month ( @monthlist ) {
+	$months{ $month } = $mctr;
+	$mctr++;
+}
+
+# Try current directory if none specified
+
+if( $#dirqueue < 0 ) {
+	push( @dirqueue, "." );
+}
+
+# process directory queue
+foreach $dir ( @dirqueue ) {
+	processEntries( $dir );
+}
+
+if ( $#merged >= 0 ) {
+	print "\nMerged files:\n\n";
+	foreach $f ( @merged ) {
+		print $f,"\n";
+	}
+}
+
+=head1 NAME
+
+cvschanged -- Lists all files in checked out CVS modules that have been
+edited or changed locally. No connection is required to the CVS server.
+
+=head1 SYNOPSIS
+
+When the current directory is a CVS module:
+
+	cvschanged
+
+Checking checked out subdirectories:
+
+	cvschanged [<dir>...]
+
+=head1 DESCRIPTION
+
+cvschanged will list all files in each checked-out module (and
+subdirectories) that have been edited or merged. This is done without
+needing to contact the CVS server, which greatly increases the speed
+for people who have a slow connection.
+
+=head1 EXAMPLES
+
+	cd baseline/kdelibs; cvschanged
+	cd baseline; cvschanged kdelibs kdebase
+
+=head1 AUTHOR
+
+Sirtaj Singh Kang <taj@kde.org>
+
+=cut

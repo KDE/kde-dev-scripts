@@ -1,0 +1,11 @@
+
+Stuff in this directory:
+
+cvs2pack	Create a standalone source distribution tarball for an app
+		in a KDE CVS module.
+
+cvschanged	Check for edited or merged files in a checked out CVS module,
+		without connecting to the CVS server.
+
+cxxmetric	Counts lines of code, comments and blank space in C and C++
+		source files.
