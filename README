@@ -11,6 +11,8 @@ create_makefile Create the Makefile in a directory containing a Makefile.am
 
 create_makefiles The recursive version of it - needs create_makefile.
 
+create_cvsignore Create a .cvsignore file (using the contents of Makefile.am)
+
 cvs2pack	Create a standalone source distribution tarball for an app
 		in a KDE CVS module.
 

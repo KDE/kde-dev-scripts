@@ -1,0 +1,15 @@
+#!/bin/zsh
+if test -f Makefile.am; then
+  cat >.cvsignore <<EOF
+Makefile
+Makefile.in
+EOF
+  bins=`grep _PROGRAMS Makefile.am | grep -v '^#' | sed -e 's/.*=\s*//'`
+  if ! test -z "$bins"; then
+    print -l `echo $bins` >> .cvsignore
+  fi
+  cvs add .cvsignore
+else
+  print "No Makefile.am found!"
+fi
+
