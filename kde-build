@@ -503,7 +503,7 @@ for module in $modules; do
     continue
   fi
 
-  if [ "$module" == arts ]; then
+  if [ "$module" = arts ]; then
     # since the CVS dir of libltdl is copied along with the rest
     # we can just cvs upd in libltdl
     cmd_update_raw="cd libltdl ; $cmd_update; cd .."
