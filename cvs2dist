@@ -458,6 +458,8 @@ echo -n "make -f Makefile.cvs in $temp_dist/... "
 make -f Makefile.cvs >> $log 2>> $log
 echo "rm Makefile.cvs" >> $log
 rm -f Makefile.cvs
+echo "rm autom4te.cache" >> $log
+rm -Rf autom4te.cache
 echo "--------" >> $log
 echo "done."
 
