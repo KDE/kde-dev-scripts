@@ -2,7 +2,7 @@
 bin_SCRIPTS = \
   create_makefile create_makefiles adddebug \
   cheatmake makeobj kde-build build-progress.sh \
-  cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
+  cvsbackport cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
   noncvslist pruneemptydirs cvs-clean \
   cvs2dist  cvsblame \
   findmissingcrystal \
