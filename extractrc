@@ -29,7 +29,7 @@ while ( <FILE> ) {
    $string .= $_;   
    chomp($string);
  
-   $textstring = '[tT][eE][xX][tT]>';
+   $textstring = '([tT][eE][xX][tT]|string)>';
 
    if ($intext == 0) {
      if ($string =~ /<$textstring/) {
@@ -44,7 +44,9 @@ while ( <FILE> ) {
    if (($intext == 1) && ($string =~ /<\/$textstring/)) {
      my $text = $string;
      $text =~ s/<\/$textstring.*$//;
-     $text =~ s/&amp;/&/g;
+	 $text =~ s/&lt;/</g;
+     $text =~ s/&gt;/>/g;
+     $text =~ s/&amp;/&/g; 
      writeoutstring($text); 
      $string =~ s/^.*<\/$textstring//;
      $intext = 0;
