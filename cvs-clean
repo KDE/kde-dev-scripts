@@ -12,20 +12,24 @@
 # the above copyright notice. There is NO WARRANTY of any kind.
 #
 
+my $dry_run = 0;
+
 sub rmrf()
 {
-  my $fn = shift;
-  lstat ($fn);
-  if (-d _) {
-    if (opendir (DIR, $fn)) {
-      for my $efn (grep (!/^\.\.?$/, readdir (DIR))) {
-	&rmrf ($fn."/".$efn);
+  if (!$dry_run) {
+    my $fn = shift;
+    lstat ($fn);
+    if (-d _) {
+      if (opendir (DIR, $fn)) {
+        for my $efn (grep (!/^\.\.?$/, readdir (DIR))) {
+          &rmrf ($fn."/".$efn);
+        }
+        closedir (DIR);
+        rmdir ($fn);
       }
-      closedir (DIR);
-      rmdir ($fn);
+    } else {
+      unlink ($fn);
     }
-  } else {
-    unlink ($fn);
   }
 }
 
@@ -81,6 +85,23 @@ sub cvsclean()
   }
   for my $fn (sort (keys (%dirscvs))) {
     &cvsclean ($dir.$fn."/");
+  }
+}
+
+my $usage = 
+  "usage: cvs-clean [options]\n".
+  "    --help | -h      print usage information\n".
+  "    --dry-run | -n   print intended actions; don't change filesystem\n";
+
+foreach my $arg (@ARGV) {
+  if ($arg eq '-h' || $arg eq '--help') {
+    print $usage;
+    exit (0);
+  } elsif ($arg eq '-n' || $arg eq '--dry-run') {
+    $dry_run = 1;
+  } else {
+    print STDERR "cvs-clean: unknown argument '".$arg."'\n\n".$usage;
+    exit (1);
   }
 }
 
