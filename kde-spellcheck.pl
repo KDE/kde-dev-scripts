@@ -234,6 +234,7 @@ my %fix = (
 	 "commited" => "committed",
 	 "commuication" => "communication",
 	 "communcation" => "communication",
+	 "comunication" => "communication",
 	 "comparision" => "comparison",
 	 "comparisions" => "comparisons",
 	 "Comparision" => "Comparison",
