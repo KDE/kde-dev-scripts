@@ -333,12 +333,13 @@
 
 (defun insert-curly-brace (arg) (interactive "*P")
   (if (not (c-in-literal))
-      (let ((n nil) (o nil))
+      (let ((n nil) (o nil)
+	    (spacep nil))
         (save-excursion
-          (forward-char -1)              ; These three lines are for the situation where 
+	  (forward-char -1)              ; These three lines are for the situation where
           (if (not (looking-at " "))     ; the user already have inserted a space after
-              (forward-char 1))          ; the closing parenthesis
-          
+              (forward-char 1)           ; the closing parenthesis
+	    (setq spacep t))
           (forward-char -2)
           (setq o (looking-at "()"))
           (forward-char 1)
@@ -346,7 +347,7 @@
           )
         (cond
          (n (progn
-              (insert " ")
+              (if (not spacep) (insert " "))
               (self-insert-command (prefix-numeric-value arg))
               (newline-and-indent)
              (save-excursion
