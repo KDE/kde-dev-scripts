@@ -10,6 +10,8 @@ use Time::Local qw( timegm );
 
 @dirqueue = @ARGV;
 @merged = ();
+@uncommitted = ();
+@missing = ();
 
 @monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
  "Sep", "Oct", "Nov", "Dec" );
@@ -61,14 +63,20 @@ sub processEntries
 		$mtm = strToTime( $stamp );
 
 		if( $mtm < 0 ) {
-			warn "Bad mod time for $dir/$fname: $stamp\n";
+			if ( $stamp =~ /dummy/ ) {
+				push @uncommitted, "$dir/$fname";
+			}
+			else {
+				warn "Bad mod time for $dir/$fname: $stamp\n";
+			}
 			next;
 		}
 
 		@sparams = stat( "$dir/$fname" );
 
 		if ( $#sparams < 0 ) {
-			warn "$dir/$fname: file missing\n";
+			push @missing, "$dir/$fname";
+			next;
 		}
 
 		if( $mtm < $sparams[ 9 ] ) {
@@ -98,9 +106,24 @@ foreach $dir ( @dirqueue ) {
 	processEntries( $dir );
 }
 
+if ( $#missing >= 0 ) {
+	print "\nMissing files:\n\n";
+	foreach $f ( @missing ) {
+		print $f,"\n";
+	}
+}
+
+
 if ( $#merged >= 0 ) {
 	print "\nMerged files:\n\n";
 	foreach $f ( @merged ) {
+		print $f,"\n";
+	}
+}
+
+if ( $#uncommitted >= 0 ) {
+	print "\nAdded but not committed:\n\n";
+	foreach $f ( @uncommitted ) {
 		print $f,"\n";
 	}
 }
