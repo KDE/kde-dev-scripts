@@ -81,6 +81,8 @@
 (define-key global-map [(meta down)] 'scroll-other-down)
 (define-key global-map [(control j)] 'goto-line)
 (global-set-key "%" 'match-paren);;for all buffers :)
+(global-set-key [(control %)] 'match-paren)
+
 (if (featurep 'igrep)
     (progn
       (setq igrep-find-prune-clause
