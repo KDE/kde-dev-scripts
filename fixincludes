@@ -111,6 +111,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'kstddirs.h'    =>  "kstandarddirs.h",
  'kuniqueapp.h'  =>  "kuniqueapplication.h",
  'kcolorbtn.h'   =>  "kcolorbutton.h",
+ 'kcolordlg.h'   =>  "kcolordialog.h",
 );
 
 
