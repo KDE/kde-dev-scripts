@@ -76,7 +76,7 @@ With arg, to it arg times."
 	       insert-tab-mode nil
 	       indent-tabs-mode nil
                c-basic-offset 4
-               c-access-key "\\<\\(signals\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
+               c-access-key "\\<\\(signals\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
                c-hanging-comment-ender-p nil
                c-offsets-alist (append '((case-label   . 0)
                                          (access-label . -)
