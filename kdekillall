@@ -3,5 +3,10 @@ if [ $# = 0 ]; then
     echo "Usage: $0 <process>"
     echo 'Kills the process "kdeinit: <process>"'
 else
-    ps aux | grep "kdeinit: $1" | grep -v grep | gawk '{print $2}' | xargs kill
+    list=`ps aux | grep "kdeinit: $1" | grep -v grep | gawk '{print $2}'`
+    if test -n "$list"; then 
+        for i in $list; do kill $i; done; 
+    else
+        echo 'No process killed'
+    fi
 fi
