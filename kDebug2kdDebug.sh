@@ -8,7 +8,14 @@
 ## Written by David Faure <faure@kde.org>, licensed under GPL.
 ## 17/03/2000
 
-find $1 -name '*[cCph]' -type f | xargs grep -l ebug | while read file; do
+find $1 -name '*[cCph]' -type f | xargs grep -i 'ebug(\|warning(' \
+| grep -v 'kdDebug\|kdWarning' \
+| grep -v include \
+| sed -e "s#:.*##" \
+| sort -u \
+| while read file; do
+echo -n "working on $file "
+cp $file $file.tmp
 perl -w -i -e \
 '
 $inkdebug=0;
@@ -133,7 +140,14 @@ if ( $inkdebug )
    print STDERR "Warning, unterminated kDebug call !! Check the file !\n";
    print $arguments;
 }
-' $file
+' $file.tmp
+if cmp -s $file $file.tmp > /dev/null 2>&1 ; then
+  echo "unchanged"
+  rm $file.tmp  
+else
+  echo "patching"
+  mv $file.tmp $file
+fi
 
 done
 
