@@ -21,11 +21,10 @@
   (cond
    ((and (save-excursion
 	   (forward-char -1)
-	   (not (looking-at "^[ \t]*"))))
+	   (looking-at "[A-Za-z0-9:>_\\-\\&\\.()]")))
     (dabbrev-expand arg))
    (t
     (c-indent-command))))
-
 
 (defun agulbra-clean-out-spaces ()
   "Remove spaces at ends of lines"
@@ -206,7 +205,14 @@ With arg, to it arg times."
 				  "'', aborting"))))
 	   (stringp insertion-string))
 	 (string-match "\\.h$" file)
-	 (find-file (replace-match ".cpp" t t file))
+	 (setq f (replace-match ".cpp" t t file))
+	 (if (file-readable-p f )
+	       (message "")
+	   (progn
+	      (string-match "\\.h$" file)
+	      (setq f (replace-match ".cc" t t file))
+	      ))
+	 (find-file f)
 	 (progn
 	   (goto-char (point-max))
 	   (insert insertion-string)
@@ -219,7 +225,9 @@ With arg, to it arg times."
 		 (progn
 		   (goto-char (point-min))
 		   (re-search-forward "^$" nil t)
-		   (insert "\n#include \"" file "\"\n"))))))))
+		   (insert "\n#include \"" file "\"\n")))))))
+  (fume-rescan-buffer)
+)
 
 
 (setq compilation-error-regexp-systems-list '(gnu of comma 4bsd)
