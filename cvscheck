@@ -1,0 +1,315 @@
+#!/usr/bin/perl
+
+use POSIX qw(mktime ctime);
+use Time::Local qw( timegm );
+
+# Offline check for status of files in a checked-out
+# CVS module. 
+# Dirk Mueller <mueller@kde.org> Oct 2001
+
+# based on cvschanged by
+# Sirtaj Singh Kang <taj@kde.org> Nov 1998.
+
+if ( $ARGV[0] eq "--help") {
+  print "cvscheck (c) 2001 Dirk Mueller <mueller\@kde.org>\n\nUsage:\n";
+  print "   cvscheck <dir>\n\n";
+  print "Prints information about the status of your local CVS checkout without\n";
+  print "communicating with the server (therefore in speed only limited by your\n";
+  print "hard-disk throughput, much unlike cvs -n up).\n\n";
+  print "Every file is printed with a status character in front of its name:\n";
+  print "? foobar.c   file is not known to CVS - maybe you should add it?\n";
+  print "M foobar.c   file is for sure locally modified.\n";
+  print "m foobar.c   file *might* have local changes (needs a diff with the server).\n";
+  print "C foobar.c   file has a CVS conflict and therefore cannot be committed.\n";
+  print "U foobar.c   file is in CVS but its somehow missing in your local checkout.\n";
+  print "T foobar.c   file has an unusual sticky CVS tag.\n";
+  print "A foobar.c   you cvs add'ed this file but did not yet commit.\n";
+  print "R foobar.c   you cvs rm'ed this file but did not yet commit.\n";
+ 
+  exit;
+}
+
+$standardtag = "";
+@dirqueue = @ARGV;
+@merged = ();
+@uncommitted = ();
+@missing = ();
+@tagged = ();
+@removed = ();
+@unknown = ();
+@modified = ();
+@conflicts = ();
+
+@monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+ "Sep", "Oct", "Nov", "Dec" );
+%months = ();
+
+# convert text stamp to GMT
+sub strToTime
+{
+	my( $timestr ) = @_;
+
+	if( ! ($timestr =~ 
+		/^(\w+)\s*(\w+)\s*(\d+)\s*(\d+):(\d+):(\d+)\s*(\d+)/) ) {
+
+		return -1;
+	}
+
+	# CVS timestamps are in GMT.
+
+	my( $tm ) = timegm( $6, $5, $4, $3, $months{ $2 }, $7 - 1900);
+
+	return $tm;
+}
+
+sub processEntries
+{
+	my ( $dir ) = @_;
+        my %dirunknown = ();
+
+        opendir (DIR, "$dir") || warn "Couldn't read '$dir'";
+        # first assume all are unknown
+        while ( $e = readdir(DIR) ) {
+          next if ($e eq ".");
+          next if ($e eq "..");
+          next if ($e eq "RCS");
+          next if ($e eq "SCCS");
+          next if ($e eq "CVS");
+          next if ($e eq "CVS.adm");
+          next if ($e eq "RCSLOG");
+          next if ($e eq "tags");
+          next if ($e eq "TAGS");
+          next if ($e eq ".make.state");
+          next if ($e eq ".nse_depinfo");
+          next if ($e eq "core");
+          next if ($e eq ".libs");
+          next if ($e eq ".deps");
+          next if ($e =~ /^.+~$/);
+          next if ($e =~ /^\#.+$/);
+          next if ($e =~ /^\.\#.+$/);
+          next if ($e =~ /^,.+$/);
+          next if ($e =~ /^_\$.+$/);
+          next if ($e =~ /^.+\$$/);
+          next if ($e =~ /^.+\.old$/);
+          next if ($e =~ /^.+\.bak$/);
+          next if ($e =~ /^.+\.BAK$/);
+          next if ($e =~ /^.+\.orig$/);
+          next if ($e =~ /^.+\.rej$/);
+          next if ($e =~ /^\.del-.+$/);
+          next if ($e =~ /^.+\.a$/);
+          next if ($e =~ /^.+\.olb$/);
+          next if ($e =~ /^.+\.o$/);
+          next if ($e =~ /^.*\.obj$/);
+          next if ($e =~ /^.+\.so$/);
+          next if ($e =~ /^.+\.Z$/);
+          next if ($e =~ /^.+\.elc$/);
+          next if ($e =~ /^.+\.ln$/);
+          next if ($e =~ /^cvslog\..*$/);
+
+          # kde specific entries
+          # TODO read from CVSROOT/cvsignore !
+          next if ($e eq "config.cache");
+          next if ($e eq "config.log");
+          next if ($e eq "config.status");
+          next if ($e eq "index.cache.bz2");
+          next if ($e =~ /^.*\.moc$/);
+          next if ($e =~ /^.+\.gmo$/);
+          next if ($e =~ /^.+\.moc\.[^\.]+$/);
+          next if ($e =~ /^.+\.lo$/);
+          next if ($e =~ /^.+\.la$/);
+          next if ($e =~ /^.+\.rpo$/);
+          next if ($e =~ /^.+\.closure$/);
+          next if ($e =~ /^.+\.all_cpp\.cpp$/);
+          next if ($e =~ /^.+\.all_C\.C$/);
+          next if ($e =~ /^.+\.all_cc\.cc$/);
+          next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
+          $dirunknown{$e} = 1;
+        }
+        closedir(DIR);
+
+        foreach $unknown (keys (%dirunknown)) {
+          next if ($dirunknown{$unknown} == 0);
+        }
+
+        if( open(CVSIGNORE, $dir."/.cvsignore") ) {
+          while(<CVSIGNORE>) {
+            next if (! /^(\S+)\s*$/ );
+            # FIXME: handle shell-like wildcards
+            next if not $dirunknown{$1};
+            $dirunknown{$1} = 0;
+          }
+          close(CVSIGNORE);
+        }
+
+	if ( !open( ENTRIES, $dir."/CVS/Entries" ) ) {
+          print "CVS/Entries missing in $dir\n";
+          return;
+        }
+        if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
+          my $line = <CVSTAG>;
+          if($line =~ /^T(.+)$/) {
+            $standardtag = $1;
+          }
+          else {
+            # something with D - assume HEAD
+            $standardtag = ""; # its HEAD
+          }
+          close(CVSTAG);
+        }
+        else {
+          $standardtag = ""; # its HEAD
+        }
+	while( <ENTRIES> ) {
+          if ( m#^\s*D/([^/]+)/# ) {
+               push ( @dirqueue, "$dir/$1" ) if (-d "$dir/$1");
+               $dirunknown{$1} = 0;
+               next;
+            }
+
+          next if !m#^\s*/([^/]+)/([-]*[\d\.]*)/([^/]+)/(/T)?(\w+)?#;
+          $fname = $1;
+          $ver = $2;
+          $stamp = $3;
+          $tag = $5;
+          my $taginfo="";
+
+          $dirunknown{$fname} = 0;
+
+          if ( $tag ne $standardtag ) {
+            if ($tag eq "") {
+              $taginfo = " (HEAD)";
+            }
+            else {
+              $taginfo = " ($tag)";
+            }
+          }
+          my $state = $stamp;
+          $state =~ s/^(.*)\+(.*)/$1/ if ($stamp =~ m/^.+\+.+$/);
+          $stamp =~ s/^(.*)\+(.*)/$2/ if ($stamp =~ m/^.+\+.+$/);
+
+          if ( $state =~ /merge/ ) {
+            # modified version merged with update from server
+            # check for a conflict
+            open (F, "$dir/$fname") || warn "couldn't open $dir/$fname";
+            my @conflict = grep /^<<<<<<</, <F>;
+            close (F);
+            if( @conflict ) {
+              push @conflicts, "$dir/$fname$taginfo";
+              next;
+            }
+          }
+          if ( $stamp =~ /merge/ ) {
+            push @merged, "$dir/$fname$taginfo";
+            next;
+          }
+          if ( $ver =~ /^\-.*/ ) {
+            push @removed, "$dir/$fname$taginfo";
+            next;
+          }
+          $mtm = strToTime( $stamp );
+          if( $mtm < 0 ) {
+            if ( $stamp =~ /dummy/ ) {
+              push @uncommitted, "$dir/$fname$taginfo";
+            }
+            else {
+              warn "Bad mod time for $dir/$fname: $stamp\n";
+            }
+            next;
+          }
+          @sparams = lstat( "$dir/$fname" );
+
+          if ( $#sparams < 0 ) {
+            push @missing, "$dir/$fname$taginfo";
+            next;
+          }
+          if( $mtm < $sparams[ 9 ] ) {
+            push @modified, "$dir/$fname$taginfo";
+            next;
+          }
+          if ( $tag ne $standardtag ) {
+            push @tagged, "$dir/$fname$taginfo";
+          }
+	}
+	close( ENTRIES );
+
+        my @unknownlist = sort keys (%dirunknown);
+        foreach $entry (@unknownlist) {
+          next if ($dirunknown{$entry} == 0);
+          next if ($entry =~ /^\.#.+$/);
+          
+          push @unknown, "$dir/$entry";
+        }
+}
+
+# month assoc array for name -> index lookups
+$mctr = 0;
+
+foreach $month ( @monthlist ) {
+	$months{ $month } = $mctr;
+	$mctr++;
+}
+
+# Try current directory if none specified
+
+if( $#dirqueue < 0 ) {
+	push( @dirqueue, "." );
+}
+
+# process directory queue
+foreach $dir ( @dirqueue ) {
+	processEntries( $dir );
+}
+
+foreach $f ( @unknown ) {
+  $f =~ s/^\.\///;
+  print "? $f\n";
+}
+
+foreach $f( @modified ) {
+  $f =~ s/^\.\///;
+  print "M $f\n";
+}
+
+foreach $f ( @missing ) {
+    $f =~ s/^\.\///;
+    print "U $f\n";
+}
+
+foreach $f ( @merged ) {
+    $f =~ s/^\.\///;
+    print "m $f\n";
+}
+
+foreach $f ( @tagged ) {
+   $f =~ s/^\.\///;
+   print "T $f\n";
+}
+
+foreach $f ( @uncommitted ) {
+    $f =~ s/^\.\///;
+    print "A $f\n";
+}
+
+foreach $f ( @removed ) {
+    $f =~ s/^\.\///;
+    print "R $f\n";
+}
+
+foreach $f ( @conflicts ) {
+    $f =~ s/^\.\///;
+    print "C $f\n";
+}
+
+
+=head1 NAME
+
+cvscheck -- Lists all files in checked out CVS modules that have been
+edited or changed locally. No connection is required to the CVS server,
+therefore being extremely fast. 
+
+=head1 AUTHOR
+
+Sirtaj Singh Kang <taj@kde.org>
+Dirk Mueller <mueller@kde.org>
+
+=cut
