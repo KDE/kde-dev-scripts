@@ -212,11 +212,16 @@ sub processEntries
           if ( $state =~ /merge/ ) {
             # modified version merged with update from server
             # check for a conflict
-            open (F, "$dir/$fname") || warn "I couldn't open $dir/$fname";
-            my @conflict = grep /^<<<<<<</, <F>;
-            close (F);
-            if( @conflict ) {
-              push @conflicts, "$dir/$fname$taginfo";
+            if ( open (F, "$dir/$fname") ) {
+              my @conflict = grep /^<<<<<<</, <F>;
+              close (F);
+              if( @conflict ) {
+                push @conflicts, "$dir/$fname$taginfo";
+                next;
+              }
+            } 
+            else {
+              push @missing, "$dir/$fname$taginfo";
               next;
             }
           }
