@@ -607,7 +607,7 @@
 	(if (string-match "-\*-\\([A-Za-z0-9\-\+\:\; ]+\\)-\*-" firstline)
 	    (delete-region startpoint endpoint))
 	(setq final (concat "-*- "
-			    "Mode: " (prin1-to-string major-mode) "; "
+			    "Mode: " mode-name "; "
 			    "c-basic-offset: " (prin1-to-string c-basic-offset)  "; "
 			    "indent-tabs-mode: " (prin1-to-string indent-tabs-mode)  "; "
 			    "tab-width: " (prin1-to-string tab-width) "; "
