@@ -24,6 +24,16 @@ define printqstring
        end
 end
 
+# Prints the contents of a QString, this one works even without a running process
+# but prints one char per line
+define printqstring_noprocess
+       set $i=0
+       set $s = $arg0
+       while $i < $s.d->len
+         p (char)($s.d->unicode[$i++].ucs & 0xff)
+       end
+end
+
 # Prints the contents of a QCString
 define printqcstring
       p $arg0.shd.data
