@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# copyright (C) 2004 Roberto Teixeira <roberto@kde.org>
+#
+# This script is release under the GPL
+#
+
+# 
+# This very simple script can be used to fetch available
+# cvs tags for a group of files.
+#
+# Its usage is simple, simply type something like
+#
+#        gettags myfile.cpp myfile.h
+#
+# to get the available cvs tags for myfile.cpp and myfile.h
+# otherwise simply type
+#
+#        gettags
+#
+# to fetch all available tags in the current directory and its
+# subdirectories.
+#
+
+usage()
+{
+  echo "Ex.:"
+  echo "  $0 [file1] [file2] ..." 
+}
+
+if [ "$1" == "" ]; then
+  echo "Will test tags for all files and subdirectories under `pwd`. Hope it's right"
+  echo "but if it is not, please inform the files you want to fetch the tags from."
+
+  usage
+fi
+
+cvs log $@|tr "\n" "å"|sed 's/^.*symbolic names:å\(.*\)keyword subst.*$/\1/'|tr "å" "\n"
