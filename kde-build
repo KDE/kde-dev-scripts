@@ -207,7 +207,7 @@ if test "x$INSTALLFROMSCRATCH" = xyes; then
     echo "Enter the root password to clean the installation directory."
     echo "WARNING: All files and directories in $KDEDIRS will be deleted!"
     echo -n "Please enter root "
-    su -c"rm -rf $KDEDIRS/*"
+    su -c "rm -rf $KDEDIRS/*"
   else
     rm -rf $KDEDIRS/*
   fi
@@ -411,7 +411,7 @@ for module in $critical_modules $KDEMODULES; do
           cmd_make_install="$cmd_make_install install"
           if test ! -w $KDEDIRS; then
             echo -n "  To install module $module, please enter the root "
-            su -c"install_module"
+            su -c "install_module"
           else
             install_module
           fi
