@@ -280,9 +280,6 @@ the functions inserts a newline."
       (indent-region start end nil)
       )
   (goto-char start)
-  (next-line 1)
-  (end-of-line)
-  (insert " ")
   (end-of-line)
   ))
 
