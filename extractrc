@@ -1,0 +1,57 @@
+#! /usr/bin/perl
+
+$linenr = 0;
+$filename = "";
+@filenames = ();
+
+sub writeoutstring($)
+{
+   print STDOUT "i18n(\"@_[0]\");\n";
+}
+
+while (defined ($ARGV[0]))
+{
+   $_ = shift; 
+   $filename = $_; # maybe check for options
+
+if (! $filename) {
+   print STDERR "no file to open\n";
+   exit 1;
+}
+
+$string = "";
+$intext = 0;
+
+open(FILE, $filename);
+while ( <FILE> ) {
+   $linenr++;
+
+   $string .= $_;   
+   chomp($string);
+ 
+   if (intext == 0) {
+     if ($string =~ /<text>/) {
+       $string =~ s/^.*<text>//;
+       $intext = 1;
+     } else {
+       $string = "";
+     }
+   }
+   
+   if (($intext == 1) && ($string =~ /<\/text>/)) {
+     my $text = $string;
+     $text =~ s/<\/text>.*$//;
+     $text =~ s/&amp;/&/g;
+     writeoutstring($text); 
+     $string =~ s/^.*<\/text>//;
+     $intext = 0;
+   }
+
+}
+
+if ($intext == 1) {
+ print STDERR "parsing error in $filename\n";
+ exit 1;
+}
+
+}
