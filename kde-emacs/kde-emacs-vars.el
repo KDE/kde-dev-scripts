@@ -95,7 +95,7 @@
   :group 'kde-devel
   :type 'string)
 
-(defcustom kde-use-pc-select t
+(defcustom kde-use-pc-select nil
   "Set this to nil if you really hate PC Select Mode..."
   :group 'kde-devel
   :type 'boolean)
@@ -106,6 +106,12 @@ header-protection function..  E.g. setting this to 3 makes header-protection def
 file named /home/domi/src/kdenonbeta/kig/misc/newtype.h"
   :group 'kde-devel
   :type 'integer)
+
+(defcustom kde-emacs-after-parent-string " "
+  "Set this to whatever you want to have inserted after the first parenthesis. Works only if
+magic-keys-mode is set to true. "
+  :group 'kde-devel
+  :type 'string)
 
 ; a grep in the part of kde-source I have gives: 
 ; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C

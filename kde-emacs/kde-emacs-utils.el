@@ -283,11 +283,11 @@
          (n (progn
               (insert " ")
               (self-insert-command (prefix-numeric-value arg))
-              ;(insert " ")
+              (insert kde-emacs-after-parent-string)
               ))
          (t ;else
           (self-insert-command (prefix-numeric-value arg))
-          ;(insert " ")
+          (insert kde-emacs-after-parent-string)
           )))
     (self-insert-command (prefix-numeric-value arg)))
   )
@@ -308,7 +308,7 @@
          (t ;else
           (if abbrev-mode ; XEmacs
               (expand-abbrev))
-          ;(insert " ")
+          (insert kde-emacs-after-parent-string)
           (self-insert-command (prefix-numeric-value arg))
           ))) ; normal case, prepend a space
     ;;(blink-matching-open) ; show the matching parens
@@ -323,6 +323,13 @@
                           (c-in-literal)
                           arg))))
     (self-insert-command (prefix-numeric-value arg))
+    (if spacep
+        (insert " "))))
+
+(defun insert-semicolon (arg)
+  (interactive "*P")
+    (self-insert-command (prefix-numeric-value arg))
+    (newline-and-indent))
     (if spacep
         (insert " "))))
 

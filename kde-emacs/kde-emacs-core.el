@@ -110,7 +110,7 @@ With arg, do it arg times."
   )
 
 (c-add-style "kde-c" '("stroustrup"
-		       (c-basic-offset . 4)
+		       (c-basic-offset . 2)
 		       (c-offsets-alist
 			(case-label . 4)
 			(access-label . -)
@@ -152,17 +152,17 @@ With arg, do it arg times."
   (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
   ;; fontify "public|protected|private slots" with one and the same face :)
   ;; NOTE: write face-at-point function to fontify those just like other
-  ;; access specifiers - Zack
+  ;; access specifiers
   (font-lock-add-keywords nil '(("\\<\\(\\(public\\|protected\\|private\\) slots\\)\\>" 
 				 . font-lock-reference-face)))
   ;; Add (setq magic-keys-mode nil) to your .emacs (before loading this file)
   ;; to disable the magic keys in C++ mode.
   (and (boundp 'magic-keys-mode) magic-keys-mode
        (progn
-	 (define-key c++-mode-map [\(] 'insert-parens)
-	 (define-key c++-mode-map [\)] 'insert-parens2)
-	 (define-key c++-mode-map [,] 'insert-comma)
-	 (define-key c++-mode-map [\{] 'insert-curly-brace)
+	 (define-key c++-mode-map "\(" 'insert-parens)
+	 (define-key c++-mode-map "\)" 'insert-parens2)
+	 (define-key c++-mode-map "\," 'insert-comma)
+	 (define-key c++-mode-map "\{" 'insert-curly-brace)
 	 ))
   )
 
