@@ -83,6 +83,7 @@ $lastdir = '.';
  'invalid use of undefined type `class QImageIO\'' => "qimage",
  'invalid use of undefined type `class QLineEdit\'' => "qlineedit",
  'invalid use of undefined type `class QComboBox\'' => "qcombobox",
+ 'invalid use of undefined type `class QStyle\'' => "qstyle",
  'invalid use of undefined type `class KPopupMenu\'' => "kpopupmenu",
  'invalid use of undefined type `class QPopupMenu\'' => "qpopupmenu",
  'cannot convert `KPopupMenu \*\' to `QPopupMenu \*' => "kpopupmenu",
@@ -101,7 +102,7 @@ while ( $exitcode != 0 && $addedone != 0 )
  $addedone = 0;
 
  %changes = ();
- open(INPUT,"makeobj 2>&1 |") || die "Couldn't run makeobj";
+ open(INPUT,"makeobj -k 2>&1 |") || die "Couldn't run makeobj";
  while(<INPUT>)
  {
   if (/make.*Entering directory \`(.+)\'/) {
