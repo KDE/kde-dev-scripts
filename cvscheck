@@ -264,8 +264,12 @@ sub processEntries
           next if ($dirunknown{$entry} == 0);
           # ignore unusual files
           next if (-l "$dir/$entry" );
-          # ifnore if its a directory in CVS
-          next if (-d "$dir/$entry" and -d "$dir/$entry/CVS");
+          # its a CVS directory ? might be a different module
+          if (-d "$dir/$entry" and -d "$dir/$entry/CVS") {
+            $defaulttag{"$dir/$entry"} = $standardtag;
+            push ( @dirqueue, "$dir/$entry" );
+            next;
+          }
           push @unknown, "$dir/$entry";
         }
 }
