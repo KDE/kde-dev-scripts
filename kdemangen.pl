@@ -153,8 +153,11 @@ $description
 .SH OPTIONS
 $options
 .SH SEE ALSO
-.BR help:/$appname
-\- The $appname documentation.
+Full user documentation is available through the KDE Help Center.  You can also enter the URL
+.BR help:/$appname/
+directly into konqueror or you can run 
+.BR "`khelpcenter help:/$appname/'"
+from the command-line.
 .br
 .SH AUTHORS
 .nf
