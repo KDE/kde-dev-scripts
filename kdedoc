@@ -1,0 +1,16 @@
+#!/bin/zsh
+# Run from command line, to open a kde help page in kfm/konqueror
+# Argument : The classname (case sensitive !).
+
+# You need to edit this line, I can't guess where your KDE docs are installed
+KDEDOCS=/mnt/devel/kde/kde2/docs
+
+if [ $# = 1 ]; then
+  if [ -f $KDEDOCS/*/$1.html ]; then
+    kfmclient exec $KDEDOCS/*/$1.html
+  else
+    echo "No class $1 in $KDEDOCS/*"
+  fi
+else
+  echo "Usage : $0 <classname>"
+fi
