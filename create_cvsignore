@@ -30,6 +30,6 @@ if test -f Makefile.am; then
 		done
 	fi
 else
-	print "No Makefile.am found!"
+	echo "No Makefile.am found!"
 fi
 
