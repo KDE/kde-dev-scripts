@@ -97,7 +97,7 @@ for my $file_name ( @ARGV )
 
   unless ( open $fh, "<", $file_name )
   {
-    warn "Failed to open: '$file_name': $!";
+    # warn "Failed to open: '$file_name': $!";
     next;
   }
 
