@@ -410,13 +410,9 @@
   )
 
 ;; pc-like textmarking
-(when kde-use-pc-select
-  (load "pc-select")
-  (if (eq kde-emacs-type 'xemacs)
-      (funcall 'pc-select-mode)
-    (when (not (and (eq emacs-major-version 21)
-		    (eq emacs-minor-version 3)))
-      (funcall (function pc-selection-mode)))))
+;(when kde-use-pc-select
+;  (load "pc-select")
+;  (funcall 'pc-select-mode))
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
@@ -619,7 +615,8 @@
 	(save-excursion
 	  (beginning-of-buffer)
 	  (insert final)
-	  (comment-region (point-at-bol) (point-at-eol))))))
+	  (comment-region (point-at-bol) (point-at-eol))
+	  (newline)))))
 
 
 (provide 'kde-emacs-utils)
