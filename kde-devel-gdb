@@ -2,6 +2,9 @@
 # To use it, add this line to your ~/.gdbinit :
 # source /path/to/kde/sources/kdesdk/scripts/kde-devel-gdb
 
+# Disable printing of static members. Qt has too many, it clutters the output
+set print static-members off
+
 # Prints the contents of a QString
 define printqstring
        set $i=0
