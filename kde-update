@@ -1,35 +1,146 @@
 #!/bin/bash
 ################################################################################
-# Updates a local CVS tree                                                     #
+# Updates a local KDE CVS tree                                                 #
 # 2000 by Frerich Raabe <raabe@kde.org>                                        #
 ################################################################################
+
+# Which command is used to update your sources?
+# anoncvs and cvs users: set this to "cvs"
+# cvsup users: set this to "cvsup"
+CVSCLIENT=cvs
+
+# Do you want any special branch? If so, specify it's tag here e.g.
+# KDE_1_91 for the KDE 1.91 Beta ("Kleopatra") or KDE_1_92 for the
+# KDE 1.92 Beta ("Korner"), if you want the plain HEAD branch, leave
+# this empty.
+BRANCH=
+
+# For cvs users only: specify your preferred cvsup mirror here, check
+# http://www.kde.org/cvsupmirrors.html for a list of cvsup mirrors.
+CVSUPSERVER=cvsup.kde.org
 
 # Where are all your CVS modules stored?
 SRCDIR=/home/devel/src/kde-cvs
 
-# Where shall the logfiles be saved?
-LOGDIR=$SRCDIR/log
+# Do you want logfiles? If so, specify a path for them here, otherwise leave
+# this blank to skip logfile generation. The default directory for logfies
+# is $SRCDIR/log.
+#LOGDIR=$SRCDIR/log
 
 # If there are any modules in $SRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
-EXCLUDE=""
+EXCLUDE="qt-copy"
 
-################################################################################
+## Don't modify anything below this line! ###################################### 
 
+# Various variables for internal usage.
+#
 DATE=`date +%x`
+POTENTIAL_MODULES=`find $SRCDIR -type d -mindepth 1 -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
+ERR_NO_ERROR=0
+ERR_NO_CVSCLIENT=1
+ERR_NO_SRCDIR=2
+ERR_NO_CVSUP_SERVER=3
+ERR_NO_TEMP_SUPFILE=4
+ERR_INV_CVSCLIENT=5
+ERR_INV_SRCDIR=6
 
-for MODULE in `find $SRCDIR -type d -mindepth 1 -maxdepth 1 -follow`; do
-  MODULE=`echo $MODULE | sed -e "s@.*/?*@@"`
-  if test ! -x $SRCDIR/$MODULE; then
-    echo "WARNING: Could not change into directory $SRCDIR/$MODULE."
+# This generates in MODULES a list of the modules which shall be updated.
+#
+for MODULE in $POTENTIAL_MODULES; do
+  if test -d $SRCDIR/$MODULE/CVS -a -w $SRCDIR/$MODULE && ! (echo $MODULE | grep -q $EXCLUDE); then
+    MODULES="$MODULES $MODULE"
+  fi
+done
+
+# Various checks to ensure that the user didn't specify invalid data which
+# would make our script break - that's not a nice thing. ;-)
+#
+if test -z "$CVSCLIENT"; then
+  echo "$0: ERROR: No CVS client specified!"; exit $ERR_NO_CVSCLIENT
+fi
+if test "$CVSCLIENT" != cvs -a "$CVSCLIENT" != cvsup; then
+  echo "$0: ERROR: Invalid CVS client specified, valid clients are 'cvs' and 'cvsup'!"; exit $ERR_INV_CVSCLIENT
+fi
+if test -z "$SRCDIR"; then
+  echo "$0: ERROR: No source directory specified!"; exit $ERR_NO_SRCDIR
+fi
+if test ! -d "$SRCDIR"; then
+  echo "$0: ERROR: Invalid source directory specified!"; exit $ERR_INV_SRCDIR
+fi
+if test "$LOGDIR" -a ! -w "$LOGDIR"; then
+  echo "$0: WARNING: No write access in $LOGDIR, disabling logfile generation."
+  LOGDIR=""
+fi
+
+# This checks whether the user wants a certain branch and generates the
+# command line. For cvsup users it even generates a supfile. :-)
+#
+if test "$CVSCLIENT" = cvs; then
+  UPDATE_COMMAND="cvs up"
+  test $BRANCH && UPDATE_COMMAND="$UPDATE_COMMAND -r $BRANCH"
+else
+  if test -z "$CVSUPSERVER"; then
+    echo "$0: ERROR: No cvsup server specified!"
+    exit $ERR_NO_CVSUP_SERVER
+  fi
+  SUPFILE=`mktemp /tmp/$0.XXXXXX`
+  if [ $? -ne 0 ]; then
+    echo "$0: ERROR: Could not create temporare supfile in /tmp!"
+    exit $ERR_NO_TEMP_SUPFILE
+  fi
+  UPDATE_COMMAND="cvsup $SUPFILE"
+  echo "*default host=$CVSUPSERVER" >> $SUPFILE
+  echo "*default base=$SRCDIR" >> $SUPFILE
+  echo "*default prefix=$SRCDIR" >> $SUPFILE
+  echo "*default relase=cvs" >> $SUPFILE
+  echo "*default delete" >> $SUPFILE
+  echo "*default compress" >> $SUPFILE
+  if test $BRANCH; then
+    echo "*default tag=$BRANCH" >> $SUPFILE
   else
-    cd $SRCDIR/$MODULE
+    echo "*default tag=." >> $SUPFILE
+  fi
+  echo "*default use-rel-suffix" >> $SUPFILE
+  for MODULE in $MODULES; do
+    if test -d $SRCDIR/$MODULE/CVS && ! (echo $EXCLUDE | grep -q $MODULE); then
+      echo "$MODULE" >> $SUPFILE
+    fi
+  done
+fi
+
+# Guess what? We'll finally start checking out the modules. :-)
+#
+for MODULE in $MODULES; do
+  if ! cd $SRCDIR/$MODULE; then
+    echo "$0: WARNING: Could not change into directory $SRCDIR/$MODULE."
+    echo "$0: Update for module $MODULE skipped."
+  else
     if test -d CVS && ! (echo $EXCLUDE | grep -q $MODULE); then
-      LOGFILE=$LOGDIR/$MODULE-update-$DATE
-      echo -n "Updating module '$MODULE'..."
-      if cvs up >& $LOGFILE; then
-        test -e admin/Makefile.common && (echo "====> Doing make -f admin/Makefile.common cvs-clean" >> $LOGFILE; make -f admin/Makefile.common cvs-clean 2>&1 | tee -a $LOGFILE > /dev/null)
-        test -e Makefile.cvs && (echo "====> doing make -f Makefile.cvs" >> $LOGFILE; make -f Makefile.cvs 2>&1 | tee -a $LOGFILE > /dev/null)
+      if test $LOGDIR; then
+        LOGFILE="$LOGDIR/$MODULE-update-$DATE"
+        UPDATE_COMMAND="$UPDATE_COMMAND &> $LOGFILE"
+      fi
+
+      echo -n "$0: Updating module '$MODULE'..."
+      if $UPDATE_COMMAND; then
+
+        MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
+        test $LOGDIR && MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
+
+        MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
+        test $LOGDIR && MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
+
+        if test -e admin/Makefile.common; then
+          test $LOGDIR && echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
+          $MAKE_CVS_CLEAN
+        fi
+
+        if test -e Makefile.cvs; then
+          test $LOGDIR && echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
+          $MAKE_MAKEFILE_CVS
+        fi
+        
         echo "done!"
       else
         echo "failed!"
@@ -37,4 +148,5 @@ for MODULE in `find $SRCDIR -type d -mindepth 1 -maxdepth 1 -follow`; do
     fi
   fi
 done
-exit 0
+
+exit $ERR_NO_ERROR
