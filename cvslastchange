@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 $version=`cvsversion $ARGV[0]`;
 chop $version;
-($v1,$v2) = split(/\./,$version);
+if ($version=~/^(.*)\.([^.]*)$/) { $v1 = $1; $v2 = $2 }    
 $v2old = ${v2}-1;
 print "cvs diff -u -r$v1.$v2old -r$v1.$v2 $ARGV[0]\n";
 system("cvs diff -u -r$v1.$v2old -r$v1.$v2 $ARGV[0]");
