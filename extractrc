@@ -33,7 +33,7 @@ READING: while ( <FILE> ) {
    $string .= "\\n" . $_;   
    chomp($string);
  
-   $textstring = '([tT][eE][xX][tT]|string)>';
+   $textstring = '([tT][eE][xX][tT]|title|string)>';
 
    if ($intext == 0) {
      if ($string =~ /<$textstring/) {
