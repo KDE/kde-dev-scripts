@@ -20,7 +20,7 @@ while (<>)
       chop;
       $oneline .= $_;
     }
-  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/)
+  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/ && !/^\s*class\s/ )
     {
       $insignature = 1;
       $statement = $_;
