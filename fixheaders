@@ -81,6 +81,7 @@ $lastdir = '.';
  'aggregate `QPopupMenu \S*\' has incomplete type' => "qpopupmenu",
  'invalid use of undefined type `class KURL' => "kurl",
  'no method `QApplication::' => "qapplication",
+ 'no method `QFile::' => "qfile",
 );
 
 # Initial values are simply to get into the while
@@ -131,7 +132,6 @@ while ( $exitcode != 0 && $addedone != 0 )
       $changes{$file} = $messages{$message};
       fixFile($file, $messages{$message});
       $addedone = 1;
-      last; # no need to keep going, abort here
     }
   }
   
