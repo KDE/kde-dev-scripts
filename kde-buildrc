@@ -104,7 +104,8 @@ CVS_CLEAN="no"
 CONFIGUREFLAGS="--disable-debug"
 
 # You can define module-specific configure flags using
-# CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc.
+# CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. These are appended to the
+# general $CONFIGUREFLAGS value
 
 # set it to the path for unsermake if you want to test it instead of
 # automake
