@@ -15,4 +15,5 @@ Test these class:
 	* KConfig
 	* KSimpleConfig
 	* QDataStream
-	* QBuffer 
+	* QBuffer
+	* QStringList 
