@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # ************************************************
 #
@@ -9,33 +9,86 @@
 #
 # ************************************************
 
-
-
 import sys
 import os
 import re
 import time
+import pickle
 
 ## Configuration class
 
 class Config:
+    # these will be saved in the config file
+
     verbose = 1
     noOptimizations = 1
     installWithoutAsking = 0
     noDebug = 0
-    cvscheckout = 1
     removeAdminDir = 0
     RunConfigure = 1
     RunCVSCheckOut = 1
     RunCompile = 1
     installDir = "/opt/kde"
-    packagename = ""
     cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"    
 
-    def load():
-        print "Config.load not implemented yet"
-    def save():
-        print "Config.save not implemented yet"
+    # these wont
+    packagename = ""
+
+    def interactive(self):
+        print "Interactive configuration. "
+        print "Please answer the following questions:\n"
+	sys.stdout.write("Your CVS access string ["+self.cvsRoot+"]:")
+        x = sys.stdin.readline()
+        if (x=="\n"):
+            print "keep the old"
+        else:
+            self.cvsRoot = x[:-1]
+            print self.cvsRoot
+        
+
+    def load(self):
+	try:
+	    filetoload = open(".kdecompile")
+	    configs = pickle.load(filetoload)
+	    print configs
+	except:
+	    print "Could not load config from .kdecompile"
+	try:
+	    self.noOptimizations = configs["noOptimizations"]
+	    self.installWithoutAsking = configs["installWithoutAsking"]
+	    self.noDebug = configs["noDebug"]
+	    self.removeAdminDir = configs["removeAdminDir"]
+	    self.RunConfigure = configs["RunConfigure"]
+	    self.RunCVSCheckout = configs["RunCVSCheckout"]
+	    self.installDir = configs["installDir"]
+	    self.cvsRoot = configs["cvsRoot"]
+	except:
+	    print "Some fields were not present in the config file."
+	    pass
+
+
+    def save(self):
+	configs = {}
+	configs["noOptimizations"] = self.noOptimizations
+	configs["installWithoutAsking"] = self.installWithoutAsking
+	configs["noDebug"] = self.noDebug
+	configs["removeAdminDir"] = self.removeAdminDir
+	configs["RunConfigure"] = self.RunConfigure
+	configs["RunCVSCheckout"] = self.RunCompile
+	configs["installDir"] = self.installDir
+	configs["cvsRoot"] = self.cvsRoot
+
+	try: 
+            filetosave = open(".kdecompile","w")
+	    pickle.dump(configs, filetosave)
+	except:
+	    print "Could not save!"
+	    pass
+	    
+	print "Here comes the config"
+	# sys.stdout.writeLines(configlist)
+
+
 
 	# hmm? why do i need the z here
     def parseArguments(self):
@@ -45,7 +98,10 @@ class Config:
 		self.printHelp()
 		sys.exit(0)
                 continue
-	    if x == "-i":
+            if x == "-i":
+                self.interactive()
+                continue
+	    if x == "--install":
 		print "Will install without asking"
 		self.installWithoutAsking = 1
                 continue
@@ -79,7 +135,7 @@ class Config:
     def printHelp(self):
           print "\nSyntax: kdecompile [options] [packagename]"
 	  print "\t-h, --help\t\tPrint this help"
-	  print "\t-i\t\t\tInstall without asking"
+	  print "\t--install\t\tInstall without asking"
 	  print "\t-d\t\t\tDisable debug info"
 	  print "\t-o\t\t\tEnable optimization"
 	  print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
@@ -304,7 +360,7 @@ def runInstall(compiledir):
 #   Version 
 #
 def version():
-    return "kdecompile v.0.3.7 as of December 14, 2000"
+    return "kdecompile v.0.3.8 as of December 20, 2000"
 
 #
 #
@@ -341,9 +397,12 @@ def doAll(packagename, currdir, cvsdir):
 #
 print version()
 config=Config()    
+# config.interactive()
 compileddirs = []
 compileDirsPre = []
+config.load()
 config.parseArguments()
+config.save()
 
 # find the directories
 
