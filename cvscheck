@@ -285,8 +285,8 @@ if( $#dirqueue < 0 ) {
 }
 
 # process directory queue
-foreach $dir ( @dirqueue ) {
-	processEntries( $dir );
+while ($#dirqueue >= 0) {
+  processEntries( pop @dirqueue );
 }
 
 foreach $f ( @unknown ) {
