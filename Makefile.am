@@ -5,7 +5,7 @@ bin_SCRIPTS = create_makefile create_makefiles cvs2pack create_cvsignore \
 	pruneemptydirs noncvslist kde-build kdekillall extractrc makeobj includemocs \
         cvsrevertlast cvsblame
 
-# not installed : fixheaders add_trace.pl kDebug2kdDebug
+# not installed : fixheaders add_trace.pl kDebug2kdDebug colorcvs
 
 #doc: cvs2pack.1 cvs2pack.txt
 
