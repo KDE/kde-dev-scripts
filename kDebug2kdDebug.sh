@@ -52,7 +52,7 @@ while (<>)
 		$area = $1;     # Store it
 		$line .= "(" . $area . ")";
 	    } else
-	    { $line .= "()";  }
+	    { $line .= "()";  }  # You can set an area here if converting qDebugs
 
             $arguments = ""; # for final test
             $commented = 0;
@@ -79,9 +79,13 @@ while (<>)
 		    if ( /(%[0-9]*[a-z])/ ) # This item is a format
 		    {
 			## 3 - Find argument
+			# kludge for QString(a,b) constructions
+			$arguments =~ s/(QString\s*\([^,]+,[^,]+\))/QStrKLUDGE/;
+			$kludge = $1;
 			$arguments =~ s/\s*([^,]+)\s*,//;
 			# Remove trailing .ascii() and latin1()
 			$arg = $1;
+			$arg =~ s/QStrKLUDGE/$kludge/; ## restore original arg
 			$arg =~ s/\.ascii\(\)$//;
 			$arg =~ s/\.latin1\(\)$//;
                         # If "a ? b : c" then add parenthesis
