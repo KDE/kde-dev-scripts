@@ -1,6 +1,6 @@
 #!/bin/sh
 # Modifies the Makefile in the current directory (and optionally its subdirs),
-# - to add debug info (-g)
+# - to add debug info (-g3)
 # - optionally (default) remove optimizations (-O[1-9]?)
 
 mxdp="-maxdepth 1"
@@ -12,7 +12,7 @@ for i in $*; do
   esac
 done
 
-xpr='s/^((C|CXX|LD)FLAGS[ \t]*=.*)$/\1 -g/'
+xpr='s/^((C|CXX|LD)FLAGS[ \t]*=.*)$/\1 -g3/'
 if test -z $keep; then
   xpr="$xpr;"'s/[\t ]-O[1-9]?\b//g'
 fi
