@@ -93,6 +93,88 @@ sub optionstonroff
     return $ret;
   };
 
+sub sortoptionsfromnroff {
+    # Zack Cerza
+
+    # Rather than redo Dominique's optionstonroff(), I decided
+    # to make this function to sort the options sections created
+    # by his function.
+
+    # What it does is read line-by-line and first determine which
+    # section it's looking at via the ".SS <SECTION>" lines. Once
+    # it knows, it sets a "$in_<SECTION>" variable to "1" and
+    # begins to write the section data into $<SECTION>. When it
+    # gets to a line that contains only ".SS ", it sets
+    # $in_<SECTION> to "0" and continues.
+
+    # It's a little messy, but it's the only way I could 
+    # get it to work with what little knowledge I had.
+
+    # This is the first time I've used Perl. Be kind.
+
+    my $options = shift;
+    my $ret="";
+
+    my $in_gen_opts = "0";
+    my $gen_opts = "";
+    my $in_qt_opts = "0";
+    my $qt_opts = "";
+    my $in_kde_opts = "0";
+    my $kde_opts = "";
+    my $in_opts = "0";
+    my $opts = "";
+    my $in_args = "0";
+    my $args = "";
+
+    foreach ( split /\n/, $options ) {
+        if( $in_gen_opts == "1" ) {
+	    if( /^(\.SS )$/ ) { $in_gen_opts = "0"; }
+	    $gen_opts .= $_;
+	    $gen_opts .= "\n";
+	}
+	if( /^(\.SS.+Generic options:)$/ ) 
+	  { $in_gen_opts = "1"; $gen_opts .= $1; $gen_opts .= "\n"; }
+      
+        if( $in_qt_opts == "1" ) {
+	    if( /^(\.SS )$/ ) { $in_qt_opts = "0"; }
+	    $qt_opts .= $_;
+	    $qt_opts .= "\n";
+	}
+        if( /^(\.SS.+Qt options:)$/ ) 
+	  { $in_qt_opts = "1"; $qt_opts .= $1; $qt_opts .= "\n"; }
+
+        if( $in_kde_opts == "1" ) {
+	    if( /^(\.SS )$/ ) { $in_kde_opts = "0"; }
+	    $kde_opts .= $_;
+	    $kde_opts .= "\n";
+	}
+        if( /^(\.SS.+KDE options:)$/ ) 
+	  { $in_kde_opts = "1"; $kde_opts .= $1; $kde_opts .= "\n"; }
+        
+	if( $in_opts == "1" ) {
+	    if( /^(\.SS )$/ ) { $in_opts = "0"; }
+	    $opts .= $_;
+	    $opts .= "\n";
+	}
+        if( /^(\.SS.+Options:)$/ ) 
+	  { $in_opts = "1"; $opts .= $1; $opts .= "\n"; }
+
+        if( $in_args == "1" ) {
+	    if( /^(\.SS )$/ ) { $in_args = "0"; }
+	    $args .= $_;
+	    $args .= "\n";
+	}
+        if( /^(\.SS.+Arguments:)$/ ) 
+	  { $in_args = "1"; $args .= ".SS\n"; $args .= $1; $args .= "\n"; }
+      }
+    $ret .= $args;
+    $ret .= $opts;
+    $ret .= $gen_opts;
+    $ret .= $kde_opts;
+    $ret .= $qt_opts;
+    return $ret;
+  };
+
 sub usage
   {
     print "This script generates a nice manual page for a KDE app which uses KCmdLineArgs..\n";
@@ -124,6 +206,7 @@ my $ucappname = uc $appname;
 
 my $options = `$runapp --help-all | sed -e '1,4d'`;
 $options = optionstonroff( $options );
+$options = sortoptionsfromnroff( $options );
 
 my $timespec = ucfirst `date '+%b %G'`;
 chomp $timespec;
