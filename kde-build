@@ -873,7 +873,7 @@ for module in $modules; do
     [ "$NICECOMPILE" = yes ] && cmd_make_install="nice $cmd_make_install"
     cmd_make_install="$cmd_make_install install"
     if [ ! -w $KDEDIRS ]; then
-      eval "$cmd_sudo $cmd_make_install"
+      eval "$cmd_sudo \"$cmd_make_install\""
     else
       install_module
     fi
