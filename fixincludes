@@ -178,6 +178,7 @@ sub find_removable_includes ($)
   # we skip all includes that are somehow ifdefed
 
   my $cpplevel = 0;
+  $cpplevel = -1 if ($srcfile=~m/^.*\.$hExt$/); # plan for header-protection #ifndef/#define/#endif
   while (<SRC>) {
     if ($_ =~ m/^\#if/) {
       $cpplevel = $cpplevel + 1;
