@@ -484,11 +484,12 @@ for module in $modules; do
   check_admin
   cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
   test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
-  if test -f Makefile.am.in && test -n "$USE_UNSERMAKE" && ! echo $NO_UNSERMAKE_MODULES \
-    | grep $module > /dev/null 2>&1; then
-    export UNSERMAKE=$USE_UNSERMAKE
-  else
-    unset UNSERMAKE || :
+  unset UNSERMAKE || true
+  if test -n "$USE_UNSERMAKE" && ! echo $NO_UNSERMAKE_MODULES \
+      | grep $module > /dev/null 2>&1; then
+     if test -f Makefile.am.in || ! grep TOPSUBDIRS Makefile.am; then
+        export UNSERMAKE=$USE_UNSERMAKE
+     fi
   fi
 
   if test $domakefilecvs -eq 0 -a -e "Makefile.in"; then
