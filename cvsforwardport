@@ -13,7 +13,7 @@ files=$*
 until test $# -eq 0; do
 
   echo "looking for last change to $1..."
-  cvslastchange $1 > $TMPFILE
+  CVSLASTCHANGE_KEEP_WHITESPACE=1 cvslastchange $1 > $TMPFILE
   echo "browsing last change to $1..."
   less $TMPFILE
   cvs up -A $1
