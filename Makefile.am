@@ -18,7 +18,7 @@ man_MANS = \
   cvsblame.1 \
   includemocs.1 
 
-CLEANFILES = $(man1_MANS)
+CLEANFILES = $(man_MANS)
 
 # sorted alphabetically
 noinst_SCRIPTS = \
