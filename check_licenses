@@ -1,0 +1,88 @@
+#!/usr/bin/perl -w
+
+unless (scalar(@ARGV) == 1)
+{
+  die "Usage: license_check directory";
+}
+
+my $gpl = 'General Public License';
+my $gp2 = 'This is free software; it comes under the GNU';
+my $gp3 = 'License: GPL with the following explicit clarification';
+my $x11 = 'TORT OR OTHERWISE';
+my $bsd = 'INCLUDING NEGLIGENCE OR OTHERWISE';
+my $gen = 'generated';
+
+sub nameok()
+{
+  my $f = shift;
+
+  if ($f =~ /\.C$/ or $f =~ /\.cpp$/ or $f =~ /\.c$/ or $f =~ /\.h$/)
+  {
+    if ($f =~ /\.cpp$/)
+    {
+      if
+        (
+              $f !~ /meta_unload\.cpp$/
+         and  $f !~ /_stub\.cpp/
+         and  $f !~ /_skel.cpp/
+         and  $f !~ /_closure\.cpp/
+         and  $f !~ /moc\.cpp/
+        )
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+    else
+    {
+      return 1;
+    }
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+sub recursive_check()
+{
+  my $dir = shift;
+
+  opendir (DIR, $dir) or die "Can't open $dir";
+
+  my @filenames = grep { /^[^\.]/ } readdir(DIR);
+
+  for my $f (@filenames)
+  {
+    my $filename = "$dir/$f";
+
+    if (-d $filename)
+    {
+      &recursive_check($filename);
+    }
+    elsif (-f $filename and &nameok($filename))
+    {
+      open (IN, "<$filename") or die "Can't open $filename";
+
+      my $license = "!";
+
+      while (<IN>)
+      {
+        if (/$gpl/) { $license = "G"; last; }
+        if (/$gp2/) { $license = "G"; last; }
+        if (/$gp3/) { $license = "G"; last; }
+        if (/$x11/) { $license = "X"; last; }
+        if (/$bsd/) { $license = "B"; last; }
+        if (/$gen/) { $license = "g"; last; }
+      }
+
+      print "$license $filename\n";
+    }
+  }
+}
+
+&recursive_check($ARGV[0]);
+
