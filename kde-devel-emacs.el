@@ -1512,6 +1512,7 @@ With arg, to it arg times."
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
                     ((string-match "^qxml" word) "qxml.h")
+                    ((string-match "^kddebug" word) "kdebug.h")
                     (t (concat word ".h")))))
       (beginning-of-buffer)
       (if (not (re-search-forward (concat "#include *<" header ">") nil t))
