@@ -102,8 +102,7 @@ With arg, to it arg times."
                                 (substring buffer-file-truename
                                            (match-beginning 1)
                                            (match-end 1)))))))
-         (define-key c++-mode-map "\C-m"
-           '(lambda () (interactive) (newline)(c-indent-command)))
+         (define-key c++-mode-map "\C-m" 'newline-and-indent)
          (define-key c++-mode-map "\C-i" 'agulbra-c++-tab)
          (define-key c++-mode-map "\ef" 'c-forward-into-nomenclature)
          (define-key c++-mode-map "\ed" 'agulbra-delete-into-nomenclature)
@@ -1198,6 +1197,7 @@ With arg, to it arg times."
 (put 'insert-parens2 'pending-delete t)
 (put 'insert-comma 'pending-delete t)
 (put 'insert-curly-brace 'pending-delete t)
+(put 'newline-and-indent 'pending-delete t)
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
 (defun scroll-me-up () (interactive) (scroll-up 3))
