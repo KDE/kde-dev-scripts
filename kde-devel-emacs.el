@@ -1078,10 +1078,10 @@ With arg, to it arg times."
   (let ((n 0))
     (save-excursion
       (setq n (or (progn (forward-char -2) (looking-at "if"))
-	          (progn (forward-char -1) (looking-at "for"))
+                  (progn (forward-char -1) (looking-at "for"))
                   (progn (forward-char -1) (looking-at "case"))
                   (progn (forward-char -1) (looking-at "while"))
-              )
+               )
       )
     )
     (cond
@@ -1109,7 +1109,12 @@ With arg, to it arg times."
   )
 
 ; Makes ',' insert ', '
-(defun insert-comma () (interactive) (insert ", "))
+(defun insert-comma () (interactive)
+  (cond 
+   ((looking-at " ") (progn (insert ",")))
+   (t (progn (insert ", ")))
+  )
+)
 (defun insert-curly-brace () (interactive) 
   (let ((n 0) (o 0))
     (save-excursion
