@@ -49,7 +49,7 @@
        (agulbra-clean-out-spaces)))
 
 ;(add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
-(add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
+;(add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
 
 (defun agulbra-delete-into-nomenclature (&optional arg)
   "Delete forward until the end of a nomenclature section or word.
