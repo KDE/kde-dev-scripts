@@ -1053,8 +1053,15 @@ With arg, to it arg times."
 (defun make () (interactive) (compile "make"))
 (defun makeinstall () (interactive) (compile "make install"))
 
-;; Indentation: 4 characters.
+;; Indentation: 4 characters, no tabs.
 (setq c-basic-offset 4)
+(setq insert-tab-mode nil)
+(c-set-style "bsd")
+
+; Move in other window
+(defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; eheh :)
+(define-key global-map [(meta up)] 'scroll-other-up)
+(defun scroll-other-down () (interactive) (scroll-other-window 1))
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; eheh :)
