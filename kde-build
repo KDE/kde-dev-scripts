@@ -86,7 +86,7 @@ dateformat="`date +%Y%m%d`"
 
 # This method gives some kind of status message in the title bar of Konsole,
 # xterm, etc.. Thanks have to go to Malte Starostik
-# <malte.starostik@t-online.de> for the code :-)
+# <malte@kde.org> for the code :-)
 set_title() {
 if ([ "$TERM" = "xterm" ] || [ "$TERM" = "screen" ]) && tty -s; then
   echo -ne "\033]0;$1\007"
