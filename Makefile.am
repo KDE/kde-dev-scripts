@@ -9,5 +9,5 @@ bin_SCRIPTS = create_makefile create_makefiles cvs2pack create_cvsignore \
 
 #doc: cvs2pack.1 cvs2pack.txt
 
-man1_DATA = cvs2pack.1 cvsversion.1 noncvslist.1 kde-build.1
-man1dir = $(mandir)/man1
+man1_MANS = cvs2pack.1 cvsversion.1 noncvslist.1 kde-build.1
+
