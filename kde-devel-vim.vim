@@ -376,12 +376,14 @@ function! AddQtSyntax()
         syn keyword qtKeywords     signals slots emit
         syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT
         syn keyword qtCast         qt_cast
+        syn keyword qtTypedef      uchar uint ushort ulong Q_INT8 Q_UINT8 Q_INT16 Q_UINT16 Q_INT32 Q_UINT32 Q_LONG Q_ULONG Q_INT64 Q_UINT64 Q_LONGLONG Q_ULONGLONG Q_LLONG Q_ULLONG pchar puchar pcchar
         syn keyword kdeKeywords    k_dcop k_dcop_signals
         syn keyword kdeMacros      K_DCOP ASYNC
 
         hi def link qtKeywords          Statement
         hi def link qtMacros            Type
         hi def link qtCast              Statement
+        hi def link qtTypedef           Type
         hi def link kdeKeywords         Statement
         hi def link kdeMacros           Type
     endif
