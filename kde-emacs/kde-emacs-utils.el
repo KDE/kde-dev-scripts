@@ -324,14 +324,12 @@
                           arg))))
     (self-insert-command (prefix-numeric-value arg))
     (if spacep
-        (insert " "))))
+	(insert " "))))
 
 (defun insert-semicolon (arg)
   (interactive "*P")
     (self-insert-command (prefix-numeric-value arg))
     (newline-and-indent))
-    (if spacep
-        (insert " "))))
 
 (defun insert-curly-brace (arg) (interactive "*P")
   (if (not (c-in-literal))
