@@ -6,9 +6,13 @@
 if [ $# = 1 ]; then
   fname=`echo $1 | tr '[A-Z]' '[a-z]'`
   if [ -f $QTDIR/doc/html/$fname.html ]; then
-    kfmclient openURL file:$QTDIR/doc/html/$fname.html
+    kdeinit_wrapper kfmclient openProfile webbrowsing file:$QTDIR/doc/html/$fname.html
   else
-    echo "No such file $fname.html"
+    if [ -f /usr/doc/qt2/html/$fname.html ]; then
+      kdeinit_wrapper kfmclient openProfile webbrowsing file:/usr/doc/qt2/html/$fname.html
+    else
+      echo "No such file $fname.html"
+    fi
   fi
 else
   kfmclient openURL file:$QTDIR/doc/html/
