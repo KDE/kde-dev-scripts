@@ -5,14 +5,14 @@ use Time::Local qw( timegm );
 
 # Offline check for status of files in a checked-out
 # CVS module. 
-# Dirk Mueller <mueller@kde.org> Oct 2001
+# Artistic License, Dirk Mueller <mueller@kde.org> 2001-2003
 
 # based on cvschanged by
 # Sirtaj Singh Kang <taj@kde.org> Nov 1998.
 
-if ( defined $ARGV[0] && $ARGV[0] eq "--help") {
-  print "cvscheck (c) 2001 Dirk Mueller <mueller\@kde.org>\n\nUsage:\n";
-  print "   cvscheck <dir>\n\n";
+if ( defined $ARGV[0] && $ARGV[0] =~ /(?:-h|--help)/) {
+  print "cvscheck (c) 2001-2003 Dirk Mueller <mueller\@kde.org>\n\nUsage:\n";
+  print "   cvscheck [options] <dirs>\n\n";
   print "Prints information about the status of your local CVS checkout without\n";
   print "communicating with the server (therefore in speed only limited by your\n";
   print "hard-disk throughput, much unlike cvs -n up).\n\n";
@@ -25,13 +25,29 @@ if ( defined $ARGV[0] && $ARGV[0] eq "--help") {
   print "T foobar.c   file has an unusual sticky CVS tag.\n";
   print "A foobar.c   you cvs add'ed this file but did not yet commit.\n";
   print "R foobar.c   you cvs rm'ed this file but did not yet commit.\n";
- 
+
+print <<EOF;
+
+
+Options: 
+
+-u | --unknown    Show only unknown (?) files
+-m | --modified   Show only modified (m/M) files
+--missing         Show only missing (U) files
+-t | --tagged     Show only tagged (T) files
+-a | --added      Show only added (A) files
+-r | --removed    Show only removed (R) files
+-c | --conflicts  Show only conflict (C) files
+
+If no option is given, it defaults to show all files and diagnostic messages.
+EOF
   exit;
 }
 
 # default is HEAD
 $standardtag = "";
-@dirqueue = @ARGV;
+%defaulttag = ();
+@dirqueue = ();
 @merged = ();
 @uncommitted = ();
 @missing = ();
@@ -41,9 +57,16 @@ $standardtag = "";
 @modified = ();
 @conflicts = ();
 
-@monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
- "Sep", "Oct", "Nov", "Dec" );
-%months = ();
+%months = ( 'Jan' => 0, 'Feb' => 1, 'Mar' => 2, 'Apr' => 3, 'May' => 4,
+            'Jun' => 5, 'Jul' => 6, 'Aug' => 7, 'Sep' => 8, 'Oct' => 9,
+            'Nov' => 10, 'Dec' => 11);
+
+%showoptions = ();
+
+sub printinfo($)
+{
+  print @_ if (defined($showoptions{"all"}));
+}
 
 # convert text stamp to GMT
 sub strToTime
@@ -155,10 +178,10 @@ sub processEntries
         }
 
 	if ( !open( ENTRIES, $dir."/CVS/Entries" ) ) {
-          print "I CVS/Entries missing in $dir\n";
+          &printinfo("I CVS/Entries missing in $dir\n");
           return;
         }
-        my $oldstandardtag = $standardtag;
+        my $oldstandardtag = defined($defaulttag{$dir}) ? $defaulttag{$dir} : "";
         my $staginfo = "";
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
@@ -169,7 +192,7 @@ sub processEntries
           else {
             # something with D - assume HEAD
             $oldstandardtag = $standardtag = ""; # its HEAD
-            print "I $dir has unknown stickyness: $line";
+            &printinfo("I $dir has unknown stickyness: $line");
           }
           close(CVSTAG);
         }
@@ -177,10 +200,13 @@ sub processEntries
           $standardtag = ""; # its HEAD
           $staginfo = "(HEAD)";
         }
-        print "I $dir has sticky tag $staginfo\n" if($standardtag ne $oldstandardtag);
+        &printinfo("I $dir has sticky tag $staginfo\n") if($standardtag ne $oldstandardtag);
 	while( <ENTRIES> ) {
           if ( m#^\s*D/([^/]+)/# ) {
-               push ( @dirqueue, "$dir/$1" ) if (-d "$dir/$1");
+               if (-d "$dir/$1") {
+                 push ( @dirqueue, "$dir/$1" );
+                 $defaulttag{"$dir/$1"} = $standardtag;
+               }
                $dirunknown{$1} = 0;
                next;
             }
@@ -196,18 +222,21 @@ sub processEntries
           $dirunknown{$fname} = 0;
 
           my $taginfo="";
-          if ( $tag ne $standardtag ) {
-            if ($tag eq "") {
-              $taginfo = " (HEAD)";
+          if(defined($showoptions{"all"})) {
+            if ( $tag ne $standardtag ) {
+              if ($tag eq "") {
+                $taginfo = " (HEAD)";
+              }
+              else {
+                $taginfo = " ($tag)";
+              }
             }
-            else {
-              $taginfo = " ($tag)";
+            if ($options =~ /^\-k(.)$/) {
+              $taginfo .= " (no RCS-tags)" if($1 eq "o");
+              $taginfo .= " (RCS binary file)" if($1 eq "b");
+              $taginfo .= " (RCS values only)" if($1 eq "v");
+              $taginfo .= " (RCS keywords only)" if($1 eq "k");
             }
-          }
-          if ($options =~ /^\-k(.)$/) {
-            $taginfo .= " (no RCS-tags)" if($1 eq "o" or $1 eq "b");
-            $taginfo .= " (RCS values only)" if($1 eq "v");
-            $taginfo .= " (RCS keywords only)" if($1 eq "k");
           }
           my $state = $stamp;
           if( $stamp =~ m(^(.+)\+(.+)$) ) {
@@ -271,65 +300,62 @@ sub processEntries
         }
 }
 
-# month assoc array for name -> index lookups
-$mctr = 0;
+sub printlist($$@)
+{
+  my ($status, $type, @flist) = @_;
 
-foreach $month ( @monthlist ) {
-	$months{ $month } = $mctr;
-	$mctr++;
-}
+  return if (not defined($showoptions{"all"}) and 
+             not defined($showoptions{"$type"}));
 
-# Try current directory if none specified
-
-if( $#dirqueue < 0 ) {
-	push( @dirqueue, "." );
-}
-
-# process directory queue
-while ($#dirqueue >= 0) {
-  processEntries( pop @dirqueue );
+  if(defined($showoptions{"all"})) {
+    foreach (@flist) {
+      s/\.\///;
+      print "$status $_\n";
+    }
+  }
+  else {
+    foreach(@flist) {
+      print "$_\n";
+    }
+  }
 }
 
 foreach $f ( @unknown ) {
   $f =~ s/^\.\///;
   print "? $f\n";
 }
+foreach (@ARGV) {
+   $showoptions{"unknown"}++ if(/(?:-u|--unknown)/);
+   $showoptions{"modified"}++ if(/(?:-m|--modified)/);
+   $showoptions{"missing"}++ if(/(?:--missing)/);
+   $showoptions{"tagged"}++ if(/(?:-t|--tagged)/);
+   $showoptions{"added"}++ if(/(?:-a|--added)/);
+   $showoptions{"removed"}++ if(/(?:-r|--removed)/);
+   $showoptions{"conflicts"}++ if(/(?:-c|--conflicts)/);
 
-foreach $f( @modified ) {
-  $f =~ s/^\.\///;
-  print "M $f\n";
+   next if (/^-/);
+   push (@dirqueue, "./$_");
 }
 
-foreach $f ( @missing ) {
-    $f =~ s/^\.\///;
-    print "U $f\n";
+# if no special flags set, show all files
+$showoptions{"all"}++ if ($#dirqueue == $#ARGV);
+
+# Try current directory if none specified
+push(@dirqueue, ".") if( $#dirqueue < 0 );
+
+# process directory queue
+while ($#dirqueue >= 0) {
+  processEntries( pop @dirqueue );
 }
 
-foreach $f ( @merged ) {
-    $f =~ s/^\.\///;
-    print "m $f\n";
-}
-
-foreach $f ( @tagged ) {
-   $f =~ s/^\.\///;
-   print "T $f\n";
-}
-
-foreach $f ( @uncommitted ) {
-    $f =~ s/^\.\///;
-    print "A $f\n";
-}
-
-foreach $f ( @removed ) {
-    $f =~ s/^\.\///;
-    print "R $f\n";
-}
-
-foreach $f ( @conflicts ) {
-    $f =~ s/^\.\///;
-    print "C $f\n";
-}
-
+&printlist("?", "unknown", @unknown);
+&printlist("M", "modified", @modified);
+&printlist("m", "modified", @merged);
+&printlist("U", "missing", @missing);
+&printlist("T", "tagged", @tagged);
+&printlist("A", "added", @uncommitted);
+&printlist("R", "removed", @removed);
+&printlist("C", "conflicts", @conflicts);
 
 =head1 NAME
 
