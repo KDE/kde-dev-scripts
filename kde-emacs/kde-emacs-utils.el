@@ -237,19 +237,19 @@
 (defun make ()
   "Executes a \"make\" in the current directory"
   (interactive)
-  (compile "make")
+  (compile "make -k")
   )
 
 (defun makeinstall ()
   "Executes a \"make install\" in the current directory"
   (interactive)
-  (compile "make install")
+  (compile "make -k install")
   )
 
 (defun makeinstallexec ()
   "Executes a \"make install-exec\" in the current directory"
   (interactive)
-  (compile "make install-exec")
+  (compile "make -k install-exec")
   )
 
 (defun makethisfile ()
