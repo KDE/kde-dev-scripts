@@ -19,11 +19,11 @@
   "Do the right thing about tabs in c++ mode"
   (interactive "*P")
   (cond
-   ((and (save-excursion
-           (forward-char -1)
+   ((and (save-excursion 
+           (forward-char -1) 
            (looking-at "[A-Za-z0-9:>_\\-\\&\\.(){}\\*\\+/]")))
-    (dabbrev-expand arg))
-   (t
+         (dabbrev-expand arg))
+   (t 
     (c-indent-command))))
 
 (defun agulbra-clean-out-spaces ()
@@ -1037,14 +1037,14 @@ With arg, to it arg times."
   (interactive)
   (insert "kdDebug() << \"")
   (insert (fume-function-before-point))
-  (insert "\" << endl; ")
+  (insert "\" << endl;")
   )
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
-;(defun scroll-me-up () (interactive) (scroll-up 4))
-;(defun scroll-me-down () (interactive) (scroll-down 4))
-;(define-key global-map [(button4)] 'scroll-me-down)
-;(define-key global-map [(button5)] 'scroll-me-up)
+(defun scroll-me-up () (interactive) (scroll-up 3))
+(defun scroll-me-down () (interactive) (scroll-down 3))
+(define-key global-map [(button4)] 'scroll-me-down)
+(define-key global-map [(button5)] 'scroll-me-up)
 
 ; Compilation
 (defun makeclean () (interactive) (compile "make clean"))
