@@ -1,0 +1,307 @@
+#!/usr/bin/python
+
+# ************************************************
+#
+# Python script for compiling and installing
+# a KDE package.
+#
+# written by Lotzi Boloni, 2000
+#
+# ************************************************
+
+
+
+import sys
+import os
+import re
+import time
+
+
+#
+#  Checking out the package from the cvs
+#
+def runCVSCheckOut(parentdir, packagename):
+    # set the environment
+    if (verbose):
+        print "Checking out from the CVS"
+    os.putenv ("CVSROOT", cvsRoot)
+    currdir = os.getcwd()
+    os.chdir(parentdir)
+    # delete the admin dir
+    if removeAdminDir:
+        print "Removing the admin dir, as always makes problems..."
+        value = os.system("rm -r "+packagename+"/admin")
+        print "Done."
+    value = os.system("cvs -q checkout "+packagename)
+    if (value != 0):
+        print "CVS checkout was not successfull"
+#        exit(1);
+    if (verbose):
+        print "CVS checkout done."
+    os.chdir(currdir)
+
+
+#
+#  The make Makefile.cvs  
+#
+def runAutoConf(parentdir):
+    if (verbose):
+        print "Doing the Makefile.cvs stuff"
+    currdir = os.getcwd()
+    os.chdir(parentdir)
+    value = os.system("make -f Makefile.cvs")
+    if (value != 0):
+        print "Autoconf was not successful"
+        exit(1);
+    if (verbose):
+        print "Makefile.cvs stuff done."
+    os.chdir(currdir)
+
+
+#
+#  Running configure
+#
+def runConfigure(compiledir, packagename, kdedir="/opt/kde"):
+    if (verbose):
+        print "Running configure"
+    currdir = os.getcwd()
+    os.chdir(compiledir)
+    commandline = "../../"+packagename+"/configure --prefix="+kdedir
+    if noDebug:
+	commandline = commandline + " --disable-debug"    
+    value = os.system(commandline)
+    if (value != 0):
+        print "Configuration was not successful. Aborting"
+        sys.exit(1);
+    if (verbose):
+        print "Configuration was done."
+    os.chdir(currdir)
+
+
+#
+#  This function removes the -02 from the makefiles
+#
+def runRemoveO2(compiledir):
+    print "Removing the optimization from the makefiles"
+    currdir = os.getcwd()
+    os.chdir(compiledir)
+    os.system("find . -name Makefile >listofmakefiles")
+    listfile = open("listofmakefiles")
+    #    makefiles = listfile.readlines()
+    for x in listfile.readlines():
+        currentfile = x[:-1]
+        sedline = "sed s/-O2// %s >%s.2" % (currentfile , currentfile)
+        #print sedline
+        os.system(sedline)
+        mvline = "cp %s.2 %s" % (currentfile, currentfile)
+        #print mvline
+        os.system(mvline)
+    os.chdir(currdir)
+
+
+#
+#  Compiling the package
+#
+def runCompile(compiledir):
+    if (verbose):
+        print "Now compiling the package"
+    currdir = os.getcwd()
+    os.chdir(compiledir)
+    value = os.system("make -k >logfile")
+    if (value != 0):
+        print "There was a compilation error."
+    if (verbose):
+        print "Compilation went fine."
+    os.chdir(currdir)
+
+#
+#  Compiling the package in a separate thread
+#
+def runCompileThread(compiledir):
+    if (verbose):
+        print "Now compiling the package the multithread way"
+    pid =0
+    pid2 = 0
+    pid = os.fork()
+    if (pid == 0):
+        # the compilation thread
+        currdir = os.getcwd()
+        os.chdir(compiledir)
+        value = os.system("make -k >logfile 2>errorfile")
+        if (value != 0):
+            print "There was a compilation error."
+            if (verbose):
+                print "Compilation went fine."
+                os.chdir(currdir)
+        sys.exit(0)
+    else:
+        pid2 = os.fork()
+        if pid2 == 0:
+            # the grep thread
+            while 1:
+                ParseLogfile()
+                time.sleep(3)
+        else:
+            os.wait(pid,0)
+            os.kill(pid2,9)
+
+#
+#   Parsing the logfile!!!
+#
+def ParseLogfile():
+  try:
+      logfile = open("logfile", "r")
+  except:
+      return
+  searchstring = re.compile("Entering directory")
+  while 1:
+      temp = logfile.readline()
+      if temp == "":
+          break      
+      if searchstring.search(temp):
+          #print temp
+          fnd = re.compile("`.*'").search(temp)
+          if (fnd):
+             value = temp[fnd.start()+1:fnd.end()-1]
+             #print value
+             alreadythere = 0
+             for a in compileddirs:
+                 if a==value:
+                     alreadythere = 1
+                     break
+             if alreadythere == 0:
+                 compileddirs.append(value)
+                 print "( %d / %d ) - compiling %s" % (len(compileddirs), len(compileDirsPre), value)
+  logfile.close()
+
+#
+#  Count directories
+#
+def countDirs(cvsdir):
+    if verbose:
+        print "Reading the directories to compile..."
+    currdir = os.getcwd()
+    os.chdir(cvsdir)
+    os.system("find -name Makefile.am >x")
+    dirsfile = open("x", "r")
+    countdirs = 0
+    cvssearch = re.compile("CVS")
+    depsearch = re.compile(".dep")
+    libsearch = re.compile(".lib")
+    while 1:
+        temp = dirsfile.readline()
+        if temp == "":
+            break      
+        if not (cvssearch.search(temp) or
+                depsearch.search(temp) or
+                libsearch.search(temp)):
+            countdirs = countdirs+1
+            compileDirsPre.append(temp[:-1])
+#    print countdirs
+#    print compileDirsPre
+    os.chdir(currdir)
+    
+  
+#
+#  Installing the package
+#
+def runInstall(compiledir):
+    if (verbose):
+        print "Now compiling the package"
+    currdir = os.getcwd()
+    os.chdir(compiledir)
+    value = os.system("make -k install >logfile.install")
+    if (value != 0):
+        print "There was a compilation error."
+    if (verbose):
+        print "Installation went fine."
+    os.chdir(currdir)
+
+
+#
+#   Print help
+#
+def printHelp():
+    print "kdecompile v.0.3.0"
+    print "-h\t\t\tPrint this help"
+    print "-i\t\t\tInstall without asking"
+    print "-d\t\t\tDisable debug info"
+    print "-o\t\t\tEnable optimization"
+    print "--remove-admin-dir\tRemove the admin dir before cvs checkout"
+        
+
+#
+# And here comes the main function
+#
+print "KDE compilation, installation etc (c) Boloni Laszlo"
+verbose = 1
+noOptimizations = 1
+installWithoutAsking = 0
+noDebug = 0
+removeAdminDir = 0
+compileddirs = []
+compileDirsPre = []
+installDir = "/opt/kde"
+cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"
+#   Process arguments
+for x in sys.argv[1:]:
+    print x
+    if (x == "-h") or (x == "--help"):
+        printHelp()
+        sys.exit(0)
+    if x == "-i":
+        print "Will install without asking"
+        installWithoutAsking = 1
+    if x == "-d":
+	print "Will compile without debug info"
+	noDebug = 1
+    if x == "-o":
+	print "Optimizations enabled"
+	noOptimizations = 0
+    if x == "--remove-admin-dir":
+        print "Will remove admin dir before cvs checkout"
+        removeAdminDir = 1
+
+
+# find the directories
+currdir = os.getcwd()
+print "current dir is " + currdir
+direlems = re.split("/", currdir)
+if (direlems[-2] != "compile") :
+    print "You are not in the compile directory!"
+    sys.exit(2)
+newdir = direlems[1:-2] #+ direlems[-2:]
+cvsdir = ""
+packagename = direlems[-1]
+for x in newdir:
+    cvsdir = cvsdir + "/"+x
+print cvsdir
+countDirs(cvsdir+"/"+packagename)
+
+runCVSCheckOut(cvsdir, packagename)
+runAutoConf(cvsdir+"/"+packagename)
+runConfigure(currdir, packagename, installDir)
+if noOptimizations:
+    runRemoveO2(currdir)
+#runCompile(currdir);
+runCompileThread(currdir)
+
+xmessline = "xmessage -buttons ThatsAll:0,Install:1 "
+xmessline = xmessline + "\"Compilation of " + packagename + " terminated\""
+
+logfile = open("../compile_log", "a+")
+currenttime = time.strftime("%B %d, %Y %H:%M", time.localtime(time.time()))
+logfile.write(packagename+" compiled on "+currenttime+"\n")
+logfile.close();
+
+if (installWithoutAsking):
+    runInstall(currdir)
+else:
+    choice = os.system(xmessline)
+    print choice
+    if (choice == 256):
+        print "Ok, here will come the installation"
+        runInstall(currdir)
+print "That's it for now."
+
+

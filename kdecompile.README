@@ -1,0 +1,45 @@
+
+  kdecompile is a python script which 
+  
+  -checks out a kde package from CVS
+  -configures and compiles it
+  -pops up a dialog box, asking if it needs to be installed
+  -installs if needed
+  
+  kdecompile is a work in progress and currently makes a number of
+assumptions about your build system. Future versions will be more 
+configurable. 
+  
+
+* It assumes Linux or a similarly behaved system. 
+
+* It assumes that your build directories are organized like this
+
+  *root dir*
+     kdelibs
+     kdebase
+     kdeutils
+     ...
+     compile
+        kdelibs
+	kdebase
+	kdeutils 
+	...
+	
+* To compile package kdelibs, you need to go to compile/kdelibs and type
+     
+     kdecompile
+	
+* It assumes that you have a CVS account or you are using anonymous CVS.
+You should modify in the script the values for the variables:
+  cvsRoot -- to your CVSROOT variable. 
+  installDir --- defaults to /opt/kde
+  
+These are around line 245 in the script.   
+
+* For the install functionality, you need to run kdecompile with the 
+corresponding rights - for example:  sudo kdecompile
+
+* There are various options, which can be found out by typing
+
+   kdecompile --help
