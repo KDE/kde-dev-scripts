@@ -131,7 +131,7 @@ sub processEntries
           next if ($e =~ /^cvslog\..*$/);
 
           # kde specific entries
-          # TODO read from CVSROOT/cvsignore !
+          # TODO read from CVSROOT/cvsignore - if it's been checked out!
           next if ($e eq "config.cache");
           next if ($e eq "config.log");
           next if ($e eq "config.status");
@@ -156,6 +156,11 @@ sub processEntries
           next if ($e =~ /^.+_meta_unload\.[^\.]+$/);
           next if ($e =~ /^.+\.kidl$/);
           next if ($e =~ /^.+_skel\.[^\.]+$/);
+
+          # Qt specific entries
+          next if ($e =~ /^\.ui$/);
+          next if ($e =~ /^\.moc$/);
+          next if ($e =~ /^\.obj$/);
 
           $dirunknown{$e} = 1;
         }
