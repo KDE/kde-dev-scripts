@@ -494,7 +494,7 @@ sub fix_unnecessary($)
   if (defined $ENV{"OBJ_REPLACEMENT"})
   {
     # we have to use sed here, because perl can't do s#a#b#
-    $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
+    $builddir = `echo $srcdir | sed -e "\$OBJ_REPLACEMENT"`;
     chomp $builddir;
     $makecmd = "makeobj";
   }
