@@ -521,7 +521,7 @@ for module in $modules; do
         fi
        
         eval ${cmd_make}
-	compile_ret=$?
+	      compile_ret=$?
 
         if test $compile_ret = 0; then
           if test "x$KDELOGDIR" != x; then
@@ -558,7 +558,7 @@ for module in $modules; do
               fi
               echo -e "$str_okay"
 	    else
-		compile_ret = $link_ret
+		  compile_ret=$link_ret
 	    fi
           fi
 	fi
