@@ -18,7 +18,7 @@ for i in $files; do if test -d $i; then
   # List their contents and filter out generated files
   realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
   if [ -z "$realfiles" ]; then
-    echo rm -rf $i
+    echo "rm -rf $i;"
   fi
 fi; done
 
