@@ -1,0 +1,2 @@
+#!/bin/sh
+ps aux | grep "kdeinit: $1" | grep -v grep | gawk '{print $2}' | xargs kill
