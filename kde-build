@@ -123,12 +123,6 @@ install_module() {
     fi
     echo -e "$str_okay"
     echo "Module $module successfully installed in $KDEDIRS!"
-    if test "x$module" = xkdebase -a "x$HOMEDIR" != x; then
-      for HOME in $HOMEDIR; do
-        test -d $HOME/.kde -a -w $HOME/.kde && rm -rf $HOME/.kde
-        test -e $HOME/.kderc -a -w $HOME/.kderc && rm -f $HOME/.kderc
-      done
-    fi
   else
     echo -e "$str_error"
     test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
@@ -350,8 +344,8 @@ for module in $KDEMODULES; do
       # Configure the module.
       #
       echo -n "  Configuring..."
-      set_title "Configuring module $module..."
-      cmd_configure="./configure --enable-debug --enable-profile --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      setTitle "Configuring module $module..."
+      cmd_configure="./configure $COMPFLAGS --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
       if test "x$KDELOGDIR" != x; then
         logfile="$KDELOGDIR/$module-build-$dateformat"

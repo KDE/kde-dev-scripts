@@ -5,15 +5,15 @@
 
 # Where are your KDE sources?
 #
-KDESRCDIR="/home/frerich/src/kde-cvs"
+KDESRCDIR="/home/dirk/src/kde"
 
 # Where shall I put the binaries?
 #
-KDEDIRS="/opt/kde2"
+KDEDIRS="/opt/kde"
 
 # Where is your Qt 2.2.x?
 #
-QTDIR="/usr/local/lib/qt"
+QTDIR="/usr/X11/lib/qt"
 
 # If you would like logfiles of the compilation process, specify a directory
 # here in which the logfiles will be saved. If you want to disable logfile
@@ -21,16 +21,8 @@ QTDIR="/usr/local/lib/qt"
 #
 KDELOGDIR="$KDESRCDIR/log"
 
-# It has been a good idea to remove the configuration directories of the
-# previous KDE desktop by deleting ~.kde back when KDE was Alpha. Now that
-# it's Beta quality and starts to become more stable this shouldn't be
-# necessary anymore but if you feel like doing so, add the home directories
-# of the users whose KDE configuration should be resetted to this space
-# seperated list.
-# NOTE: This removes the whole configuration, e.g. KMail's filters, Kicker's
-# settings, your addressbook etc.!
-#
-HOMEDIR=""
+# compilation flags
+COMPFLAGS="--disable-debug"
 
 # Do you want the logfiles to be compressed? Set this variable to "yes" to
 # make the script compress the logfiles using bzip2 (using gzip as a
@@ -39,11 +31,11 @@ HOMEDIR=""
 COMPRESSLOGS="yes"
 
 # Add modules you want to get compiled to this space-seperated list. Please
-# note that the modules kde-qt-addon, kdesuppor, kdelibs, and kdebase
+# note that the moduleskdelibs, and kdebase
 # (if you want a KDE2 desktop and not just develope applications for it)
 # must be compiled in exactly that order. Any other modules are optional.
 #
-KDEMODULES="kdegraphics kdenetwork kdemultimedia kdegames"
+KDEMODULES="kdenetwork kdegames kdeutils"
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
@@ -74,7 +66,7 @@ CVSCLIENT="cvs"
 # For CVS users only: Do you have a CVS account? If so, set this variable to
 # the correct name, otherwise leave this blank to use anonymous CVS.
 #
-ACCOUNT="raabe"
+ACCOUNT="mueller"
 
 # Do you want any special branch? If so, specify it's tag here e.g.
 # KDE_1_91 for the KDE 1.91 Beta ("Kleopatra") or KDE_1_92 for the
@@ -91,7 +83,7 @@ CVSUPSERVER="cvsup.kde.org"
 # If there are any modules in $KDESRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
 #
-EXCLUDE="qt-copy kdenonbeta kde-i18n kdesupport kdelibs kdebase kdenetwork kdegraphics kdemultimedia kdesdk www kdeutils kde-common kdegames"
+EXCLUDE="qt-copy kdenonbeta kde-i18n www qt kdeutils kde-common bugs"
 
 # If you would like a virgin cvs copy set this field to "yes", otherwise set
 # this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'
@@ -101,5 +93,5 @@ EXCLUDE="qt-copy kdenonbeta kde-i18n kdesupport kdelibs kdebase kdenetwork kdegr
 # Users who want to stay at the bleeding edge will want to activate this in
 # order to make sure there aren't any remains of a previous compile.
 #
-CVS_CLEAN="yes"
+CVS_CLEAN="no"
 
