@@ -20,5 +20,3 @@ cvschanged.1: cvschanged
 cvsversion.1: cvsversion
 	pod2man -lax -center="K Desktop Environment" cvsversion > cvsversion.1
 
-messages:
-
