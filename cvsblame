@@ -1,0 +1,101 @@
+#!/usr/bin/perl
+
+# cvs blame inspired by Bonsai
+# Author: Bernd Gehrmann <bernd@physik.hu-berlin.de>
+
+$file = $ARGV[0];
+$output = ">#cvsblame.html#";
+
+open(OUTPUT, $output);
+# Header
+print OUTPUT <<EOF;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+  </head>
+
+  <script>
+    function poplog(event, rev) {
+      var popup = document.layers['popup'];
+      popup.left = event.target.x;
+      popup.top = event.target.y;
+      popup.document.write("<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=6><TR><TD BGCOLOR='#CC9DB5'<tt>");
+      popup.document.write(rev);
+      popup.document.write("</TD></TR></TABLE>");
+      popup.document.close();
+      popup.visibility = "show";
+      return true;
+    }
+EOF
+
+$revision = "";
+open (LOG, "cvs log $file|");
+while (<LOG>) {
+      chop;
+      $line = $_;
+      if ($line =~ /revision (.*)/) {
+             $revision = $1;
+             $revstr = "log$revision";
+             $revstr =~ s/\./_/g;
+      } elsif ($line =~ /date: ([^;]*);\s*author: ([^;]*);.*/) {
+             $content = "<b>$revision</b> $2 <b>$1<b>";
+      } elsif ($line eq "----------------------------" && !($revision eq "")) {
+             print OUTPUT "$revstr = \"$content\";\n";
+      } elsif ($line eq "=============================================================================" && !($revision eq "")) {
+             print OUTPUT "$revstr = \"$content\";\n";
+      } else {
+             $line =~ s/\"/\\\"/g;
+             $content = "$content<br>$line";
+      }
+}
+close LOG;
+
+print OUTPUT <<EOF;
+  </script>
+  <body>
+     <layer name='popup' onmouseout="this.visibility='hide';" LEFT=0 TOP=0 BGCOLOR='#CCCCC0' visibility='hide'></layer>
+    <h1>$file</h1>
+      <pre>
+EOF
+
+$lineno = 1;
+$oldrevision = "";
+open (ANNOTATE, "cvs annotate $file 2>/dev/null|");
+while (<ANNOTATE>) {
+      chop;
+      $line = $_;
+      $revision = substr $line, 0, 13;
+      $revision =~ s/\s//g;
+      $author = substr $line, 14, 9;
+      $author =~ s/\s//g;
+      $date = substr $line, 23, 9;
+      $content = substr $line, 35;
+      $revstr = "log$revision";
+      $revstr =~ s/\./_/g;
+      if ($revision eq $oldrevision) {
+            $linkstr = "";
+            $linkendstr = "";
+            $revauthor = "";
+      } else {
+            $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
+            $linkendstr = "</a>";
+            $revauthor = "$author $revision";
+      }
+      print OUTPUT sprintf "%-6i$linkstr%-16s$linkendstr$content\n", $lineno, $revauthor;
+      $lineno++;
+      $oldrevision = $revision;
+}
+close ANNOTATE;
+
+# Footer
+print OUTPUT <<EOF;
+    </pre>
+  </body>
+</html>
+EOF
+
+close OUTPUT;
+
+system("netscape file://`pwd`/%23cvsblame.html%23");
+

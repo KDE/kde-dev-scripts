@@ -14,6 +14,8 @@ create_makefiles The recursive version of it - needs create_makefile.
 cvs2pack	Create a standalone source distribution tarball for an app
 		in a KDE CVS module.
 
+cvsblame	Bonsai-like cvs annotate 
+
 cvschanged	Check for edited or merged files in a checked out CVS module,
 		without connecting to the CVS server.
 
