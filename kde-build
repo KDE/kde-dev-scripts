@@ -955,8 +955,7 @@ The following error codes are returned by the script.
 
 =head1 BUGS
 
-Lots, mostly that the script wasn't written with portability in mind
-and therefore won't run very nice on platforms other than Linux.
+Probably.
 
 =head1 TODO
 
