@@ -336,8 +336,8 @@ make_makefile_cvs() {
     cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
   fi
   unset UNSERMAKE || true
-  if [ -n "$USE_UNSERMAKE" ] && ! echo $NO_UNSERMAKE_MODULES \
-      | grep $module > /dev/null 2>&1; then
+  if [ -n "$USE_UNSERMAKE" ] && \
+     !(echo $NO_UNSERMAKE_MODULES | grep $module > /dev/null 2>&1); then
     export UNSERMAKE=$USE_UNSERMAKE 
   fi
 
@@ -827,8 +827,8 @@ for module in $modules; do
   set_title "Compiling module $module..."
   use_compile_target=no
   [ -f $KDESRCDIR/$module/Makefile.am.in ] && [ -n "$MAKE_OPTS_COMPILE" ] && [ -n "$USE_UNSERMAKE" ] \
-       && ! echo $NO_UNSERMAKE_MODULES | \
-       grep $module > /dev/null 2>&1 && use_compile_target=yes 
+       && ! (echo $NO_UNSERMAKE_MODULES | grep $module > /dev/null 2>&1) \
+       && use_compile_target=yes
   if [ "$use_compile_target" = yes ]; then
     cmd_make="$MAKE $MAKE_OPTS_COMPILE"
   else
