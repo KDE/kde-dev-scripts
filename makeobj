@@ -34,6 +34,8 @@ if test ! -f $dir/$file; then
   	echo "no objdir found"
   fi
   cd $pwd/$dir
+else
+  cd $dir
 fi
 
 /usr/bin/make $args
