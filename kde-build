@@ -376,7 +376,8 @@ if [ -z "$MAKE" ]; then
 fi
 
 if [ -n "$specifiedModules" ]; then
-  modules=$specifiedModules
+  # In case someone with a kdebase dir in $PWD does autocompletion..
+  modules=$( echo $specifiedModules | sed -e 's/\///g' )
 else
   if [ "$ONLYLISTEDMODULES" = yes ]; then
     if [ "$USEKDESUPPORT" = yes ]; then
