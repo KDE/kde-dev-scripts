@@ -403,7 +403,7 @@ fi
 # If we want to use unsermake, update that at the very beginning, so that
 # all the modules make use of the most recent unsermake version.
 #
-if test -n "$USE_UNSERMAKE"; then
+if test -n "$USE_UNSERMAKE" && test "$docvsupdate" = 1; then
   unsermake_dir=`dirname $USE_UNSERMAKE`
   echo -n "Updating unsermake copy in $unsermake_dir..."
   if test -d "$unsermake_dir/CVS"; then
