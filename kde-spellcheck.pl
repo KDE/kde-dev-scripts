@@ -137,6 +137,7 @@ my %fix = (
 	 "automaticly" => "automatically",
 	 "autoreplacment" => "autoreplacement",
 	 "auhor" => "author",
+	 "authentification" => "authentication",
 	 "authoratative" => "authoritative",
 	 "authorisations" => "authorizations",
 	 "Availible" => "Available",
