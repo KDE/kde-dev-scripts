@@ -132,3 +132,52 @@ function! RunDiff()
 	read! cvs diff -bB -I \\\#include | egrep -v '(^Index:|^=+$|^RCS file:|^retrieving revision|^diff -u|^[+-]{3})'
 endfunction
 
+function CreateChangeLogEntry()
+    let currentBuffer = expand( "%" )
+
+    if bufname( "ChangeLog" ) != "" && bufwinnr( bufname( "ChangeLog" ) ) != -1
+        "execute "edit ChangeLog"
+	" A beer to the person who manages to figure out a way to activate
+	" an existing window showing the ChangeLog already, without destroying
+	" the current buffer. Kind of like an emulation of <C-W><Up>/</Down>
+	" (or left/right) until the right window is found :) (Simon)
+        execute "split ChangeLog"
+    else
+        execute "split ChangeLog"
+    endif
+
+    if exists( "$EMAIL" )
+        let mail = $EMAIL
+    else
+        let mail = inputdialog( "Enter Name/Email for Changelog entry: " ) 
+	if mail == ""
+	    echo "Aborted ChangeLog edit..."
+	    return
+	endif
+	" ### emacs is more clever by storing that information persistently
+	" in .emacs 
+    endif
+
+    let lastEntry = getline( nextnonblank( 1 ) )
+    let newEntry = strftime("%Y-%m-%d") . "  " . mail
+
+    if lastEntry != newEntry 
+        call append( 0, "" )
+        call append( 0, "" )
+        call append( 0, newEntry )
+    endif
+
+    " like emacs, prepend the current buffer name to the entry. but unlike
+    " emacs I have no idea how to figure out the current function name :(
+    " (Simon)
+    if currentBuffer != ""
+        let newLine = "\t* " . currentBuffer . ": "
+    else
+        let newLine = "\t* "
+    endif
+
+    call append( 2, newLine )
+
+    execute "normal 3G$"
+endfunction
+
