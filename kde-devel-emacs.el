@@ -1072,11 +1072,9 @@ With arg, to it arg times."
 
 ; Makes '(' insert '( ' or ' ( ' where appropiate
 (defun insert-parens () (interactive) 
-  (let ((n 0) (o 0) (p 0) (q 0) (r 0))
+  (let ((n 0))
     (save-excursion
-      (forward-char -2)
-      (setq n (looking-at "( ")) 
-      (setq o (or (looking-at "if") 
+      (setq n (or (progn (forward-char -2) (looking-at "if"))
 	          (progn (forward-char -1) (looking-at "for"))
                   (progn (forward-char -1) (looking-at "case"))
                   (progn (forward-char -1) (looking-at "while"))
@@ -1085,11 +1083,9 @@ With arg, to it arg times."
     )
     (cond
      (n (progn
-          (insert "( ")))
-     (o (progn
           (insert " ( ")))
      (t ;else
-      (insert "(") ))))
+      (insert "( ") ))))
 
 ; Makes ')' insert ' )', unless we just typed '('
 (defun insert-parens2 () (interactive)
