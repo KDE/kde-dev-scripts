@@ -107,10 +107,10 @@ With arg, to it arg times."
          (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
 
          ;; keybindings for adding spaces around parenthesises
-         ;(define-key c++-mode-map [\(] 'insert-parens)
-         ;(define-key c++-mode-map [\)] 'insert-parens2)
-         ;(define-key c++-mode-map [,] 'insert-comma)
-         ;(define-key c++-mode-map [\{] 'insert-curly-brace)
+         (define-key c++-mode-map [\(] 'insert-parens)
+         (define-key c++-mode-map [\)] 'insert-parens2)
+         (define-key c++-mode-map [,] 'insert-comma)
+         (define-key c++-mode-map [\{] 'insert-curly-brace)
 ))
 
 
@@ -1070,9 +1070,28 @@ With arg, to it arg times."
   )
 
 
-; Makes '(' insert '( '
-(defun insert-parens () (interactive) (insert "( "))
-; Makes '(' insert ') ', unless there's already a ' '
+; Makes '(' insert '( ' or ' ( ' where appropiate
+(defun insert-parens () (interactive) 
+  (let ((n 0) (o 0) (p 0) (q 0) (r 0))
+    (save-excursion
+      (forward-char -2)
+      (setq n (looking-at "( ")) 
+      (setq o (or (looking-at "if") 
+	          (progn (forward-char -1) (looking-at "for"))
+                  (progn (forward-char -1) (looking-at "case"))
+                  (progn (forward-char -1) (looking-at "while"))
+              )
+      )
+    )
+    (cond
+     (n (progn
+          (insert "( ")))
+     (o (progn
+          (insert " ( ")))
+     (t ;else
+      (insert "(") ))))
+
+; Makes ')' insert ' )', unless we just typed '('
 (defun insert-parens2 () (interactive)
   (let ((remv 0) (nospac 0))
     (forward-char -2) 
@@ -1101,8 +1120,13 @@ With arg, to it arg times."
      (n (progn
 	  (insert " {")
           (newline-and-indent)))
-     (t ;else
-      (insert "{") )))
+     (t (progn ;else
+          (insert "{") 
+          (c-indent-command)))
+    )
+  )
+;; doesn't work
+;;    (c-electric-brace)
 )
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
