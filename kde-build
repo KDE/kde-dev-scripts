@@ -93,6 +93,11 @@ if ([ "$TERM" = "xterm" ] || [ "$TERM" = "screen" ]) && tty -s; then
 fi
 }
 
+# moves a log file to be named failed, so one can see on first glance
+move_logfile() {
+  mv $logfile `echo $logfile | sed -e "s,-build-,-failed-,"`
+}
+
 # This function computes the time which was needed for a certain task.
 #
 compute_time() {
@@ -127,7 +132,8 @@ install_module() {
   else
     echo -e "$str_error"
     test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
-    echo "$critical_modules" | grep -q $module && exit $err_install_fail
+    test "x$critical" = "x0" || exit $err_compile_fail
+    move_logfile
   fi
 }
 
@@ -301,6 +307,8 @@ fi
 #
 for module in $modules; do
   if test "x$KDELOGDIR" != x; then
+    rm -f $KDELOGDIR/$module-build-*
+    rm -f $KDELOGDIR/$module-failed-*
     logfile="$KDELOGDIR/$module-build-$dateformat"
     echo "================================================================================" > $logfile
     echo "Build log of module $module, started on `date +%c`" >> $logfile
@@ -361,8 +369,11 @@ for module in $modules; do
 done
 
 for module in $critical_modules $KDEMODULES; do
+  critical=0
+  for m in $critical_modules; do if test $m = $module; then critical=1; fi; done
+
   if ! cd $KDESRCDIR/$module; then
-    if echo "$critical_modules" | grep -q $module; then
+    if test "x$critical" = "x1"; then
       echo "ERROR: Could not change into directory $KDESRCDIR/$module!"
       exit $err_change_into_mod_dir
     else
@@ -375,7 +386,7 @@ for module in $critical_modules $KDEMODULES; do
     # Check whether 'make -f Makefile.cvs' has been called.
     #
     if test ! -e "Makefile.in"; then
-      if echo "$critical_modules" | grep -q $module; then
+      if test "x$critical" = "x1"; then
         echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
         exit $err_no_makefile_in
       else
@@ -416,9 +427,10 @@ for module in $critical_modules $KDEMODULES; do
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
         cmd_make="make $MAKE_OPTS"
-        echo "$critical_modules" | grep -q $module || cmd_make="$cmd_make -k"
+        test "x$critical" = "x0" && cmd_make="$cmd_make -k"
         if test "x$KDELOGDIR" != x; then
           echo "-> Compilation <----------------------------------------------------------------" >> $logfile
+          echo "-> $cmd_make <-" >> $logfile
           cmd_make="$cmd_make >> $logfile 2>&1"
           starttime=`date +%s`
         fi
@@ -436,7 +448,7 @@ for module in $critical_modules $KDEMODULES; do
           # Install the module.
           #
           cmd_make_install="make"
-          echo "$critical_modules" | grep -q $module || cmd_make_install="$cmd_make_install -k "
+          test "x$critical" = "x0" && cmd_make_install="$cmd_make_install -k"
           test "x$NICECOMPILE" = xyes && cmd_make_install="nice $cmd_make_install"
           cmd_make_install="$cmd_make_install install"
           if test ! -w $KDEDIRS; then
@@ -448,12 +460,14 @@ for module in $critical_modules $KDEMODULES; do
         else
           echo -e "$str_error"
           test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
-          echo "$critical_modules" | grep -q $module && exit $err_compile_fail
+          test "x$critical" = "x0" || exit $err_compile_fail
+          move_logfile
         fi
       else
         echo -e "$str_error"
         test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
-        echo "$critical_modules" | grep -q $module && exit $err_configure_fail
+        test "x$critical" = "x0" || exit $err_compile_fail
+        move_logfile
       fi
     fi
   fi
