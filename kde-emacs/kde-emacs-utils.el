@@ -334,8 +334,12 @@
 (defun insert-curly-brace (arg) (interactive "*P")
   (if (not (c-in-literal))
       (let ((n nil) (o nil)
-	    (spacep nil) (c nil))
+	    (spacep nil) (c nil)
+	    (oneliner nil))
         (save-excursion
+	  (save-excursion
+	    (if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
+		(setq oneliner t)))
 	  (forward-char -1)              ; These three lines are for the situation where
           (if (not (looking-at " "))     ; the user already have inserted a space after
               (forward-char 1)           ; the closing parenthesis
@@ -344,13 +348,15 @@
           (setq o (looking-at "()"))
           (forward-char 1)
           (setq n (looking-at ")"))
-	  (if (not (eq
+	  (if (and 
+	       (not oneliner)
+	       (not (eq
 		    (count-lines (point-min) (point))
-		    (count-lines (point-min) (point-max))))
+		    (count-lines (point-min) (point-max)))))
 	      (progn
 		(next-line 1)
 		(beginning-of-line)
-		(if (re-search-forward "[a-zA-Z]" (point-at-eol))
+		(if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
 		    (setq c (eq (car (car (c-guess-basic-syntax))) 'substatement)))
 		)
 	    )
@@ -360,6 +366,7 @@
               (if (not spacep) (insert " "))
               (self-insert-command (prefix-numeric-value arg))
               (if (not c) (newline-and-indent))
+	      (if oneliner (end-of-line))
              (save-excursion
 	      (if c
 		  (progn
