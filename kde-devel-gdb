@@ -8,8 +8,9 @@ set print static-members off
 # Prints the contents of a QString
 define printqstring
        set $i=0
-       while $i < ($arg0).d->len
-         p (char)(($arg0).d->unicode[$i++].ucs & 0xff)
+       set $s = $arg0
+       while $i < $s.d->len
+         p (char)($s.d->unicode[$i++].ucs & 0xff)
        end
 end
 
