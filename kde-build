@@ -105,7 +105,7 @@ if [ "$USE_KPPP" = "TRUE" ]; then
 	kppp_process=`dcopfind -a kppp-*`
 	if [ "$kppp_process" = "" ]; then
 		#kppp not running
-		kppp &> /dev/null &
+		kppp > /dev/null 2>&1 &
 		sleep $KPPP_LOAD_TIME
 		`dcop $(dcopfind -a kppp-*) KpppIface beginConnect`
 		#wait for a while
