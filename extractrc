@@ -30,7 +30,7 @@ while ( <FILE> ) {
    	next;
    }
 
-   $string .= $_;   
+   $string .= "\\n" . $_;   
    chomp($string);
  
    $textstring = '([tT][eE][xX][tT]|string)>';
