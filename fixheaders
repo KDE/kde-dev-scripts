@@ -64,7 +64,10 @@ $lastdir = '.';
  '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`KIcon\' undeclared \(first use this function\)' => "kiconloader",
+ 'invalid use of undefined type `class DCOPClient' => "dcopclient",
  '`DCOPClient\' undeclared \(first use this function\)' => "dcopclient",
+ 'invalid use of undefined type `class KStatusBar' => "kstatusbar",
+ 'invalid use of undefined type `class KURL' => "kurl",
 );
 
 # Initial values are simply to get into the while
