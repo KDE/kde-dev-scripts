@@ -224,7 +224,7 @@ function! MapIdentHeader( ident )
     " KDE stuff
     elseif a:ident == 'KListViewItem'
         return '<klistview.h>'
-    elseif a:ident =~ 'kd\(Debug|Warning|Error|Fatal|Backtrace\)'
+    elseif a:ident =~ 'kd\(Debug\|Warning\|Error\|Fatal\|Backtrace\)'
         return '<kdebug.h>'
     elseif a:ident == 'kapp'
         return '<kapplication.h>'
