@@ -20,8 +20,9 @@ while (<>)
 	#print "Reading line : " . $_ . "\n";
 	$statement .= $_;
     }
-    elsif ( /kDebug[a-zA-Z]*[\s]*\(/ )
+    elsif ( /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ )
     {
+        print STDERR "Found one $_";
 	$inkdebug = 1;
 	chop;
 	$statement = $_;
@@ -29,20 +30,25 @@ while (<>)
     
     if ( $inkdebug )
     {
-	if ( /\)[\s]*;/ ) # look for );
+	if ( /\)\s*;/ ) # look for );
 	{
 	    $inkdebug = 0;
 	    $_ = $statement;
 	    ## Ok, now we have the full line
 	    ## 1 - Parse
-	    s/(^.*kDebug[a-zA-Z]*)[\s]*\([\s]*// || die "parse error on kDebug...";
+	    if (s/(^.*kDebug[a-zA-Z]*)\s*\(\s*//) {
+	      $line=$1; # has the indentation, //, and the kDebug* name
+            } elsif (s/(^.*qDebug)\s*\(\s*//) {
+              $line=$1;
+            } else { die "parse error on kDebug/qDebug..."; }
 	    $line=$1; # has the indentation, //, and the kDebug* name
 	    $line =~ s/kDebugInfo/kdDebug/;
+	    $line =~ s/qDebug/kdDebug/;
 	    $line =~ s/kDebugWarning/kdWarning/;
 	    $line =~ s/kDebugError/kdError/;
 	    $line =~ s/kDebugFatal/kdFatal/;
 	    $area = "";
-	    if ( s/^([0-9]+)[\s]*,[\s]*//) # There is an area
+	    if ( s/^([0-9]+)\s*,\s*//) # There is an area
 	    {
 		$area = $1;     # Store it
 		$line .= "(" . $area . ")";
@@ -53,8 +59,8 @@ while (<>)
             $commented = 0;
 	    if ( !s/^\"([^\"]*)\"// ) # There is no format
 	    {
-		s/[\s]*\)[\s]*;[\s]*$//;
-		$commented = s/[\s]*\)[\s]*;[\s]*\*\/$//; # terminating with */
+		s/\s*\)\s*;\s*$//;
+		$commented = s/\s*\)\s*;\s*\*\/$//; # terminating with */
 		$line = $line . " << " . $_ ;
 	    } else
 	    {
@@ -62,8 +68,8 @@ while (<>)
                 # If we stopped on a \" we need to keep adding to format
                 while ( $format =~ m/\\$/ )
                     { s/^([^\"]*)\"// || die "problem"; $format .= "\"" . $1; }
-		s/[\s]*\)[\s]*;[\s]*$/,/; # replace trailing junk with , for what follows
-		$commented = s/[\s]*\)[\s]*;[\s]*\*\/$/,/; # terminating with */
+		s/\s*\)\s*;\s*$/,/; # replace trailing junk with , for what follows
+		$commented = s/\s*\)\s*;\s*\*\/$/,/; # terminating with */
 		$arguments = $_;
 
 		## 2 - Look for %x
@@ -74,13 +80,13 @@ while (<>)
 		    if ( /(%[0-9]*[a-z])/ ) # This item is a format
 		    {
 			## 3 - Find argument
-			$arguments =~ s/[\s]*([^,]+)[\s]*,//;
+			$arguments =~ s/\s*([^,]+)\s*,//;
 			# Remove trailing .ascii() and latin1()
 			$arg = $1;
 			$arg =~ s/\.ascii\(\)$//;
 			$arg =~ s/\.latin1\(\)$//;
                         # If "a ? b : c" then add parenthesis
-                        if ( $arg =~ m/.+[\s]*?[\s]*.+[\s]*:[\s]*.+/ ) {
+                        if ( $arg =~ m/.+\s*\?\s*.+\s*:\s*.+/ ) {
                            $arg = "(" . $arg . ")";
                         }
 			$line = $line . " << " . $arg;
