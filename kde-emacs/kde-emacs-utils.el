@@ -77,6 +77,7 @@
   "make a skeleton member function in the .cpp or .cc file"
   (interactive)
   (let ((class nil)
+        (namespace "") ; will contain A::B::
         (function nil)
         (file (buffer-file-name))
         (insertion-string nil)
@@ -94,8 +95,8 @@
              (while (looking-at "[A-Za-z0-9_]")
                (forward-char 1))
              (cond 
-	      (class
-	       (setq class (concat (buffer-substring start (point)) "::" class)))
+	      (class ; class found already, so the rest goes into the namespace
+	       (setq namespace (concat (buffer-substring start (point)) "::" namespace)))
 	      (t ;class==nil
 	       (setq class (buffer-substring start (point)))))
 	     )
@@ -103,6 +104,7 @@
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
 	(let ((pos (scan-lists (point) -1 1 nil t)))
+          ; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
 	))
     (progn
@@ -136,6 +138,8 @@
                 (setq function (replace-match "" t t function)))
            (while (string-match "  +" function)
              (setq function (replace-match " " t t function)))
+           (while (string-match "^ " function)
+             (setq function (replace-match "" t t function)))
            (while (string-match "\t+" function)
              (setq function (replace-match " " t t function)))
            (while (string-match " ?=[^,)]+" function)
@@ -146,20 +150,20 @@
          (stringp class)
          (stringp file)
          (progn
-           (cond ((string-match (concat "^ *" class "[ \\t]*(") function)
+           (cond ((string-match (concat "^ *" class "[ \\t]*(") function) ; constructor
                   (progn
                   (setq insertion-string
                         (concat
                          (replace-match
-                          (concat class "::" class "(")
+                          (concat namespace class "::" class "(")
                           t t function)
                          "\n{\n    \n}\n"))))
-                  ((string-match (concat "^ *~" class "[ \\t]*(") function)
+                  ((string-match (concat "^ *~" class "[ \\t]*(") function) ; destructor
                    (progn
                      (setq insertion-string
                            (concat
                             (replace-match
-                             (concat class "::~" class "(")
+                             (concat namespace class "::~" class "(")
                              t t function)
                             "\n{\n    \n}\n"))))
                   ((string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function)
@@ -167,7 +171,7 @@
                      (setq insertion-string
                            (concat
                             (replace-match
-                             (concat " " class "::" "\\1(")
+                             (concat " " namespace class "::" "\\1(")
                              t nil function)
                             "\n{\n    \n}\n"))))
                   (t
