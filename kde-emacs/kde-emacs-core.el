@@ -177,7 +177,7 @@ With arg, do it arg times."
 ;;        If you don't have 5.30 comment out the following c-guess-basic-syntax
 ;;        and uncomment the one underneath.
 (cond
- ((or (string= "5.30.5" c-version) (string= "5.30.6" c-version))
+ ((string-match "^5\\.30\\." c-version)
   (defun c-guess-basic-syntax ()
   "Return the syntactic context of the current line.
 This function does not do any hidden buffer changes."
