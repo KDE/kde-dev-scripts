@@ -3,7 +3,7 @@
 local tmp 
 
 if [ CURRENT -eq 4 ]; then
-    tmp=(`$words[1,CURRENT-1] 2>/dev/null | awk '{print $2}' | sed -e "s,\(.*\)(.*,\1,"`)
+    tmp=(`$words[1,CURRENT-1] 2>/dev/null | sed -e "s,.* \(.*\)(.*,\1,"`)
 else
     tmp=(`$words[1,CURRENT-1] 2>/dev/null | sed -e "s,(default),default,"`)
 fi
