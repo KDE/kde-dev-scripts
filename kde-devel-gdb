@@ -24,6 +24,37 @@ define printqstring
        end
 end
 
+# Prints the contents of a QString encoded in utf8. Nice if you run your debug session in
+# a utf8 enabled terminal.
+define printqstring_utf8
+       set $i=0
+       set $out="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+       set $cur=0
+       set $s = $arg0
+       while $i < $s.d->len
+         set $uc = (unsigned short) $s.d->unicode[$i++].ucs
+	 if ( $uc < 0x80 )
+           set $out[$cur++] = (unsigned char)($uc & 0x7f)
+	 else
+	   if ( $uc < 0x0800 )
+             set $out[$cur++] = (unsigned char)(0xc0 | ($uc >> 6))
+	   else
+             set $out[$cur++] = (unsigned char)(0xe0 | ($uc >> 12)
+             set $out[$cur++] = (unsigned char)(0x80 | (($uc > 6) &0x3f)
+	   end
+	   set $out[$cur++] = (unsigned char)(0x80 | ((uchar) $uc & 0x3f))
+	 end
+         if $cur >= 40
+           p $out
+           set $cur = 0
+           set $out="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+         end
+       end
+       if $cur < 40
+         p $out
+       end
+end
+
 # Prints the contents of a QString, this one works even without a running process
 # but prints one char per line
 define printqstring_noprocess
