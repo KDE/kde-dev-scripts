@@ -68,6 +68,7 @@ foreach $dir ( @dirqueue ) {
 	while( <FILES> ) {
 		chop;
 		next if $_ eq '.';
+		next if m/\/\.#/;     #ignore .#blah
 		push @files, $_;
 	}
 }
