@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# this is a script around make which basicly checks
+# if it's in srcdir or in builddir and changes to 
+# the right directory for calling /usr/bin/make
+# (C) Stephan Kulow
+
 file=Makefile
 dir=.
 args=
