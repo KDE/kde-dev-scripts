@@ -35,7 +35,7 @@ while (defined ($ARGV[0]))
 {
   $_ = shift;
   if (/^--help$|^-h$/)  {
-    print "Usage: fixincludes [--verbose | -v] [--experimental | -e ] [--modify | -m ]\n";
+    print "Usage: fixkdeincludes [--verbose | -v] [--experimental | -e ] [--modify | -m ]\n";
     exit 0;
   }
   elsif (/^--verbose$|^-v$/) {
@@ -531,7 +531,7 @@ sub fix_unnecessary($)
     
     chdir($srcdir);
 
-    local $localbackup = $srcfile . "#fixincludes";
+    local $localbackup = $srcfile . "#fixkdeincludes";
     
     # preserve timestamp if possible for CVS
     unlink $localbackup;

@@ -6,7 +6,7 @@ bin_SCRIPTS = \
   noncvslist pruneemptydirs cvs-clean \
   cvs2pack cvs2dist  cvsblame \
   kdedoc qtdoc extractrc zonetab2pot.py \
-  licensecheck fixincludes includemocs create_cvsignore \
+  licensecheck fixkdeincludes includemocs create_cvsignore \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py
 
 # sorted by bin_SCRIPTS reference
