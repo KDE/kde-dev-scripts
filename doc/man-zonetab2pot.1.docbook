@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email></email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>zonetab2pot.py</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>zonetab2pot.py</command></refname>
+<refpurpose>Converts a timezone list to a PO file template.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>zonetab2pot.py</command>
+
+<group><option><replaceable>timezone-list</replaceable></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>zonetab2pot.py</command> reads the timezone list given
+on the command-line and converts it to a gettext message file
+(PO-file) template containing the names of the individual
+timezones. </para>
+
+<para>The given timezone list should be in the same format as the system
+zone.tab. If no timezone list is specified on the command-line,
+<filename>/usr/share/zoneinfo/zone.tab</filename> will be used.</para>
+
+<para>The new PO-file template will be written to standard output.</para>
+
+<para>This utility is part of the KDE Software Development Kit. </para> 
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>zonetab2pot.py was written by <personname><firstname>Lukas</firstname><surname>Tinkl</surname></personname><email>lukas@kde.org</email></para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

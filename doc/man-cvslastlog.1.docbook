@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email></email></author>
+<date>April 06, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>cvslastlog</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>cvslastlog</command></refname>
+<refpurpose>Prints the log entry for the last commit for a file.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>cvslastlog</command>
+
+<group><option><replaceable>filename</replaceable></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>cvslastlog</command> shows the log associated with the
+last CVS commit for the given file. It depends on the version of the
+local file, not the one on the server. </para>
+
+<para>This utility is part of the &kde; Software Development Kit.</para>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>demangle</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>demangle</command></refname>
+<refpurpose>Undo C++ name mangling for symbols</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>demangle</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>demangle</command> reads a list of C++ mangled symbol names from standard input and converts these names to human-readable form on standard output.</para>
+
+<para>This utility is part of the &kde; Software Development Kit.</para> 
+
+</refsect1>
+
+<refsect1>
+<title>Example</title>
+
+<para>Create a file called <filename>names</filename> containing the following mangled symbol names:</para>
+
+<programlisting>_ZNK6Object10metaObjectEv 
+_ZN8QPtrListI5ArrowE5clearEv 
+_ZTC4Kolf0_11KMainWindow</programlisting>
+
+<para>These names can then be demangled as follows:</para>
+
+<screen><prompt>example$</prompt> <userinput><command>demangle</command> &lt; <filename>names</filename></userinput>
+<computeroutput>Object::metaObject() const 
+QPtrList&lt;Arrow&gt;::clear() 
+construction vtable for KMainWindow-in-Kolf</computeroutput></screen>
+
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>kminspector(1) kmtrace(1) match(1)</para>
+
+</refsect1>
+
+</refentry>

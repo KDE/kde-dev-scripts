@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>transxx</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>transxx</command></refname>
+<refpurpose>Create a pseudo translated PO file from a PO template file</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>transxx</command>
+<group><option><replaceable>template.pot</replaceable></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>transxx</command> is a command-line tool that produces
+a basic fleshed-out PO-file from a PO-template file. Some of the
+formatting and structure of the msgid strings will be copied to the
+msgstr strings, but otherwise text will be translated to
+<quote>xx</quote>.</para>
+
+<para>The fleshed-out PO-file is sent to standard output.</para>
+
+<para>Running your software with the language <quote>xx</quote> will
+quickly show you any user visible strings that are not
+translateable.</para>
+
+<para>This utility is part of the KDE Software Development Kit.</para> 
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>The PO-XML tools were written by &Stephan.Kulow; &Stephan.Kulow.mail;</para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

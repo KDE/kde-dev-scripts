@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>March 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>addebug</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>addebug</command></refname>
+<refpurpose>Modifies <filename>Makefile</filename>(s) to add debug info</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>adddebug</command>
+<group><option>-k</option></group>
+<group><option>-r</option></group>
+<group><option>-n</option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>adddebug</command> modifies the
+<filename>Makefile</filename> in the current directory (and optionally
+in its subdirectories) to add debug info (<option>-g3</option>). It
+will also remove optimisations (<option>-O[1-9]</option>).</para>
+
+<para>This utility is part of the &kde; Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title>Options</title>
+
+<variablelist>
+<varlistentry>
+<term><option>-k</option></term>
+<listitem><para>Keep optimisations (do not remove <option>-O[1-9]?</option> flags which are removed by default).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><option>-r</option></term>
+<listitem>
+<para>Recursively search through all subdirectories of the current directory and operate on every <filename>Makefile</filename> that is found. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><option>-n</option></term>
+<listitem><para>compile without NDEBUG and NO_DEBUG being defined (makes <function>kdDebug</function> calls work)</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

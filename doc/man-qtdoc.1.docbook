@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>April 8, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>qtdoc</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>qtdoc</command></refname>
+<refpurpose>Open a &Qt; help page in &konqueror;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>qtdoc</command>
+
+<group><option><replaceable>classname</replaceable></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>qtdoc</command> opens a &Qt; help page in &konqueror;.
+If <replaceable>classname</replaceable> is given, it opens the help
+page for that class.  Otherwise the main &Qt; help page is opened.
+<replaceable>classname</replaceable> is case insensitive.</para>
+
+<para>This utility is part of the &kde; Software Development Kit</para>
+
+</refsect1>
+
+<refsect1>
+<title>Environment</title>
+
+<variablelist>
+<varlistentry>
+<term><envar>QTDIR</envar></term>
+<listitem><para>The directory beneath which &Qt; is installed.  The main &Qt; help page is expected to be in <filename class="directory">$<envar>QTDIR</envar>/doc/html/</filename>.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title>Examples</title>
+
+<para>To display the help on the class <classname>QString</classname>:</para>
+<screen><userinput><command>qtdoc</command> <option>QString</option></userinput></screen>
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>kdedoc(1), assistant(1)</para>
+
+</refsect1>
+
+
+<refsect1>
+<title>Authors</title>
+
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY Ian.Reinhart.Geiser "<personname><firstname>Ian</firstname><othername>Reinhart</othername><surname>Geiser</surname></personname>">
+<!ENTITY Ian.Reinhart.Geiser.mail "<email>geiseri@kde.org</email>">
+<!ENTITY kweather "<application>kweather</application>">
+<!ENTITY Nadeem.Hasan "<personname><firstname>Nadeem</firstname><surname>Hasan</surname></personname>">
+<!ENTITY Nadeem.Hasan.mail "<email>nhasan@kde.org</email>">
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>reportview</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>reportview</command></refname>
+<refpurpose>ask KWeatherService to display a weather report </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>reportview;</command>
+<group><option>KDE Generic Options</option></group>
+<group><option>Qt Generic Options</option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>reportview</command> is not intended to be used
+directly.</para>
+
+<para><command>reportview</command> is a small program that asks
+KWeatherService to display a weather report. Information shown
+includes the temperature, wind speed and air pressure.</para>
+
+<para>KWeatherService is a DCOP service used by both reportview and
+the &kweather; panel applet to provide weather data. There is no need to
+start KWeatherService separately; reportview will start the service
+itself if needed.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title>See Also</title>
+
+<para>kweather(1)</para>
+
+<para>More detailed user documentation is available from <ulink
+url="help:/kweather">help:/kweather</ulink> (either enter this
+<acronym>URL</acronym> into &konqueror;, or run
+<userinput><command>khelpcenter</command>
+<parameter>help:/kweather</parameter></userinput>).</para>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>&kweather; was written by &Ian.Reinhart.Geiser; &Ian.Reinhart.Geiser.mail; and &Nadeem.Hasan; &Nadeem.Hasan.mail;</para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

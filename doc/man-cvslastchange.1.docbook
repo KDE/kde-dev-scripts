@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY cvslastchange "<command>cvslastchange</command>">
+<!ENTITY CVS "<acronym>CVS</acronym>">
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>March 8, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle>&cvslastchange;</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>&cvslastchange;</refname>
+<refpurpose>Display the last change committed to &CVS; for a file</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+&cvslastchange;
+<group><replaceable>file</replaceable></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para>&cvslastchange; displays the last change committed to &CVS; for
+a file.  It uses <command>cvs diff</command> and <command>cvs
+log</command> to do this.</para>
+
+<para>&cvslastchange; works on any &CVS; branch, not just HEAD.</para>
+
+<para>This utility is part of the &kde; Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>cvslastlog(1) cvsrevertlast(1) cvs(1)</para>
+
+</refsect1>
+
+</refentry>

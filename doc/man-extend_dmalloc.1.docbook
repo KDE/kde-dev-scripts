@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>extend_dmalloc</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>extend_dmalloc</command></refname>
+<refpurpose>Analyze return-addresses from dmalloc logfiles.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>extend_dmalloc</command>
+<group><option><replaceable>dmalloc-log</replaceable> <command>binary</command></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>extend_dmalloc</command> will run <command>gdb</command>(1) to get information on the return-addresses from a <command>dmalloc</command>(1) logfile. Specifically it will examine any <literal>ra=</literal> lines and try to get the corresponding line numbers</para>
+
+<para>The argument
+<option><command>binary</command></option>
+must be the binary that generated the log
+<filename>dmalloc-log</filename>.</para>
+
+<para>This utility is part of the &kde; Software Development
+Kit.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title>Notes</title>
+<para>You may wish to direct the output from
+<command>extend_dmalloc</command> to a file, since otherwise
+<command>gdb</command> seems to prompt for a return as if you are at
+the end of a page. </para> 
+</refsect1>
+
+</refentry>

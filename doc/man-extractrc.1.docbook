@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>extractrc</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>extractrc</command></refname>
+<refpurpose>Extract message strings from UI and GUI-RC files</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>extractrc</command>
+
+<group><option><replaceable>filename</replaceable></option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>extractrc</command> finds all text tags and other
+message strings in the given files and writes the corresponding i18n()
+calls to standard output so that xgettext can parse them.</para>
+
+<para>It understands both (&Qt;/&kde;)
+<application>designer</application>'s <acronym>UI</acronym> files and
+&XML; GUI-RC files. </para>
+
+<para>This utility is part of the KDE Software Development Kit. </para>
+
+</refsect1>
+
+</refentry>

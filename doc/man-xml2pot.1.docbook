@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>xml2pot</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>xml2pot</command></refname>
+<refpurpose>Creates a PO template file from a DocBook XML file.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>xml2pot</command>
+
+<group><option><replaceable>original-XML</replaceable></option></group>
+
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>xml2pot</command> is a command-line tool that produces
+a gettext message template file from the DocBook XML file
+<filename>original-XML</filename>. The template file is sent to
+standard output.</para>
+
+<para>The resulting template file can be used to create gettext
+message files (PO-files) for a variety of languages. These can then be
+used in conjunction with <command>po2xml</command>(1) to translate the
+original XML file into these other languages.</para>
+
+
+<para>This utility is part of the KDE Software Development Kit.</para> 
+
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>po2xml(1), split2po(1), swappo(1), transxx(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>The PO XML tools were written by &Stephan.Kulow; &Stephan.Kulow.mail;</para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

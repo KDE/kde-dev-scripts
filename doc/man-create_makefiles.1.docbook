@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY create_makefiles "<command>create_makefiles</command>">
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date>March 8, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle>&create_makefiles;</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>&create_makefiles;</refname>
+<refpurpose>Recreates all <filename>Makefile</filename>s beneath a directory</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+&create_makefiles;
+<group><replaceable>dir</replaceable></group>
+
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para>&create_makefiles; recreates all <filename>Makefile</filename>s
+in <replaceable>dir</replaceable> and its
+(recursed) subdirectories from the corresponding
+<filename>Makefile.am</filename> templates.</para>
+
+<para>This script must be run from the toplevel directory (the one
+containing configure). This script saves time compared to re-running
+configure completely.</para>
+
+<para>If the source directory is different from the build directory
+(see the environment variables below), it will be assumed that each
+<filename>Makefile.am</filename> and <filename>Makefile.in</filename>
+belongs beneath the source directory and that each
+<filename>Makefile</filename> belongs beneath the build
+directory.</para>
+
+<para>This utility is part of the &kde; Software Development Kit.</para>
+</refsect1>
+
+
+<refsect1>
+<title>Environment</title>
+<para>One of the following variables (but not both) should be set if
+the source directory is different from the build directory. If the
+build directory is simply a subdirectory of the source directory, the
+simpler variable <envar>OBJ_SUBDIR</envar> should be used. </para>
+
+<variablelist>
+<varlistentry>
+<term><envar>OBJ_SUBJDIR</envar></term>
+<listitem><para>Indicates that the build directory is in the given subdirectory of the source directory. For instance, if the source directory is <filename class="directory">kdesdk</filename> and the build directory is <filename class="directory">kdesdk/obj-i386-linux</filename>, then <envar>OBJ_SUBDIR</envar> should be set to <parameter>obj-i386-linux</parameter>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><envar>OBJ_REPLACEMENT</envar></term>
+<listitem><para>A <command>sed</command> expression that is used to transform the source directory into the build directory.  For instance, if the source directory is <filename class="directory">kdesdk/obj-i386-linux</filename>, then <envar>OBJ_REPLACEMENT</envar> should be set to <parameter>s#kdesdk#kdesdk-obj#</parameter>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>&create_makefiles; was written by &David.Faure; &David.Faure.mail;.</para>
+
+<para>This manual page was prepared by
+<personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email> for the Debian GNU/Linux system (but may be
+used by others).</para>
+ 
+</refsect1>
+
+</refentry>

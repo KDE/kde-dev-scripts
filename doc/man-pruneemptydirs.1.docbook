@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>April 8, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>pruneemptydirs</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>pruneemptydirs</command></refname>
+<refpurpose>Detects stale source directories in a CVS tree</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>pruneemptydirs</command>
+<group><option>-f</option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>pruneemptydirs</command> is used to clean up a local
+CVS tree. It detects directories containing remnants of old stuff
+which has been removed from the CVS. Such stale directories often
+break compilation. The current directory and all directories beneath
+it will be examined.</para>
+
+<para>Note that this tool does not remove anything; it simply prints
+what to do as a series of remove commands. You can copy and paste
+these commands, or use them with eval in a script.</para>
+
+<para>This tool works better if the source directory is not the same
+as the build directory, since it will not print directories containing
+old executables.</para>
+
+<para>This utility is part of the KDE Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title>Options</title>
+
+<variablelist>
+<varlistentry>
+<term><option>-f</option></term>
+<listitem><para>Actually perform the deletions instead of just printing them out.  Use this option with care.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para><command>pruneemptydirs</command> was written by &David.Faure; &David.Faure.mail;</para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
+</refsect1>
+
+</refentry>

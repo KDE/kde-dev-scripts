@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY cvscheck "<command>cvscheck</command>">
+<!ENTITY CVS "<acronym>CVS</acronym>">
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date>March 8, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle>&cvscheck;</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>&cvscheck;</refname>
+<refpurpose>Offline status report for files in a checked-out &CVS; module.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+&cvscheck;
+<group><replaceable>dir</replaceable></group>
+
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para>&cvscheck; prints information about the status of your local
+&CVS; checkout without communicating with the server. This means it is
+extremely fast and does not require a network connection.</para>
+
+<para>The given directory and all of its subdirectories will be
+processed recursively. If no directory is given, the current directory
+and its recursed subdirectories will be used.</para>
+
+<para>Each file with an interesting status will be printed with a
+status character in front of its name. The status characters are as
+follows.</para>
+
+<variablelist>
+<varlistentry>
+<term><returnvalue>?</returnvalue> <filename>foobar.c</filename></term>
+<listitem>
+<para>The file is not known to &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>M</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem>
+<para>The file is definitely locally modified</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>m</returnvalue> 
+<filename>foobar.c</filename></term>
+<listitem>
+<para>The file <emphasis>might</emphasis> have local changes. You
+should <command>diff</command> with the server to make sure.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>C</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem>
+<para>The file has a &CVS; conflict and therefore cannot be
+committed.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>U</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem>
+<para>This file is in &CVS; but is missing in your local
+checkout.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>T</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem><para>This file has an unusual sticky &CVS;
+tag.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>A</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem>
+<para>You have done a <userinput><command>cvs</command>
+<option>add</option></userinput> for this file, but have not yet committed
+it.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><returnvalue>R</returnvalue>
+<filename>foobar.c</filename></term>
+<listitem>
+<para>You have done a <userinput><command>cvs</command>
+<option>rm</option></userinput> for this file, but have not yet committed
+it.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>This utility is part of the &kde; Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+
+<para>cvscheck was written by &Dirk.Mueller; &Dirk.Mueller.mail;
+ and Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para>This manual page was prepared by
+<personname><firstname>Ben</firstname>
+<surname>Burton</surname></personname> <email>bab@debian.org</email> for the
+Debian GNU/Linux system (but may be used by others).
+ </para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>April 7, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>fixincludes</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>fixincludes</command></refname>
+<refpurpose>Reduce the number of #includes in &kde; source files</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>fixincludes</command>
+<group><option>-v, --verbose</option></group>
+<group><option>-e, --experimental</option></group>
+<group><option>-m, --modify</option></group>
+<group><option><replaceable>file</replaceable></option></group>
+<group><option>--help</option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><command>fixincludes</command> tries to reduce the number of
+#includes in C++ source files.  Much of it's processing is specific to
+&kde; sources and so it might not work so well with sources for
+non-&kde; applications.</para>
+
+<para>The following problems are identified by <command>fixincludes</command>:</para>
+
+<itemizedlist>
+<listitem>
+<para>Including headers that are no longer supported but which exist for compatibility with older Qt/KDE versions;</para>
+</listitem>
+<listitem>
+<para>Including the same file multiple times. </para>
+</listitem>
+</itemizedlist>
+
+<para>There is also an experimental mode which tries removing each
+#include one at a time (with a few exceptions) to see whether the
+source still compiles. Note that this experimental mode will modify
+the original sources. </para>
+
+<para>By default the sources will not be modified; the identified
+problems will simply be written to standard output. </para>
+
+<para>The list of C++ sources to examine should be given on the
+command-line. If no files are given, all C++ sources in or beneath the
+current directory will be examined (with the exception of directories
+whose <filename>Makefile.am</filename> contains
+<option>-UQT_NO_COMPAT</option> or
+<option>-UKDE_NO_COMPAT</option>)</para>
+
+<para>This utility is part of the KDE Software Development Kit. </para>
+
+</refsect1>
+
+<refsect1>
+<title>Options</title>
+
+<variablelist>
+<varlistentry>
+<term><option>-v, --verbose</option></term>
+<listitem><para>Verbose mode.  Additional debugging output is written to standard output.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><option>-e, --experimental</option></term>
+<listitem><para>Experimental mode, as described above in detail. Note that this option implies <option>--modify</option>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><option>-m, --modify</option></term>
+<listitem><para>As well as writing messages to standard output, actually modify the original sources to fix any problems that were found.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+<para><command>fixincludes</command> was written by Dirk Mueller <email>mueller@kde.org</email>. 
+</para>
+</refsect1>
+
+</refentry>
