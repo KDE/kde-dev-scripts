@@ -101,7 +101,7 @@
              (forward-char)
              (backward-sexp)))
       (and (stringp class)
-           (re-search-backward "^[ \t]")
+           (re-search-backward "^[ \t]*")
            (progn
              (while (looking-at "[ \t]")
                (forward-char 1))
