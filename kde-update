@@ -36,7 +36,7 @@ EXCLUDE="qt-copy"
 # is executed).
 CVS_CLEAN=yes
 
-## Don't modify anything below this line! ###################################### 
+## Don't modify anything below this line! ######################################
 
 # Various variables for internal usage.
 #
@@ -62,19 +62,19 @@ done
 # would make our script break - that's not a nice thing. ;-)
 #
 if test -z "$CVSCLIENT"; then
-  echo "$0: ERROR: No CVS client specified!"; exit $ERR_NO_CVSCLIENT
+  echo "ERROR: No CVS client specified!"; exit $ERR_NO_CVSCLIENT
 fi
 if test "$CVSCLIENT" != cvs -a "$CVSCLIENT" != cvsup; then
-  echo "$0: ERROR: Invalid CVS client specified, valid clients are 'cvs' and 'cvsup'!"; exit $ERR_INV_CVSCLIENT
+  echo "ERROR: Invalid CVS client specified, valid clients are 'cvs' and 'cvsup'!"; exit $ERR_INV_CVSCLIENT
 fi
 if test -z "$SRCDIR"; then
-  echo "$0: ERROR: No source directory specified!"; exit $ERR_NO_SRCDIR
+  echo "ERROR: No source directory specified!"; exit $ERR_NO_SRCDIR
 fi
 if test ! -d "$SRCDIR"; then
-  echo "$0: ERROR: Invalid source directory specified!"; exit $ERR_INV_SRCDIR
+  echo "ERROR: Invalid source directory specified!"; exit $ERR_INV_SRCDIR
 fi
 if test "$LOGDIR" -a ! -w "$LOGDIR"; then
-  echo "$0: WARNING: No write access in $LOGDIR, disabling logfile generation."
+  echo "WARNING: No write access in $LOGDIR, disabling logfile generation."
   LOGDIR=""
 fi
 
@@ -86,12 +86,12 @@ if test "$CVSCLIENT" = cvs; then
   test $BRANCH && UPDATE_COMMAND="$UPDATE_COMMAND -r $BRANCH"
 else
   if test -z "$CVSUPSERVER"; then
-    echo "$0: ERROR: No cvsup server specified!"
+    echo "ERROR: No cvsup server specified!"
     exit $ERR_NO_CVSUP_SERVER
   fi
   SUPFILE=`mktemp /tmp/$0.XXXXXX`
   if [ $? -ne 0 ]; then
-    echo "$0: ERROR: Could not create temporare supfile in /tmp!"
+    echo "ERROR: Could not create temporare supfile in /tmp!"
     exit $ERR_NO_TEMP_SUPFILE
   fi
   UPDATE_COMMAND="cvsup $SUPFILE"
@@ -114,12 +114,14 @@ else
   done
 fi
 
+export UPDATE_COMMAND
+
 # Guess what? We'll finally start checking out the modules. :-)
 #
 for MODULE in $MODULES; do
   if ! cd $SRCDIR/$MODULE; then
-    echo "$0: WARNING: Could not change into directory $SRCDIR/$MODULE."
-    echo "$0: Update for module $MODULE skipped."
+    echo "WARNING: Could not change into directory $SRCDIR/$MODULE."
+    echo "Update for module $MODULE skipped."
   else
     if test -d CVS && ! (echo $EXCLUDE | grep -q $MODULE); then
       if test $LOGDIR; then
@@ -127,25 +129,24 @@ for MODULE in $MODULES; do
         UPDATE_COMMAND="$UPDATE_COMMAND &> $LOGFILE"
       fi
 
-      echo -n "$0: Updating module '$MODULE'..."
-      if $UPDATE_COMMAND; then
+      echo -n "Updating module '$MODULE'..."
+      if eval "$UPDATE_COMMAND"; then
 
         if test "$CVS_CLEAN" = yes; then
           MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
           test $LOGDIR && MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
           if test -e admin/Makefile.common; then
             test $LOGDIR && echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
-            $MAKE_CVS_CLEAN
+            eval "$MAKE_CVS_CLEAN"
           fi
         fi
-        
+
         MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
         test $LOGDIR && MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
         if test -e Makefile.cvs; then
           test $LOGDIR && echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
-          $MAKE_MAKEFILE_CVS
+          eval "$MAKE_MAKEFILE_CVS"
         fi
-        
         echo "done!"
       else
         echo "failed!"
