@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 # ************************************************
 #
@@ -28,6 +28,7 @@ class Config:
     RunConfigure = 1
     RunCVSCheckOut = 1
     installDir = "/opt/kde"
+    packagename = ""
     cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"
 
     def load():
@@ -35,6 +36,39 @@ class Config:
     def save():
         print "Config.save not implemented yet"
 
+	# hmm? why do i need the z here
+    def parseArguments(obj):
+        readpackage = 0
+	for x in sys.argv[1:]:
+	    # print x
+	    if readpackage:
+		obj.packagename = x
+		readpackage = 0
+		print "Package is:"+z.packagename
+	    if (x == "-h") or (x == "--help"):
+		printHelp()
+		sys.exit(0)
+	    if x == "-i":
+		print "Will install without asking"
+		obj.installWithoutAsking = 1
+	    if x == "-d":
+		print "Will compile without debug info"
+		obj.noDebug = 1
+	    if x == "-o":		
+		print "Optimizations enabled"
+		obj.noOptimizations = 0
+	    if x == "--remove-admin-dir":
+		print "Will remove admin dir before cvs checkout"
+		obj.removeAdminDir = 1
+	    if x == "--no-cvs-checkout":
+		print "Will not do CVS checkout"
+		obj.RunCVSCheckOut = 0
+	    if x == "--no-configure":
+		print "Will not run configure"
+		obj.RunConfigure = 0
+	    if x == "--packagename":
+		readpackage = 1
+		
 ## end of configuration class 
 
 
@@ -251,7 +285,7 @@ def runInstall(compiledir):
 #   Version 
 #
 def version():
-    return "kdecompile v.0.3.2 as of November 23, 2000"
+    return "kdecompile v.0.3.5 as of November 28, 2000"
 
 #
 #   Print help
@@ -271,60 +305,73 @@ def printHelp():
 #
 print "KDE compilation, installation etc (c) Boloni Laszlo"
 
+#
+#  Perform the compilation process
+#
+def doAll(packagename, currdir, cvsdir):
+    if config.RunCVSCheckOut:
+	runCVSCheckOut(cvsdir, packagename)
+    if config.RunConfigure:
+	runAutoConf(cvsdir+"/"+packagename)
+    runConfigure(currdir, packagename, config.installDir)
+    countDirs(cvsdir+"/"+packagename)
+    if config.noOptimizations:
+	runRemoveO2(currdir)
+    #runCompile(currdir);
+    runCompileThread(currdir)
+
     
 config=Config()    
 compileddirs = []
 compileDirsPre = []
-#   Process arguments
-for x in sys.argv[1:]:
-    print x
-    if (x == "-h") or (x == "--help"):
-        printHelp()
-        sys.exit(0)
-    if x == "-i":
-        print "Will install without asking"
-        config.installWithoutAsking = 1
-    if x == "-d":
-	print "Will compile without debug info"
-	config.noDebug = 1
-    if x == "-o":
-        
-	print "Optimizations enabled"
-	config.noOptimizations = 0
-    if x == "--remove-admin-dir":
-        print "Will remove admin dir before cvs checkout"
-        config.removeAdminDir = 1
-    if x == "--no-cvs-checkout":
-        print "Will not do CVS checkout"
-        config.RunCVSCheckOut = 0
-    if x == "--no-configure":
-        print "Will not run configure"
-	config.RunConfigure = 0
+config.parseArguments()
 
 # find the directories
-currdir = os.getcwd()
-print "current dir is " + currdir
-direlems = re.split("/", currdir)
-if (direlems[-2] != "compile") :
-    print "You are not in the compile directory!"
-    sys.exit(2)
-newdir = direlems[1:-2] #+ direlems[-2:]
-cvsdir = ""
-packagename = direlems[-1]
-for x in newdir:
-    cvsdir = cvsdir + "/"+x
-print cvsdir
 
-if config.RunCVSCheckOut:
-    runCVSCheckOut(cvsdir, packagename)
-if config.RunConfigure:
-    runAutoConf(cvsdir+"/"+packagename)
-    runConfigure(currdir, packagename, config.installDir)
-countDirs(cvsdir+"/"+packagename)
-if config.noOptimizations:
-    runRemoveO2(currdir)
+if config.packagename=="":
+    # guess the packagename from the current dir
+    currdir = os.getcwd()
+    direlems = re.split("/", currdir)
+    if (direlems[-2] != "compile") :
+	print "You are not in the compile directory!"
+	sys.exit(2)
+    newdir = direlems[1:-2] #+ direlems[-2:]
+    cvsdir = ""
+    packagename = direlems[-1]
+    for x in newdir:
+	cvsdir = cvsdir + "/"+x
+else:
+    packagename = config.packagename;
+    currdir = os.getcwd()+"/"+packagename
+    direlems = re.split("/", currdir)
+    if (direlems[-2] != "compile") :
+	print "You are not in the compile directory!"+currdir
+	sys.exit(2)
+    newdir = direlems[1:-2] #+ direlems[-2:]
+    cvsdir = ""
+    packagename = direlems[-1]
+    for x in newdir:
+	cvsdir = cvsdir + "/"+x    
+
+
+#print cvsdir
+print "\n\nCompiling package: "+packagename
+print "Compilation directory: "+currdir
+print "Source directory: "+cvsdir
+print "\n"
+
+doAll(packagename, currdir, cvsdir)
+
+#if config.RunCVSCheckOut:
+#    runCVSCheckOut(cvsdir, packagename)
+#if config.RunConfigure:
+#    runAutoConf(cvsdir+"/"+packagename)
+#    runConfigure(currdir, packagename, config.installDir)
+#countDirs(cvsdir+"/"+packagename)
+#if config.noOptimizations:
+#    runRemoveO2(currdir)
 #runCompile(currdir);
-runCompileThread(currdir)
+#runCompileThread(currdir)
 
 xmessline = "xmessage -buttons ThatsAll:0,Install:1 "
 xmessline = xmessline + "\"Compilation of " + packagename + " terminated\""
