@@ -69,7 +69,7 @@ With arg, to it arg times."
                c-basic-offset 4
                c-access-key "\\<\\(signals\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
                c-hanging-comment-ender-p nil
-               c-offsets-alist (append '((case-label   . 0)
+               c-offsets-alist (append '((case-label   . 4)
                                          (access-label . -)
                                          (label        . 0)
                                          (statement-cont . c-lineup-math)
