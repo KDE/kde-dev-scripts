@@ -636,11 +636,11 @@ for module in $modules; do
   #
   if [ ! -e "Makefile.in" ]; then
     if [ $critical -eq 1 ]; then
-      echo "ERROR: Please execute '$MAKE -f Makefile.cvs' first for this module!"
+      echo "ERROR: Please execute '$MAKE -f Makefile.cvs' first for module $module!"
       exit $err_no_makefile_in
     else
-      echo "WARNING: '$MAKE -f Makefile.cvs' seems not to be executed for this"
-      echo "WARNING: module, skipping compilation."
+      echo "WARNING: '$MAKE -f Makefile.cvs' seems not to be executed for"
+      echo "WARNING: module $module, skipping compilation."
       continue
     fi
   fi
