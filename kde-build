@@ -124,7 +124,7 @@ module_variable() {
   varname="$1_"`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`; # e.g. $1_ARTS etc.
   varvalue=`eval echo '$'$varname`
   if [ -n "$varvalue" ]; then
-    eval "$1=$varvalue"
+    eval "$1=\"$varvalue\""
   fi
 }
 
@@ -481,7 +481,7 @@ if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
   fi
 fi
 
-BASE_CONFIGUREFLAGS=$CONFIGUREFLAGS
+BASE_CONFIGUREFLAGS="$CONFIGUREFLAGS"
 BASE_BRANCH=$BRANCH
 
 for module in $modules; do
