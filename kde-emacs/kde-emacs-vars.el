@@ -73,7 +73,16 @@
   :version "0.1"
   :type 'string)
 
-(defvar magic-keys-mode nil
+(defcustom magic-keys-mode nil
   "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate...")
+
+(defcustom kde-c++-style "kde-c++"
+  "Set this variable to the CC Mode style you would like loaded when you open a C++ KDE source code file...")
+
+(defcustom kde-c-style "kde-c"
+  "Set this variable to the CC Mode style you would like loaded when you open a C KDE source code file...")
+
+(defcustom kde-use-pc-select t
+  "Set this to nil if you really hate PC Select Mode...")
 
 (provide 'kde-emacs-vars)

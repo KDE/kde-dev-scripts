@@ -96,11 +96,13 @@ return (\"test.cpp\" t)."
 at a first non-blank line"
   (let* ((start (point-at-bol))
 	 (end (point-at-eol))
-	 (mstring (buffer-substring start end)))
+	 (mstring (buffer-substring start end))
+	 (ret 0))
     (while (or 
 	    (string-match "^[ \t\r\n]+$" mstring)
-	    (string= mstring ""))
-	(forward-line -1)
+	    (and (string= mstring "")
+		 (= ret 0)))
+        (setq ret (forward-line -1))	; if ret != 0, we stop, since we're at the first line...
 	(setq start (point-at-bol)
 	      end   (point-at-eol))
 	(setq mstring (buffer-substring start end))

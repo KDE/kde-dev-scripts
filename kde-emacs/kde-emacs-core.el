@@ -103,48 +103,37 @@ With arg, do it arg times."
 				     (append keywords old))))))
   )
 
+(c-add-style "kde-c" '("stroustrup"
+		       (c-basic-offset . 4)
+		       (c-offsets-alist
+			(case-label . 4)
+			(access-label . -)
+			(label . 0)
+			(statement-cont . c-lineup-math)
+			)))
+
+;  ( we use Backquote ( '`' ) instead of "'" because we want
+;    kde-access-labels to be evaluated... )
+(c-add-style "kde-c++" `("kde-c"
+  ;;FIXME: 1) fume functions not available on GNU/Emacs
+  ;;       2) insert-tab-mode no longer present (free variable)
+  ;;       3) c-hangin-commment-under-p no longer present (free variable)
+			 (c-tab-always-indent . nil)
+					; (insert-tab-mode nil)
+			 (indent-tabs-mode . nil)
+					; (fume-auto-rescan-buffer-p nil)
+			 (c-access-key . ,(eval kde-access-labels))
+			 (c-opt-access-key . ,(eval kde-access-labels))
+					; (c-hanging-comment-under-p nil)
+			 (c-offsets-alist (case-label . 0))
+			 ))
+		    
 ;; KDE C++ mode
 ;; Not a "(setq c++-mode-hook ..." because this way we would
 ;; prune all other hooks!
 (defun kde-c++-mode-hook ()
   (font-lock-mode)
-  (c-set-style "stroustrup")
-  ;;FIXME: 1) fume functions not available on GNU/Emacs
-  ;;       2) insert-tab-mode no longer present (free variable)
-  ;;       3) c-hangin-commment-under-p no longer present (free variable)
-  (setq 
-        c-tab-always-indent nil
-   ;;	insert-tab-mode nil
-        indent-tabs-mode nil
-	;;fume-auto-rescan-buffer-p nil
-	c-basic-offset 4
-	c-access-key kde-access-labels
-	c-opt-access-key kde-access-labels
-	;;c-hanging-comment-under-p nil
-	c-offsets-alist (append '((case-label   . 0)
-				  (access-label . -)
-				  (label        . 0)
-				  (statement-cont . c-lineup-math)
-				  ) c-offsets-alist))
-  (cond ((string-match "^\\(.*/qt/src\\)/.*/" buffer-file-truename)
-	 (progn
-	   (make-local-variable 'compile-command)
-	   (setq compile-command
-		 (concat "make -k -j 3 -C "
-			 (substring buffer-file-truename
-				    (match-beginning 1) (match-end 1))
-			 " GNUmakefile.debug && make -k -j 3 -C "
-			 (substring buffer-file-truename
-				    (match-beginning 1) (match-end 1))
-			 " -f GNUmakefile.debug"))))
-	((string-match "^\\\(.*/2x/src\\\)/.*/" buffer-file-truename)
-	 (progn
-	   (make-local-variable 'compile-command)
-	   (setq compile-command
-		 (concat "make -k -C "
-			 (substring buffer-file-truename
-				    (match-beginning 1)
-				    (match-end 1)))))))
+  (c-set-style kde-c++-style)
   (define-key c++-mode-map "\C-m" 'newline-and-indent)
   (when (or
 	 (eq kde-tab-behavior 'default)
@@ -171,15 +160,7 @@ With arg, do it arg times."
 
 (defun kde-c-mode-hook ()
   (font-lock-mode)
-  (setq 
-   ;;   c-tab-always-indent nil
-	c-basic-offset 4
-	c-offsets-alist (append '((case-label   . 4)
-				  (access-label . -)
-				  (label        . 0)
-				  (statement-cont . c-lineup-math)
-				  ) c-offsets-alist)))
-
+  (c-set-style kde-c-style))
 
 ;; NOTE : This is a completely new c-guess-basic-syntax, it's faster, 
 ;;        better, meaner, harder, covers more cases, more c++ syntax,

@@ -81,9 +81,9 @@
 
 ;; FIXME: remember to get these working on Gnu/Emacs (Zack)
 (when (eq kde-emacs-type 'xemacs)
-  (define-key global-map [(f8)] 'function-menu)
-  (define-key global-map [(f3)] 'fume-list-functions)
-  (define-key global-map [(shift f3)] 'fume-prompt-function-goto)
+  (define-key c++-mode-map [(f8)] 'function-menu)
+  (define-key c++-mode-map [(f3)] 'fume-list-functions)
+  (define-key c++-mode-map [(shift f3)] 'fume-prompt-function-goto)
   )
 
 (define-key global-map [(shift button3)] 'mouse-function-menu)
@@ -92,14 +92,14 @@
 (define-key global-map [(f5)] 'makeinstall)
 (define-key global-map [(shift f5)] 'makeinstallexec)
 (define-key global-map [(shift f6)] 'makethisfile)
-(define-key global-map [(f6)] 'kde-switch-cpp-h)
-(define-key global-map [(f7)] 'switch-to-function-def)
-(define-key global-map [(f9)] 'agulbra-make-member)
+(define-key c++-mode-map [(f6)] 'kde-switch-cpp-h)
+(define-key c++-mode-map [(f7)] 'switch-to-function-def)
+(define-key c++-mode-map [(f9)] 'agulbra-make-member)
 
 ; kde-emacs-headers:
-(define-key global-map [(f10)] 'kdab-insert-header)
-(define-key global-map [(shift f10)] 'kdab-lookup-qt-documentation)
-(define-key global-map [(control meta d)] 'insert-kdDebug)
+(define-key c++-mode-map [(f10)] 'kdab-insert-header)
+(define-key c++-mode-map [(shift f10)] 'kdab-lookup-qt-documentation)
+(define-key c++-mode-map [(control meta d)] 'insert-kdDebug)
 
 ; Standard Qt/KDE shortcuts: Ctrl+Backspace, Ctrl+Delete
 (define-key global-map [(control backspace)] 'backward-kill-word)
@@ -112,11 +112,11 @@
 ; kde-emacs-semantic :
 ; no binding for kde-license-insert; call it via M-x
 (when (featurep 'semantic)
-  (define-key global-map [(control c)(control k)(d)] 'kde-doc-function-insert)
-  (define-key global-map [(control c)(control k)(m)] 'kde-doc-multiline-insert)
-  (define-key global-map [(control c)(control k)(o)] 'kde-doc-oneliner-insert)
-  (define-key global-map [(control c)(control k)(e)] 'kde-function-expand-at-point)
-  (define-key global-map [(control c)(control k)(s)] 'kde-create-skeletons))
+  (define-key c++-mode-map [(control c)(control k)(d)] 'kde-doc-function-insert)
+  (define-key c++-mode-map [(control c)(control k)(m)] 'kde-doc-multiline-insert)
+  (define-key c++-mode-map [(control c)(control k)(o)] 'kde-doc-oneliner-insert)
+  (define-key c++-mode-map [(control c)(control k)(e)] 'kde-function-expand-at-point)
+  (define-key c++-mode-map [(control c)(control k)(s)] 'kde-create-skeletons))
 
 (modify-frame-parameters (selected-frame) '((menu-bar-lines . 2)))
 (define-key c++-mode-map [menu-bar KDE]

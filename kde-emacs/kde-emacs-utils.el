@@ -399,10 +399,11 @@
   )
 
 ;; pc-like textmarking
-(load "pc-select")
-(if (eq kde-emacs-type 'xemacs)
-    (funcall 'pc-select-mode)
-  (funcall 'pc-selection-mode))
+(when kde-use-pc-select
+  (load "pc-select")
+  (if (eq kde-emacs-type 'xemacs)
+      (funcall 'pc-select-mode)
+    (funcall 'pc-selection-mode)))
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
