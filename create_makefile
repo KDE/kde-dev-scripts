@@ -45,6 +45,9 @@ else
     relpath="$relpath/Makefile"
   fi
 
+  # Strip leading ./, otherwise config.status chokes
+  relpath=`echo "$relpath" | sed -e 's,^\./,,'`
+
   # Go up to toplevel dir
   while test ! -f config.status; do
     relpath="`basename $PWD`/$relpath"
