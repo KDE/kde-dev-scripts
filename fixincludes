@@ -231,7 +231,6 @@ sub remove_include ($$$)
   }
 
   # now we have the fixed contents in @contents, although in wrong order
-  # check if the file was already modified, and we didn't yet warn about it
   open(O, "> $srcfile") || die "couldn't open '$srcfile' for writing\n";
   print O reverse @contents;
   close (O);
@@ -390,10 +389,11 @@ sub fix_unnecessary($)
   my $makecmd = "make";
   $makecmd = "makeobj" if (defined $objreplacement);
   my $output = `$makecmd $blanksrc.lo 2>&1`;
-  $objextension = ".lo" if ( 0 == $?);
+  $objextension = ".lo" if ( 0 == ($? >> 8));
   if($objextension eq "BUG") {
+    print "failed with .lo... \n";
     $output = `$makecmd $blanksrc.o 2>&1`;
-    $objextension = ".o" if ( 0 == $?);
+    $objextension = ".o" if ( 0 == ($? >> 8));
   }
   if($objextension eq "BUG") {
     warn "can't figure out right compile command for $srcfile :-(\n??? unused, or didn't compile in the first place?\n";
@@ -411,7 +411,6 @@ sub fix_unnecessary($)
     # if it continues to compile
     next if( $include eq "kdatastream.h");
     
-    chdir($origdir);
     chdir($srcdir);
 
     my $localbackup = $srcfile . "#fixincludes";
@@ -423,12 +422,10 @@ sub fix_unnecessary($)
 
     # check if it still compiles
     if($verbose) {
-      chdir($origdir);
       chdir($builddir);
       unlink "$blanksrc$objextension";
       `$makecmd $blanksrc$objextension 2>&1`;
-      die "unexpected error $output\nexitcode=$?" if($?);
-      chdir($origdir);
+      die "unexpected error $output\nexitcode=($? >> 8)" if($? >> 8);
       chdir($srcdir);
     }
 
@@ -436,15 +433,14 @@ sub fix_unnecessary($)
     print "trying without $include: ";
     &remove_include($srcfile, $include, 1);
     
-    chdir($origdir);
     chdir($builddir);
 
     # try if it compiles
     unlink "$blanksrc$objextension";
-    `$makecmd $blanksrc$objextension 2>&1`;
-    my $retcode = $?;
+    $output=`$makecmd $blanksrc$objextension 2>&1`;
+    my $retcode = ($? >> 8);
+    print "retcode=$retcode\n$output" if ($verbose);
 
-    chdir($origdir);
     chdir($srcdir);
     
     if($retcode == 0) {
@@ -499,7 +495,8 @@ foreach $dir(@dirlist) {
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
     `cvscheck | grep $file | grep '^[MmC]'`;
-    $file_was_modified = 1 - $?; # $?=0 if modified, $?=1 if not
+    $file_was_modified = 1 - ($? >> 8); # $?=0 if modified, $?=1 if not
+    print "$file was modified $file_was_modified\n" if ($file_was_modified && $verbose);
     &fix_compat_includes($file);
     &fix_duplicates($file);
     if ($experimental) {
