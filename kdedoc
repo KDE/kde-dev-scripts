@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 # Run from command line, to open a kde help page in kfm/konqueror
 # Argument : The classname (case sensitive !).
 
