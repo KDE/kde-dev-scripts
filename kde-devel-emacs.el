@@ -173,10 +173,12 @@ With arg, to it arg times."
                   (setq function (buffer-substring start (point))))
              (re-search-forward "(" nil t))))
     (and (stringp function)
-         (progn
+         (progn ;; get rid of virtual, static, multiple spaces, default values.
            (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
                 (setq function (replace-match " " t t function)))
            (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
+                (setq function (replace-match "" t t function)))
+           (and (string-match "^\\(static\\>\\)?[ \t]*" function)
                 (setq function (replace-match "" t t function)))
            (while (string-match "  +" function)
              (setq function (replace-match " " t t function)))
