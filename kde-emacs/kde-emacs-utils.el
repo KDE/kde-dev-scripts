@@ -489,7 +489,7 @@
 
 (defun kde-emacs-year-range-contains-year (ranges year)
   "checks whether year is in ranges.. ( ranges is a list as \
-   my-cpp-parse-copyright-years returns.. "
+   kde-emacs-year-range-parse-years-string returns.. "
   (let ((ret))
     (dolist (range ranges ret)
       (when (and (>= year (car range)) (<= year (cdr range)))
@@ -562,7 +562,7 @@
       (if (re-search-forward (concat "Copyright ([Cc]) \\([0-9 ,-]*\\) " kde-full-name) nil t)
 	  (progn
 	    (beginning-of-line)
-	    (let ((years (kde-emacs-year-range-cleanup (my-cpp-parse-copyright-years (match-string 1))))
+	    (let ((years (kde-emacs-year-range-cleanup (kde-emacs-year-range-parse-years-string (match-string 1))))
 		  (new-copyright-string "Copyright (C) ")
 		  (this-year (string-to-int (format-time-string "%Y"))))
 	      (when (not (kde-emacs-year-range-contains-year years this-year))
