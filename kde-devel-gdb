@@ -16,4 +16,12 @@ define printqfont
        printqstring ($arg0).d->req.family
 end
 
+# Prints the contents of a QColor
+define printqcolor
+  printf "(%d,%d,%d)\n", ($arg0).red(), ($arg0).green(), ($arg0).blue()
+end
+document printqcolor
+  Prints a QColor as (R,G,B).
+  Usage: 'qcolor <QColor col>
+end
 
