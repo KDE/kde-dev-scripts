@@ -1,27 +1,7 @@
 #! /usr/bin/perl
 
-###########################################################################################
-# 2004-05-08: Changes by Richard Evans <rich@ridas.com>
-#
-# Add getopt support, tag groups, make code (hopefully) more
-# idiomatic. If anything is broken here, you know who to blame!
-#
-# 2004-05-10: Richard Evans <rich@ridas.com>
-#
-# Change tag_group to tag-group.
-# Rename tag group kdesdk to default.
-# For empty messages, skip output and write a comment.
-#
-# 2004-05-13: Richard Evans <rich@ridas.com>
-#
-# Relaxed error handling which was breaking stuff in kdeedu.
-# Now warns instead of dies when:
-#
-# 1) Invalid flags are specified.
-# 2) No filenames are specified.
-# 3) Files fail to open.
-#
-# Also removed "\n" from warning/errors.
+### TODO: other copyrights, license?
+# Copyright (c) 2004 Richard Evans <rich@ridas.com>
 
 sub usage
 {
