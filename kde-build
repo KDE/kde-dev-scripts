@@ -377,6 +377,10 @@ for module in $modules; do
         cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
     else
         echo -n "Updating module $module..."
+        # Hack for the kdemultimedia/noatun/noatun problem
+        if test "x$module" = xkdemultimedia -a "x$KDEBUILDDIR" = x -a ! -d noatun/noatun; then
+            rm -f noatun/noatun
+        fi
         cmd_update_raw="$cmd_update"
     fi
 
@@ -401,6 +405,7 @@ for module in $modules; do
           check_admin
           check_libltdl
           cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
+          test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
           if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
               export UNSERMAKE=$USE_UNSERMAKE
           else
