@@ -39,11 +39,11 @@ HOMEDIR=""
 COMPRESSLOGS="yes"
 
 # Add modules you want to get compiled to this space-seperated list. Please
-# note that the modules kde-qt-addon, kdesuppor, kdelibs, and kdebase
-# (if you want a KDE2 desktop and not just develope applications for it)
-# must be compiled in exactly that order. Any other modules are optional.
+# note that the modules kdesupport, kdelibs, and kdebase (if you want a
+# KDE 2 desktop without any extra programs for it) must be compiled in
+# exactly that order. Any other modules are optional.
 #
-KDEMODULES="kde-qt-addon kdesupport kdelibs kdebase"
+KDEMODULES="kdesupport kdelibs kdebase"
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
