@@ -135,7 +135,9 @@ endfunction
 function CreateChangeLogEntry()
     let currentBuffer = expand( "%" )
 
-    if exists( "$EMAIL" )
+    if exists( "g:email" )
+        let mail = g:email
+    elseif exists( "$EMAIL" )
         let mail = $EMAIL
     else
         let mail = inputdialog( "Enter Name/Email for Changelog entry: " ) 
@@ -143,6 +145,7 @@ function CreateChangeLogEntry()
 	    echo "Aborted ChangeLog edit..."
 	    return
 	endif
+	let g:email = mail
 	" ### emacs is more clever by storing that information persistently
 	" in .emacs 
     endif
