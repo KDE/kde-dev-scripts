@@ -79,7 +79,9 @@ ACCOUNT="anonymous"
 
 # Do you want any special branch? If so, specify its tag here e.g.
 # KDE_2_2_BRANCH  or KDE_3_0_ALPHA_1. If you want the
-# plain HEAD branch, leave this empty.
+# checked out branch, leave this empty. Use "HEAD" if you want
+# the development branch for sure (leaving it empty will simply update
+# whatever is there)
 #
 BRANCH=""
 

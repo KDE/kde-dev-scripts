@@ -314,8 +314,10 @@ if test "x$CVSCLIENT" = xcvs; then
   cmd_update="cvs up"
   if test "x$BRANCH" != x; then
     cmd_update="$cmd_update -dPr $BRANCH"
-  else
+  elseif test $BRANCH = HEAD; then
     cmd_update="$cmd_update -dPA"
+  else
+    cmd_update="$cmd_update -dP"
   fi
   if test "x$CVSROOT" = x; then
     if test "x$ACCOUNT" = x; then
