@@ -49,6 +49,9 @@ vmap ,u :s,^//X ,,<CR>
 " Insert an include guard based on the file name on ,i
 nmap ,i :call IncludeGuard()<CR>o
 
+" Insert simple debug statements into each method
+nmap ,d :call InsertMethodTracer()<CR>
+
 " Expand #i to #include <.h> or #include ".h". The latter is chosen
 " if the character typed after #i is a dquote
 " If the character is > #include <> is inserted (standard C++ headers w/o .h)
@@ -207,6 +210,10 @@ function! AddQtSyntax()
 		hi def link kdeKeywords         Statement
 		hi def link kdeMacros           Type
 	endif
+endfunction
+
+function! InsertMethodTracer()
+	:normal [[kf(yBjokdDebug() << ""()" << endl;
 endfunction
 
 autocmd Syntax * call AddQtSyntax()
