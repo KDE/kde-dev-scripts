@@ -20,7 +20,7 @@ while (<>)
       chop;
       $oneline .= $_;
     }
-  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ )
+  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/)
     {
       $insignature = 1;
       $statement = $_;
@@ -57,11 +57,11 @@ while (<>)
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
 	      ## int, long ?
-	      elsif ( m/int\s+([a-zA-Z0-9_]+)/ || m/long\s*([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/^int\s+([a-zA-Z0-9_]+)/ || m/^long\s*([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
 	      ## bool
-	      elsif ( m/bool\s+([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/^bool\s+([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << (" . $1 . " ? \"true\" : \"false\" )";
 	      }
 	      ## QString and friends
