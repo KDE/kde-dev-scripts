@@ -246,52 +246,74 @@
 ; the given class.
 ;--------------------------------------------------------------------------------
 (defun kdab-insert-header ( prefix )
+  "Insert include file for class at point"
   (interactive "P")
   (save-excursion
     (let* ((word-at-point (if prefix
                               (read-from-minibuffer "Class: ")
-                            (current-word)))
-           (word (downcase word-at-point))
+                            (current-word))))
+      (kdab-insert-header-non-interactive word-at-point))))
+
+;--------------------------------------------------------------------------------
+; insert include file for `word-with-case' non-interactively.
+; for an interactive version see kdab-insert-header
+;--------------------------------------------------------------------------------
+(defun kdab-insert-header-non-interactive (word-with-case)
+  (save-excursion
+    (let* ((word (downcase word-with-case))
            (special-header (cond
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
                     ((string-match "^qxml" word) "qxml.h")
                     (t (concat word ".h"))))
-           header include-file)
+           header is-local)
 
       
       ;; decide on the header file.
-      (if (file-exists-p (concat word-at-point ".h"))
+      (if (file-exists-p (concat word-with-case ".h"))
           (progn ; file exists in given case in pwd.
-            (setq header (concat word-at-point ".h"))
-            (setq include-file (concat "#include \"" header "\"")))
+            (setq header (concat word-with-case ".h"))
+            (setq is-local 't))
         (if  (file-exists-p (concat word ".h")) ; file exists in lowercase in pwd
             (progn
               (setq header (concat word ".h"))
-              (setq include-file (concat "#include \"" header "\"")))
+              (setq is-local 't))
           (progn ; header in <..> path
             (setq header special-header)
-            (setq include-file (concat "#include <" header ">")))))
+            (setq is-local nil))))
 
+      (kdab-insert-include-file header is-local t))))
 
-      (beginning-of-buffer)
-      (if (re-search-forward (concat "^ *// *\\(#include *[<\"][ \t]*" header "[ \t]*[>\"]\\)") nil t)
+;--------------------------------------------------------------------------------
+; Insert header file for header. If is-local insert it with "" 
+; otherwise insert it with <>
+;--------------------------------------------------------------------------------
+(defun kdab-insert-include-file (header is-local show-message)
+  (let ((include-file (if is-local
+                          (concat "#include \"" header "\"")
+                        (concat "#include <" header ">"))))
+
+    (beginning-of-buffer)
+    (if (re-search-forward (concat "^ *// *\\(#include *[<\"][ \t]*" header "[ \t]*[>\"]\\)") nil t)
+        (progn
+          (replace-match "\\1")
+          (when show-message
+            (message (concat "commented in #include for " header))))
+      
+      (if (not (re-search-forward (concat "#include *[\"<][ \t]*" header "[ \t]*[\">]") nil t))
           (progn
-            (replace-match "\\1")
-            (message (concat "commented in #include for " header)))
-
-        (if (not (re-search-forward (concat "#include *[\"<][ \t]*" header "[ \t]*[\">]") nil t))
-            (progn
                                         ; No include existed
-              (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-              (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
-                  (beginning-of-buffer)
-                (progn (end-of-line) (forward-char 1)))
-              
-              ;; Now insert the header
-              (insert (concat include-file "\n"))
-              (message (concat "inserted " include-file)))
-          (message (concat "header file \"" header "\" is already included")))))))
+            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
+            (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
+                (beginning-of-buffer)
+              (progn (end-of-line) (forward-char 1)))
+            
+            ;; Now insert the header
+            (insert (concat include-file "\n"))
+            (when show-message
+              (message (concat "inserted " include-file))))
+        (when show-message
+              (message (concat "header file \"" header "\" is already included")))))))
 
 
 

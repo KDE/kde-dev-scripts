@@ -195,13 +195,8 @@
 	   (save-excursion
 	     (and (string-match ".*/" file)
 		  (setq file (replace-match "" t nil file)))
-	     (or (re-search-backward
-		  (concat "^#include *[<\"]" file "[>\"]$") nil t)
-		 (progn
-		   (goto-char (point-min))
-		   (re-search-forward "^$" nil t)
-		   (insert "\n#include \"" file "\"\n"))))
-	   ))
+             (if (functionp 'kdab-insert-include-file)
+                 (kdab-insert-include-file file 't nil)))))
   (when (featurep 'fume-rescan-buffer)
     (fume-rescan-buffer))
   )
