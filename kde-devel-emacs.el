@@ -9,7 +9,7 @@
 
 ; Tip: also add (gnuserv-start), to be able to use gnuclient to open new files from a shell
 
-; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
+; Add (setq magic-keys-mode t) to your .xemacs/init.el or ~/.emacs (before loading this file)
 ; to enable the magic keys in C++ mode (auto-insertion of spaces and newlines).
 
 ; See the end of this file for the list of key bindings and for customizing them
@@ -71,7 +71,7 @@ With arg, to it arg times."
 (setq c++-mode-hook
       (lambda ()
          (font-lock-mode)
-         (c-set-style "bsd")
+         (c-set-style "stroustrup")
          (setq c-tab-always-indent nil
 	       insert-tab-mode nil
 	       indent-tabs-mode nil
@@ -1219,7 +1219,6 @@ With arg, to it arg times."
 ;; Indentation: 4 characters, no tabs.
 (setq c-basic-offset 4)
 (setq insert-tab-mode nil)
-(c-set-style "stroustrup")
 (setq-default require-final-newline t)
 (setq-default next-line-add-newlines nil)
 
