@@ -4,15 +4,28 @@
 # and writes on standard output (usually redirected to rc.cpp)
 # the equivalent i18n() calls so that xgettext can parse them.
 
+# known flags:
+# --tag=name : extract also the tag name
+# --contect=name : give all i18n calls a context name: i18n( "name",...)
+
 $filename = "";
 @filenames = ();
 
-sub writeoutstring($)
+sub writeoutstring
 {
-   print STDOUT "i18n(\"@_[0]\"); // $filename \n";
+   print STDOUT "i18n(\"";
+   if (@_[0])
+   {
+      # We have a I18N context
+      print STDOUT @_[0];
+      print STDOUT "\",\"";
+   }
+   print STDOUT @_[1];
+   print STDOUT "\"); // $filename \n";
 }
 
 $extratags = "";
+$context = ""; # I18N context
 
 ARGUMENTS: while (defined ($ARGV[0]))
 {
@@ -21,6 +34,11 @@ ARGUMENTS: while (defined ($ARGV[0]))
    if (/^--tag=(\w+)/) # --tag=name
    {
         $extratags .= "|" . $1;
+        next ARGUMENTS;
+   }
+   elsif (/^--context=(\w+)/) # --context=name
+   {
+        $context = $1;
         next ARGUMENTS;
    }
 
@@ -75,7 +93,7 @@ READING: while ( <FILE> ) {
      $text =~ s/&amp;/&/g; 
      $text =~ s/\\([^n])/\\\\$1/g;
      $text =~ s/\"/\\\"/g;
-     writeoutstring($text); 
+     writeoutstring($context, $text); 
      $string =~ s/^.*<\/$textstring//;
      $intext = 0;
      # Text can be multiline in .ui files (possibly), but we warn about it in XMLGUI .rc files.
