@@ -20,7 +20,7 @@ files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$`
 toremove="rm -rf";
 for i in $files; do if test -d $i; then
   # List their contents and filter out generated files
-  realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
+  realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
   if [ -z "$realfiles" ]; then
     toremove="$toremove $i"
   fi
