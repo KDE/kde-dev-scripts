@@ -7,5 +7,5 @@
 # Stupid, but handy.
 # David Faure <faure@kde.org>
 #
-find $1 -name Makefile.am | sed -e 's/\.am//' | while read a; do create_makefile $a ; done
+find $1 -type d | grep -v '\.libs' | grep -v '\.deps' | grep -v CVS | while read a; do create_makefile $a ; done
 
