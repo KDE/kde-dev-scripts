@@ -163,17 +163,8 @@
                    (error (concat "Can't parse declaration ``"
                                   function "'' in class ``" class
                                   "'', aborting"))))
-           (stringp insertion-string))
-         (string-match "\\.h$" file)
-         (setq f (replace-match ".cpp" t t file))
-	 (if (file-readable-p f )
-	     t
-           (progn
-	     (string-match "\\.h$" file)
-	     (setq f (replace-match (concat "." kde-prefered-source-extension) t t file))
-	     t
-	     )))
-         (find-file f)
+           (stringp insertion-string)))
+	 (kde-switch-cpp-h)
          (progn
            (goto-char (point-max))
 	   (kde-comments-begin)
