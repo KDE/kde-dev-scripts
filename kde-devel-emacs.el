@@ -27,7 +27,7 @@
     (c-indent-command))))
 
 (defun agulbra-clean-out-spaces ()
-  "Remove spaces at ends of lines and untabifies"
+  "Remove spaces at ends of lines"
   (interactive)
   (and (not buffer-read-only)
        (save-excursion
@@ -37,19 +37,20 @@
            (while (re-search-forward "[ \t]+$" nil t)
              (setq count (1+ count))
              (replace-match "" t t))
-           (untabify (point-min) (point-max))
            (set-buffer-modified-p bmp)
            (and (buffer-modified-p)
                   (basic-save-buffer))))))
 
+; the above used to contain (untabify (point-min) (point-max)) too
+
 (defun agulbra-c++-clean-out-spaces ()
-  "Remove spaces at ends of lines and untabifies, only in c++ mode"
+  "Remove spaces at ends of lines, only in c++ mode"
   (interactive)
   (and (eq major-mode 'c++-mode)
        (agulbra-clean-out-spaces)))
 
 ;(add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
-;(add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
+(add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
 
 (defun agulbra-delete-into-nomenclature (&optional arg)
   "Delete forward until the end of a nomenclature section or word.
