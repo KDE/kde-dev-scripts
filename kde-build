@@ -83,6 +83,15 @@ critical_modules="kdesupport kdelibs kdebase"
 #
 dateformat="`date +%Y%m%d`"
 
+# This method gives some kind of status message in the title bar of Konsole,
+# xterm, etc.. Thanks have to go to Malte Starostik
+# <malte.starostik@t-online.de> for the code :-)
+set_title() {
+if ([ "$TERM" = "xterm" ] || [ "$TERM" = "screen" ]) && tty -s; then
+  echo -ne "\033]0;$1\007"
+fi
+}
+
 # This function computes the time which was needed for a certain task.
 #
 compute_time() {
@@ -96,6 +105,7 @@ compute_time() {
 #
 install_module() {
   echo -n "  Installing..."
+  setTitle "Installing module $module..."
   if test "x$KDELOGDIR" != x; then
     echo "-> Installation <---------------------------------------------------------------" >> $logfile
     cmd_make_install="$cmd_make_install >> $logfile 2>&1"
@@ -162,7 +172,8 @@ else
     KDELOGDIR=""
   fi
 fi
-test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further information."
+test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further 
+information."
 if test ! -d "$KDESRCDIR"; then
   echo "ERROR: Invalid source directory specified!"; exit $err_inv_kdesrcdir
 fi
@@ -269,6 +280,7 @@ for module in $modules; do
     echo "Update for module $module skipped."
   else
     echo -n "Updating module $module..."
+    setTitle "Updating module $module..."
     if test "x$KDELOGDIR" != x; then
       echo "-> Update <---------------------------------------------------------------" >> $logfile
       cmd_update_raw="$cmd_update >> $logfile 2>&1"
@@ -338,6 +350,7 @@ for module in $KDEMODULES; do
       # Configure the module.
       #
       echo -n "  Configuring..."
+      setTitle "Configuring module $module..."
       cmd_configure="./configure --enable-debug --enable-profile --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
       if test "x$KDELOGDIR" != x; then
@@ -359,6 +372,7 @@ for module in $KDEMODULES; do
         # Compile the module.
         #
         echo -n "  Compiling..."
+        setTitle "Compiling module $module..."
         cmd_make="make"
         echo "$critical_modules" | grep -q $module || cmd_make="$cmd_make -k"
         if test "x$KDELOGDIR" != x; then
@@ -402,6 +416,8 @@ for module in $KDEMODULES; do
     fi
   fi
 done
+
+setTitle "KDE build finished."
 
 exit $err_no_error
 
@@ -481,3 +497,4 @@ Add a DIAGNOSIS section to this man page.
 Frerich Raabe <raabe@kde.org>
 
 =cut
+
