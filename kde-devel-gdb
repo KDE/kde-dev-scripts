@@ -10,6 +10,12 @@ define printqstring
        end
 end
 
+# Prints the contents of a QCString
+define printqcstring
+      p $arg0.shd.data
+      p $arg0.shd.len
+end
+
 # Prints the contents of a QFont
 define printqfont
        print *($arg0).d
