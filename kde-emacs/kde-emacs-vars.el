@@ -45,6 +45,11 @@
 (defconst kde-source-files '("cpp" "cc" "cxx" "CC" "C" "c")
   "List of source-file extensions.")
 
+; a grep in the part of kde-source I have gives: 
+; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
+(defconst kde-prefered-source-extension "cpp"
+  "Source extension which agulbra-make-member should use for creating new files.")
+
 (defconst kde-header-files '("h" "H" "hh" "hxx" "hpp")
   "List of header-file extensions.")
 

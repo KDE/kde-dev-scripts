@@ -170,7 +170,7 @@
 	     t
            (progn
 	     (string-match "\\.h$" file)
-	     (setq f (replace-match ".cc" t t file))
+	     (setq f (replace-match (concat "." kde-prefered-source-extension) t t file))
 	     t
 	     )))
          (find-file f)
