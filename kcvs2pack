@@ -132,8 +132,13 @@ sub main
 		" && cd .. && tar cf \"$packagedir\".tar \"$packagedir\""
 		|| die;
 
+	print "Working dir:", `pwd`, "\n";
 # Create tar.gz file
+
 	print "$myname: tarring... ";
+	system "tar cf \"$packagedir.tar\" \"$packagedir\"";
+
+	print "$packagedir.tar\n$myname: gzipping... ";
 	system "gzip -9 < \"$packagedir.tar\" > \"$packagedir.tar.gz\" ";
 
 	print "$packagedir.tar.gz\n$myname: bzipping... ";
