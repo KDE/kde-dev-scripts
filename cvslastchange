@@ -8,5 +8,7 @@ $version=`$cvsversion $ARGV[0]`;
 chop $version;
 if ($version=~/^(.*)\.([^.]*)$/) { $v1 = $1; $v2 = $2 }    
 $v2old = ${v2}-1;
+print "cvs -f log -N -r$v1.$v2 $ARGV[0]\n";
+system("cvs -f log -N -r$v1.$v2 $ARGV[0]");
 print "cvs -f diff -bp -u -r$v1.$v2old -r$v1.$v2 $ARGV[0]\n";
 system("cvs -f diff -bp -u -r$v1.$v2old -r$v1.$v2 $ARGV[0]");
