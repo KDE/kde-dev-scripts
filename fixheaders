@@ -68,6 +68,7 @@ $lastdir = '.';
  '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`UserIcon\' undeclared \(first use this function\)' => "kiconloader",
+ 'implicit declaration of function `int UserIcon\(...\)\'' => "kiconloader",
  '`KIcon\' undeclared \(first use this function\)' => "kiconloader",
  'invalid use of undefined type `class KIconLoader' => "kiconloader",
  'invalid use of undefined type `class KInstance' => "kinstance",
