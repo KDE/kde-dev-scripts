@@ -55,15 +55,25 @@ else
   srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
 
   (  
-    if cd $srcdir ; then 
-     /bin/sh admin/missing --run automake $relpath || exit
-     if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
-     else 
-       if test -f ../admin/am_edit; then perl ../admin/am_edit $relpath.in ; \
+    if cd $srcdir ; then
+     # Check if unsermake or automake was used to create the toplevel Makefile.in
+     # (the one in $relpath might not exist yet)
+     if test -n "`sed -n -e '1p' Makefile.in | grep unsermake`"; then
+       if test -z "$UNSERMAKE"; then
+         echo "unsermake was used to build this module, but \$UNSERMAKE isn't set!"
+	 exit 1
+       fi
+       $UNSERMAKE $relpath
+     else
+       /bin/sh admin/missing --run automake $relpath || exit
+       if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
+       else 
+         if test -f ../admin/am_edit; then perl ../admin/am_edit $relpath.in ; \
+         fi
        fi
      fi
     fi
-  )
+  ) || exit 1
   if test -f `dirname $relpath`; then 
 	rm `dirname $relpath`
   fi
