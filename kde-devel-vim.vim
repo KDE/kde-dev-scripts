@@ -51,7 +51,7 @@ inoremap <F5> <C-O>:call AddHeader()<CR>
 nmap <silent> ,h :call SwitchHeaderImpl()<CR>
 
 " Comment selected lines on ,c in visual mode
-vmap ,c :s,^,//X ,<CR>
+vmap ,c :s,^,//X ,<CR>:noh<CR>
 " Uncomment selected lines on ,u in visual mode
 vmap ,u :s,^//X ,,<CR>
 
