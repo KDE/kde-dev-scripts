@@ -10,7 +10,7 @@
 # Some modifications for i18n inclusion by Dominique Devriese <devriese@kde.org>
 # Added --no-i18n-lang and --replace-files by Michael Buesch <mbuesch@freenet.de>
 # License: GPL (http://www.gnu.org/)
-# Last modification: 2004/10/10
+# Last modification: 2004/10/13
 
 cmdline="$@"
 
@@ -412,8 +412,7 @@ if [ $doi18n = "yes" ]; then
 		
 		echo "KDE_LANG = $lang
 SUBDIRS = \$(AUTODIRS)
-POFILES = AUTO
-CLEANFILES = *.gmo" > $dest/Makefile.am
+POFILES = AUTO" > $dest/Makefile.am
 
 		subdirs="non_empty"
 	done
