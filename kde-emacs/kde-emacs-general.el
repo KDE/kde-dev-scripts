@@ -91,4 +91,43 @@ return (\"test.cpp\" t)."
            (end (progn (forward-word 1) (point))))
       (buffer-substring start end))))
 
+(defun kde-skip-blank-lines ()
+  "Skips backwards past blank lines, stopping
+at a first non-blank line"
+  (let* ((start (point-at-bol))
+	 (end (point-at-eol))
+	 (mstring (buffer-substring start end)))
+    (while (or 
+	    (string-match "^[ \t\r\n]+$" mstring)
+	    (string= mstring ""))
+	(forward-line -1)
+	(setq start (point-at-bol)
+	      end   (point-at-eol))
+	(setq mstring (buffer-substring start end))
+	)
+    ))
+
+(defun kde-comments-begin ()
+  "Skip back from current point past any preceding C-based comments at the beginning of lines.
+Presumes no \"/*\" strings are nested within multi-line comments."
+  (let ((opoint))
+    (while (progn (setq opoint (point))
+		  ;; To previous line
+		  (if (zerop (forward-line -1))
+		      (cond
+		       ;; If begins with "//" or ends with "*/", then is a
+		       ;; comment.
+		       ((looking-at "[ \t]*\\(//\\|$\\)"))
+		       ((looking-at ".*\\*/[ \t]*$")
+			(progn (end-of-line)
+			       ;; Avoid //*** single line comments here.
+			       (if (re-search-backward "\\(^\\|[^/]\\)/\\*" nil t)
+				   (progn (beginning-of-line)
+					  (looking-at "[ \t]*/\\*")))))
+		       (t nil)))))
+    (goto-char opoint)
+    ;; Skip past whitespace
+    (skip-chars-forward " \t\n\r\f")
+    (beginning-of-line)))
+
 (provide 'kde-emacs-general)

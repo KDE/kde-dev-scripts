@@ -76,6 +76,7 @@
         (function nil)
         (file (buffer-file-name))
         (insertion-string nil)
+	(msubstr nil)
         (start nil))
     (save-excursion
       (and (re-search-backward "^class[ \t]" nil t)
@@ -161,16 +162,24 @@
            (stringp insertion-string))
          (string-match "\\.h$" file)
          (setq f (replace-match ".cpp" t t file))
-         (if (file-readable-p f )
-               (message "")
+	 (if (file-readable-p f )
+	     t
            (progn
-              (string-match "\\.h$" file)
-              (setq f (replace-match ".cc" t t file))
-              ))
+	     (string-match "\\.h$" file)
+	     (setq f (replace-match ".cc" t t file))
+	     t
+	     )))
          (find-file f)
          (progn
            (goto-char (point-max))
-	   ; TODO: go up above #include "blah.moc" if there's one
+	   (kde-comments-begin)
+	   (kde-skip-blank-lines)
+	   (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
+	   (if (string-match "^#include.*moc.*" msubstr)
+	       (progn 
+		 (forward-line -1)
+		 (end-of-line)
+		 (insert "\n")))
            (insert insertion-string)
            (forward-char -3)
            (save-excursion
@@ -181,10 +190,10 @@
                  (progn
                    (goto-char (point-min))
                    (re-search-forward "^$" nil t)
-                   (insert "\n#include \"" file "\"\n")))))))
-  (fume-rescan-buffer)
+                   (insert "\n#include \"" file "\"\n"))))))
+  (when (featurep 'fume-rescan-buffer)
+    (fume-rescan-buffer))
 )
-
 
 
 ; Adds the current file to Makefile.am.
