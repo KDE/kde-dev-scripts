@@ -1,7 +1,14 @@
 #!/bin/sh
 d=`dirname $1`
 f=`basename $1`
-cat $d/CVS/Entries | grep "\/$f\/" | gawk 'BEGIN { FS = "/" } { print $3 }'
+if [ -z "$AWK" ]; then
+    if [ `uname` = "FreeBSD" ]; then
+        AWK=awk
+    else
+        AWK=gawk
+    fi
+fi
+cat $d/CVS/Entries | grep "\/$f\/" | $AWK 'BEGIN { FS = "/" } { print $3 }'
 exit 0
 
 =head1 NAME
