@@ -178,6 +178,9 @@ A few variable names are treated specially."
 	      (not (get var 'safe-local-variable))))
 	 (message (format "Ignoring %s in %s"
 			  (symbol-name var) dirvars-file)))
+	;;check whether the var should be evaluated
+	((eq var 'evaluate)
+	 (eval val))
 	;; Ordinary variable, really set it.
 	(t (make-local-variable var)
 	   (set var val))))

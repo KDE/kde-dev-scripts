@@ -28,6 +28,41 @@
       (add-hook 'find-file-hooks 'fume-add-menubar-entry))
   (require 'imenu))
 
+(defmacro c-safe-scan-lists (from count depth)
+  "Like `scan-lists' but returns nil instead of signalling errors.
+This function does not do any hidden buffer changes."
+  (if (featurep 'xemacs)
+      `(scan-lists ,from ,count ,depth nil t)
+    `(c-safe (scan-lists ,from ,count ,depth))))
+
+;; returns non-nil if the given file has a using declaration
+;; with the passed namespace
+(defun kde-file-has-using (namespace)
+  (let (found)
+    (save-excursion
+      (beginning-of-buffer)
+      (setq found (re-search-forward "^using" nil 1))
+      (if found
+	  (setq found (search-forward namespace (line-end-position) 1))
+	)
+      )
+    found)
+  )
+
+;; returns non-nill if the given file has a "namespace SomeNM" declaration
+;; where SomeNM is passed via the namespace argument
+(defun kde-file-is-in-namespace (namespace)
+  (let (found)
+    (save-excursion
+      (beginning-of-buffer)
+      (setq found (re-search-forward "^namespace" nil 1))
+      (if found
+	  (setq found (search-forward namespace (line-end-position) 1))
+	)
+      )
+    found)
+  )
+
 ; Helper function for parsing our current position in a C++ header file
 ; returns (namespace (class function)) where (a b) is a cons.
 (defun method-under-point ()
@@ -39,7 +74,7 @@
         ; Go up a level, skipping entire classes etc.
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
-	(let ((pos (scan-lists (point) -1 1 nil t)))
+	(let ((pos (c-safe-scan-lists (point) -1 1)))
         ; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
 	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
@@ -65,7 +100,7 @@
 	      (setq class (buffer-substring start (point)))))
 	    )
         ; Go up one level again
-	(let ((pos (scan-lists (point) -1 1 nil t)))
+	(let ((pos (c-safe-scan-lists (point) -1 1)))
 	  (goto-char (if pos (+ pos 1) (point-min))))
 	)))
 
@@ -171,7 +206,7 @@
         ; TODO replace fume-function-before-point, needed for emacs,
         ; and for better namespace support.
 	;(progn
-	;  (let ((pos (scan-lists (point) -1 1 nil t))) ; Go up a level
+	;  (let ((pos (kde-scan-lists (point) -1 1 nil t))) ; Go up a level
 	;    (goto-char (if pos (+ pos 1) (point-min))))
         (let ((a (fume-function-before-point)))
           (and (string-match "^\\(.*\\)::\\(.*\\)$" a)
@@ -486,25 +521,25 @@
 (defun makeclean ()
   "Executes a \"make clean\" in the current directory"
   (interactive)
-  (compile "make clean")
+  (compile (concat kde-emacs-make " clean"))
   )
 
 (defun make ()
   "Executes a \"make\" in the current directory"
   (interactive)
-  (compile "make -k")
+  (compile (concat kde-emacs-make " -k"))
   )
 
 (defun makeinstall ()
   "Executes a \"make install\" in the current directory"
   (interactive)
-  (compile "make -k install")
+  (compile (concat kde-emacs-make " -k install"))
   )
 
 (defun makeinstallexec ()
   "Executes a \"make install-exec\" in the current directory"
   (interactive)
-  (compile "make -k install-exec")
+  (compile (concat kde-emacs-make " -k install-exec"))
   )
 
 (defun makethisfile ()
@@ -513,7 +548,7 @@
   (let ((f (file-name-nondirectory (buffer-file-name))))
     (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
     (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
-    (compile (concat "make " f )))
+    (compile (concat kde-emacs-make " " f)))
   )
 
 ;; pc-like textmarking

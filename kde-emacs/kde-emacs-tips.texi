@@ -230,6 +230,13 @@ I made to a certain file?}
 @strong{A.} I wouldn't be writing this if there wouldn't - try
 @kbd{M-x highlight-changes-mode}.
 
+@sp 1
+@strong{Q.} @emph{How to get a diff between the stuff I have in my
+local buffer and the file on disk?}
+
+@strong{A.} Use ibuffer package. After @kbd{M-x ibuffer} typing
+@kbd{=} over a file will display a diff between the buffer and the
+file on the disk.
 
 @sp 1
 @strong{Q.} @emph{I want to temporarily highlight certain variable in

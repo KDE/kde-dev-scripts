@@ -83,6 +83,11 @@
   :group 'kde-devel
   :type 'boolean)
 
+(defcustom kde-emacs-make "make"
+  "Specifies the make command which KDE Emacs will use"
+  :group 'kde-devel
+  :type 'string)
+
 ;;Make styles a list of the format (radio (const kde-c++) (const kde-c) style)
 ;;and assign it to type.
 (defcustom kde-c++-style "kde-c++"
@@ -118,8 +123,6 @@ file named /home/domi/src/kdenonbeta/kig/misc/newtype.h"
 magic-keys-mode is set to true. "
   :group 'kde-devel
   :type 'string)
-
-
 
 ; a grep in the part of kde-source I have gives: 
 ; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
