@@ -115,6 +115,8 @@ sub main
 	$src =~ s/\n/ /g;
 
 	print "$myname: No. files in copy queue: ", $#fromfiles + 1,"\n";
+	print $src ;
+	print $packagedir;
 	system "cp -pRL $src \"$packagedir\"";
 
 # files to remove
@@ -136,6 +138,35 @@ sub main
 		unless $#rem < 0;
 	
 	close RM;
+
+# rename crystal icons to hicolor icons as any good 3rdparty app
+
+	open (RM, "find \"$packagedir\" -name \"hi[0-9][0-9]-*.png\" |" );
+
+	while ( <RM> ) {
+	  chop;
+	  push hicolor, $_;
+	}
+	close RM;
+
+	$hic = join( " ", @hicolor );
+
+ # We only want to rename cr icons to hi in case the developer only
+ # distributes icons in the cr icon theme.
+	if ( not -z "$hic" ) {
+
+	  open (RM, "find \"$packagedir\" -name \"cr[0-9][0-9]-*.png\" |" );
+
+	  while ( <RM> ) {
+	    chop;
+	    $newname = $_ ;
+	    $newname =~ s/cr([0-9][0-9])-([^\/]*$)/hi\1-\2/ ;
+	    print "$myname: renaming $_ to $newname\n";
+	    rename ( $_, $newname ) or die ( "Can't rename $_ to $newname: $!" );
+	  }
+
+	  close RM;
+	}
 
 # Creating a Makefile.am for the top dir
 
