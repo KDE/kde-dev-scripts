@@ -9,7 +9,7 @@
 # Heavy, heavy modifications by Jason Katz-Brown <jason@katzbrown.com>
 # Some modifications for i18n inclusion by Dominique Devriese <devriese@kde.org>
 # License: GPL (http://www.gnu.org/)
-# Last modification: 2003/1/20
+# Last modification: 2004/10/03
 
 cmdline="$@"
 
@@ -17,6 +17,8 @@ returndir=`pwd`
 override="README ChangeLog INSTALL AUTHORS AUTHOR COPYING COPYING.LIB TODO"
 remove="config.cache config.log config.status Makefile configure inst-apps CVS acinclude.m4 aclocal.m4 config.h config.h.bot config.h.in configure.files libtool stamp-h stamp-h.in stamp-h1 subdirs *.moc *.la .libs .deps .cvsignore autom4te.cache {arch} .arch-ids"
 toplevelremove="configure.in.bot"
+# whitespace seperated list of languages to never include.
+always_skip_languages="xx"
 
 test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
 
@@ -24,7 +26,7 @@ test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
 # --log has optional argument
 TEMP=`getopt \
 -o v:n:r:e:a:B:dhmbgol \
---long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,cvs-root:,debug \
+--long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,no-i18n-lang:,cvs-root:,debug \
 -n cvs2dist -- $extraoptions "$@"`
 
 if [ $? != 0 ]; then
@@ -37,6 +39,7 @@ eval set -- "$TEMP"
 log="/dev/null"
 calclog=0
 doi18n="yes"
+noi18nlang=""
 cvsroot=""
 debug=""
 
@@ -54,6 +57,7 @@ while true; do
 		--cvs-root) cvsroot="$2"; shift 2 ;;
 		-r|--required-header) requiredheader=$2; shift 2 ;;
 		--no-i18n) doi18n="no"; shift 1 ;;
+		--no-i18n-lang) noi18nlang="$2"; shift 2 ;;
 		-e|--required-header-error-message) requiredmsg=$2; shift 2 ;;
 		-m|--make-unpackaged) leavedir="non-empty"; shift 1 ;;
 		-h|--help) showhelp="non-empty"; shift 1 ;;
@@ -116,6 +120,9 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "                    (symbolic links are OK.)"
 	echo "  -B --branch <branch> use branch for i18n checkouts."
 	echo "  --no-i18n  don't try to automatically checkout the translations from cvs."
+	echo "  --no-i18n-lang <languages> exclude all languages in the given comma"
+	echo "                             seperated list. example:"
+	echo "                             --no-i18n-lang uk,de,en_GB"
 	echo "  --log=<logfile> If logfile unspecified, default file is used."
 	echo "                  (The '=' is essential and may not be ommited"
 	echo "                  when specifying the logfile.)"
@@ -296,7 +303,20 @@ if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "cvs co kde-i18n/subdirs" >> $log
     cvs -z4 -q -d "$cvsroot" co $branch -P kde-i18n/subdirs > /dev/null 2>&1
-    i18nlangs="$(cat kde-i18n/subdirs)"
+    i18nlangs_tmp="$(cat kde-i18n/subdirs)"
+    skiplist="`echo $noi18nlang | sed -e 's/,/ /g'`"
+    skiplist="$skiplist $always_skip_languages"
+    for lang in $i18nlangs_tmp; do
+        must_skip="no"
+        for skip in $skiplist; do
+            if [ "$lang" = "$skip" ]; then
+                must_skip="yes"
+            fi
+        done
+        if [ "$must_skip" = "no" ]; then
+            i18nlangs="$i18nlangs $lang"
+        fi
+    done
     echo "available languages: $i18nlangs" >> $log
     popd
 fi
