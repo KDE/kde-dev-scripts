@@ -102,7 +102,8 @@
         ; Go up a level, skipping entire classes etc.
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
-	(goto-char (or (scan-lists (point) -1 1 nil t) (buffer-end -1)))
+	(let ((pos (scan-lists (point) -1 1 nil t)))
+	  (goto-char (if pos (+ pos 1) (point-min))))
 	))
     (progn
       (and (looking-at "$")
