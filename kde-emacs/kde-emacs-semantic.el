@@ -1,6 +1,6 @@
 ;; kde-emacs-semantic.el
 ;;
-;; Copyright (C)  2002  Zack Rusin <zackrat@att.net>
+;; Copyright (C)  2002  Zack Rusin <zack@kde.org>
 ;;
 ;; This library is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU Lesser General Public
@@ -368,7 +368,7 @@ class-token has to be a token representing either a class or a struct."
     (if exists
 	(progn
 	  (find-file FILENAME)
-	  (setq tokens (senator-parse))
+	  (setq tokens (semantic-bovinate-toplevel t))
 	  (switch-to-buffer buf)
 	  tokens)
       nil)
@@ -406,7 +406,7 @@ class-token has to be a token representing either a class or a struct."
   "Creates functions stubs in the source file, for all functions
 in the current header file."
   (interactive)
-  (let* ((all-tokens (senator-parse))
+  (let* ((all-tokens (semantic-bovinate-toplevel t))
 	(filename (buffer-name))
 	(cppfile (car (kde-file-get-cpp-h)))
 	(funcs (kde-expand-tokens all-tokens)))

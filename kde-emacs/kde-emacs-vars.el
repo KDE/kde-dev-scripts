@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; kde-emacs-vars.el 							    ;;
 ;; 									    ;;
-;; Copyright (C)  2002  Zack Rusin <zackrat@att.net>			    ;;
+;; Copyright (C)  2002  Zack Rusin <zack@kde.org>			    ;;
 ;;		                                                            ;;
 ;; This program is free software; you can redistribute it and/or	    ;;
 ;; modify it under the terms of the GNU General Public License		    ;;

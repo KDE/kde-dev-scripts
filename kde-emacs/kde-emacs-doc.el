@@ -1,6 +1,6 @@
 ;; kde-emacs-doc.el
 ;;
-;; Copyright (C)  2002  Zack Rusin <zackrat@att.net>
+;; Copyright (C)  2002  Zack Rusin <zack@kde.org>
 ;;
 ;; This library is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU Lesser General Public
