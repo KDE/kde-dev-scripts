@@ -651,6 +651,13 @@ This function does not do any hidden buffer changes."
 	      (c-add-syntax 'inher-intro (c-point 'boi))
 	      (if inclass-p
 		  (c-add-class-syntax 'inclass inclass-p paren-state)))
+	     ;; CASE kde hack:
+	     ((and inclass-p
+		   c-access-key
+		   (looking-at c-access-key))
+	      (c-add-syntax 'access-label (c-point 'bonl))
+	      (c-add-class-syntax 'inclass inclass-p paren-state)
+	      )
 	     ;; CASE 5C.3: in a Java implements/extends
 	     (injava-inher
 	      (let ((where (cdr injava-inher))
@@ -857,7 +864,9 @@ This function does not do any hidden buffer changes."
 			  c-opt-access-key
 			  (not (bobp))
 			  (save-excursion
-			    (c-safe (c-backward-sexp 1) t)
+			    (c-safe (progn (c-backward-sexp 1) t))
+			    (and (looking-at "slots:")
+				 (c-backward-sexp 1))
 			    (looking-at c-opt-access-key)))
 		(c-backward-sexp 1)
 		(c-backward-syntactic-ws lim))
