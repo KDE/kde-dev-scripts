@@ -20,6 +20,18 @@ toplevelremove="configure.in.bot"
 # whitespace seperated list of languages to never include.
 always_skip_languages="xx"
 
+
+exit_cleanup()
+{
+    echo -n "Cleaning up... "
+    if [ -d $temp_dir ]; then
+        test -z "$debug" && rm -Rf $temp_dir
+    fi
+    echo "done."
+}
+
+trap "exit_cleanup; exit 1" SIGINT SIGTERM
+
 test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
 
 # getopt usage from the getopt bash example
@@ -522,9 +534,8 @@ fi
 
 test -e $filename.tar && rm -f $filename.tar
 
-echo -n "Cleaning up... "
-test -z "$debug" && rm -Rf $temp_dir
-echo "done."
+# cleanup all tempoaries
+exit_cleanup
 
 cd $returndir
 
