@@ -54,7 +54,7 @@ INSTALLFROMSCRATCH="no"
 # compilation process will try to eat up all the ressources, which speeds up
 # the overall progress but makes it a PITA to work on this box. ;)
 #
-COMPILENICE="yes"
+NICECOMPILE="yes"
 
 # Set this variable to "yes" to activate certain cheap tweaks to speed up the
 # compilation process. Those tweaks mainly consist of lowering the
