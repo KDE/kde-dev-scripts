@@ -573,6 +573,10 @@ if echo $MAKE_OPTS_COMPILE | grep TEAMBUILDER > /dev/null; then
   MAKE_OPTS_COMPILE=`echo $MAKE_OPTS_COMPILE | sed -e "s,TEAMBUILDER,$hosts,"`
 fi
 
+#Connect to the internet before we start enything
+#
+kppp_connect
+
 # Guess what? We'll finally start checking out the modules. :-)
 #
 # If we want to use unsermake, update that at the very beginning, so that
@@ -684,6 +688,10 @@ for module in $modules; do
 
   log_endsection "Updating"
 done
+
+# Now disconnect from the internet as we've vinished updating
+#
+kppp_disconnect
 
 for module in $modules; do
   module_variable CONFIGUREFLAGS
