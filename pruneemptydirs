@@ -29,7 +29,7 @@ fi; done
 if [ "$toremove" != "rm -rf" ]; then
   # Do the same in the builddir, if srcdir != builddir
   if [ -n "$OBJ_REPLACEMENT" ]; then
-    bdcmd="( cd `echo $PWD | sed -e $OBJ_REPLACEMENT` ; $toremove )"
+    bdcmd="( cd `echo $PWD | sed -e "$OBJ_REPLACEMENT"` ; $toremove )"
   fi
   # Print it or do it
   if [ $force -eq 1 ]; then
