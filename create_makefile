@@ -52,5 +52,8 @@ else
      fi
     fi
   )
+  if test -f `dirname $relpath`; then 
+	rm `dirname $relpath`
+  fi
   CONFIG_FILES=$relpath CONFIG_HEADERS= ./config.status
 fi
