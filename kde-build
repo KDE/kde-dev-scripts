@@ -498,9 +498,9 @@ for module in $modules; do
       varvalue=`eval echo '$'$varname`
       test -n "$varvalue" && configureflags="$configureflags $varvalue"
       if test -n "$KDEBUILDDIR"; then
-        cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+        cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
       else
-        cmd_configure="./configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+        cmd_configure="./configure $configureflags --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
       fi
       test "$NICECOMPILE" = yes && cmd_configure="nice $cmd_configure"
       configure_okay="$str_okay"
