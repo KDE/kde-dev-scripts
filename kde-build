@@ -159,12 +159,40 @@ check_libltdl() {
   fi
 }
 
-# Show help info
+docvsupdate=1
+dousage=0
+specifiedModules=""
+# Parse args
 #
-if test "$1" = "--help"; then
-    echo "--no-update    do not update from cvs"
-    echo "--help         this message"
-    exit $err_no_error
+while [ $# != 0 ]
+do
+  arg=$1
+  case "$arg" in
+    --help)
+        dousage=1
+        break ;;
+    --version)
+        # Show version
+        echo "$0 version 0.1"
+        exit $err_no_error ;;
+    --no-update)
+        docvsupdate=0 ;;
+    -*)
+        echo "Unhandled option $arg"
+        dousage=1
+        break ;;
+    *) 
+        specifiedModules="$specifiedModules $arg" ;;
+  esac
+  shift
+done
+
+# Show help info
+if test "$dousage" -eq 1; then
+  echo "usage: $0 [--options] [modules]"
+  echo "--no-update    do not update from cvs"
+  echo "--help         this message"
+  exit $err_no_error
 fi
 
 # Get current configuration, bail out if it couldn't be found.
@@ -181,20 +209,24 @@ if test -z "$MAKE"; then
   MAKE=make
 fi
 
-if test "x$ONLYLISTEDMODULES" = xyes; then
-   modules="$critical_modules $KDEMODULES"
+if test -n "$specifiedModules"; then
+   modules=$specifiedModules
 else
+   if test "x$ONLYLISTEDMODULES" = xyes; then
+      modules="$critical_modules $KDEMODULES"
+   else
 
-  # This generates in 'modules' a list of the modules which shall be updated.
-  #
-  potential_modules=`find $KDESRCDIR -type d -mindepth 1 \
-      -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
-  for module in $potential_modules; do
-    if test -d $KDESRCDIR/$module/CVS -a -w $KDESRCDIR/$module \
-          && !(echo $EXCLUDE | grep -q $module); then
-      modules="$modules $module"
-    fi
-  done
+     # This generates in 'modules' a list of the modules which shall be updated.
+     #
+     potential_modules=`find $KDESRCDIR -type d -mindepth 1 \
+         -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
+     for module in $potential_modules; do
+       if test -d $KDESRCDIR/$module/CVS -a -w $KDESRCDIR/$module \
+             && !(echo $EXCLUDE | grep -q $module); then
+         modules="$modules $module"
+       fi
+     done
+  fi
 fi
 
 # Various checks to ensure that the user didn't specify invalid data which
@@ -216,8 +248,7 @@ else
     KDELOGDIR=""
   fi
 fi
-test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further 
-information."
+test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further information."
 if test ! -d "$KDESRCDIR"; then
   echo "ERROR: Invalid source directory specified!"; exit $err_inv_kdesrcdir
 fi
@@ -326,18 +357,18 @@ for module in $modules; do
     echo "Update for module $module skipped."
   else
     set_title "Updating module $module..."
-    if test "$1" = "--no-update"; then
-	echo -n "Checking module $module (no cvs update)..."
-	cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
+    if test "$docvsupdate" -eq 0; then
+        echo -n "Checking module $module (no cvs update)..."
+        cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
     else
-	echo -n "Updating module $module..."
-	cmd_update_raw="$cmd_update"
+        echo -n "Updating module $module..."
+        cmd_update_raw="$cmd_update"
     fi
 
     if test "x$KDELOGDIR" != x; then
-	echo "-> Update <---------------------------------------------------------------" >> $logfile
-	cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
-	starttime=`date +%s`
+        echo "-> Update <---------------------------------------------------------------" >> $logfile
+        cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
+        starttime=`date +%s`
     fi
     
     eval ${cmd_update_raw}
@@ -356,11 +387,11 @@ for module in $modules; do
         check_libltdl
         cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
         test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
-	if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
-	    export UNSERMAKE=$USE_UNSERMAKE
-	else
-	    unset UNSERMAKE || :
-	fi
+        if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
+            export UNSERMAKE=$USE_UNSERMAKE
+        else
+            unset UNSERMAKE || :
+        fi
         if eval ${cmd_make_makefile_cvs}; then
           echo "$str_okay"
         else
@@ -379,7 +410,7 @@ for module in $modules; do
   fi
 done
 
-for module in $critical_modules $KDEMODULES; do
+for module in $modules; do
   critical=0
   for m in $critical_modules; do if test $m = $module; then critical=1; fi; done
 
@@ -481,6 +512,8 @@ for module in $critical_modules $KDEMODULES; do
           echo -e "$str_error"
           test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
           test "x$critical" = "x0" || exit $err_compile_fail
+          # Attempt to display the actual error
+          grep -B3 Error $logfile | head -2
           move_logfile
         fi
       else
