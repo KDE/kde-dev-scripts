@@ -120,7 +120,7 @@ print OUTPUT <<EOF;
       popup.style.pixelLeft = x;
       popup.style.pixelTop = y;
       popup.innerHTML = rev;
-      popup.style.visibility = "normal";
+      popup.style.visibility = "visible";
       return true;
     }
 EOF
