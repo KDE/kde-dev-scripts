@@ -137,8 +137,7 @@ while ( $exitcode != 0 && $addedone != 0 )
   foreach $message (keys %messages) {
     if ($line =~ /$message/) {
       $changes{$file} = $messages{$message};
-      fixFile($file, $messages{$message});
-      $addedone = 1;
+      $addedone = fixFile($file, $messages{$message});
     }
   }
   
@@ -175,33 +174,28 @@ sub fixFile
   
   close FILE;
   
-  my $success;
-
   if (!$lastinclude) {
     print STDERR "ERROR: no include found!\n";
-    return;
+    return 0;
   }
 
   if ($flines =~ m/#include\s*[\"<]$adding\.h[\">]\s*\n/) {
     print STDERR "ERROR: $adding.h already included!\n";
-    $success = 0;
-    return;
+    return 0;
   }
   if ($flines =~ /(\n$lastinclude)/) {
     $flines =~ s/$lastinclude/$lastinclude\n#include <$adding.h>/;
-      print STDERR "ADDED <$adding.h> after \"$lastinclude\"\n";
-    $success = 1;
+    print STDERR "ADDED <$adding.h> after \"$lastinclude\"\n";
   } else {
     print STDERR "ERROR: can't find $lastinclude in $file\n";
-    $success = 0;
+    return 0;
   }
 	    
-  return if (!$success);
-      
   # write file
       
   rename($file, "$file.old");
   open( FILE, ">$file" ) || die "Can't write to $file";
   print FILE $flines;    
   close FILE;
+  return 1;
 }
