@@ -31,6 +31,8 @@ cvslastlog      Shows the log associated with the last change on a given file.
 
 gendebug        Generate C++/Qt code for printing debug output.
 
+pruneemptydirs	Detects stale source dirs in a CVS tree
+
 ----------------
 Looking to add a script?
 
