@@ -2,6 +2,9 @@
 # tries to reduce the number of includes in KDE source files
 # (c) 2001 Dirk Mueller <mueller@kde.org>
 
+use File::Basename;
+use Cwd;
+
 # declaration of useful subroutines
 sub find_fixable_sources ($);
 sub find_removable_includes ($);
@@ -9,10 +12,33 @@ sub remove_include ($$$);
 sub replace_include ($$$);
 sub fix_duplicates($);
 sub fix_compat_includes($);
+sub fix_unnecessary($);
+sub copy_file($$);
+                    
 
 # some global variables
 $verbose = 0; # turns on debugging
-$modify =  0;  # if 1 it should try to fix the files as well
+$modify = 0;  # if 1 it should try to fix the files as well
+$experimental = 0;
+
+while (defined ($ARGV[0]))
+{
+  $_ = shift;
+  if (/^--help$|^-h$/)  {
+    print "Usage: fixincludes [--verbose | -v] [--experimental | -e ] [--modify | -m ]\n";
+    exit 0;
+  }
+  elsif (/^--verbose$|^-v$/) {
+    $verbose = 1;       # Oh is there a problem...?
+  }
+  elsif (/^--modify$|^-m$/) {
+    $modify = 1;
+  }
+  elsif (/^--experimental$|^-e$/) {
+    $modify = 1;
+    $experimental = 1;
+  }
+}
 
 $cppExt     = "(cpp|cc|cxx|C|c\\+\\+)";
 #$hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
@@ -178,8 +204,7 @@ sub remove_include ($$$)
       next;
     }
 
-    if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*/) {
-      print "HAH! found $include to remove in $srcfile!\n" if($verbose);
+    if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*$/) {
       $level = $level - 1;
       # skipping the line..
       next;
@@ -316,14 +341,131 @@ foreach $dir ( @dirlist ) {
  closedir(DIR);
 }
 
+# copies a file from src to dest, overwrites destination if exists
+sub copy_file($$)
+{
+  my $src = shift(@_);
+  my $dst = shift(@_);
+
+  open(I, "< $src") or die "copy_file: can't open $src for input\n";
+  my @fcontents = <I>;
+  close(I);
+  open(O, "> $dst") or die "copy_file: can't open $dst for output\n";
+  print O @fcontents;
+  close(O);
+}
+
+sub fix_unnecessary($)
+{
+  my $srcfile = shift @_;
+  my $srcdir = dirname($srcfile);
+  
+  my $builddir = $srcdir; # FIXME!
+
+  my @includes = &find_removable_includes($srcfile);
+
+  print "=============== $srcfile\n";
+
+  $srcfile = basename($srcfile);
+ 
+  # first figure out some details
+  my $blanksrc = $srcfile;
+  $blanksrc =~ s/(.*)\.[^\.]+/$1/;
+
+  my $origdir = cwd;
+  chdir($builddir);
+
+  my $objextension = "BUG";
+  `make $blanksrc.o`;
+  $objextension = ".o" if ( 0 == $?);
+  if($objextension eq "BUG") {
+    `make $blanksrc.lo`;
+    $objextension = ".lo" if ( 0 == $?);
+  }
+
+  die "can't figure out right compile command :-(\n" if ($objextension eq "BUG");
+
+  print "found objextension: $objextension\n" if($verbose);
+
+  # now try to drop some includes 
+  foreach $include (@includes) {
+    chdir($origdir);
+    chdir($srcdir);
+
+    my $localbackup = $srcfile . "#fixincludes";
+    
+    # preserve timestamp if possible for CVS
+    unlink $localbackup;
+    rename $srcfile, $localbackup;
+    copy_file($localbackup, $srcfile);
+
+    # check if it still compiles
+    if($verbose) {
+      chdir($origdir);
+      chdir($builddir);
+      unlink "$blanksrc$objextension";
+      my $output = `make $blanksrc$objextension &> /dev/null`;
+      my $retcode = $?; #system("make", "$blanksrc$objextension");    
+
+      die "unexpected error" if($retcode);
+    }
+
+    chdir($origdir);
+    chdir($srcdir);
+
+    # duplicates have to be nuked here , so it will be dropped maximum once
+    print "trying without $include: ";
+    &remove_include($srcfile, $include, 1);
+    
+    chdir($origdir);
+    chdir($builddir);
+
+    # try if it compiles
+    unlink "$blanksrc$objextension";
+    `make $blanksrc$objextension &> /dev/null`;
+    my $retcode = $?;
+
+    chdir($origdir);
+    chdir($srcdir);
+    
+    if($retcode == 0) {
+      # wow, it worked, lets continue!
+      print "SUCCESS!\n";
+    }
+    else {
+      # better luck next time
+      print "failed\n";
+      unlink $srcfile;
+      rename $localbackup, $srcfile;
+    }
+  }
+
+  print "\n";
+
+  chdir($origdir);
+}
+
+
 # now iterate over all subdirs
 foreach $dir(@dirlist) {
+
+  # check if this directory wants not to be fixed
+  if(open(M, "$dir/Makefile.am")) {
+    my @mcontents = grep /(\-UQT_NO_COMPAT|\-UKDE_NO_COMPAT)/, <M>;
+    close(M);
+    if ( @mcontents ) {
+      print "Skipping directory: $dir\n";
+      next;
+    }
+  }
+
   @sources = &find_fixable_sources($dir);
 
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
     &fix_compat_includes($file);
     &fix_duplicates($file);
+    &fix_unnecessary($file) if ($experimental);
 
     print "\n" if ($verbose);
   }
