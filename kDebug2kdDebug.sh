@@ -8,7 +8,7 @@
 ## Written by David Faure <faure@kde.org>, licensed under GPL.
 ## 17/03/2000
 
-find $1 -name '*[cCph]' -type f | while read file; do
+find $1 -name '*[cCph]' -type f | xargs grep -l kDebug | while read file; do
 perl -w -i -e \
 '
 $inkdebug=0;
@@ -26,7 +26,7 @@ while (<>)
 	chop;
 	$statement = $_;
     }
-    
+
     if ( $inkdebug )
     {
 	if ( /\)\s*;/ ) # look for );
@@ -110,7 +110,7 @@ while (<>)
 	}
     }
     else
-    { 
+    {
         # Normal line
 	print;
     }
