@@ -351,11 +351,12 @@ fi
 # Clean the installation directory if selected.
 #
 if [ "$INSTALLFROMSCRATCH" = yes ]; then
+  mkdir $KDEDIRS 2> /dev/null
   if [ ! -w $KDEDIRS ]; then
     echo "Enter the root password to clean the installation directory."
     echo "WARNING: All files and directories in $KDEDIRS will be deleted!"
     echo -n "Please enter root "
-    su -c "rm -rf $KDEDIRS/*"
+    eval "$cmd_sudo rm -rf $KDEDIRS/*"
   else
     rm -rf $KDEDIRS/*
   fi
