@@ -12,10 +12,19 @@ sub writeoutstring($)
    print STDOUT "i18n(\"@_[0]\"); // $filename \n";
 }
 
-while (defined ($ARGV[0]))
+$extratags = "";
+
+ARGUMENTS: while (defined ($ARGV[0]))
 {
-   $_ = shift; 
-   $filename = $_; # maybe check for options
+   $_ = shift;
+
+   if (/^--tag=(\w+)/) # --tag=name
+   {
+        $extratags .= "|" . $1;
+        next ARGUMENTS;
+   }
+
+   $filename = $_; # maybe check for more options
 
 if (! $filename) {
    print STDERR "no file to open\n";
@@ -37,8 +46,8 @@ READING: while ( <FILE> ) {
 
    $string .= "\\n" . $_;
    chomp($string);
- 
-   $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label)>';
+
+   $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label' . $extratags .')>';
 
    # The 'database' property contains strings that shouldn't be translated
    if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/ || $string=~ /<property name=\"associations\"/)) {
