@@ -70,7 +70,15 @@
     (qtabbar.h QTab)
     (qpalette.h QColorGroup)
     (qaction.h QActionGroup)
+    (qvalidator.h QIntValidator QDoubleValidator QRegExpValidator)
     (qlistbox.h QListBoxItem QListBoxText QListBoxPixmap)
+    (qstring.h QChar QCharRef QConstString)
+    (qcanvas.h QCanvasSprite QCanvasPolygonalItem QCanvasRectangle
+               QCanvasPolygon QCanvasEllipse QCanvasText QCanvasLine
+               QCanvasChunk QCanvas QCanvasItem QCanvasView QCanvasPixmap)
+    (qgl.h QGLFormat QGL QGLContext QGLWidget QGLColormap)
+    (qtable.h QTableSelection QTableItem QComboTableItem QCheckTableItem) 
+
     
     ; Qt/Embedded
     (qcopchannel_qws.h QCopChannel)
@@ -136,6 +144,11 @@
     (kapplication.h kapp)
     (klocale.h i18n i18N_NOOP)
     (kstandarddirs.h locate locateLocal)
+    (stdlib.h getenv)
+    (unistd.h unlink)
+    (iostream.h cout cerr)
+    (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
+
 
     )
     "List of special include files which do not follow the normal scheme")
@@ -232,36 +245,52 @@
 ; this is that an include line is added (if it does not already exists) for
 ; the given class.
 ;--------------------------------------------------------------------------------
-(defun kdab-insert-header ()
-  (interactive "")
+(defun kdab-insert-header ( prefix )
+  (interactive "P")
   (save-excursion
-    (let* ((word (downcase (current-word)))
-           (header (cond
+    (let* ((word-at-point (if prefix
+                              (read-from-minibuffer "Class: ")
+                            current-word)))
+           (word (downcase word-at-point))
+           (special-header (cond
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
                     ((string-match "^qxml" word) "qxml.h")
-                    (t (concat word ".h")))))
+                    (t (concat word ".h"))))
+           header include-file)
+
+      
+      ;; decide on the header file.
+      (if (file-exists-p (concat word-at-point ".h"))
+          (progn ; file exists in given case in pwd.
+            (setq header (concat word-at-point ".h"))
+            (setq include-file (concat "#include \"" header "\"")))
+        (if  (file-exists-p (concat word ".h")) ; file exists in lowercase in pwd
+            (progn
+              (setq header (concat word ".h"))
+              (setq include-file (concat "#include \"" header "\"")))
+          (progn ; header in <..> path
+            (setq header special-header)
+            (setq include-file (concat "#include <" header ">")))))
+
+
       (beginning-of-buffer)
-      (if (re-search-forward (concat "^ *// *\\(#include *[<\"]" header "[>\"]\\)") nil t)
+      (if (re-search-forward (concat "^ *// *\\(#include *[<\"][ \t]*" header "[ \t]*[>\"]\\)") nil t)
           (progn
             (replace-match "\\1")
             (message (concat "commented in #include for " header)))
 
-        (if (not (re-search-forward (concat "#include *[\"<]" header "[\">]") nil t))
+        (if (not (re-search-forward (concat "#include *[\"<][ \t]*" header "[ \t]*[\">]") nil t))
             (progn
                                         ; No include existed
               (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
               (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
                   (beginning-of-buffer)
                 (progn (end-of-line) (forward-char 1)))
-              (if (file-exists-p header)
-                  (progn 
-                                        ; See this as a local file.
-                    (insert "#include \"" header "\"\n")
-                    (message (concat "inserted " "#include \"" header "\"")))
-                (progn
-                  (insert "#include <" header ">\n")
-                  (message (concat "inserted " "#include <" header ">")))))
+              
+              ;; Now insert the header
+              (insert (concat include-file "\n"))
+              (message (concat "inserted " include-file)))
           (message (concat "header file \"" header "\" is already included")))))))
 
 
@@ -272,10 +301,11 @@
 ; result of this is that a forward declaration line is added (if it does
 ; not already exist) for the given class.
 ;----------------------------------------------------------------------------
-(defun kdab-insert-forward-decl ()
-  (interactive "")
+(defun kdab-insert-forward-decl ( prefix )
+  (interactive "P")
   (save-excursion
-    (let* ((word (current-word)))
+    (let* ((word (if prefix (read-from-minibuffer "Class: ")
+                   (current-word))))
       (beginning-of-buffer)
       (if (re-search-forward (concat "^ *// *\\(class *" word ";\\)") nil t)
           (progn
