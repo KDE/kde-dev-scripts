@@ -18,9 +18,11 @@ if $QTDIR != ''
 endif
 if $KDEDIR != ''
     let &path = &path . $KDEDIR . '/include/,'
+    let &path = &path . $KDEDIR . '/include/arts/,'
 endif
 if $KDEDIRS != ''
     let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include,', 'g' )
+    let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include/arts,', 'g' )
 endif
 set path+=,
 
@@ -219,6 +221,10 @@ function! MapIdentHeader( ident )
         return '<qapplication.h>'
 
     " KDE stuff
+    elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
+        return '<knuminput.h>'
+    elseif a:ident == 'KConfigGroup'
+        return '<kconfigbase.h>'
     elseif a:ident == 'KListViewItem'
         return '<klistview.h>'
     elseif a:ident =~ 'kd\(Debug\|Warning\|Error\|Fatal\|Backtrace\)'
@@ -231,6 +237,10 @@ function! MapIdentHeader( ident )
     elseif a:ident == 'locate' ||
           \a:ident == 'locateLocal'
         return '<kstandarddirs.h>'
+
+    " aRts stuff
+    elseif a:ident =~ '\arts_\(debug\|info\|warning\|fatal\)'
+        return '<debug.h>'
 
     " Standard Library stuff
     elseif a:ident =~ '\(std::\)\?\(cout\|cerr\|endl\)'
@@ -400,3 +410,4 @@ endfunction
 autocmd Syntax * call AddQtSyntax()
 autocmd CursorHold * call UpdateMocFiles()
 
+" vim: sw=4 sts=4 et
