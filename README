@@ -45,6 +45,11 @@ extractrc	Extract text tags from designer's UI files and XML GUI-RC files
 gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
 		extract scoped messages
 
+kde-devel-emacs.el An emacs file that contains many helpful functions and keybindings
+		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
+
+kde-devel-gdb	A gdb macro definition file, to e.g. print QStrings from gdb.
+
 ----------------
 Looking to add a script?
 
