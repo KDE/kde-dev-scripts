@@ -107,10 +107,10 @@ With arg, to it arg times."
          (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
 
          ;; keybindings for adding spaces around parenthesises
-         (define-key c++-mode-map [\(] 'insert-parens)
-         (define-key c++-mode-map [\)] 'insert-parens2)
-         (define-key c++-mode-map [,] 'insert-comma)
-         (define-key c++-mode-map [\{] 'insert-curly-brace)
+         ;(define-key c++-mode-map [\(] 'insert-parens)
+         ;(define-key c++-mode-map [\)] 'insert-parens2)
+         ;(define-key c++-mode-map [,] 'insert-comma)
+         ;(define-key c++-mode-map [\{] 'insert-curly-brace)
 ))
 
 
