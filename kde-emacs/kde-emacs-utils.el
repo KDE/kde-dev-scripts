@@ -475,7 +475,7 @@ Otherwise treat `\\' in NEWTEXT as special:
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t (self-insert-command (or arg 1)))))
 
-(defun kde-emacs-start-c++-header ()
+(defun kde-start-c++-header ()
   "Start a new C++ header by inserting include guards ( see \
    header-protection function ), inserting a license statement \
    and putting (point) at the correct position"
@@ -491,7 +491,7 @@ Otherwise treat `\\' in NEWTEXT as special:
   (insert "\n")
 )
 
-(defun kde-emacs-year-range-parse-years-string (string)
+(defun kde-year-range-parse-years-string (string)
   "parses something like \"2000, 2008-2010\" into a list of the form \
    ((2008 . 2010)(2000 . 2000))"
   (let ((pos -1)
@@ -519,16 +519,16 @@ Otherwise treat `\\' in NEWTEXT as special:
     )
   )
 
-(defun kde-emacs-year-range-contains-year (ranges year)
+(defun kde-year-range-contains-year (ranges year)
   "checks whether year is in ranges.. ( ranges is a list as \
-   kde-emacs-year-range-parse-years-string returns.. "
+   kde-year-range-parse-years-string returns.. "
   (let ((ret))
     (dolist (range ranges ret)
       (when (and (>= year (car range)) (<= year (cdr range)))
 	(setq ret t))
       )))
 
-(defun kde-emacs-year-range-to-string (ranges)
+(defun kde-year-range-to-string (ranges)
   "converts ranges to a string.."
   (let ((ret ""))
     (dolist (range ranges)
@@ -548,7 +548,7 @@ Otherwise treat `\\' in NEWTEXT as special:
   )
 
 ; merges adjacent year ranges into one..
-(defun kde-emacs-year-range-cleanup (range)
+(defun kde-year-range-cleanup (range)
   (let ((origrange range))
     (while (and range (cdr range))
       (let ((years (car range)) (nyears (cadr range)))
@@ -563,7 +563,7 @@ Otherwise treat `\\' in NEWTEXT as special:
   )
 
 ; adds year to range..
-(defun kde-emacs-year-range-add-year (range year)
+(defun kde-year-range-add-year (range year)
   (while range
     (let ((years (car range)))
       (cond
@@ -580,10 +580,10 @@ Otherwise treat `\\' in NEWTEXT as special:
       )
     (setq range (cdr range))
     )
-  (kde-emacs-year-range-cleanup range)
+  (kde-year-range-cleanup range)
   )
 
-(defun kde-emacs-add-copyright () (interactive)
+(defun kde-add-copyright () (interactive)
   "Tries to add your kde-full-name and kde-email to the Copyright \
    statements at the top of a file...  It tries to figure out \
    if it's already there, and if so, updates the line to include the \
@@ -594,13 +594,13 @@ Otherwise treat `\\' in NEWTEXT as special:
       (if (re-search-forward (concat "Copyright ([Cc]) \\([0-9 ,-]*\\) " kde-full-name) nil t)
 	  (progn
 	    (beginning-of-line)
-	    (let ((years (kde-emacs-year-range-cleanup (kde-emacs-year-range-parse-years-string (match-string 1))))
+	    (let ((years (kde-year-range-cleanup (kde-year-range-parse-years-string (match-string 1))))
 		  (new-copyright-string "Copyright (C) ")
 		  (this-year (string-to-int (format-time-string "%Y"))))
-	      (when (not (kde-emacs-year-range-contains-year years this-year))
-		(kde-emacs-year-range-add-year years this-year))
+	      (when (not (kde-year-range-contains-year years this-year))
+		(kde-year-range-add-year years this-year))
 	      (setq new-copyright-string
-		    (concat new-copyright-string (kde-emacs-year-range-to-string years)))
+		    (concat new-copyright-string (kde-year-range-to-string years)))
 					; finish new-copyright-string 
 	      (setq new-copyright-string
 		    (concat new-copyright-string "  " kde-full-name " <" kde-email ">"))
