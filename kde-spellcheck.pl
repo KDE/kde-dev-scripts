@@ -3,6 +3,16 @@
 # Check for common spelling errors.
 # Artistic License, Dirk Mueller <mueller@kde.org> 2003.
 
+# The script replaces common misspelled words with the correct words
+#
+# Use:
+# - without parameters to check the current directory
+# - with parameters to check multiple files or directories
+#
+# Note:
+# The changes are automatic and do not follow any programming language syntax
+# So be careful and check the modification before committing.
+
 use POSIX;
 use strict;
 
@@ -1221,7 +1231,25 @@ sub processDir($)
     closedir(DIR);
 }
 
-push (@dirqueue, getcwd());
+if ($#ARGV >= 0) {
+    while (defined($ARGV[0])) {
+        $_ = shift;
+        if (-d $_) {
+            push (@dirqueue, $_);
+        }
+        elsif (-f $_) {
+            print "processing file: " . $_ . "\n";
+            spell_file( $_ );
+        }
+        else {
+            print STDERR "unknown file: " . $_ . "\n";
+        }
+    }
+}
+else {
+    # No files were given on the command line, so assume current directory
+    push (@dirqueue, getcwd());
+}
 
 while($#dirqueue >= 0) {
     processDir( pop @dirqueue );
