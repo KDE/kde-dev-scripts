@@ -160,6 +160,7 @@ check_libltdl() {
 }
 
 docvsupdate=1
+domakefilecvs=1
 dousage=0
 specifiedModules=""
 # Parse args
@@ -177,6 +178,8 @@ do
         exit $err_no_error ;;
     --no-update)
         docvsupdate=0 ;;
+    --incremental) ### This is experimental, don't use
+        domakefilecvs=0 ;;
     -*)
         echo "Unhandled option $arg"
         dousage=1
@@ -371,41 +374,47 @@ for module in $modules; do
         starttime=`date +%s`
     fi
     
-    eval ${cmd_update_raw}
+    if eval ${cmd_update_raw}; then
 
-    if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
-      check_admin
-    fi
-    if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
-      cmd_make_cvs_clean="$MAKE -f admin/Makefile.common cvs-clean"
-      test "x$KDELOGDIR" != x && cmd_make_cvs_clean="$cmd_make_cvs_clean >> $logfile 2>&1"
-    fi
-    
-    if eval ${cmd_make_cvs_clean}; then
-      if test -e Makefile.cvs; then
+      if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
         check_admin
-        check_libltdl
-        cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
-        test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
-        if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
-            export UNSERMAKE=$USE_UNSERMAKE
-        else
-            unset UNSERMAKE || :
+      fi
+      if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
+        cmd_make_cvs_clean="$MAKE -f admin/Makefile.common cvs-clean"
+        test "x$KDELOGDIR" != x && cmd_make_cvs_clean="$cmd_make_cvs_clean >> $logfile 2>&1"
+      fi
+    
+      if eval ${cmd_make_cvs_clean}; then
+        if test -e Makefile.cvs; then
+          check_admin
+          check_libltdl
+          cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
+          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
+              export UNSERMAKE=$USE_UNSERMAKE
+          else
+              unset UNSERMAKE || :
+          fi
+          if test $domakefilecvs -eq 0 -a -e "Makefile.in"; then
+            cmd_make_makefile_cvs="echo Warning: no Makefile.cvs for module $module - as requested"
+          fi
+          test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
+          if eval ${cmd_make_makefile_cvs}; then
+            echo "$str_okay"
+          else
+            echo -e "$str_error"
+          fi
         fi
-        if eval ${cmd_make_makefile_cvs}; then
-          echo "$str_okay"
-        else
-          echo -e "$str_error"
-        fi
+      else
+        echo -e "$str_error"
+      fi
+      if test "x$KDELOGDIR" != x; then
+        compute_time
+        echo "--------------------------------------------------------------------------------" >> $logfile
+        echo "Time needed for updating module $module: $hours:$minutes:$seconds" >> $logfile
+        echo "" >> $logfile
       fi
     else
       echo -e "$str_error"
-    fi
-    if test "x$KDELOGDIR" != x; then
-      compute_time
-      echo "--------------------------------------------------------------------------------" >> $logfile
-      echo "Time needed for updating module $module: $hours:$minutes:$seconds" >> $logfile
-      echo "" >> $logfile
     fi
   fi
 done
