@@ -27,7 +27,7 @@ LOGDIR=$SRCDIR/log
 # script do this automatically for you, add the home directories of the users
 # whose KDE configuration should be resetted to this space seperated list.
 #
-HOMEDIR="/home/devel"
+HOMEDIR=""
 
 # Do you want the logfiles to be compressed? Set this variable to "yes" to
 # make the script compress the logfiles using bzip2 (using gzip as a
@@ -40,14 +40,14 @@ COMPRESSLOGS=yes
 # must be compiled in exactly that order. Any other modules are optional.
 #
 MODULES="kde-qt-addon kdesupport kdelibs kdebase kdegraphics kdenetwork \
-         kdesdk kdeutils kde-i18n"
+         kdesdk"
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
 # running. Set this to "no" to install the new snapshot over the previous
 # one, otherwise set it to "yes".
 #
-INSTALLFROMSCRATCH=yes
+INSTALLFROMSCRATCH=no
 
 # Do you plan to use this box otherwise while compiling? If so, you'd
 # probably set this variable to "yes". If this is set to "no", the
@@ -139,7 +139,7 @@ install_module() {
   test $LOGDIR && STARTTIME=`date +%s`
   if eval "$MAKE_INSTALL"; then
     if test $LOGDIR; then
-      compute_time()
+      compute_time
       echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
     fi
     test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
@@ -242,17 +242,17 @@ for MODULE in $MODULES; do
       # Configure the module.
       #
       echo -n "  Configuring..."
-      CONFIGURE="configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR"
+      CONFIGURE="configure --enable-debug --enable-profile --prefix=$KDE2DIR --with-qt-libs=$QTDIR"
       test "$NICECOMPILE" = yes && CONFIGURE="nice $CONFIGURE"
       CONFIGURE_LOG="$LOGDIR/$MODULE-configure-$DATE"
       if test $LOGDIR; then
         CONFIGURE="$CONFIGURE > $CONFIGURE_LOG 2>&1"
-        STARTTIME=$(date +%s)
+        STARTTIME=`date +%s`
       fi
 
       if eval "$CONFIGURE"; then
         if test $LOGDIR; then
-          compute_time()
+          compute_time
           echo "Time needed for configuration of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $CONFIGURE_LOG
         fi
         test $CMD_COMPRESS && $CMD_COMPRESS $CONFIGURE_LOG
@@ -266,13 +266,13 @@ for MODULE in $MODULES; do
         echo $CRITICAL_MODULES | grep -q $MODULE || MAKE="$MAKE -k"
         if test $LOGDIR; then
           MAKE="$MAKE > $MAKE_LOG 2>&1"
-          STARTTIME=$(date +%s)
+          STARTTIME=`date +%s`
         fi
         test "$NICECOMPILE" = yes && MAKE="nice $MAKE"
 
         if eval "$MAKE"; then
           if test $LOGDIR; then
-            compute_time()
+            compute_time
             echo "Time needed for compilation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_LOG
           fi
           test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_LOG
@@ -280,7 +280,6 @@ for MODULE in $MODULES; do
 
           # Install the module.
           #
-          export INSTALL="/usr/bin/install -c -p"
           MAKE_INSTALL="make install"
           MAKE_INSTALL_LOG="$LOGDIR/$MODULE-install-$DATE"
           test $LOGDIR && MAKE_INSTALL="$MAKE_INSTALL > $MAKE_INSTALL_LOG 2>&1"
@@ -288,9 +287,9 @@ for MODULE in $MODULES; do
           if test ! -w $KDE2DIR; then
             echo "  Please enter the root password to install module $MODULE."
             echo -n "  "
-            su -c"install_module()"
+            su -c"install_module"
           else
-            install_module()
+            install_module
           fi
         else
           echo -e $STR_ERROR
