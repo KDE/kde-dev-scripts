@@ -172,7 +172,7 @@
     (kstandarddirs.h locate locateLocal)
     (stdlib.h getenv)
     (unistd.h unlink sleep usleep)
-    (iostream.h cout cerr)
+    (iostream cout cerr)
     (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
 
 
