@@ -97,6 +97,7 @@ dateformat="`date +%Y%m%d`"
 # xterm, etc.. Thanks have to go to Malte Starostik
 # <malte@kde.org> for the code :-)
 set_title() {
+  which printf > /dev/null 2>&1 || return
   if ([ "$TERM" = "xterm" ] || [ "$TERM" = "xterm-color" ] || [ "$TERM" = "screen" ]) && tty -s; then
     printf "\033]0;$1\007"
   fi
@@ -137,13 +138,21 @@ log_endsection() {
   echo "" >> $logfile 2>&1
 }
 
-# This function computes the time which was needed for a certain task.
+# This function computes the time which was needed for a certain task, using
+# bc (instead of shell-specific features) for portability. If bc is not
+# available, bogus values are returned in $hours, $minutes and $seconds.
 #
 compute_time() {
-  duration=$[`date +%s`-$starttime]
-  hours=`echo $[$duration / 3600] | sed -e "s/^[0-9]\$/0&/"`
-  minutes=`echo $[$[$duration % 3600] / 60] | sed -e "s/^[0-9]\$/0&/"`
-  seconds=`echo $[$duration % 60] | sed -e "s/^[0-9]\$/0&/"`
+  if which bc > /dev/null 2>&1; then
+    duration=`echo \`date +%s\` - $starttime | bc`
+    hours=`echo $duration / 3600 | bc | sed -e "s/^[0-9]\$/0&/"`
+    minutes=`echo $duration % 3600 | bc | sed -e "s/^[0-9]\$/0&/"`
+    seconds=`echo $duration % 60 | bc | sed -e "s/^[0-9]\$/0&/"`
+  else
+    hours="??"
+    minutes="??"
+    seconds="??"
+  fi
 }
 
 # This function installs a compiled CVS module.
