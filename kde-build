@@ -399,21 +399,21 @@ fi
 # command line. For cvsup users it even generates a supfile. :-)
 #
 if [ "$CVSCLIENT" = cvs ]; then
-  cmd_update="cvs up"
+  cmd_update="cvs"
+  if [ -z "$CVSROOT" ]; then
+    if [ -z "$ACCOUNT" ]; then
+      cmd_update="$cmd_update -d:$ANONCVSROOT"
+    else
+      cmd_update="$cmd_update -d:pserver:$ACCOUNT@cvs.kde.org:/home/kde"
+    fi
+  fi
+  cmd_update="$cmd_update up"
   if [ "$BRANCH" = "HEAD" ]; then
     cmd_update="$cmd_update -dPA"
   elif [ -n "$BRANCH" ]; then
     cmd_update="$cmd_update -dPr $BRANCH"
   else
     cmd_update="$cmd_update -dP"
-  fi
-  if [ -z "$CVSROOT" ]; then
-    if [ -z "$ACCOUNT" ]; then
-      CVSROOT="$ANONCVSROOT"
-    else
-      CVSROOT=":pserver:$ACCOUNT@cvs.kde.org:/home/kde"
-    fi
-    export CVSROOT
   fi
 else
   if [ -z "$CVSUPSERVER" ]; then
