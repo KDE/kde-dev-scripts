@@ -1045,6 +1045,23 @@ With arg, to it arg times."
   (insert "\" << endl;")
   )
 
+; Creates the ifndef/define/endif statements necessary for a header file
+(defun header-protection ()
+  (interactive)
+  (let ((f (buffer-file-name)))
+    (if (string-match "^.*/" f)
+      (setq f (replace-match "" t t f)))
+    (while (string-match "\\." f)
+      (setq f (replace-match "_" t t f)))
+    (save-excursion
+      (goto-char (point-min))
+      (insert "#ifndef " f "\n#define " f "\n\n")
+      (goto-char (point-max))
+      (insert "\n#endif\n")
+      )
+    )
+  )
+
 ; A wheel mouse that doesn't beep, unlike mwheel-install
 (defun scroll-me-up () (interactive) (scroll-up 3))
 (defun scroll-me-down () (interactive) (scroll-down 3))
@@ -1055,6 +1072,7 @@ With arg, to it arg times."
 (defun makeclean () (interactive) (compile "make clean"))
 (defun make () (interactive) (compile "make"))
 (defun makeinstall () (interactive) (compile "make install"))
+(defun makeinstallexec () (interactive) (compile "make install-exec"))
 
 ;; Indentation: 4 characters, no tabs.
 (setq c-basic-offset 4)
@@ -1079,6 +1097,7 @@ With arg, to it arg times."
 (define-key global-map [(meta f4)] 'makeclean)
 (define-key global-map [(f4)] 'make)
 (define-key global-map [(f5)] 'makeinstall)
+(define-key global-map [(shift f5)] 'makeinstallexec)
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
