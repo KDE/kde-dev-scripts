@@ -32,7 +32,7 @@ do
   license=""
   gl=""
   qte=""
-  header=`head -30 $file| sed 's/	/ /g;s/$/ /g;s#//##g' | tr -d -c ' A-Za-z.,/@1-9()'`
+  header=`head -n 30 $file| sed 's/	/ /g;s/$/ /g;s#//##g' | tr -d -c ' A-Za-z.,/@1-9()'`
   if test ! -z "$verbose"; then
     echo "----- header -----"
     echo $header
