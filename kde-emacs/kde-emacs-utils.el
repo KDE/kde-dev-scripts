@@ -164,8 +164,10 @@
                                   function "'' in class ``" class
                                   "'', aborting"))))
            (stringp insertion-string)))
-	 (kde-switch-cpp-h)
-         (progn
+        (if (string-match "\\.h$" file)
+	    (kde-switch-cpp-h)
+	  )
+	(progn
            (goto-char (point-max))
 	   (kde-comments-begin)
 	   (kde-skip-blank-lines)
