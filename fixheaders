@@ -31,6 +31,7 @@ $lastdir = '.';
  'no matching function for call to `QPopupMenu::' => "qpopupmenu",
  '`Dnd_\S*\' undeclared \(first use this function\)' => "drag",
  '`QTextStream\' undeclared \(first use this function\)' => "qtextstream",
+ '`QTextStream\' was not declared in this scope' => "qtextstream",
 );
 
 %changes = ();
