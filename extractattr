@@ -8,6 +8,16 @@
 # 2004-05-11: Richard Evans <rich@ridas.com>
 #
 # Initial revision based off existing extractrc and kate/kivio extract-i18n scripts.
+#
+# 2004-05-13: Richard Evans <rich@ridas.com>
+#
+# Relaxed error handling. Now warns instead of dies when:
+#
+# 1) Invalid flags are specified.
+# 2) No filenames are specified.
+# 3) Files fail to open.
+#
+# Also removed "\n" from warning/errors.
 
 sub usage
 {
@@ -48,14 +58,22 @@ use Getopt::Long;
 ###########################################################################################
 # Add options here as necessary - perldoc Getopt::Long for details on GetOptions
 
-die "extractattr --help for usage\n"
-  unless GetOptions ( "attr=s"    => \my @opt_attr,
-                      "context=s" => \my $opt_context,
-                      "lines"     => \my $opt_lines,
-                      "help|?"    => \&usage );
+GetOptions ( "attr=s"    => \my @opt_attr,
+             "context=s" => \my $opt_context,
+             "lines"     => \my $opt_lines,
+             "help|?"    => \&usage );
 
-die "No filename specified\n"   unless @ARGV;
-die "No attributes specified\n" unless @opt_attr;
+unless ( @ARGV )
+{
+  warn "No filename specified";
+  exit;
+}
+
+unless ( @opt_attr )
+{
+  warn "No attributes specified";
+  exit;
+}
 
 ###########################################################################################
 # Program start proper - NB $. is the current line number
@@ -65,7 +83,13 @@ our $file_name;
 
 for $file_name ( @ARGV )
 {
-  open my $fh, "<", $file_name or die "Failed to open: '$file_name': $!\n";
+  my $fh;
+
+  unless ( open $fh, "<", $file_name )
+  {
+    warn "Failed to open: '$file_name': $!";
+    next;
+  }
 
   while ( <$fh> )
   {
@@ -75,7 +99,7 @@ EOF
 $code .= build_code(@opt_attr) . <<'EOF';
   }
 
-  close $fh or warn "Failed to close: '$file_name': $!\n";
+  close $fh or warn "Failed to close: '$file_name': $!";
 }
 
 1;
@@ -83,7 +107,7 @@ EOF
 
 # warn "CODE TO EVAL:\n$code\n";
   
-eval $code or die "$@\n";
+eval $code or die;
 
 
 sub build_code
