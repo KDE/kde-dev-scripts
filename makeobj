@@ -53,8 +53,14 @@ if test ! -f $dir/$file; then
     if test -n "$OBJ_REPLACEMENT"; then
       pwd=`echo $PWD | sed -e "$OBJ_REPLACEMENT"`
       if test ! -f $pwd/$dir/$file; then
-  	 echo "no objdir found. Tried $pwd"
-	 exit 1
+         # No objdir found. But if "make" will work in srcdir, then go ahead; might be a non-kde project.
+         test -f $dir/GNUmakefile && file=GNUmakefile
+         test -f $dir/makefile && file=makefile
+         test -f $dir/$file || file=""
+         if test -z "$file"; then
+           echo "no objdir found. Tried $pwd"
+           exit 1
+         fi
       fi
       cd $pwd/$dir
     fi
