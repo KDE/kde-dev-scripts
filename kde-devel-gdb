@@ -153,6 +153,23 @@ document _qmapiterator_inc
   Increment a qmap iterator (internal method, used by printqmap)
 end
 
+define printqptrlist
+    set $list = $arg0
+    set $len = $list.numNodes
+    output $len
+    printf " items in the list\n"
+    set $it = $list.firstNode
+    while $it != 0
+        output $it->data
+        printf "\n"
+        set $it = $it->next
+    end
+end
+document printqptrlist
+  Prints the contents of a QPtrList.
+  Usage: printqptrlist mylist
+end
+
 define printqvaluelist
     set $list = $arg0
     set $len = $list.sh->nodes
