@@ -4,30 +4,33 @@
 # Taj Sun Apr 26 03:31:00 EST 1998
 # $Id$
 
-$bigblank = 0;
-$bigcommt = 0;
-$bigstrcount = 0;
-$bigstrsize = 0;
-$bigtotal = 0;
-$numfiles = 0;
+use strict;
 
-$blocklen = 0;
-$numblocks = 0;
-$blockdepth = 0;
-$blockstart = 0;
-$blockmin = -1;
-$blockmax = 0;
-@blenlist = ();
+our $bigblank = 0;
+our $bigcommt = 0;
+our $bigstrcount = 0;
+our $bigstrsize = 0;
+our $bigtotal = 0;
+our $numfiles = 0;
+
+our $blocklen = 0;
+our $numblocks = 0;
+our $blockdepth = 0;
+our $blockstart = 0;
+our $blockmin = -1;
+our $blockmax = 0;
+our @blenlist = ();
+our @extensions = ( ".cpp", ".cc", ".C", ".c", ".h", ".tcc" );
 
 sub processFile
 {
-	my( $file ) = @_;
-	$blank  = 0;
-	$comment  = 0;
-	$total  = 0;
-	$incomment  = 0;
-	$strcount = 0;
-	$strsize = 0;
+	our ( $file ) = @_;
+	our $blank  = 0;
+	our $comment  = 0;
+	our $total  = 0;
+	our $incomment  = 0;
+	our $strcount = 0;
+	our $strsize = 0;
 
 	open( SOURCE, "$file" ) || 
 		die "cxxmetric.pl: Couldn't read from $file.\n";
@@ -75,8 +78,8 @@ sub processFile
 			}
 		}	
 
-		$start	= 0;
-		$stop	= 0;	
+		my $start = 0;
+		my $stop  = 0;
 
 		if ( m#/\*# ) {
 			$start = 1;
@@ -103,28 +106,49 @@ sub processFile
 		}
 	}
 
-	$code = $total - ($comment + $blank );
+	our $code = $total - ($comment + $blank );
 	$bigtotal += $total;
 	$bigcommt += $comment;
 	$bigblank += $blank;
 	$bigstrcount += $strcount;
 	$bigstrsize += $strsize;
 	
-	$stravglen = $strcount ? ($strsize / $strcount) : 0;
+	our $stravglen = $strcount ? ($strsize / $strcount) : 0;
 
 	write;
 }
 
+sub buildFileList {
+  my ( $dir ) = @_;
+  my @fileList = glob( "$dir/*" );
+  my @cxxList;
+
+  foreach my $file (@fileList) {
+
+    if( -d $file ) {
+      push @cxxList, buildFileList( $file );
+    }
+    else {
+      foreach my $extension (@extensions) {
+        if( substr( $file, length( $file ) - length( $extension ) ) eq $extension ) {
+	  push @cxxList, $file;
+	}
+      }
+    }
+  }
+
+  return @cxxList;
+}
 
 sub countStrings
 {
 		my $line = shift;
 
-		foreach my $string ( split( /("[^"]*)"/, $line ) ) {
+		foreach my $string ( split( /("[^"]*)\"/, $line ) ) {
 				next unless $string =~ /^\"/;
 
-				$strcount++;
-				$strsize += length( $string ) - 1;
+				our $strcount++;
+				our $strsize += length( $string ) - 1;
 		}
 }
 
@@ -137,16 +161,25 @@ sub pct
 	return int(( $top * 100 ) / $bottom);
 }
 
-foreach $file ( @ARGV ) {
+our @files;
+
+if( @ARGV == 0 ) {
+  @files = buildFileList(".");
+}
+else {
+  @files = @ARGV;
+}
+
+foreach my $file ( @files ) {
 	processFile( $file );
 	++$numfiles;
 }
 
-$total =  $bigtotal;
-$comment= $bigcommt;
-$blank =  $bigblank;
-$code  = $bigtotal - ($bigcommt + $bigblank );
-$file = "Total";
+our $total =  $bigtotal;
+our $comment = $bigcommt;
+our $blank = $bigblank;
+our $code  = $bigtotal - ($bigcommt + $bigblank );
+our $file = "Total";
 
 print "\n";
 write;
@@ -159,9 +192,9 @@ print "Average Code/File:\t" , int($code/$numfiles)," lines\n"
 	unless $numfiles == 0;
 
 if ( $numblocks > 0 ) {
-	$avg = int( $blocklen / $numblocks );
+	my $avg = int( $blocklen / $numblocks );
 	@blenlist = sort @blenlist;
-	$median = $blenlist[ int( $numblocks / 2 )];
+	my $median = $blenlist[ int( $numblocks / 2 )];
 print<<EOF;
 
 Blocks:\t$numblocks
@@ -169,7 +202,7 @@ Blocks:\t$numblocks
 EOF
 }
 
-$bigstravglen = $bigstrcount ? int($bigstrsize / $bigstrcount) : 0;
+our $bigstravglen = $bigstrcount ? int($bigstrsize / $bigstrcount) : 0;
 
 print<<EOF;
 Strings:\t$bigstrcount
@@ -186,5 +219,5 @@ format STDOUT_TOP =
 
 format STDOUT =
 @######	@######	@######	@######	@######	@######	@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-$total, $code, $comment, $blank, $strcount, $stravglen, $file
+$total, $code, $comment, $blank, our $strcount, our $stravglen, $file
 .
