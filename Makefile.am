@@ -7,7 +7,7 @@ bin_SCRIPTS = \
   cvs2dist  cvsblame \
   findmissingcrystal \
   kdedoc qtdoc extractrc zonetab2pot.py \
-  licensecheck fixkdeincludes includemocs create_cvsignore \
+  licensecheck fixkdeincludes fixuifiles includemocs create_cvsignore \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
   package_crystalsvg png2mng.pl kdemangen.pl
 
