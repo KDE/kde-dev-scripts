@@ -99,6 +99,36 @@ move_logfile() {
   mv $logfile `echo $logfile | sed -e "s,-build-,-failed-,"`
 }
 
+# Executes the given command, logging the output to $logfile if requested.
+#
+log_cmd() {
+  if test "x$logfile" != "x"; then
+    eval "$1 >> $logfile 2>&1"
+  else
+    eval "$1"
+  fi
+  return $?
+}
+
+# Inserts a "-> blah <---" style separator into $logfile, and starts a timer
+log_section() {
+  test "x$logfile" = "x" && return 0
+  len=`echo $1 | wc -m | sed -e "s,^[ ]*,,"`
+  echo "------------------------------------------------------------------------" \
+    | sed -e "s,^,-> $1 <," -e "s,.\{$len\}$,," >> $logfile 2>&1
+  starttime=`date +%s`
+}
+
+# Computes the time elapsed since the last log_section call,
+# inserts a "----" separator, and the time needed, into $logfile
+log_endsection() {
+  test "x$logfile" = "x" && return 0
+  compute_time
+  echo "----------------------------------------------------------------------------" >> $logfile 2>&1
+  echo "$1 for module $module done. Time needed: $hours:$minutes:$seconds" >> $logfile 2>&1
+  echo "" >> $logfile 2>&1
+}
+
 # This function computes the time which was needed for a certain task.
 #
 compute_time() {
@@ -113,18 +143,11 @@ compute_time() {
 install_module() {
   echo -n "  Installing..."
   set_title "Installing module $module..."
-  if test "x$KDELOGDIR" != x; then
-    echo "-> Installation <---------------------------------------------------------------" >> $logfile
-    cmd_make_install="$cmd_make_install >> $logfile 2>&1"
-    starttime=`date +%s`
-  fi
+  log_section "Installation"
 
-  if eval ${cmd_make_install}; then
+  if log_cmd "$cmd_make_install"; then
     if test "x$KDELOGDIR" != x; then
-      compute_time
-      echo "--------------------------------------------------------------------------------" >> $logfile
-      echo "Time needed for installation of module $module: $hours:$minutes:$seconds" >> $logfile
-      echo "" >> $logfile
+      log_endsection "Installation"
       echo "Build of module $module successfully finished at `date +%c`" >> $logfile
       test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
     fi
@@ -423,9 +446,9 @@ for module in $modules; do
     rm -f $KDELOGDIR/$module-build-*
     rm -f $KDELOGDIR/$module-failed-*
     logfile="$KDELOGDIR/$module-build-$dateformat.log"
-    echo "================================================================================" > $logfile
+    echo "===============================================================================" > $logfile
     echo "Build log of module $module, started on `date +%c`" >> $logfile
-    echo "================================================================================" >> $logfile
+    echo "===============================================================================" >> $logfile
     echo "" >> $logfile
   fi
   if ! cd $KDESRCDIR/$module; then
@@ -443,14 +466,11 @@ for module in $modules; do
     cmd_update_raw="$cmd_update"
   fi
 
-  if test "x$KDELOGDIR" != x; then
-    echo "-> Update $cmd_update <---------------------------------------------------------------" >> $logfile
-    cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
-    starttime=`date +%s`
-  fi
+  log_section "Update $cmd_update"
+
   check_libltdl
 
-  if ! eval ${cmd_update_raw}; then
+  if ! log_cmd "$cmd_update_raw"; then
     echo -e "$str_error"
     continue
   fi
@@ -458,9 +478,9 @@ for module in $modules; do
   if test "x$module" == xarts; then
     # since the CVS dir of libltdl is copied along with the rest
     # we can just cvs upd in libltdl
-    cmd_update_raw="cd libltdl ; $cmd_update >> $logfile 2>&1; cd .."
+    cmd_update_raw="cd libltdl ; $cmd_update; cd .."
     if test ! "$docvsupdate" -eq 0; then
-       eval ${cmd_update_raw}
+       log_cmd "$cmd_update_raw"
     fi
   fi
 
@@ -470,10 +490,9 @@ for module in $modules; do
 
   if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
     cmd_make_cvs_clean="$MAKE -f admin/Makefile.common cvs-clean"
-    test "x$KDELOGDIR" != x && cmd_make_cvs_clean="$cmd_make_cvs_clean >> $logfile 2>&1"
   fi
 
-  if ! eval ${cmd_make_cvs_clean}; then
+  if ! log_cmd "$cmd_make_cvs_clean"; then
     echo -e "$str_error"
     continue
   fi
@@ -498,18 +517,14 @@ for module in $modules; do
     cmd_make_makefile_cvs="echo Warning: no Makefile.cvs for module $module - as requested"
   fi
 
-  test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
-  if eval ${cmd_make_makefile_cvs}; then
+  if log_cmd "$cmd_make_makefile_cvs"; then
     echo "$str_okay"
   else
     echo -e "$str_error"
   fi
 
   if test "x$KDELOGDIR" != x; then
-    compute_time
-    echo "--------------------------------------------------------------------------------" >> $logfile
-    echo "Time needed for updating of module $module: $hours:$minutes:$seconds" >> $logfile
-    echo "" >> $logfile
+    log_endsection "Updating"
   fi
 done
 
@@ -580,16 +595,12 @@ for module in $modules; do
     cmd_configure="echo Warning: no configure for module $module - as requested"
     configure_okay="skipped." # see below if you change hte string here
   fi
+  log_section "Configuration"
   if test -n "$KDELOGDIR"; then
-    logfile="$KDELOGDIR/$module-build-$dateformat.log"
-    echo "-> Configuration <--------------------------------------------------------------" >> $logfile
     echo $cmd_configure >> $logfile
-    echo "-> Configuration <--------------------------------------------------------------" >> $logfile
-    cmd_configure="$cmd_configure >> $logfile 2>&1"
-    starttime=`date +%s`
   fi
 
-  if ! eval ${cmd_configure}; then
+  if ! log_cmd "$cmd_configure"; then
     echo -e "$str_error"
     test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
     test "x$critical" = "x0" || exit $err_compile_fail
@@ -598,10 +609,7 @@ for module in $modules; do
   fi
 
   if test "x$KDELOGDIR" != x; then
-    compute_time
-    echo "--------------------------------------------------------------------------------" >> $logfile
-    echo "Time needed for configuration of module $module: $hours:$minutes:$seconds" >> $logfile
-    echo "" >> $logfile
+    log_endsection "Configuration"
   fi
   echo -e "$configure_okay"
 
@@ -609,14 +617,11 @@ for module in $modules; do
     echo -n "  Updating Makefile..."
     cmd_make_makefile="$MAKE $MAKE_OPTS Makefile"
     test "$NICECOMPILE" = yes && cmd_make_makefile="nice $cmd_make_makefile"
+    log_section "Updating Makefile"
     if test -n "$KDELOGDIR"; then
-      logfile="$KDELOGDIR/$module-build-$dateformat.log"
-      echo "-> Updating Makefile <--------------------------------------------------------------" >> $logfile
       echo $cmd_make_makefile >> $logfile
-      cmd_make_makefile="$cmd_make_makefile >> $logfile 2>&1"
-      starttime=`date +%s`
     fi
-    if ! eval ${cmd_make_makefile}; then
+    if ! log_cmd "$cmd_make_makefile"; then
       echo -e "$str_error"
       test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
       test "x$critical" = "x0" || exit $err_compile_fail
@@ -625,10 +630,7 @@ for module in $modules; do
     fi
 
     if test "x$KDELOGDIR" != x; then
-      compute_time
-      echo "--------------------------------------------------------------------------------" >> $logfile
-      echo "Time needed for updating Makefile of module $module: $hours:$minutes:$seconds" >> $logfile
-      echo "" >> $logfile
+      log_endsection "Updating Makefile"
     fi
     echo -e "$str_okay"
   fi
@@ -651,22 +653,13 @@ for module in $modules; do
   test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
   test "$use_compile_target" = yes && cmd_make="$cmd_make compile"
 
-  if test "x$KDELOGDIR" != x; then
-    echo "-> Compilation <----------------------------------------------------------------" >> $logfile
-    echo "-> $cmd_make <-" >> $logfile
-    cmd_make="$cmd_make >> $logfile 2>&1"
-    starttime=`date +%s`
-  fi
-
-  eval ${cmd_make}
+  log_section "Compilation $cmd_make"
+  log_cmd "$cmd_make"
   compile_ret=$?
 
   if test $compile_ret = 0; then
     if test "x$KDELOGDIR" != x; then
-      compute_time
-      echo "--------------------------------------------------------------------------------" >> $logfile
-      echo "Time needed for compilation of module $module: $hours:$minutes:$seconds" >> $logfile
-      echo "" >> $logfile
+      log_endsection "Compilation"
     fi
     echo -e "$str_okay"
 
@@ -678,21 +671,12 @@ for module in $modules; do
       test "x$critical" = "x0" && cmd_make="$cmd_make -k"
       test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
 
-      if test "x$KDELOGDIR" != x; then
-        echo "-> Linking <----------------------------------------------------------------" >> $logfile
-        echo "-> $cmd_make <-" >> $logfile
-        cmd_make="$cmd_make >> $logfile 2>&1"
-        starttime=`date +%s`
-      fi
-
-      eval ${cmd_make}
+      log_section "Linking $cmd_make"
+      log_cmd "$cmd_make"
       link_ret=$?
       if test "$link_ret" = 0; then
         if test "x$KDELOGDIR" != x; then
-          compute_time
-          echo "--------------------------------------------------------------------------------" >> $logfile
-          echo "Time needed for linkage of module $module: $hours:$minutes:$seconds" >> $logfile
-          echo "" >> $logfile
+          log_endsection "Linking"
         fi
         echo -e "$str_okay"
       else
