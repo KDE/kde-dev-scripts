@@ -35,6 +35,15 @@
 }
 
 {
+    strlen/libc/_dl_catch_error
+    MemCheck:Cond
+    fun:strlen
+    fun:_dl_open
+    obj:*libdl-2*.so
+    fun:_dl_catch_error*
+}
+
+{
     strchr/libc/_dl_catch_error
     MemCheck:Cond
     fun:strchr
@@ -56,7 +65,7 @@
    fun:strlen
    fun:_dl_signal_cerror
    fun:_dl_lookup_symbol_internal
-   fun:do_dlsym
+   fun:*dlsym
 }
 
 #
@@ -104,8 +113,8 @@
    writev(vector[...])
    Memcheck:Param
    writev(vector[...])
-   fun:do_writev
-   fun:_X11TransSocketWritev
+   fun:*writev
+   obj:libX11.so.*
    fun:_X11TransWritev
    fun:_XSend
 }
