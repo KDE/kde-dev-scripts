@@ -375,9 +375,9 @@
 		    (end-of-line)
 		    ))
 	      (newline-and-indent)
-              (insert "}")
+              (insert "}")(c-indent-line))
               (c-indent-line)
-              )))
+	     ))
          (o (progn
               (newline)
               (self-insert-command (prefix-numeric-value arg))
@@ -444,8 +444,9 @@
   (progn
     (load "pc-select")
     (if (eq kde-emacs-type 'xemacs)
-      	(funcall 'pc-select-mode)
+       (funcall 'pc-select-mode)
       (funcall 'pc-selection-mode))))
+
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
