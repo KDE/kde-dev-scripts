@@ -46,7 +46,9 @@
                  (setq fn (match-string 2 a))
                  (kde-switch-cpp-h)
                  (goto-char 0)
+                 ;; TODO really look for a class declaration, not just for the classname somewhere
                  (re-search-forward class nil t)
+                 ;; TODO keep looking, until we find a match that's not inside a comment
                  (re-search-forward (concat "[ \t]+" fn "[ \t]*(") nil t)))))
     (if (string-match "\\.h$" n)
         (progn
