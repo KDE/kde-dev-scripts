@@ -24,12 +24,8 @@ $lastdir = '.';
  'variable `class QPixmap \S*\' has initializer but incomplete type' => "qpixmap",
  '`kapp\' undeclared \(first use this function\)' => "kapp",
  'no matching function for call to `KLocale::' => "klocale",
- '`DndURL\' undeclared \(first use this function\)' => "drag",
- 'no matching function for call to `KDNDDropZone::' => "drag",
  '`klocale\' undeclared \(first use this function\)' => "klocale",
- '`KDNDIcon\' was not declared in this scope' => "drag",
  'no matching function for call to `QPopupMenu::' => "qpopupmenu",
- '`Dnd_\S*\' undeclared \(first use this function\)' => "drag",
  '`QTextStream\' undeclared \(first use this function\)' => "qtextstream",
  '`QTextStream\' was not declared in this scope' => "qtextstream",
  'incomplete type `QSocketNotifier\'' => "qsocketnotifier",
@@ -46,13 +42,14 @@ $lastdir = '.';
  'no method `KGlobal::' => "kglobal",
  '`KGlobal\' undeclared \(first use this function\)' => "kglobal",
  'warning: implicit declaration of function `int locate\(\.\.\.\)' => "kstddirs",
- 'no matching function for call to `KStandardDirs::' => "kstddirs",
+ 'no matching function for call to `KStandardDirs' => "kstddirs",
  'no method `KStandardDirs::' => "kstddirs",
  'variable `class QFile \S*\' has initializer but incomplete type' => "qfile",
  'warning: implicit declaration of function `int ICON\(\.\.\.\)' => "kiconloader",
  '`QMessageBox\' undeclared \(first use this function\)' => "qmessagebox",
  'no matching function for call to `QBoxLayout::QBoxLayout' => "qlayout",
- 
+ '`QUriDrag\' undeclared \(first use this function\)' => "qdragobject",
+ 'no matching function for call to `KMenuBar::' => "kmenubar",
 );
 
 %changes = ();
