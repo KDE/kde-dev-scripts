@@ -36,9 +36,7 @@ gendebug        Generate C++/Qt code for printing debug output.
 
 pruneemptydirs	Detects stale source dirs in a CVS tree
 
-kde-rebuild	Compiles a CVS tree very easily
-
-kde-update	Updates a whole CVS tree
+kde-build       Updates and recompiles a local CVS tree
 ----------------
 Looking to add a script?
 
