@@ -79,7 +79,7 @@
 	(msubstr nil)
         (start nil))
     (save-excursion
-      (and (re-search-backward "^class[ \t]" nil t)
+      (and (re-search-backward "^\\(class\\|namespace\\)[ \t]" nil t)
            (progn
              (forward-word 1)
              (while (looking-at "[ \t]*Q_EXPORT")
@@ -186,20 +186,21 @@
 		 (insert "\n")
 		 (forward-line 1)
 	     ))
-           (insert insertion-string)
-           (forward-char -3)
-           (save-excursion
-             (and (string-match ".*/" file)
-                  (setq file (replace-match "" t nil file)))
-             (or (re-search-backward
-                  (concat "^#include *\"" file "\"$") nil t)
-                 (progn
-                   (goto-char (point-min))
-                   (re-search-forward "^$" nil t)
-                   (insert "\n#include \"" file "\"\n"))))))
+	   (insert insertion-string)
+	   (forward-char -3)
+	   (save-excursion
+	     (and (string-match ".*/" file)
+		  (setq file (replace-match "" t nil file)))
+	     (or (re-search-backward
+		  (concat "^#include *[<\"]" file "[>\"]$") nil t)
+		 (progn
+		   (goto-char (point-min))
+		   (re-search-forward "^$" nil t)
+		   (insert "\n#include \"" file "\"\n"))))
+	   ))
   (when (featurep 'fume-rescan-buffer)
     (fume-rescan-buffer))
-)
+  )
 
 
 ; Adds the current file to Makefile.am.

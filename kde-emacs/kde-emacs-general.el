@@ -59,6 +59,8 @@ return (\"test.cpp\" t)."
     ret
     ))
 
+; TODO: look at buffers too, not only files, so that it's possible to switch
+; between two new buffers, not saved yet.
 (defun kde-switch-cpp-h ()
   "Switches between the source and the header file 
 (both directions)."
