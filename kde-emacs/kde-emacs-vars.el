@@ -107,4 +107,10 @@ file named /home/domi/src/kdenonbeta/kig/misc/newtype.h"
   :group 'kde-devel
   :type 'integer)
 
+; a grep in the part of kde-source I have gives: 
+; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
+(defconst kde-prefered-source-extension "cpp"
+  "Source extension which kde-* functions should use for creating new files.")
+
+
 (provide 'kde-emacs-vars)
