@@ -1,6 +1,7 @@
 ;; kde-emacs-utils.el
 ;;
 ;; Copyright (C)  2002  KDE Development Team <www.kde.org>
+;; Copyright (C) 2003  Dominique Devriese <devriese@kde.org>
 ;;
 ;; This library is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU Lesser General Public
@@ -442,5 +443,169 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t (self-insert-command (or arg 1)))))
 
+(defun kde-emacs-start-c++-header ()
+  "Start a new C++ header by inserting include guards ( see \
+   header-protection function ), inserting a license statement \
+   and putting (point) at the correct position"
+  (interactive)
+  (header-protection)
+  (insert "\n")
+  (beginning-of-buffer)
+  (kde-license-insert "GNU GPL")
+  (next-line 1)
+  (kill-line)
+  (end-of-buffer)
+  (next-line -3)
+  (insert "\n")
+)
+
+(defun kde-emacs-year-range-parse-years-string (string)
+  "parses something like \"2000, 2008-2010\" into a list of the form \
+   ((2008 . 2010)(2000 . 2000))"
+  (let ((pos -1)
+	(oldpos)
+	(l (length string))
+	(currange "")
+	(startyear)
+	(endyear)
+	(ret)
+	)
+    (while (< pos l)
+      (setq oldpos (+ pos 1))
+      (setq pos (string-match "[,]" string (+ pos 1)))
+      (unless pos (setq pos l))
+      (setq currange (substring string oldpos pos))
+      (string-match "[0-9]+" currange)
+      (setq startyear (string-to-int (match-string 0 currange)))
+      (setq endyear
+	    (if (string-match "-" currange)
+		(string-to-int (substring currange (match-end 0)))
+	      startyear))
+      (setq ret (cons (cons startyear endyear) ret))
+      )
+    ret
+    )
+  )
+
+(defun kde-emacs-year-range-contains-year (ranges year)
+  "checks whether year is in ranges.. ( ranges is a list as \
+   my-cpp-parse-copyright-years returns.. "
+  (let ((ret))
+    (dolist (range ranges ret)
+      (when (and (>= year (car range)) (<= year (cdr range)))
+	(setq ret t))
+      )))
+
+(defun kde-emacs-year-range-to-string (ranges)
+  "converts ranges to a string.."
+  (let ((ret ""))
+    (dolist (range ranges)
+      (setq ret 
+	    (concat
+	     (int-to-string (car range))
+	     (if (/= (cdr range) (car range))
+		 (concat "-" (int-to-string (cdr range)))
+	       "")
+	     ", "
+	     ret) 
+	    )
+      )
+    ; remove extraneous ", "
+    (setq ret (substring ret 0 (- (length ret) 2)))
+    )
+  )
+
+; merges adjacent year ranges into one..
+(defun kde-emacs-year-range-cleanup (range)
+  (let ((origrange range))
+    (while (and range (cdr range))
+      (let ((years (car range)) (nyears (cadr range)))
+	(when (>= (+ (cdr nyears) 1) (car nyears))
+	  (setcar range (cons (car nyears) (cdr years)))
+	  (setcdr range (cddr range)))
+	)
+      (setq range (cdr range))
+      )
+    origrange
+    )
+  )
+
+; adds year to range..
+(defun kde-emacs-year-range-add-year (range year)
+  (while range
+    (let ((years (car range)))
+      (cond
+       ((and (>= year (car years)) (<= year (cdr years))
+	     ; year is already in the range..
+	     (setq range nil)))
+       ((= year (+ (cdr years) 1))
+	(setcdr years year)
+	(setq range nil))
+       ((= year (- (car years) 1))
+	(setcar years year)
+	(setq range nil))
+       )
+      )
+    (setq range (cdr range))
+    )
+  (kde-emacs-year-range-cleanup range)
+  )
+
+(defun kde-emacs-add-copyright () (interactive)
+  "Tries to add your kde-full-name and kde-email to the Copyright \
+   statements at the top of a file...  It tries to figure out \
+   if it's already there, and if so, updates the line to include the \
+   current year.. ( well, replaces it by a new one, anyway :) )"
+  (let ((wascomment ""))
+    (save-excursion
+      (beginning-of-buffer)
+      (if (re-search-forward (concat "Copyright ([Cc]) \\([0-9 ,-]*\\) " kde-full-name) nil t)
+	  (progn
+	    (beginning-of-line)
+	    (let ((years (kde-emacs-year-range-cleanup (my-cpp-parse-copyright-years (match-string 1))))
+		  (new-copyright-string "Copyright (C) ")
+		  (this-year (string-to-int (format-time-string "%Y"))))
+	      (when (not (kde-emacs-year-range-contains-year years this-year))
+		(kde-emacs-year-range-add-year years this-year))
+	      (setq new-copyright-string
+		    (concat new-copyright-string (kde-emacs-year-range-to-string years)))
+					; finish new-copyright-string 
+	      (setq new-copyright-string
+		    (concat new-copyright-string "  " kde-full-name " <" kde-email ">"))
+	      (beginning-of-line)
+	      (re-search-forward "Copyright ([Cc])")
+	      (beginning-of-line)
+	      (setq wascomment 
+		    (buffer-substring (point)
+				      (match-beginning 0)
+				      ))
+	      (kill-line nil)
+	      (insert new-copyright-string)
+	      )
+	    )
+	(beginning-of-buffer)
+	(let ((first-copyright-str (re-search-forward "Copyright ([Cc])" nil t)))
+	  (if first-copyright-str
+	      (progn
+		(goto-char first-copyright-str)
+		(beginning-of-line)
+		(setq wascomment (buffer-substring (point) (match-beginning 0)))
+		(forward-line 1)
+		)
+	    (goto-line 2))
+	  )
+	(beginning-of-line)
+	(insert "Copyright (C) " (format-time-string "%Y") "  "
+		kde-full-name " <" kde-email ">\n")
+	(forward-line -1)
+	)
+      (end-of-line)
+      (let ((end (point)))
+	(beginning-of-line)
+	(insert wascomment)
+	)
+      )
+    )
+  )
 
 (provide 'kde-emacs-utils)
