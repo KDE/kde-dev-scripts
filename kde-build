@@ -159,10 +159,10 @@ install_module() {
       echo "Build of module $module successfully finished at `date +%c`" >> $logfile
       [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     fi
-    echo -e "$str_okay"
+    echo "$str_okay"
     echo "Module $module successfully installed in $KDEDIRS!"
   else
-    echo -e "$str_error"
+    echo "$str_error"
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
     move_logfile
@@ -493,7 +493,7 @@ for module in $modules; do
   check_libltdl
 
   if ! log_cmd "$cmd_update_raw"; then
-    echo -e "$str_error"
+    echo "$str_error"
     continue
   fi
 
@@ -515,7 +515,7 @@ for module in $modules; do
   fi
 
   if ! log_cmd "$cmd_make_cvs_clean"; then
-    echo -e "$str_error"
+    echo "$str_error"
     continue
   fi
 
@@ -544,7 +544,7 @@ for module in $modules; do
   if log_cmd "$cmd_make_makefile_cvs"; then
     echo "$str_okay"
   else
-    echo -e "$str_error"
+    echo "$str_error"
   fi
 
   log_endsection "Updating"
@@ -624,7 +624,7 @@ for module in $modules; do
   fi
 
   if ! log_cmd "$cmd_configure"; then
-    echo -e "$str_error"
+    echo "$str_error"
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
     move_logfile
@@ -633,9 +633,9 @@ for module in $modules; do
 
   log_endsection "Configuration"
   if [ $configure_skipped -eq 1 ]; then
-    echo -e " skipped."
+    echo " skipped."
   else
-    echo -e "$str_okay"
+    echo "$str_okay"
   fi
 
   if [ $configure_skipped -eq 1 ]; then
@@ -647,7 +647,7 @@ for module in $modules; do
       echo $cmd_make_makefile >> $logfile
     fi
     if ! log_cmd "$cmd_make_makefile"; then
-      echo -e "$str_error"
+      echo "$str_error"
       [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
       [ $critical -eq 0 ] || exit $err_compile_fail
       move_logfile
@@ -655,7 +655,7 @@ for module in $modules; do
     fi
 
     log_endsection "Updating Makefile"
-    echo -e "$str_okay"
+    echo "$str_okay"
   fi
 
   # Compile the module.
@@ -682,7 +682,7 @@ for module in $modules; do
 
   if [ $retval -eq 0 ]; then
     log_endsection "Compilation"
-    echo -e "$str_okay"
+    echo "$str_okay"
 
     # Link the module
     if [ "$use_compile_target" = yes ]; then
@@ -697,7 +697,7 @@ for module in $modules; do
       retval=$?
       if [ $retval -eq 0 ]; then
         log_endsection "Linking"
-        echo -e "$str_okay"
+        echo "$str_okay"
       fi
     fi
   fi
@@ -715,7 +715,7 @@ for module in $modules; do
       install_module
     fi
   else
-    echo -e "$str_error"
+    echo "$str_error"
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
     # Attempt to display the actual error
