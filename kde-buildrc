@@ -103,6 +103,14 @@ CVS_CLEAN="no"
 #
 CONFIGUREFLAGS="--disable-debug"
 
+# set it to the path for unsermake if you want to test it instead of
+# automake
+USE_UNSERMAKE=""
+
+# if you use an extra build dir (KDEBUILDDIR), then set it to yes to
+# remove the module's directory before calling configure
+BUILD_CLEAN=no
+
 # If you would like to pass any parameters to make add them here. If you
 # do not want to add any parameters leave this empty.
 # example:

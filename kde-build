@@ -354,6 +354,11 @@ for module in $modules; do
         check_libltdl
         cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
         test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
+	if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
+	    export UNSERMAKE=$USE_UNSERMAKE
+	else
+	    unset UNSERMAKE || :
+	fi
         if eval ${cmd_make_makefile_cvs}; then
           echo "$str_okay"
         else
@@ -401,6 +406,14 @@ for module in $critical_modules $KDEMODULES; do
       echo "Building module: $module"
 
       if test -n "$KDEBUILDDIR"; then
+
+        if test "x$BUILD_CLEAN" = "xyes"; then
+	   if test -d $KDEBUILDDIR/$module; then
+	    echo -n "  Removing build dir..."
+	    set_title "Removing build dir for module $module..."
+	     rm -rf $KDEBUILDDIR/$module
+	   fi
+	fi
         mkdir -p $KDEBUILDDIR/$module
         cd $KDEBUILDDIR/$module
       fi
