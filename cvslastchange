@@ -1,5 +1,10 @@
 #!/usr/bin/perl
-$version=`cvsversion $ARGV[0]`;
+
+use File::Basename;
+
+$cvsversion= dirname($0) . "/cvsversion";
+$version=`$cvsversion $ARGV[0]`;
+
 chop $version;
 if ($version=~/^(.*)\.([^.]*)$/) { $v1 = $1; $v2 = $2 }    
 $v2old = ${v2}-1;
