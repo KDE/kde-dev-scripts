@@ -483,6 +483,7 @@ for module in $modules; do
 
   if ! test -e Makefile.cvs; then
     echo "$str_okay"
+    continue
   fi
 
   check_admin
