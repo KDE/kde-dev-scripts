@@ -272,9 +272,7 @@ make_makefile_cvs() {
   unset UNSERMAKE || true
   if [ -n "$USE_UNSERMAKE" ] && ! echo $NO_UNSERMAKE_MODULES \
       | grep $module > /dev/null 2>&1; then
-     if [ -f Makefile.am.in ] || ! grep TOPSUBDIRS Makefile.am; then
-        export UNSERMAKE=$USE_UNSERMAKE
-     fi
+    export UNSERMAKE=$USE_UNSERMAKE 
   fi
 
   if [ "$INCREMENTAL_BUILD" = "yes" -a -e "Makefile.in" ]; then
@@ -370,6 +368,15 @@ KDELOGDIR=`echo "$KDELOGDIR" |sed -e "s,^\~/,$HOME/,"`
 PATH=$QTDIR/bin:$KDEDIRS/bin:$PATH
 MANPATH=$QTDIR/doc/man:$MANPATH
 LD_LIBRARY_PATH=$KDEDIRS/lib:$QTDIR/lib:$LD_LIBRARY_PATH
+
+if [ -n "$USE_UNSERMAKE" ]; then
+  if [ -n "$MAKE" ]; then
+     echo "overwriting MAKE=$USE_UNSERMAKE"
+  fi
+  MAKE=$USE_UNSERMAKE
+  UNSERMAKE_PATH=`dirname $USE_UNSERMAKE`
+  PATH=$UNSERMAKE_PATH:$PATH
+fi
 
 if [ -z "$MAKE" ]; then
   MAKE=make
@@ -506,10 +513,9 @@ fi
 # all the modules make use of the most recent unsermake version.
 #
 if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
-  unsermake_dir=`dirname $USE_UNSERMAKE`
   echo -n "Updating unsermake copy in $unsermake_dir..."
-  if [ -d "$unsermake_dir/CVS" ]; then
-    cd "$unsermake_dir"
+  if [ -d "$UNSERMAKE_PATH/CVS" ]; then
+    cd "$UNSERMAKE_PATH"
     cvs up > /dev/null 2>&1
     echo $str_okay
   else
