@@ -25,7 +25,7 @@ SRCDIR=/home/devel/src/kde-cvs
 # Do you want logfiles? If so, specify a path for them here, otherwise leave
 # this blank to skip logfile generation. The default directory for logfies
 # is $SRCDIR/log.
-#LOGDIR=$SRCDIR/log
+LOGDIR=$SRCDIR/log
 
 # If there are any modules in $SRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
