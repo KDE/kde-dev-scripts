@@ -157,11 +157,11 @@ buffer."
 	  (progn
 	    (cond ((string= license "GNU GPL")
 		   (insert (kde-license-header))
-		   (insert LGPL)
+		   (insert GPL)
 		   )
 		  ((string= license "GNU LGPL")
 		   (insert (kde-license-header))
-		   (insert GPL)
+		   (insert LGPL)
 		   )
 		  ((string= license "GNU FDL")
 		   (insert (kde-license-header))
