@@ -16,6 +16,21 @@
 
 ; This file is maintained by David Faure <faure@kde.org>
 
+
+; Global variables used to differentiate between different emacs
+; versions :
+; emacs - t if GNU/Emacs is used
+; xemacs - t if XEmacs is being used
+
+(if (string= (substring (emacs-version) 0 6) "XEmacs")
+    (progn
+      (setq emacs nil)
+      (setq xemacs t))
+  (progn
+    (setq emacs t)
+    (setq xemacs nil)))
+
+
 ;; -------  First part, from Arnt's "c++ stuff"
 
 (defun agulbra-c++-tab (arg)
@@ -49,11 +64,17 @@
 
 ; the above used to contain (untabify (point-min) (point-max)) too
 
+;; it seems that recursion in agulbra-clean-out-spaces trashes Gnu/Emacs stack
+;; one of the functions in there has to behave differently than its XEmacs
+;; counterpart does, if you're reading this in a middle of may 2002 then
+;; please email me (Zack) at zackrat@att.net and bug me to finally fix this
 (defun agulbra-c++-clean-out-spaces ()
   "Remove spaces at ends of lines, only in c++ mode"
   (interactive)
   (and (eq major-mode 'c++-mode)
-       (agulbra-clean-out-spaces)))
+       (if xemacs 
+	   (agulbra-clean-out-spaces)
+  )))
 
 (add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
 (add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
@@ -1557,8 +1578,14 @@ With arg, to it arg times."
 ;;; definition by selecting it from the menu.  The following code turns this on
 ;;; for all of the recognized languages.  Scanning the buffer takes some time,
 ;;; but not much.
-(require 'func-menu)
-(add-hook 'find-file-hooks 'fume-add-menubar-entry)
+
+(if xemacs 
+    (progn
+      (require 'func-menu)
+      (add-hook 'find-file-hooks 'fume-add-menubar-entry) )
+  (progn
+    (require 'imenu)))
+    ;(add-hook 'find-file-hooks 'imenu)) )
 
 ;; Switch between the declaration of a class member in .cc/.cpp/.C, and its definition in the .h file
 ;; Written by David and Reggie after much hair tearing
@@ -1645,7 +1672,7 @@ With arg, to it arg times."
       (setq f (replace-match "_" t t f)))
     (save-excursion
       (goto-char (point-min))
-      (insert "#ifndef " f "\n#define " f "\n\n")
+      (insert "#ifndef " (upcase f) "\n#define " (upcase f) "\n\n")
       (goto-char (point-max))
       (insert "\n#endif\n")
       )
@@ -1776,7 +1803,9 @@ With arg, to it arg times."
 
 ;; pc-like textmarking
 (load "pc-select")
-(pc-select-mode)
+(if xemacs
+    (pc-select-mode)
+  (pc-selection-mode))
 
 ; Move in other window
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
@@ -1786,9 +1815,10 @@ With arg, to it arg times."
 
 ;; Some example bindings, feel free to customize :)
 (define-key global-map [(f2)] 'grep)
+;; FIXME: remember to get these two working on Gnu/Emacs (Zack)
 (define-key global-map [(f3)] 'fume-list-functions)
 (define-key global-map [(shift f3)] 'fume-prompt-function-goto)
-(define-key global-map '(shift button3) 'mouse-function-menu)
+(define-key global-map [(shift button3)] 'mouse-function-menu)
 (define-key global-map [(shift f4)] 'makeclean)
 (define-key global-map [(f4)] 'make)
 (define-key global-map [(f5)] 'makeinstall)
@@ -1796,7 +1826,9 @@ With arg, to it arg times."
 (define-key global-map [(shift f6)] 'makethisfile)
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
-(define-key global-map 'f8 'function-menu)
+;; imenu does that interactively
+(if xemacs
+    (define-key global-map [(f8)] 'function-menu))
 ;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(f10)] 'kdab-insert-header)
 (define-key global-map [(shift f10)] 'kdab-lookup-qt-documentation)
