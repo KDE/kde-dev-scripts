@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# Author: Martijn Klingens <klingens@kde.org>
+#
+# License: GPL
+
+if [ -z "$1" -o -z "$2" ]
+then
+    echo "$0 - Generate an incremental diff that contains the changes"
+    echo "between your local source code and a diff file."
+    echo "Useful when the diff contains changes that are partially applied"
+    echo "locally, but not in CVS yet."
+    echo
+    echo "Note that this script relies on cvs up -C, and hence updates the"
+    echo "CVS checkout in both the original and the temporary dir to the most"
+    echo "current for the branch you're working in."
+    echo
+    echo "Usage: $0 directory patch-file [new-patch-file]"
+    echo
+    echo 'directory      - Directory to diff'
+    echo 'patch-file     - Diff file to use'
+    echo 'new-patch-file - Optional name of the new diff. Otherwise'
+    echo '                 ${patch_file}.new will be used.'
+
+    exit 0
+fi
+
+DIR="$1"
+PATCH_FILE="$2"
+if [ -z "$3" ]
+then
+    NEW_PATCH_FILE="${PATCH_FILE}.new"
+else
+    NEW_PATCH_FILE="$3"
+fi
+
+if [ ! -d "${DIR}" ]
+then
+    echo "ERROR: ${DIR} is not a directory!"
+    exit -1
+fi
+
+if [ -e "${DIR}~" ]
+then
+    echo "ERROR: Temporary directory ${DIR}~ already exists!"
+    exit -1
+fi
+
+if [ ! -r "${PATCH_FILE}" ]
+then
+    echo "ERROR: Patch file ${PATCH_FILE} doesn't exist or is not readable!"
+    exit -1
+fi
+
+cp -a "${DIR}" "${DIR}~"
+if [ $? -ne 0 ]
+then
+    echo "ERROR: Couldn't create a temporary copy of ${DIR} to ${DIR}~!"
+    echo
+    echo "You may need to remove ${DIR}~ manually."
+    exit -1
+fi
+
+cd "${DIR}~"
+cvs up -C
+if [ $? -ne 0 ]
+then
+    echo "ERROR: Couldn't revert to the CVS version of ${DIR}!"
+    echo
+    echo "You need to remove ${DIR}~ manually."
+    exit -1
+fi
+
+patch -p0 < "${PATCH_FILE}"
+if [ $? -ne 0 ]
+then
+    echo "ERROR: Applying the patch from ${PATCH_FILE} failed!"
+    echo
+    echo "If you want, you can try to manually fix the errors and continue."
+    echo
+    read -rs -p "Continue? (y/N) " -n 1 ANSWER
+    echo
+    if [ ! "${ANSWER}" = "y" -a ! "${ANSWER}" = "Y" ]
+    then
+        echo
+        echo "Aborted."
+        echo
+        echo "You need to remove ${DIR}~ manually."
+        exit -1
+    fi
+fi
+
+cd ..
+cd "${DIR}"
+cvs up
+# Ignore errors after cvs up, they are harmless AFAICS
+
+cd ..
+
+diff -ur "${DIR}~" "${DIR}" > "${NEW_PATCH_FILE}"
+
+# Cleanup
+rm -rf "${DIR}~"
+if [ $? -ne 0 ]
+then
+    echo "ERROR: Couldn't remove temporary dir ${DIR}~!"
+    echo
+    echo "You need to remove ${DIR}~ manually."
+    exit -1
+fi
+
+echo
+echo "Success: Created new diff ${NEW_PATCH_FILE}"
+echo
+
