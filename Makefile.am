@@ -25,7 +25,7 @@ noinst_SCRIPTS = \
   cvsaddcurrentdir fixheaders kDebug2kdDebug.sh kdecompile
 
 EXTRA_DIST = completions kde-emacs \
-  colorcvsrc-sample cvschanged gettext.patch kde-buildrc \
+  colorcvsrc-sample gettext.patch kde-buildrc \
   kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
   kde.supp kdecompile.README 
 
