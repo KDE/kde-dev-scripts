@@ -119,6 +119,7 @@ With arg, do it arg times."
 	;;fume-auto-rescan-buffer-p nil
 	c-basic-offset 4
 	c-access-key kde-access-labels
+	c-opt-access-key kde-access-labels
 	;;c-hanging-comment-under-p nil
 	c-offsets-alist (append '((case-label   . 0)
 				  (access-label . -)
@@ -847,6 +848,8 @@ With arg, do it arg times."
 			      (not (bobp))
 			      (save-excursion
 				(c-safe (progn (c-backward-sexp 1) t))
+				(and (looking-at "slots:")
+				   (c-backward-sexp 1))
 				(looking-at c-opt-access-key)))
 		    (c-backward-sexp 1)
 		    (c-backward-syntactic-ws lim))
