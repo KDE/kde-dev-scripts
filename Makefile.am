@@ -9,7 +9,7 @@ bin_SCRIPTS = \
   kdedoc qtdoc extractrc zonetab2pot.py \
   licensecheck fixkdeincludes includemocs create_cvsignore \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
-  package_svg_files
+  package_crystalsvg
 
 # sorted by bin_SCRIPTS reference
 man_MANS = \
