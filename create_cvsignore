@@ -27,7 +27,7 @@ function handledir() {
 		addignore Makefile
 		addignore Makefile.in
 
-		bins=`perl -p -e 's/\\\s*\n/ /g' Makefile.am | grep _PROGRAMS | grep -v '^#' | sed -e 's/.*=\s*//'`
+		bins=`perl -p -e 's/\\\s*\n/ /g' Makefile.am | grep _PROGRAMS | grep -v '^#' | sed -e 's/.*=\s*//;s/#.*//'`
 		if ! test -z "$bins"; then
 			for prog in $bins; do
 				addignore "$prog"
