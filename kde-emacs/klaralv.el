@@ -1,5 +1,5 @@
 ;; ------------------------------ COPYRIGHT NOTICE ------------------------------
-;; klaralv.el version 1.1
+;; klaralv.el version 1.2
 ;; Copyright Klaralvdalens Datakonsult AB.
 ;;
 ;; This program is free software; you can redistribute it and/or modify it
@@ -64,11 +64,13 @@
               QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
               QChildEvent QCustomEvent)
     (qdatetime.h QTime QDateTime QDate)
+    (qdatetimeedit.h QTimeEdit QDateTimeEditBase QDateEdit QDateTimeEdit)
     (qcstring.h QByteArray)
     (qwidgetlist.h QWidgetListIt)
     (qtabbar.h QTab)
     (qpalette.h QColorGroup)
     (qaction.h QActionGroup)
+    (qlistbox.h QListBoxItem QListBoxText QListBoxPixmap)
     
     ; Qt/Embedded
     (qcopchannel_qws.h QCopChannel)
@@ -108,6 +110,32 @@
 
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
+
+    ; KDGear - http://www.klaralvdalens-datakonsult.se
+    (KDCheckableGroupBox.h KDCheckableGroupBox)
+    (KDCheckableHGroupBox.h KDCheckableHGroupBox)
+    (KDCheckableVGroupBox.h KDCheckableVGroupBox)
+    (KDCloseableWidget.h KDCloseableWidget)
+    (KDConfigDialog.h KDConfigDialog)
+    (KDConfigWidget.h KDConfigWidget)
+    (KDDateWidget.h KDDateWidget KDDateTimeWidget)
+    (KDDirMonitor.h KDDirMonitor)
+    (KDGridWidget.h KDGridWidget)
+    (KDListBoxPair.h KDListBoxPair)
+    (KDMinimizeSplitter.h KDMinimizeSplitter)
+    (KDSearchableListBox.h KDSearchableListBox)
+    (KDSemiSizingControl.h KDSemiSizingControl)
+    (KDShowHideTableControl.h KDShowHideTableControl)
+    (KDSimpleSizingControl.h KDSimpleSizingControl)
+    (KDSizingControl.h KDSizingControl)
+    (KDStream.h KDStream)
+    (KDTimeWidget.h KDTimeWidget)
+
+    ; Fake entries, which is usefull
+    (qapplication.h qApp)
+    (kapplication.h kapp)
+    (klocale.h i18n i18N_NOOP)
+    (kstandarddirs.h locate locateLocal)
 
     )
     "List of special include files which do not follow the normal scheme")
@@ -222,22 +250,27 @@
                     ((string-match "^qxml" word) "qxml.h")
                     (t (concat word ".h")))))
       (beginning-of-buffer)
-      (if (not (re-search-forward (concat "#include *<" header ">") nil t))
+      (if (re-search-forward (concat "^ *// *\\(#include *[<\"]" header "[>\"]\\)") nil t)
           (progn
+            (replace-match "\\1")
+            (message (concat "commented in #include for " header)))
+
+        (if (not (re-search-forward (concat "#include *[\"<]" header "[\">]") nil t))
+            (progn
                                         ; No include existed
-            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-            (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
-                (beginning-of-buffer)
-              (progn (end-of-line) (forward-char 1)))
-            (if (file-exists-p header)
-                (progn 
-                  ; See this as a local file.
-                  (insert "#include \"" header "\"\n")
-                  (message (concat "inserted " "#include \"" header "\"")))
-              (progn
-                (insert "#include <" header ">\n")
-                (message (concat "inserted " "#include <" header ">")))))
-        (message (concat "header file \"" header "\" is already included"))))))
+              (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
+              (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
+                  (beginning-of-buffer)
+                (progn (end-of-line) (forward-char 1)))
+              (if (file-exists-p header)
+                  (progn 
+                                        ; See this as a local file.
+                    (insert "#include \"" header "\"\n")
+                    (message (concat "inserted " "#include \"" header "\"")))
+                (progn
+                  (insert "#include <" header ">\n")
+                  (message (concat "inserted " "#include <" header ">")))))
+          (message (concat "header file \"" header "\" is already included")))))))
 
 
 
@@ -252,22 +285,27 @@
   (save-excursion
     (let* ((word (kdab-word-under-point)))
       (beginning-of-buffer)
-      (if (not (re-search-forward (concat "class *" word ";") nil t))
+      (if (re-search-forward (concat "^ *// *\\(class *" word ";\\)") nil t)
           (progn
-                                        ; No forward decl existed
-            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-            (if (re-search-backward "^[ \t]*class .*;" nil t)
-                (progn (end-of-line) (forward-char 1))
-              ; No forward declarations found, lets search for include lines.
-              (if (re-search-backward "#include" nil t)
-                  (progn (end-of-line) (forward-char 1))
-                (beginning-of-buffer)))
-            
-            (progn
-              (insert "class " word ";\n")
-              (message (concat "inserted " "class " word ";")))))
-      (message (concat "forward decl for \"" word "\" already exists")))))
+            (replace-match "\\1")
+            (message (concat "commented in forward declaration for " word)))
 
+        (if (not (re-search-forward (concat "class *" word ";") nil t))
+            (progn
+                                        ; No forward decl existed
+              (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
+              (if (re-search-backward "^[ \t]*class .*;" nil t)
+                  (progn (end-of-line) (forward-char 1))
+                                        ; No forward declarations found, lets search for include lines.
+                (if (re-search-backward "#include" nil t)
+                    (progn (end-of-line) (forward-char 1))
+                  (beginning-of-buffer)))
+              
+              (progn
+                (insert "class " word ";\n")
+                (message (concat "inserted class " word ";"))))
+          (message (concat "forward decl for \"" word "\" already exists")))))))
+  
 
 (defun is-qpe-class (class)
   (let ((list kdab-qpe-includes) classes (found nil))
@@ -295,6 +333,5 @@
                  (replace-match word t t doc))))
       (start-process "qt documentation" nil "kfmclient" "openURL" url)
       (message (concat "Loading " url)))))
-
 
 (provide 'klaralv)
