@@ -20,7 +20,7 @@ i18n() calls so that xgettext can parse them.
                     Valid groups are: @{[TAG_GROUPS()]}
 
 --context=name    : Give i18n calls a context name: i18n("name", ...)
---lines           : Include source line numbers in comments
+--lines           : Include source line numbers in comments (deprecated, it is switched on by default now)
 --help|?          : Display this summary
 
 EOF
@@ -138,12 +138,11 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
+       print "//i18n: file $file_name line $.\n";
        print "// xgettext: no-c-format\n";
        print  q|i18n("|;
        print qq|$opt_context","|        if $opt_context;   # We have a I18N context
-       print qq|$text"); // $file_name|;
-       print qq| $.|                    if $opt_lines;
-       print qq| \n|;
+       print qq|$text");\n|;
      }
      else
      {
