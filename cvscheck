@@ -161,14 +161,14 @@ sub processEntries
         my $staginfo = "";
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
-          if($line =~ /^[TN](.+)$/) {
+          if($line =~ /^[TDN](.+)$/) {
             $standardtag = $1;
             $staginfo = $1;
           }
           else {
             # something with D - assume HEAD
             $oldstandardtag = $standardtag = ""; # its HEAD
-            print "I $dir has sticky date: $line\n";
+            print "I $dir has unknown stickyness: $line";
           }
           close(CVSTAG);
         }
@@ -190,7 +190,7 @@ sub processEntries
           $stamp = $3;
           $options = $4;
           $tag = $5;
-          $tag = $1 if ($tag =~ /^T(.+)$/);
+          $tag = $1 if ($tag =~ /^[TD](.+)$/);
 
           $dirunknown{$fname} = 0;
 
