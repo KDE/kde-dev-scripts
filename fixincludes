@@ -417,6 +417,7 @@ sub fix_unnecessary($)
     # it will break the application if removed even
     # if it continues to compile
     next if( $include eq "kdatastream.h");
+    next if( $include eq "kdebug.h");
     
     chdir($srcdir);
 
