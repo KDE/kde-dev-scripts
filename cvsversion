@@ -1,15 +1,5 @@
 #!/bin/sh
-d=`dirname $1`
-f=`basename $1`
-if [ -z "$AWK" ]; then
-    if [ `uname` = "FreeBSD" ]; then
-        AWK=awk
-    else
-        AWK=gawk
-    fi
-fi
-cat $d/CVS/Entries | grep "\/$f\/" | $AWK 'BEGIN { FS = "/" } { print $3 }'
-exit 0
+exec awk -F / "{ if (\$2 == \"`basename $1`\") print \$3 }" < `dirname $1`/CVS/Entries
 
 =head1 NAME
  
