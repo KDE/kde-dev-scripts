@@ -68,6 +68,9 @@ sub optionstonroff
 	    if( $2 ) { $long = $2; } else { $long = ""; };
 	    if( $3 ) { $arg = $3; } else { $arg = ""; };
 	    if( $4 ) { $desc = $4; } else { $desc = ""; };
+	    $short =~ s/-/\\-/g;
+	    $long =~ s/-/\\-/g;
+	    $arg =~ s/-/\\-/g;
 	    $ret .= ".TP\n";
 	    $ret .= ".B $short $long $arg\n";
 	    $ret .= "$desc\n";
@@ -200,6 +203,7 @@ chomp $shortdescription;
 
 my $synopsis = `$runapp --help | sed -n '1p' | sed -e 's/[^:]*: //'`;
 chomp $synopsis;
+$synopsis =~ s/-/\\-/g;
 my $appname = $synopsis;
 $appname =~ s/ .*$//;
 my $ucappname = uc $appname;
@@ -227,7 +231,7 @@ print <<EOF;
 .TH $ucappname 1 \"$timespec\" \"K Desktop Environment\" \"$shortdescription\"
 .SH NAME
 $appname
-\- $shortdescription
+\\- $shortdescription
 .SH SYNOPSIS
 $synopsis
 .SH DESCRIPTION
