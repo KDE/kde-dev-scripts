@@ -130,6 +130,7 @@
 (define-key c-mode-map [(f6)] 'kde-switch-cpp-h)
 (define-key c++-mode-map [(f7)] 'switch-to-function-def)
 (define-key c++-mode-map [(f9)] 'agulbra-make-member)
+(define-key c-mode-map [(f9)] 'agulbra-make-member)
 (define-key global-map [(meta n)] 'next-error)
 
 ; kde-emacs-headers:
