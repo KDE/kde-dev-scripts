@@ -110,4 +110,8 @@ CONFIGUREFLAGS="--disable-debug"
 #
 MAKE_OPTS=""
 
+# If you would like to compile with a different make, please set it
+# here
+MAKE=make
+
 # vim:et:ts=2:sw=2

@@ -58,7 +58,10 @@ else
 fi
 
 echo "makeobj[0]: Entering directory \`$PWD'"
-LANGUAGE=C /usr/bin/make $args
+if test -z "$MAKE"; then
+	MAKE=/usr/bin/make
+fi
+LANGUAGE=C $MAKE $args
 retval=$?
 echo "makeobj[0]: Leaving directory \`$PWD'"
 exit $retval

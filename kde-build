@@ -175,6 +175,10 @@ else
   . ./kde-buildrc
 fi
 
+if test -z "$MAKE"; then
+  MAKE=make
+fi
+
 if test "x$ONLYLISTEDMODULES" = xyes; then
    modules="$critical_modules $KDEMODULES"
 else
@@ -340,7 +344,7 @@ for module in $modules; do
       check_admin
     fi
     if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
-      cmd_make_cvs_clean="make -f admin/Makefile.common cvs-clean"
+      cmd_make_cvs_clean="$MAKE -f admin/Makefile.common cvs-clean"
       test "x$KDELOGDIR" != x && cmd_make_cvs_clean="$cmd_make_cvs_clean >> $logfile 2>&1"
     fi
     
@@ -348,7 +352,7 @@ for module in $modules; do
       if test -e Makefile.cvs; then
         check_admin
         check_libltdl
-        cmd_make_makefile_cvs="make -f Makefile.cvs"
+        cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
         test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
         if eval ${cmd_make_makefile_cvs}; then
           echo "$str_okay"
@@ -387,10 +391,10 @@ for module in $critical_modules $KDEMODULES; do
     #
     if test ! -e "Makefile.in"; then
       if test "x$critical" = "x1"; then
-        echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
+        echo "ERROR: Please execute '$MAKE -f Makefile.cvs' first for this module!"
         exit $err_no_makefile_in
       else
-        echo "WARNING: 'make -f Makefile.cvs' seems not to be executed for this"
+        echo "WARNING: '$MAKE -f Makefile.cvs' seems not to be executed for this"
         echo "WARNING: module, skipping compilation."
       fi
     else
@@ -426,7 +430,7 @@ for module in $critical_modules $KDEMODULES; do
         #
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
-        cmd_make="make $MAKE_OPTS"
+        cmd_make="$MAKE $MAKE_OPTS"
         test "x$critical" = "x0" && cmd_make="$cmd_make -k"
         if test "x$KDELOGDIR" != x; then
           echo "-> Compilation <----------------------------------------------------------------" >> $logfile
@@ -447,7 +451,7 @@ for module in $critical_modules $KDEMODULES; do
 
           # Install the module.
           #
-          cmd_make_install="make"
+          cmd_make_install="$MAKE"
           test "x$critical" = "x0" && cmd_make_install="$cmd_make_install -k"
           test "x$NICECOMPILE" = xyes && cmd_make_install="nice $cmd_make_install"
           cmd_make_install="$cmd_make_install install"
