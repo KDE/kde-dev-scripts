@@ -1,8 +1,15 @@
-#compdef kcmshell
+#compdef kcmshell appletproxy
 
-local i tmp
+local i tmp dir flags
+if [ "$words[0]" = "kcmshell" ]; then
+	dir="applnk/Settings";
+	flags=":t:r";
+else
+	dir="apps/kicker/applets";
+	flags=":t"
+fi
 for i in `echo $KDEDIRS | sed 's,:, ,'` $KDEHOME; do
-	tmp=($i/share/applnk/Settings/**/*.desktop(:t:r))
+	tmp=($i/share/$dir/**/*.desktop($flags))
 	compadd -a tmp
 done
 
