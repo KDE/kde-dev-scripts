@@ -519,7 +519,6 @@ sub processDir($)
             print "** Skipping $d/$e\n";
             next;
         }
-        push (@dirqueue, "$d/$e") if (-d ("$d/$e"));
         &spell_file("$d/$e") if (-f ("$d/$e"));
     }
     closedir(DIR);
