@@ -640,4 +640,32 @@ Otherwise treat `\\' in NEWTEXT as special:
     )
   )
 
+(defun kde-emacs-file-style-update ()
+  "Updates the style header of this file"
+  (interactive)
+  (if (or (eq major-mode 'c++-mode)
+	  (eq major-mode 'c-mode))
+      (let ((startpoint) (endpoint)
+	    (firstline) (strings)
+	    (str) (m) (m2) (var) (value)
+	    (final))
+	(save-excursion
+	  (beginning-of-buffer)
+	  (setq startpoint (point))
+	  (setq endpoint (point-at-eol)))
+	(setq firstline (buffer-substring startpoint endpoint))
+	(if (string-match "-\*-\\([A-Za-z0-9\-\+\:\; ]+\\)-\*-" firstline)
+	    (delete-region startpoint endpoint))
+	(setq final (concat "-*- "
+			    "Mode: " (prin1-to-string major-mode) "; "
+			    "c-basic-offset: " (prin1-to-string c-basic-offset)  "; "
+			    "indent-tabs-mode: " (prin1-to-string indent-tabs-mode)  "; "
+			    "tab-width: " (prin1-to-string tab-width) "; "
+			    "-*-"))
+	(save-excursion
+	  (beginning-of-buffer)
+	  (insert final)
+	  (comment-region (point-at-bol) (point-at-eol))))))
+
+
 (provide 'kde-emacs-utils)
