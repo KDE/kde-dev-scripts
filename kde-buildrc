@@ -11,7 +11,7 @@ KDESRCDIR="/home/dirk/src/kde"
 #
 KDEDIRS="/opt/kde"
 
-# Where is your Qt 2.2.x?
+# Where is your Qt 3.0..x?
 #
 QTDIR="/usr/X11/lib/qt"
 
@@ -68,10 +68,9 @@ CVSCLIENT="cvs"
 #
 ACCOUNT="mueller"
 
-# Do you want any special branch? If so, specify it's tag here e.g.
-# KDE_1_91 for the KDE 1.91 Beta ("Kleopatra") or KDE_1_92 for the
-# KDE 1.92 Beta ("Korner"), if you want the plain HEAD branch, leave
-# this empty.
+# Do you want any special branch? If so, specify its tag here e.g.
+# KDE_2_2_BRANCH  or KDE_3_O_ALPHA_1. If you want the
+# plain HEAD branch, leave this empty.
 #
 BRANCH=""
 
