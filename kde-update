@@ -1,19 +1,40 @@
 #!/bin/bash
 ################################################################################
-# Updates a local CVS tree with KDE sources                                    #
+# Updates a local CVS tree                                                     #
 # 2000 by Frerich Raabe <raabe@kde.org>                                        #
 ################################################################################
 
 # Where are all your CVS modules stored?
 SRCDIR=/home/devel/src/kde-cvs
 
+# Where shall the logfiles be saved?
+LOGDIR=$SRCDIR/log
+
+# If there are any modules in $SRCDIR which you don't want to be updated,
+# you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
+EXCLUDE=""
+
 ################################################################################
 
-for MODULE in `ls $SRCDIR`; do
-  cd $SRCDIR/$MODULE
-  echo "========================> Updating module '$MODULE'..."
-  test -d CVS && cvs up
-  echo "========================> Update finished successfully"
-  test -e admin/Makefile.common && make -f admin/Makefile.common cvs-clean
-  test -e Makefile.cvs && make -f Makefile.cvs
+DATE=`date +%x`
+
+for MODULE in `find $SRCDIR -type d -mindepth 1 -maxdepth 1 -follow`; do
+  MODULE=`echo $MODULE | sed -e "s@.*/?*@@"`
+  if test ! -x $SRCDIR/$MODULE; then
+    echo "WARNING: Could not change into directory $SRCDIR/$MODULE."
+  else
+    cd $SRCDIR/$MODULE
+    if test -d CVS && ! (echo $EXCLUDE | grep -q $MODULE); then
+      LOGFILE=$LOGDIR/$MODULE-update-$DATE
+      echo -n "Updating module '$MODULE'..."
+      if cvs up >& $LOGFILE; then
+        test -e admin/Makefile.common && (echo "====> Doing make -f admin/Makefile.common cvs-clean" >> $LOGFILE; make -f admin/Makefile.common cvs-clean 2>&1 | tee -a $LOGFILE > /dev/null)
+        test -e Makefile.cvs && (echo "====> doing make -f Makefile.cvs" >> $LOGFILE; make -f Makefile.cvs 2>&1 | tee -a $LOGFILE > /dev/null)
+        echo "done!"
+      else
+        echo "failed!"
+      fi
+    fi
+  fi
 done
+exit 0
