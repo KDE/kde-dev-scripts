@@ -10,9 +10,8 @@ if [ $# -ne 1 ]; then
   echo "So the argument is the file you want to create."
   echo
 else
-  srcdir=
   if test -f config.status && test -f configure; then
-	srcdir=.
+    :
   else
     if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
       cd $OBJ_SUBDIR
@@ -54,20 +53,30 @@ else
     cd ..
   done
 
-  # Find out srcdir
-  srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+  # Find out top_srcdir.
+  top_srcdir=`egrep '^top_srcdir *=' Makefile | sed -e "s#top_srcdir *= *##"`
 
   (  
-    if cd $srcdir ; then
+    if cd $top_srcdir ; then
      # Check if unsermake or automake was used to create the toplevel Makefile.in
      # (the one in $relpath might not exist yet)
      if test -n "`sed -n -e '1p' Makefile.in | grep unsermake`"; then
-       if test -z "$UNSERMAKE"; then
-         echo "unsermake was used to build this module, but \$UNSERMAKE isn't set!"
-	 exit 1
+       if test -n "`sed -n -e '1p' Makefile.in | grep automake`"; then # old unsermake
+         if test -z "$UNSERMAKE"; then
+           echo "unsermake was used to build this module, but \$UNSERMAKE isn't set!"
+	   exit 1
+         fi
+         $UNSERMAKE $relpath
+         exit 2
+       else # new unsermake
+         UNSERMAKE=`type -p unsermake`
+         if test ! -x "$UNSERMAKE"; then
+                echo 'Makefile was created with unsermake, but there'
+                echo 'is no unsermake in $PATH'
+                exit 1
+         fi
+         $UNSERMAKE -c $relpath
        fi
-       $UNSERMAKE $relpath
-       exit 2
      else
        # Suck in AUTOCONF/AUTOMAKE detection code
        . admin/detect-autoconf.sh
