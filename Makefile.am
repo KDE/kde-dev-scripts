@@ -3,7 +3,7 @@ bin_SCRIPTS = create_makefile create_makefiles cvs2pack create_cvsignore \
 	cvslastchange cvslastlog cvsversion cvscheck cxxmetric extend_dmalloc \
 	kdedoc qtdoc kdelnk2desktop.py licensecheck adddebug \
 	pruneemptydirs noncvslist kde-build kdekillall extractrc makeobj includemocs \
-	cvsrevertlast cvsblame cheatmake fixincludes incdiff
+	cvsrevertlast cvsblame cheatmake fixincludes
 
 # not installed : add_trace.pl kDebug2kdDebug colorcvs
 
