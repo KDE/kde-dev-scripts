@@ -181,7 +181,7 @@ check_admin() {
 }
 
 check_libltdl() {
-  if [ "$module" == arts -a ! -e libltdl/Makefile.am ]; then
+  if [ "$module" = arts -a ! -e libltdl/Makefile.am ]; then
     if [ -d ../kdelibs ]; then
       cp -a ../kdelibs/libltdl .
       echo "Making copy of ../kdelibs/libltdl" >> $logfile 2>&1
