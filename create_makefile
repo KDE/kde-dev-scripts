@@ -92,6 +92,6 @@ else
   fi
   CONFIG_FILES=$relpath CONFIG_HEADERS= ./config.status
   if test "$createrulesfile" = "true"; then
-    CONFIG_FILES=$relpath".rules" CONFIG_HEADERS= ./config.status
+    CONFIG_FILES="$relpath.rules $relpath.calls" CONFIG_HEADERS= ./config.status
   fi
 fi
