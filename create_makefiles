@@ -1,0 +1,11 @@
+#!/bin/sh
+# Usage : create_makefiles dir
+# (to be run from toplevel directory)
+# Will re-create all Makefiles in dir and its subdirs
+# Needs create_makefile in the path.
+#
+# Stupid, but handy.
+# David Faure <faure@kde.org>
+#
+find $1 -name Makefile.am | sed -e 's/\.am//' | while read a; do create_makefile $a ; done
+
