@@ -1,8 +1,8 @@
 #compdef kcmshell
 
 local i tmp
-for i in `echo $KDEDIRS | sed 's,:, ,'`; do
-	tmp=(`find $i/share/applnk/Settings/ -name '*.desktop' 2>/dev/null | sed 's,.*/,,' | sed 's,\.desktop,,'`)
+for i in `echo $KDEDIRS | sed 's,:, ,'` $KDEHOME; do
+	tmp=($i/share/applnk/Settings/**/*.desktop(:t:r))
 	compadd -a tmp
 done
 
