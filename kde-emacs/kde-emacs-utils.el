@@ -343,6 +343,10 @@
   (if (not (c-in-literal))
       (let ((n nil) (o nil))
         (save-excursion
+          (forward-char -1)              ; These three lines are for the situation where 
+          (if (not (looking-at " "))     ; the user already have inserted a space after
+              (forward-char 1))          ; the closing parenthesis
+          
           (forward-char -2)
           (setq o (looking-at "()"))
           (forward-char 1)
