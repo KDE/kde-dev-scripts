@@ -36,14 +36,14 @@ EXTRA_DIST = completions kde-emacs \
 #	pod2man $< $@
 
 kde-build.1: kde-build
-	pod2man $< > $@
+	pod2man kde-build > $@
 cvsversion.1: cvsversion
-	pod2man $< > $@
+	pod2man cvsversion > $@
 cvscheck.1: cvscheck
-	pod2man $< > $@
+	pod2man cvscheck > $@
 noncvslist.1: noncvslist
-	pod2man $< > $@
+	pod2man noncvslist > $@
 cvsblame.1: cvsblame
-	pod2man $< > $@
+	pod2man cvsblame > $@
 includemocs.1: includemocs
-	pod2man $< > $@
+	pod2man includemocs > $@
