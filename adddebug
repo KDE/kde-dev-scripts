@@ -17,6 +17,7 @@ done
 xpr='s/^((C|CXX|LD)FLAGS[ \t]*=.*)$/\1 -g3/'
 if test -z $keep; then
   xpr="$xpr;"'s/[\t ]-O[1-9]?\b//g'
+  xpr="$xpr;"'s/[\t ]-march=\S+\b//g'
 fi
 if test -z $ndebug; then
   xpr="$xpr;"'s/[\t ]-DNDEBUG\b//g'
