@@ -148,9 +148,13 @@ for my $file_name ( @ARGV )
      $text =~ s/<\/$text_string.*$//o;
      $text =~ s/&lt;/</g;
      $text =~ s/&gt;/>/g;
-     $text =~ s/&amp;/&/g; 
-     $text =~ s/\\([^n])/\\\\$1/g;
-     $text =~ s/\"/\\\"/g;
+     $text =~ s/&amp;/&/g;
+     
+     # We need to escape characters exactly like uic does it:
+     $text =~ s/\\/\\\\/g; # escape \
+     $text =~ s/\"/\\\"/g; # escape "
+     $text =~ s/\r//g; # remove CR (Carriage Return)
+     ### TODO: line feed: $text =~ s/\n/\\n/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
 
      if ( $text cmp "" )
      {
