@@ -121,7 +121,7 @@ function! IncludeGuard()
 endfunction
 
 function! SmartInclude()
-	if nr2char( getchar() ) == '"'
+	if nr2char( getchar( 0 ) ) == '"'
 		return "#include \".h\"\<Left>\<Left>\<Left>"
 	endif
 	return "#include <.h>\<Left>\<Left>\<Left>"
