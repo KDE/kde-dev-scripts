@@ -8,9 +8,19 @@ set print static-members off
 # Prints the contents of a QString
 define printqstring
        set $i=0
+       set $out="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+       set $cur=0
        set $s = $arg0
        while $i < $s.d->len
-         p (char)($s.d->unicode[$i++].ucs & 0xff)
+         set $out[$cur++] = (char)($s.d->unicode[$i++].ucs & 0xff)
+         if $cur >= 40
+           p $out
+           set $cur = 0
+           set $out="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+         end
+       end
+       if $cur < 40
+         p $out
        end
 end
 
