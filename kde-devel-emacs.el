@@ -1062,6 +1062,29 @@ With arg, to it arg times."
     )
   )
 
+
+; Makes '(' insert '( '
+(defun insert-parens () (interactive) (insert "( "))
+; Makes '(' insert ') ', unless we just typed '('
+(defun insert-parens2 () (interactive)
+  (let ((n ""))
+    (save-excursion
+      (forward-char -2) 
+      (setq n (looking-at "( ")) )
+    (cond
+     (n (progn
+	  (delete-backward-char 1)
+	  (insert ")")))
+     (t ;else
+      (insert " )") ))))
+; Makes ',' insert ', '
+(defun insert-comma () (interactive) (insert ", "))
+
+; The keybindings for the above. You need to uncomment them out if they suit you.
+;(define-key c++-mode-map [\(] 'insert-parens)
+;(define-key c++-mode-map [\)] 'insert-parens2)
+;(define-key c++-mode-map [,] 'insert-comma)
+
 ; A wheel mouse that doesn't beep, unlike mwheel-install
 (defun scroll-me-up () (interactive) (scroll-up 3))
 (defun scroll-me-down () (interactive) (scroll-down 3))
