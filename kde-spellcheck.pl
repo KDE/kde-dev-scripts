@@ -1122,6 +1122,7 @@ my %fix = (
 	 "utilisation" => "utilization",
 	 "valied" => "valid",
 	 "vaild" => "valid",
+	 "valueable" => "valuable",
 	 "varb" => "verb",
 	 "vays" => "ways",
 	 "verfication" => "verification",
