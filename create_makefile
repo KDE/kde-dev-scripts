@@ -15,9 +15,13 @@ else
   if test -f config.status && test -f configure; then
 	srcdir=.
   else
-    if test ! -f Makefile && test -n "$OBJ_REPLACEMENT"; then
-       objdir=`pwd | sed -e "$OBJ_REPLACEMENT"`
-       cd $objdir
+    if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
+      cd $OBJ_SUBDIR
+    else
+      if test ! -f Makefile && test -n "$OBJ_REPLACEMENT"; then
+         objdir=`pwd | sed -e "$OBJ_REPLACEMENT"`
+         cd $objdir
+      fi
     fi
 
     if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
