@@ -265,7 +265,7 @@ else
     KDELOGDIR=""
   fi
 fi
-test "x$KDELOGDIR" != x && str_error="$str_error\x00a\x00d\x020\x020Check the logfile in $KDELOGDIR for further information."
+test "x$KDELOGDIR" != x && str_error="$str_error   Check the logfile in $KDELOGDIR for further information."
 if test ! -d "$KDESRCDIR"; then
   echo "ERROR: Invalid source directory specified!"; exit $err_inv_kdesrcdir
 fi
@@ -365,7 +365,7 @@ for module in $modules; do
   if test "x$KDELOGDIR" != x; then
     rm -f $KDELOGDIR/$module-build-*
     rm -f $KDELOGDIR/$module-failed-*
-    logfile="$KDELOGDIR/$module-build-$dateformat"
+    logfile="$KDELOGDIR/$module-build-$dateformat.log"
     echo "================================================================================" > $logfile
     echo "Build log of module $module, started on `date +%c`" >> $logfile
     echo "================================================================================" >> $logfile
@@ -393,9 +393,18 @@ for module in $modules; do
         cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
         starttime=`date +%s`
     fi
+    check_libltdl
     
     if eval ${cmd_update_raw}; then
 
+      if test "x$module" == xarts; then
+        # since the CVS dir of libltdl is copied along with the rest
+        # we can just cvs upd in libltdl
+        cmd_update_raw="cd libltdl ; $cmd_update >> $logfile 2>&1; cd .."
+        if test ! "$docvsupdate" -eq 0; then
+          eval ${cmd_update_raw}
+        fi
+      fi
       if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
         check_admin
       fi
@@ -407,7 +416,6 @@ for module in $modules; do
       if eval ${cmd_make_cvs_clean}; then
         if test -e Makefile.cvs; then
           check_admin
-          check_libltdl
           cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
           test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
           if test -f Makefile.am.in && test -n "$USE_UNSERMAKE" && test "x$module" != xkdepim; then
@@ -431,7 +439,7 @@ for module in $modules; do
       if test "x$KDELOGDIR" != x; then
         compute_time
         echo "--------------------------------------------------------------------------------" >> $logfile
-        echo "Time needed for updating module $module: $hours:$minutes:$seconds" >> $logfile
+        echo "Time needed for updating of module $module: $hours:$minutes:$seconds" >> $logfile
         echo "" >> $logfile
       fi
     else
@@ -489,7 +497,11 @@ for module in $modules; do
       varname="CONFIGUREFLAGS_`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`"; # e.g. CONFIGUREFLAGS_ARTS etc.
       varvalue=`eval echo '$'$varname`
       test -n "$varvalue" && configureflags="$configureflags $varvalue"
-      cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      if test -n "$KDEBUILDDIR"; then
+        cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      else
+        cmd_configure="./configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      fi
       test "$NICECOMPILE" = yes && cmd_configure="nice $cmd_configure"
       configure_okay="$str_okay"
       if test $doconfigure -eq 0 -a -e "Makefile"; then
@@ -497,7 +509,9 @@ for module in $modules; do
         configure_okay="skipped."
       fi
       if test -n "$KDELOGDIR"; then
-        logfile="$KDELOGDIR/$module-build-$dateformat"
+        logfile="$KDELOGDIR/$module-build-$dateformat.log"
+        echo "-> Configuration <--------------------------------------------------------------" >> $logfile
+        echo $cmd_configure >> $logfile
         echo "-> Configuration <--------------------------------------------------------------" >> $logfile
         cmd_configure="$cmd_configure >> $logfile 2>&1"
         starttime=`date +%s`
@@ -516,7 +530,7 @@ for module in $modules; do
         #
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
-	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$USE_UNSERMAKE" && use_compile_target=yes
+	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$UNSERMAKE" && use_compile_target=yes
 	if test "$use_compile_target" = yes && test -n "$MAKE_OPTS_COMPILE"; then
 	    cmd_make="$MAKE $MAKE_OPTS_COMPILE"
 	else

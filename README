@@ -74,6 +74,10 @@ pruneemptydirs	Detects stale source dirs in a CVS tree
 
 kde-build       Updates and recompiles a local CVS tree
 
+build-progress.sh Displays the progress of kde-build, times needed to complete each
+		step. And sets the titlebar of the terminal to the directory that
+		make is processing 
+
 extractrc	Extract text tags from designer's UI files and XML GUI-RC files
 
 gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
