@@ -60,7 +60,7 @@ sub processEntries
 		$stamp = $3;
 		$tag = $5;
 
-		if ( !( $tag eq "" ) ) {
+		if ( $tag ne "" ) {
 			push @tagged, "$dir/$fname - $tag";
 		}
 
