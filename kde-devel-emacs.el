@@ -230,7 +230,7 @@ With arg, to it arg times."
                              (concat class "::~" class "(")
                              t t function)
                             "\n{\n    \n}\n"))))
-                  ((string-match " *\\([a-z0-9_]+\\)[ \\t]*(" function)
+                  ((string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function)
                    (progn
                      (setq insertion-string
                            (concat
