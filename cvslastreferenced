@@ -1,0 +1,64 @@
+#!/usr/bin/perl -w
+# Written by Zack Rusin <zack@kde.org>
+#
+# This file is free software, licensed under the BSD licence. 
+# That means that you can do anything you want with it except 
+# eating too much candy since that totally messes up your teeth
+# and here in KDE land we care about your teeth. They're out 
+# greatest priority right next to scoring chicks of course...
+#
+
+# This script goes through the whole history of a file to find 
+# all modifications referencing specific string. It's useful if
+# you want to know when a function has been removed/modified/added
+# to a file if a recent cvs annotate doesn't anymore reference it.
+
+our $file;
+our $func;
+
+sub check_file
+{
+  my $rev1 = shift;
+  my $rev2 = shift;
+
+  my $output = `cvs diff -r $rev1 -r $rev2 $file`;
+
+  if ( $output =~ /(^[+-].+$func.+$)/m ) {
+    print "FOUND IN: cvs diff -r $rev1 -r $rev2 $file\n";
+    $_ = $1;
+    s/^([-+])\s*(.+)/$1 $2/;
+    return $_;
+  }
+  return 0;
+}
+
+sub get_revision
+{
+  my $output = `cvsversion $file`;
+  chomp $output;
+  return $output;
+}
+
+my $argc = scalar @ARGV;
+
+die "$0 <function> <file>" if ( $argc != 2 );
+$func = $ARGV[0];
+$file = $ARGV[1];
+
+my $current_revision = get_revision( $file );
+
+$current_revision =~ /(\d+)\.(\d+)/;
+$base = $1;
+$working = $2;
+
+while ( $working > 1 ) {
+  my $older = $working - 1;
+  my $res = check_file( "$base.$older", "$base.$working");
+  
+  if ( $res ) {
+    print "\t($res)\n";
+  }
+  --$working;
+}
+
+print "Didn't find a reference to that $func in $file\n";
