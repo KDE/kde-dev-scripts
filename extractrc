@@ -29,7 +29,7 @@ while ( <FILE> ) {
    $string .= $_;   
    chomp($string);
  
-   if (intext == 0) {
+   if ($intext == 0) {
      if ($string =~ /<text>/) {
        $string =~ s/^.*<text>//;
        $intext = 1;
@@ -50,7 +50,7 @@ while ( <FILE> ) {
 }
 
 if ($intext == 1) {
- print STDERR "parsing error in $filename\n";
+ print STDERR "parsing error in $filename $linenr\n";
  exit 1;
 }
 
