@@ -26,7 +26,7 @@ open(FILE, $filename);
 
 READING: while ( <FILE> ) {
    $linenr++;
-   if ($linenr == 1 && $_ !~ /^<!DOCTYPE/) {
+   if ($linenr == 1 && ($_ !~ /^<!DOCTYPE/) && ($_ !~ /^<\?xml/)) {
    	last READING;
    }
 
