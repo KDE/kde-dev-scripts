@@ -56,6 +56,7 @@ $lastdir = '.';
  'invalid use of undefined type `class QPointArray' => "qpointarray",
  'variable `QPainter \S*\' has initializer but incomplete type' => "qpainter",
  'invalid use of undefined type `class QRegExp' => "qregexp",
+ 'no method `QCursor::pos' => "qcursor",
 );
 
 %changes = ();
