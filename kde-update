@@ -31,11 +31,16 @@ LOGDIR=$SRCDIR/log
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
 EXCLUDE="qt-copy"
 
+# If you would like a virgin cvs copy set this field to "yes", otherwise set
+# this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'
+# is executed).
+CVS_CLEAN=yes
+
 ## Don't modify anything below this line! ###################################### 
 
 # Various variables for internal usage.
 #
-DATE=`date +%x`
+DATE=`date +%Y%m%d`
 POTENTIAL_MODULES=`find $SRCDIR -type d -mindepth 1 -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
 ERR_NO_ERROR=0
 ERR_NO_CVSCLIENT=1
@@ -125,17 +130,17 @@ for MODULE in $MODULES; do
       echo -n "$0: Updating module '$MODULE'..."
       if $UPDATE_COMMAND; then
 
-        MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
-        test $LOGDIR && MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
-
+        if test "$CVS_CLEAN" = yes; then
+          MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
+          test $LOGDIR && MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
+          if test -e admin/Makefile.common; then
+            test $LOGDIR && echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
+            $MAKE_CVS_CLEAN
+          fi
+        fi
+        
         MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
         test $LOGDIR && MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
-
-        if test -e admin/Makefile.common; then
-          test $LOGDIR && echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
-          $MAKE_CVS_CLEAN
-        fi
-
         if test -e Makefile.cvs; then
           test $LOGDIR && echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
           $MAKE_MAKEFILE_CVS
