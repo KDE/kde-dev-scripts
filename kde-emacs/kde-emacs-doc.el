@@ -83,6 +83,29 @@ A copy of the license is included in the section entitled \"GNU
 Free Documentation License\"."
   "GNU FDL license header.")
 
+(defvar BSD "Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+  "BSD license header.")
+
+
 ;;----------------
 ;; Variables     |
 ;;----------------
@@ -152,7 +175,7 @@ See `comment-styles' for a list of available styles."
 buffer."
   (interactive (list (completing-read
 		      "Which license do you want to use? "
-		      '(("GNU GPL" 1) ("GNU LGPL" 2) ("GNU FDL" 3))
+		      '(("GNU GPL" 1) ("GNU LGPL" 2) ("GNU FDL" 3) ("BSD" 4))
 		      nil t nil)))
   (save-excursion
     (let ((start (point-min))
@@ -173,6 +196,10 @@ buffer."
 		  ((string= license "GNU FDL")
 		   (insert (kde-license-header))
 		   (insert FDL)
+		   )
+		  ((string= license "BSD")
+		   (insert (kde-license-header))
+		   (insert BSD)
 		   )
 		  )
 	    (insert "\n")
