@@ -57,5 +57,9 @@ else
   cd $dir
 fi
 
-exec /usr/bin/make $args
+echo "makeobj[0]: Entering directory \`$PWD'"
+LANGUAGE=C /usr/bin/make $args
+retval=$?
+echo "makeobj[0]: Leaving directory \`$PWD'"
+exit $retval
 
