@@ -28,61 +28,12 @@
       (add-hook 'find-file-hooks 'fume-add-menubar-entry))
   (require 'imenu))
 
-;; Switch between the declaration of a class member in .cc/.cpp/.C, and its definition in the .h file
-;; Written by David and Reggie after much hair tearing
-(defun switch-to-function-def ()
-  (interactive)
-  (let ((n (buffer-file-name))
-        (class "")
-        (fn "")
-	(save)
-	)
-    (if (or (string-match "\\.cc$" n)
-            (string-match "\\.cpp$" n)
-            (string-match "\\.C$" n))
-        (let ((a (fume-function-before-point)))
-          (and (string-match "^\\(.*\\)::\\(.*\\)$" a)
-               (progn
-                 (setq class (match-string 1 a))
-                 (setq fn (match-string 2 a))
-                 (kde-switch-cpp-h)
-                 (goto-char 0)
-                 (re-search-forward
-		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
-			  class "[^;]+{") nil t)
-                 ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "[ \t]+" fn "[ \t]*(") nil t)))))
-    (if (string-match "\\.h$" n)
-        (progn
-          (save-excursion
-            (forward-line 0)
-            (re-search-forward "[ \t]+\\([^ \t(]+\\)[ \t]*(" nil t)
-            (setq fn (match-string 1))
-            (re-search-backward "^\\(class\\|namespace\\) \\([a-zA-Z0-9_]+\\)[ \t]*\\([a-zA-Z0-9_]*\\)" nil t)
-            (setq class (match-string 2))
-            (setq save (match-string 3))
-            (and (string-match "Q_EXPORT" class)
-                 (setq class save))
-            (message (concat class "::" fn))
-            )
-          (kde-switch-cpp-h)
-          (goto-char 0)
-          (re-search-forward (concat "^[^()]*" class "::" fn "[ \t]*(") nil t)
-          (message c-syntactic-context)
-          )
-)))
-
-; Credits to Arnt
-(defun agulbra-make-member ()
-  "make a skeleton member function in the .cpp or .cc file"
-  (interactive)
+; Helper function for parsing our current position in a C++ header file
+; returns (namespace (class function)) where (a b) is a cons.
+(defun method-under-point ()
   (let ((class nil)
         (namespace "") ; will contain A::B::
-        (function nil)
-        (file (buffer-file-name))
-        (insertion-string nil)
-	(msubstr nil)
-        (start nil))
+        (function nil))
     (save-excursion
       (progn
         ; Go up a level, skipping entire classes etc.
@@ -117,8 +68,8 @@
 	(let ((pos (scan-lists (point) -1 1 nil t)))
 	  (goto-char (if pos (+ pos 1) (point-min))))
 	)))
-    ; Back to where we were, parse function name
-    (progn
+
+    (progn ; Back to where we were, parse function name
       (and (looking-at "$")
            (progn
              (search-backward ")" nil t)
@@ -138,95 +89,168 @@
 	(and (looking-at ";")
 	     (setq function (buffer-substring start (point))))
 	(re-search-forward "(" nil t)))
-    (and (stringp function)
-         (progn ;; get rid of virtual, static, multiple spaces, default values.
-           (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
-                (setq function (replace-match " " t t function)))
-           (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
-                (setq function (replace-match "" t t function)))
-           (and (string-match "^\\(static\\>\\)?[ \t]*" function)
-                (setq function (replace-match "" t t function)))
-           (while (string-match "  +" function) ; simplifyWhiteSpace
-             (setq function (replace-match " " t t function)))
-           (while (string-match "\t+" function)
-             (setq function (replace-match " " t t function)))
-           (while (string-match "^ " function)  ; remove leading whitespace
-             (setq function (replace-match "" t t function)))
-	   (let ((startargs (string-match "(" function)))
-		(while (string-match " ?=[^,)]+" function startargs) ; remove default values
-		  (setq function (replace-match " " t t function))))
-           (while (string-match " +," function) ; remove space before commas
-             (setq function (replace-match "," t t function)))))
-    (and (stringp function)
-         (stringp file)
-	 (progn
-	   (and (stringp class)
-		(cond
-		 ((string-match (concat "^ *" class "[ \\t]*(") function) ; constructor
-		  (progn
-		    (setq insertion-string
-			  (concat
-			   (replace-match
-			    (concat namespace class "::" class "(")
-			    t t function)
-			   "\n{\n    \n}\n"))))
-		 ((string-match (concat "^ *~" class "[ \\t]*(") function) ; destructor
-		  (progn
-		    (setq insertion-string
-			  (concat
-			   (replace-match
-			    (concat namespace class "::~" class "(")
-			    t t function)
-			   "\n{\n    \n}\n"))))
-		 ))			; end of "class required"
-	   (if (not (stringp insertion-string)) ; no ctor nor dtor
-	       (if (or (string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function) ; normal method
-		       (string-match " *\\(operator[^ \\t]+\\)[ \\t]*(" function)) ; operator
-		   (progn
-		     (setq insertion-string
-			   (concat
-			    (replace-match
-			     (if class
-				 (concat " " namespace class "::" "\\1(") ; c++ method
-			       (concat " " "\\1(")) ; c function
-			     t nil function)
-			    "\n{\n    \n}\n")))
+    (cons namespace (cons class function))
+    )
+  )
+
+; get rid of virtual, static, multiple spaces, default values.
+(defun canonical-function-sig (function)
+  (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
+       (setq function (replace-match " " t t function)))
+  (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
+       (setq function (replace-match "" t t function)))
+  (and (string-match "^\\(static\\>\\)?[ \t]*" function)
+       (setq function (replace-match "" t t function)))
+  (while (string-match "  +" function) ; simplifyWhiteSpace
+    (setq function (replace-match " " t t function)))
+  (while (string-match "\t+" function)
+    (setq function (replace-match " " t t function)))
+  (while (string-match "^ " function)  ; remove leading whitespace
+    (setq function (replace-match "" t t function)))
+  (let ((startargs (string-match "(" function)))
+    (while (string-match " ?=[^,)]+" function startargs) ; remove default values
+      (setq function (replace-match " " t t function))))
+  (while (string-match " +," function) ; remove space before commas
+    (setq function (replace-match "," t t function)))
+  function ; the return value
+)
+
+; Helper method which turns the function as seen in the header
+; into the signature for its implementation
+; Returns the fully-qualified signature of the function implementation
+(defun kde-function-impl-sig (namespace class _function)
+  (let (
+	(function (canonical-function-sig _function))
+	(insertion-string nil))
+    (and (stringp class)
+	 (cond
+	  ((string-match (concat "^ *" class "[ \\t]*(") function) ; constructor
+	   (setq insertion-string
+		 (replace-match
+		  (concat namespace class "::" class "(")
+		  t t function)
+		 ))
+	  ((string-match (concat "^ *~" class "[ \\t]*(") function) ; destructor
+	   (setq insertion-string
+		 (replace-match
+		  (concat namespace class "::~" class "(")
+		  t t function)
+		 ))
+	  ))				; end of "class required"
+    (if (not (stringp insertion-string)) ; no ctor nor dtor
+	(if (or (string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function) ; normal method
+		(string-match " *\\(operator[^ \\t]+\\)[ \\t]*(" function)) ; operator
+	      (setq insertion-string
+		    (replace-match
+		     (if class
+			 (concat " " namespace class "::" "\\1(") ; c++ method
+		       (concat " " "\\1(")) ; c function
+		     t nil function)
+		    )
 					; else
-		 (error (concat "Can't parse declaration ``"
-				function "'' in class ``" class
-				"'', aborting")))))
-	 (stringp insertion-string))
+	  (error (concat "Can't parse declaration ``"
+			 function "'' in class ``" class
+			 "'', aborting"))))
+    insertion-string ; the return value
+    )
+  )
+
+;; Switch between the declaration of a class member in .cc/.cpp/.C, and its definition in the .h file
+;; Written by David and Reggie after much hair tearing
+(defun switch-to-function-def ()
+  (interactive)
+  (let ((n (buffer-file-name))
+        (namespace "")
+        (class "")
+        (function "")
+	(save)
+	)
+    (if (or (string-match "\\.cc$" n)
+            (string-match "\\.cpp$" n)
+            (string-match "\\.C$" n))
+        ; TODO replace fume-function-before-point, needed for emacs,
+        ; and for better namespace support.
+	;(progn
+	;  (let ((pos (scan-lists (point) -1 1 nil t))) ; Go up a level
+	;    (goto-char (if pos (+ pos 1) (point-min))))
+        (let ((a (fume-function-before-point)))
+          (and (string-match "^\\(.*\\)::\\(.*\\)$" a)
+               (progn
+                 (setq class (match-string 1 a))
+                 (setq function (match-string 2 a))
+                 (kde-switch-cpp-h)
+                 (goto-char 0)
+                 (re-search-forward
+		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
+			  class "[^;]+{") nil t)
+                 ;; TODO keep looking, until we find a match that's not inside a comment
+                 (re-search-forward (concat "[ \t]+" function "[ \t]*(") nil t)))))
+    (if (string-match "\\.h$" n)
+        (progn
+	  (let ((mup (method-under-point))
+		(sig "")
+		(pos 0))
+            ;(setq namespace (car mup))
+	    (setq class (car (cdr mup)))
+	    (setq function (cdr (cdr mup)))
+	    (kde-switch-cpp-h)
+	    (goto-char 0)
+	    (setq sig (kde-function-impl-sig namespace class function))
+	    (if (string-match "(.*" sig) ; remove args
+		(setq sig (replace-match "" nil t sig)))
+	    (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t)
+	    (message c-syntactic-context)
+	    ))
+)))
+
+; Initial implementation by Arnt Gulbransen
+; Current maintainer: David Faure
+(defun agulbra-make-member ()
+  "make a skeleton member function in the .cpp or .cc file"
+  (interactive)
+  (let* (
+	 (mup (method-under-point))
+	 (namespace (car mup))  ; will contain A::B::
+	 (class (car (cdr mup)))
+	 (function (cdr (cdr mup)))
+	 (file (buffer-file-name))
+	 (insertion-string nil)
+	 (msubstr nil)
+	 (start nil)
+	 )
+    (setq insertion-string 
+	  (concat (kde-function-impl-sig namespace class function) "\n{\n    \n}\n"))
     (if (string-match "\\.h$" file)
 	(kde-switch-cpp-h)
-      )
+    )
     (progn
-      (goto-char (point-max))
-      (kde-comments-begin)
-      (kde-skip-blank-lines)
-      (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
-      (if (string-match "^#include.*moc.*" msubstr)
-	  (progn 
-	    (forward-line -1)
-	    (end-of-line)
-	    (insert "\n")))
-      (if (string-match "}" msubstr)
-	  (progn
-	    (end-of-line)
-	    (insert "\n")
-	    (forward-line 1)
-	    ))
-      (insert insertion-string)
-      (forward-char -3)
-      (c-indent-command)
-      (save-excursion
-	(and (string-match ".*/" file)
-	     (setq file (replace-match "" t nil file)))
-	(and (string-match "\\.h$" file)
-	     (functionp 'kdab-insert-include-file)
-	     (kdab-insert-include-file file 't nil)))))
-  (when (featurep 'fume-rescan-buffer)
+    (goto-char (point-max))
+    (kde-comments-begin)
+    (kde-skip-blank-lines)
+    (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
+    (if (string-match "^#include.*moc.*" msubstr)
+	(progn 
+	  (forward-line -1)
+	  (end-of-line)
+	  (insert "\n")))
+    (if (string-match "}" msubstr)
+	(progn
+	  (end-of-line)
+	  (insert "\n")
+	  (forward-line 1)
+	  ))
+    (insert insertion-string)
+    (forward-char -3)
+    (c-indent-command)
+    (save-excursion
+      (and (string-match ".*/" file)
+	   (setq file (replace-match "" t nil file)))
+      (and (string-match "\\.h$" file)
+	   (functionp 'kdab-insert-include-file)
+	   (kdab-insert-include-file file 't nil))))
+    (when (featurep 'fume-rescan-buffer)
     (fume-rescan-buffer))
-  )
+    ))
 
 
 ; Adds the current file to Makefile.am.
