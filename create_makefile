@@ -31,5 +31,5 @@ else
      fi
     fi
   )
-  CONFIG_FILES=$* CONFIG_HEADERS= config.status
+  CONFIG_FILES=$* CONFIG_HEADERS= ./config.status
 fi
