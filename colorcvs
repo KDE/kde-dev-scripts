@@ -1,0 +1,175 @@
+#! /usr/bin/perl
+
+# colorcvs
+#
+# based on colorgcc
+#
+# Requires the ANSIColor module from CPAN.
+#
+# Usage:
+#
+# In a directory that occurs in your PATH _before_ the directory
+# where cvs lives, create a softlink to colorcvs:
+#
+#    cvs -> colorcvs
+#
+# That's it. When "cvs" is invoked, colorcvs is run instead.
+#
+# The default settings can be overridden with ~/.colorcvsrc.
+# See the colorcvsrc-sample for more information.
+#
+# Note:
+#
+# colorcvs will only emit color codes if:
+# 
+#    (1) tts STDOUT is a tty.
+#    (2) the value of $TERM is not listed in the "nocolor" option.
+#    (3) the cvs command is not a commit or import (as the text editor
+#    opened by cvs will often be hampered by colorcvs).
+#
+# If colorcvs colorizes the output, cvs's STDERR will be
+# combined with STDOUT. Otherwise, colorcvs just passes the output from
+# cvs through without modification.
+#
+# Copyright 2002 Neil Stevens <neil@qualityassistant.com>
+#
+# Copyright 1999 Jamie Moyers <jmoyers@geeks.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License as published
+# by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+use Term::ANSIColor;
+use IPC::Open3;
+
+sub initDefaults
+{
+	$cvsPath = "/usr/bin/cvs";
+
+	$nocolor{"dumb"} = "true";
+
+	$colors{"P"} = color("reset");
+	$colors{"U"} = color("reset");
+	$colors{"C"} = color("bold red");
+	$colors{"M"} = color("bold yellow");
+	$colors{"A"} = color("cyan");
+	$colors{"R"} = color("cyan");
+	$colors{"?"} = color("bold");
+	$colors{"server"} = color("bold green");
+	$colors{"warning"} = color("bold cyan");
+}
+
+sub loadPreferences
+{
+# Usage: loadPreferences("filename");
+
+	my($filename) = @_;
+
+	open(PREFS, "<$filename") || return;
+
+	while(<PREFS>)
+	{
+		next if (m/^\#.*/);          # It's a comment.
+		next if (!m/(.*):\s*(.*)/);  # It's not of the form "foo: bar".
+
+		$option = $1;
+		$value = $2;
+
+		if ($option =~ /cvs/)
+		{
+			$cvsPath = $value;
+		}
+		elsif ($option eq "nocolor")
+		{
+			# The nocolor option lists terminal types, separated by
+			# spaces, not to do color on.
+			foreach $termtype (split(/\s+/, $value))
+			{
+				$nocolor{$termtype} = "true";
+			}
+		}
+		else
+		{
+			$colors{$option} = color($value);
+		}
+	}
+	close(PREFS);
+}
+
+#
+# Main program
+#
+
+# Set up default values for colors and compilers.
+initDefaults();
+
+# Read the configuration file, if there is one.
+$configFile = $ENV{"HOME"} . "/.colorcvsrc";
+if (-f $configFile)
+{
+	loadPreferences($configFile);
+}
+
+# Get the terminal type. 
+$terminal = $ENV{"TERM"} || "dumb";
+
+$commit = 0;
+foreach (@ARGV)
+{
+	if(/^ci$/ || /^commit$/ || /^import$/)
+	{
+		$commit = 1;
+	}
+}
+
+# If it's in the list of terminal types not to color, or if
+# we're writing to something that's not a tty, don't do color.
+if (! -t STDOUT || $commit == 1 || $nocolor{$terminal})
+{
+	exec $cvsPath, @ARGV
+		or die("Couldn't exec");
+}
+
+# Keep the pid of the compiler process so we can get its return
+# code and use that as our return code.
+$cvs_pid = open3('<&STDIN', \*CVSOUT, \*CVSOUT, $cvsPath, @ARGV);
+$cvsName = $cvsPath;
+$cvsName =~ s,.*/(.*)$,\1,;
+
+# Colorize the output from the compiler.
+while(<CVSOUT>)
+{
+	chomp;
+	if (m/^(.) .+/) # S filename
+	{
+		print($colors{$1}, $_, color("reset"));
+	}
+	elsif (m/warning:/) # warning
+	{
+		print($colors{"warning"}, $_, color("reset"));
+	}
+	elsif (m/^$cvsName[^:]*: / || m/^cvs server: /) # server message
+	{
+		print($colors{"server"}, $_, color("reset"));
+	}
+	else # Anything else
+	{
+		# Print normally.
+		print(color("reset"), $_);
+	}
+	print "\n";
+}
+
+# Get the return code of the compiler and exit with that.
+waitpid($compiler_pid, 0);
+exit ($? >> 8);
