@@ -41,6 +41,7 @@ sub checkdir($)
 	}
       }
       if ($s) {
+        print "echo >> $s ;\n";
         print "echo '#include \"$name.moc\"' >> $s ;\n";
       } else {
         print "echo \"can't guess a C++ file for $dir/$h\" ;\n";
