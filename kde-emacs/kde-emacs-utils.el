@@ -180,6 +180,12 @@
 		 (forward-line -1)
 		 (end-of-line)
 		 (insert "\n")))
+	   (if (string-match "}" msubstr)
+	       (progn
+		 (end-of-line)
+		 (insert "\n")
+		 (forward-line 1)
+	     ))
            (insert insertion-string)
            (forward-char -3)
            (save-excursion
