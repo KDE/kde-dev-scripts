@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # Create Makefile.in and Makefile in a directory (containing a Makefile.am !)
-# Must be run from the toplevel directory (i.e. the one containing configure)
 # Saves time compared to re-running configure completely
 
 if [ $# -ne 1 ]; then 
@@ -35,8 +34,6 @@ else
       exit
     fi
 
-    # Find out srcdir
-    srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
   fi
 
   # Handle arg with missing "/Makefile"
@@ -47,6 +44,15 @@ else
   if test -z "`echo $relpath | grep 'Makefile$'`"; then 
     relpath="$relpath/Makefile"
   fi
+
+  # Go up to toplevel dir
+  while test ! -f config.status; do
+    relpath="`basename $PWD`/$relpath"
+    cd ..
+  done
+
+  # Find out srcdir
+  srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
 
   (  
     if cd $srcdir ; then 
