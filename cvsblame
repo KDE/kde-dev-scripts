@@ -131,7 +131,7 @@ open (LOG, "cvs log $file|");
 while (<LOG>) {
       chop;
       $line = $_;
-      if ($line =~ /revision (.*)/) {
+      if ($line =~ /^revision (.*)/) {
              $revision = $1;
              $revstr = "log$revision";
              $revstr =~ s/\./_/g;
