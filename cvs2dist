@@ -321,6 +321,12 @@ if [ -d $module/doc/$name ]; then
 		fi
 		echo -n "Copying $lang's $name documentation over... "
 		cp -R $docdirname $temp_dist/doc/$lang
+		# we don't want KDE_DOCS = AUTO, cause that makes the
+		# build system assume that the name of the app is the
+		# same as the name of the dir the Makefile.am is in.
+		# Instead, we explicitly pass the name..
+		cat $temp_dist/doc/$lang/Makefile.am | sed -e "s/AUTO/$name/" > $temp_dist/doc/$lang/Makefile.am.nw
+		mv $temp_dist/doc/$lang/Makefile.am.nw $temp_dist/doc/$lang/Makefile.am
 		echo "done."
 		echo "$lang documentation included." >> $log
 	    done
