@@ -92,7 +92,7 @@
              (while (looking-at "[ \t]")
                (forward-char 1))
              (setq start (point))
-             (while (looking-at "[A-Za-z0-9_]")
+             (while (looking-at "[A-Za-z0-9_:]")
                (forward-char 1))
              (cond 
 	      (class ; class found already, so the rest goes into the namespace
@@ -204,8 +204,9 @@
 	   (save-excursion
 	     (and (string-match ".*/" file)
 		  (setq file (replace-match "" t nil file)))
-             (if (functionp 'kdab-insert-include-file)
-                 (kdab-insert-include-file file 't nil)))))
+	     (and (string-match "\\.h$" file)
+		  (functionp 'kdab-insert-include-file)
+		  (kdab-insert-include-file file 't nil)))))
   (when (featurep 'fume-rescan-buffer)
     (fume-rescan-buffer))
   )
