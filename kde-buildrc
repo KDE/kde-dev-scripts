@@ -1,6 +1,6 @@
 ################################################################################
 # Configures the kde-build script.                                             #
-# 2000 by Frerich Raabe <raabe@kde.org>                                        #
+# (c)2000, 2001 by Frerich Raabe <raabe@kde.org>                               #
 ################################################################################
 
 # Where are your KDE sources?
@@ -11,7 +11,7 @@ KDESRCDIR="/home/dirk/src/kde"
 #
 KDEDIRS="/opt/kde"
 
-# Where is your Qt 3.0..x?
+# Where is your Qt 3.0.x?
 #
 QTDIR="/usr/X11/lib/qt"
 
@@ -20,9 +20,6 @@ QTDIR="/usr/X11/lib/qt"
 # generation, leave this blank.
 #
 KDELOGDIR="$KDESRCDIR/log"
-
-# compilation flags
-COMPFLAGS="--disable-debug"
 
 # Do you want the logfiles to be compressed? Set this variable to "yes" to
 # make the script compress the logfiles using bzip2 (using gzip as a
@@ -69,7 +66,7 @@ CVSCLIENT="cvs"
 ACCOUNT="mueller"
 
 # Do you want any special branch? If so, specify its tag here e.g.
-# KDE_2_2_BRANCH  or KDE_3_O_ALPHA_1. If you want the
+# KDE_2_2_BRANCH  or KDE_3_0_ALPHA_1. If you want the
 # plain HEAD branch, leave this empty.
 #
 BRANCH=""
@@ -94,3 +91,13 @@ EXCLUDE="qt-copy kdenonbeta kde-i18n www qt kdeutils kde-common bugs"
 #
 CVS_CLEAN="no"
 
+# Flags to be passed to the 'configure' script.
+#
+CONFIGUREFLAGS="--disable-debug"
+
+# If you would like to pass any parameters to make add them here. If you
+# do not want to add any parameters leave this empty.
+# example:
+# MAKE_OPTS="-j 4 -l 4"
+#
+MAKE_OPTS=""
