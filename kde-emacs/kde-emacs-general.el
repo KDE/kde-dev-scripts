@@ -66,7 +66,7 @@ return (\"test.cpp\" t)."
   (let ((file (kde-file-get-cpp-h)))
     (if (car file)
 	(find-file (car file))
-      (error "Coresponding source file doesn't exist.")
+      (error "Corresponding source file doesn't exist.")
     )
   ))
 
@@ -81,15 +81,6 @@ return (\"test.cpp\" t)."
 	  (setq end (point-at-bol))
 	(setq end (1+ end))))
     (delete-backward-char (- start end))))
-
-(defun kde-word-under-point ()
-  "Returns a word under the current position."
-  (save-excursion
-    (let* ((start (if (= (preceding-char) ?\ )
-                      (point)
-                    (progn (backward-word 1) (point))))
-           (end (progn (forward-word 1) (point))))
-      (buffer-substring start end))))
 
 (defun kde-skip-blank-lines ()
   "Skips backwards past blank lines, stopping

@@ -225,14 +225,6 @@
     ))
         
 
-(defun kdab-word-under-point ()
-  (save-excursion
-    (let* ((start (if (= (preceding-char) ?\ )
-                      (point)
-                    (progn (backward-word 1) (point))))
-           (end (progn (forward-word 1) (point))))
-      (buffer-substring start end))))
-    
 
 ;--------------------------------------------------------------------------------
 ; Insert include file for Qt program.
@@ -243,7 +235,7 @@
 (defun kdab-insert-header ()
   (interactive "")
   (save-excursion
-    (let* ((word (downcase (kdab-word-under-point)))
+    (let* ((word (downcase (current-word)))
            (header (cond
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
@@ -283,7 +275,7 @@
 (defun kdab-insert-forward-decl ()
   (interactive "")
   (save-excursion
-    (let* ((word (kdab-word-under-point)))
+    (let* ((word (current-word)))
       (beginning-of-buffer)
       (if (re-search-forward (concat "^ *// *\\(class *" word ";\\)") nil t)
           (progn
@@ -326,7 +318,7 @@
 (defun kdab-lookup-qt-documentation ()
   (interactive "")
   (save-excursion
-    (let* ((word (downcase (kdab-word-under-point)))
+    (let* ((word (downcase (current-word)))
            (doc (if (is-qpe-class word) kdab-qpe-documentation kdab-qt-documentation))
            (url (if (not (string-match "XXX" doc))
                    (error "didn't find three X's in kdab-qt-documentation or kdab-qpe-documentation")

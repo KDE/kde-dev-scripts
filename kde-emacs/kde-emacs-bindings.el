@@ -23,7 +23,7 @@
 ; -----------------------------------------------------------------
 ; The list below defines the following bindings:
 ;
-; F2 : offer a grep command
+; F2 : offer a grep command  (use C-u F2 if you need to specify options, like -i or -w)
 ;
 ; F3/Shift-F3/F8/Shift-RMB : different ways to see the list of methods in the current buffer
 ;
@@ -76,14 +76,19 @@
 (define-key global-map [(meta up)] 'scroll-other-up)
 (define-key global-map [(meta down)] 'scroll-other-down)
 (define-key global-map [(control j)] 'goto-line)
-(define-key global-map [(f2)] 'grep)
+(if (featurep 'igrep)
+    (progn
+      (define-key global-map [(f2)] 'igrep)
+      (setq igrep-files-default 'ignore) ; too hard to use *.cc *.h with it, because of the full path
+      )
+  (define-key global-map [(f2)] 'grep))
 (define-key global-map [(shift backspace)] 'kde-delete-backward-ws)
 
 ;; FIXME: remember to get these working on Gnu/Emacs (Zack)
 (when (eq kde-emacs-type 'xemacs)
   (define-key c++-mode-map [(f8)] 'function-menu)
-  (define-key c++-mode-map [(f3)] 'fume-list-functions)
-  (define-key c++-mode-map [(shift f3)] 'fume-prompt-function-goto)
+  (define-key c++-mode-map [(f3)] 'fume-prompt-function-goto)
+  (define-key c++-mode-map [(shift f3)] 'fume-list-functions)
   )
 
 (define-key global-map [(shift button3)] 'mouse-function-menu)

@@ -154,7 +154,7 @@ custom types?}
 that.
 
 @sp 1
-@strong{Q.} @emph{Is it possible to highlight dengerous syntax, just
+@strong{Q.} @emph{Is it possible to highlight dangerous syntax, just
 like Borland JBuilder does it?} 
 
 @strong{A.} Yes, use the @file{cwarn.el} package.
@@ -206,7 +206,7 @@ agree with me. What can I do? }
 
 @strong{A.} Use the @file{glasses.el} package which changes
 identifiersNamedLikeThis to identifiers_named_like_this in the
-buffers you're editting and switches them back to their original form
+buffers you're editing and switches them back to their original form
 once you save those buffers.
 
 @sp 1
@@ -215,11 +215,11 @@ signature display in Emacs? Will it ever be done?}
 
 @strong{A.} Yes and yes. I've been planning on doing this for quite a
 while and hopefully will have this finished pretty soon (no dates
-though :) ) The first thing that should be done is writting a few
+though :) ) The first thing that should be done is writing a few
 fixes for the Semantic package (@file{c.bnf} to be more exact),
 because Semantic doesn't handle templates, member function declared
 as const or KDE access specifiers, once this is done all that will be
-left is using smenaticdb package which efficiently stores and retrieves
+left is using semanticdb package which efficiently stores and retrieves
 large amounts of tokens and then displaying tokens belonging to types at
 point which match current context.
 
@@ -227,7 +227,7 @@ point which match current context.
 @strong{Q.} @emph{Is there a package that would highlight changes that
 I made to a certain file?}
 
-@strong{A.} I wouldn't be writting this if there wouldn't - try
+@strong{A.} I wouldn't be writing this if there wouldn't - try
 @kbd{M-x highlight-changes-mode}.
 
 
