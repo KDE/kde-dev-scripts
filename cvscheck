@@ -62,6 +62,7 @@ $standardtag = "";
             'Nov' => 10, 'Dec' => 11);
 
 %showoptions = ();
+$optionlocal = 0;
 
 sub printinfo($)
 {
@@ -211,7 +212,7 @@ sub processEntries
         &printinfo("I $dir has sticky tag $staginfo\n") if($standardtag ne $oldstandardtag);
 	while( <ENTRIES> ) {
           if ( m#^\s*D/([^/]+)/# ) {
-               if (-d "$dir/$1") {
+               if (-d "$dir/$1" && !$optionlocal) {
                  push ( @dirqueue, "$dir/$1" );
                  $defaulttag{"$dir/$1"} = $standardtag;
                }
@@ -337,20 +338,21 @@ foreach $f ( @unknown ) {
   print "? $f\n";
 }
 foreach (@ARGV) {
-   $showoptions{"unknown"}++ if(/(?:-u|--unknown)/);
-   $showoptions{"modified"}++ if(/(?:-m|--modified)/);
-   $showoptions{"missing"}++ if(/(?:--missing)/);
-   $showoptions{"tagged"}++ if(/(?:-t|--tagged)/);
-   $showoptions{"added"}++ if(/(?:-a|--added)/);
-   $showoptions{"removed"}++ if(/(?:-r|--removed)/);
-   $showoptions{"conflicts"}++ if(/(?:-c|--conflicts)/);
+   $showoptions{"unknown"}++ if(/^(?:-u|--unknown)$/);
+   $showoptions{"modified"}++ if(/^(?:-m|--modified)$/);
+   $showoptions{"missing"}++ if(/^(?:--missing)$/);
+   $showoptions{"tagged"}++ if(/^(?:-t|--tagged)$/);
+   $showoptions{"added"}++ if(/^(?:-a|--added)$/);
+   $showoptions{"removed"}++ if(/^(?:-r|--removed)$/);
+   $showoptions{"conflicts"}++ if(/^(?:-c|--conflicts)$/);
+   $optionlocal++ if(/^(?:-l|--local)$/);
 
    next if (/^-/);
    push (@dirqueue, "./$_");
 }
 
 # if no special flags set, show all files
-$showoptions{"all"}++ if ($#dirqueue == $#ARGV);
+$showoptions{"all"}++ if(scalar(keys(%showoptions)) == 0);
 
 # Try current directory if none specified
 push(@dirqueue, ".") if( $#dirqueue < 0 );
