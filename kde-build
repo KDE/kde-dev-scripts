@@ -613,7 +613,6 @@ for module in $modules; do
       logfile="$KDELOGDIR/$module-build-$dateformat.log"
       echo "-> Updating Makefile <--------------------------------------------------------------" >> $logfile
       echo $cmd_make_makefile >> $logfile
-      echo "-> Configuration <--------------------------------------------------------------" >> $logfile
       cmd_make_makefile="$cmd_make_makefile >> $logfile 2>&1"
       starttime=`date +%s`
     fi
