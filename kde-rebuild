@@ -13,16 +13,16 @@ KDE2DIR=/opt/kde2
 # Where is your Qt 2.2.0?
 QTDIR=/usr/local/lib/qt
 
-# Where shall I put the logfiles of the compilation process? The default
-# value is $SRCDIR/log.
+# If you would like logfiles of the compilation process, specify a directory
+# here in which the logfiles will be saved. If you want to disable logfile
+# generation, leave this blank.
 LOGDIR=$SRCDIR/log
 
-# These modules are a must-have, don't change this line!
-BASEMODS="kde-qt-addon kdesupport kdelibs kdebase"
-
-# These modules are optional, add any modules you checked out here to have
-# them included in the compilation process.
-OTHERMODS="kdegraphics kdenetwork kdesdk kdeutils kde-i18n"
+# Add modules you want to get compiled to this space-seperated list. Please
+# note that the modules kde-qt-addon, kdesuppor, kdelibs, and kdebase
+# (if you want a KDE2 desktop and not just develope applications for it)
+# must be compiled in exactly that order. Any other modules are optional.
+MODULES="kde-qt-addon kdesupport kdelibs kdebase"
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
@@ -30,71 +30,139 @@ OTHERMODS="kdegraphics kdenetwork kdesdk kdeutils kde-i18n"
 # one, otherwise set it to "yes".
 INSTALLFROMSCRATCH=yes
 
-################################################################################
+## Don't modify anything below this line! ######################################
 
+# Various variables for internal usage
+#
 STR_OKAY="done!"
-STR_ERROR="failed!\012\015\040\040Check the logfile in $LOGDIR for further info."
-
+STR_ERROR="failed!\012\015"
 ERR_NO_ERROR=0
 ERR_CHANGE_INTO_MOD_DIR=1
 ERR_NO_MAKEFILE_IN=2
 ERR_CONFIGURE_FAIL=3
 ERR_COMPILE_FAIL=4
 ERR_INSTALL_FAIL=5
+ERR_INV_SRCDIR=6
+ERR_INV_QTDIR=7
+CRITICAL_MODULES="kde-qt-addon kdesupport kdelibs kdebase"
+DATE=`date +%Y%m%d`
 
-DATE=`date +%x`
+# Various checks to ensure that valid data has been specified, creates the
+# directory for the logfile in case it doesn't exist already.
+#
+if test -n "$LOGDIR" -a ! -d "$LOGDIR"; then
+  if ! mkdir -p "$LOGDIR" &> /dev/null; then
+    echo "WARNING: Could not create logfile-directory."
+    echo "WARNING: Logfile generation deactivated."
+    LOGDIR=""
+  fi
+else
+  if test -n "$LOGDIR" -a ! -w "$LOGDIR"; then
+    echo "WARNING: Could not obtain write access to specified logfile-directory."
+    echo "WARNING: Logfile generation deactivated."
+    LOGDIR=""
+  fi
+fi
+test $LOGDIR && STR_ERROR="$STR_ERRORCheck the logfile in $LOGDIR for further info."
+if test ! -d "$SRCDIR"; then
+  echo "ERROR: Invalid source directory specified!"; exit $ERR_INV_SRCDIR
+fi
+if test ! -d "$QTDIR"; then
+  echo "ERROR: Invalid Qt directory specified!"; exit $ERR_INV_QTDIR
+fi
 
-test ! -d $LOGDIR && mkdir -p $LOGDIR
-
+# Clean the installation directory if selected.
+#
 if test "$INSTALLFROMSCRATCH" = yes; then
   if test ! -w $KDEDIR; then
-    echo "Enter the root password to remove your current KDE2 desktop."
+    echo "Enter the root password to clean the installation directory."
+    echo -n ""
     su -c"rm -rf $KDE2DIR/*"
   else
     rm -rf $KDE2DIR/*
   fi
 fi
 
-for MODULE in $BASEMODS $OTHERMODS; do
-  if test -d $SRCDIR/$MODULE; then
-    cd $SRCDIR/$MODULE
-  else
-    echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
-    exit $ERR_CHANGE_INTO_MOD_DIR
-  fi
-
-  if test ! -e Makefile.in; then
-    echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
-    exit $ERR_NO_MAKEFILE_IN
-  fi
-
-  echo "* Building module: $MODULE"
-  echo -n "  Configuring..."
-  if configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR &> $LOGDIR/$MODULE-configure-$DATE; then
-    echo -e $STR_OKAY
-    echo -n "  Compiling..."
-    if make &> $LOGDIR/$MODULE-build-$DATE; then
-      echo -e $STR_OKAY
+# Start installing the modules.
+#
+for MODULE in $MODULES; do
+  if ! cd $SRCDIR/$MODULE; then
+    if echo $CRITICAL_MODULES | grep -q $MODULE; then
+      echo "ERROR: Could not change into directory $SRCDIR/$MODULE!"
+      exit $ERR_CHANGE_INTO_MOD_DIR
     else
-      echo -e $STR_ERROR
-      exit $ERR_COMPILE_FAIL
+      echo "WARNING: Could not change into directory $SRCDIR/$MODULE."
+      echo "WARNING: Skipping module $MODULE."
     fi
   else
-    echo -e $STR_ERROR
-    exit $ERR_CONFIGURE_FAIL
-  fi
+    cd $SRCDIR/$MODULE
 
-  if test ! -w $KDE2DIR; then
-    echo "  Please enter the root password to install module $MODULE."
-    su -c"echo -n '  Installing...'; if make install &> $LOGDIR/$MODULE-install-$DATE; then echo -e $STR_OKAY; echo Module $MODULE successfully installed in $KDE2DIR!; else echo -e $STR_ERROR; exit $ERR_INSTALL_FAIL; fi"
-  else
-    echo -n "  Installing..."
-    if make install &> $LOGDIR/$MODULE-install-$DATE; then
-      echo -e $STR_OKAY
-      echo "Module $MODULE successfully installed in $KDE2DIR!"
+    # Check whether 'make -f Makefile.cvs' has been called.
+    #
+    if test ! -e Makefile.in; then
+      if echo $CRITICAL_MODULES | grep -q $MODULE; then
+        echo "ERROR: Please execute 'make -f Makefile.cvs' first for this module!"
+        exit $ERR_NO_MAKEFILE_IN
+      else
+        echo "WARNING: 'make -f Makefile.cvs' seems not to be executed for this"
+        echo "WARNING: module, skipping compilation."
+      fi
     else
-      echo -e $STR_FAIL
-      exit $ERR_INSTALL_FAIL
+      echo "Building module: $MODULE"
+
+      # Configure the module.
+      #
+      echo -n "  Configuring..."
+      CONFIGURE="configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR"
+      test $LOGDIR && CONFIGURE="$CONFIGURE &> $LOGDIR/$MODULE-configure-$DATE"
+
+      if eval "$CONFIGURE"; then
+        echo -e $STR_OKAY
+
+        # Compile the module.
+        #
+        echo -n "  Compiling..."
+        MAKE="make"
+        echo $CRITICAL_MODULES | grep -q $MODULE || MAKE="$MAKE -k"
+        test $LOGDIR && MAKE="$MAKE &> $LOGDIR/$MODULE-build-$DATE"
+
+        if eval "$MAKE"; then
+          echo -e $STR_OKAY
+
+          # Install the module.
+          #
+          MAKE_INSTALL="make install"
+          test $LOGDIR && MAKE_INSTALL="$MAKE_INSTALL &> $LOGDIR/$MODULE-install-$DATE"
+
+          if test ! -w $KDE2DIR; then
+            echo "  Please enter the root password to install module $MODULE."
+            echo -n "  "
+            su -c"echo -n '  Installing...';
+            if eval $MAKE_INSTALL; then
+              echo -e $STR_OKAY;
+              echo Module $MODULE successfully installed in $KDE2DIR!;
+            else
+              echo -e $STR_ERROR;
+              echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_INSTALL_FAIL;
+            fi"
+          else
+            echo -n "  Installing..."
+            if eval "$MAKE_INSTALL"; then
+              echo -e $STR_OKAY
+              echo "Module $MODULE successfully installed in $KDE2DIR!"
+            else
+              echo -e $STR_ERROR
+              echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_INSTALL_FAIL
+            fi
+          fi
+        else
+          echo -e $STR_ERROR
+          echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_COMPILE_FAIL
+        fi
+      else
+        echo -e $STR_ERROR
+        exit $ERR_CONFIGURE_FAIL
+      fi
     fi
   fi
 done
