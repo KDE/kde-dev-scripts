@@ -19,12 +19,15 @@
   "Do the right thing about tabs in c++ mode"
   (interactive "*P")
   (cond
-   ((and (save-excursion 
+   ((and (not (looking-at "[A-Za-z0-9]"))
+         (save-excursion 
            (forward-char -1) 
            (looking-at "[A-Za-z0-9:>_\\-\\&\\.(){}\\*\\+/]")))
          (dabbrev-expand arg))
    (t 
-    (c-indent-command))))
+    (save-excursion
+     (beginning-of-line)
+     (c-indent-command)))))
 
 (defun agulbra-clean-out-spaces ()
   "Remove spaces at ends of lines"
