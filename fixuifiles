@@ -14,7 +14,17 @@ use Cwd;
 
 # Fix the version number in .ui files if it's bigger than this:
 my $minversion_maj = 3;
-my $minversion_min = 2;
+my $minversion_min = 3;
+
+# Known words which are ok as captions
+my %knowncaptions = (
+  'Settings' => '',
+  'Statistics' => '',
+  'General' => '',
+  'Tracks' => '',
+  'Constants' => '',
+  'Preferences' => ''
+);
 
 # declaration of useful subroutines
 sub process_ui_file($);
@@ -48,7 +58,7 @@ sub find_ui_files($)
   my @files = grep { /^.*\.ui$/ } readdir(DIR);
   closedir(DIR);
 
-  print "found files: [ " . join(' ', @files) . " ] in $dir\n" if ($verbose);
+  #print "found files: [ " . join(' ', @files) . " ] in $dir\n" if ($verbose);
 
   # prefix them with $dir
   my @retfiles = ();
@@ -157,11 +167,12 @@ sub fix_captions($)
 	  $line =~ m/<string>(.*)<\/string>/ || die "Malformed XML (no string under caption)";
 	  my $caption = $1;
 	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
-	  if ( $caption eq $class ) {
+	  if ( $caption eq $class && !defined $knowncaptions{$caption} ) {
 	      print "$srcfile: removing caption '$caption'\n";
 	      $inside_caption = 2;
 	      $captionsremoved++;
 	  } else {                # Real caption, keep it
+	      print "$srcfile: keeping caption '$caption'\n" if ($verbose);
 	      push @fixedcontents, $firstline;
 	      $inside_caption = 0;
 	  }
