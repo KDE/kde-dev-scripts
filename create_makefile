@@ -50,7 +50,7 @@ else
 
   (  
     if cd $srcdir ; then 
-     automake $relpath || exit
+     /bin/sh admin/missing --run automake $relpath || exit
      if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
      else 
        if test -f ../admin/am_edit; then perl ../admin/am_edit $relpath.in ; \
