@@ -78,7 +78,7 @@
   :group 'kde-devel
   :type 'string)
 
-(defcustom magic-keys-mode nil
+(defcustom magic-keys-mode 't
   "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate..."
   :group 'kde-devel
   :type 'boolean)

@@ -155,9 +155,9 @@ With arg, do it arg times."
   ;; access specifiers - Zack
   (font-lock-add-keywords nil '(("\\<\\(\\(public\\|protected\\|private\\) slots\\)\\>" 
 				 . font-lock-reference-face)))
-  ;; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
-  ;; to enable the magic keys in C++ mode.
-  (and (boundp 'magic-keys-mode)
+  ;; Add (setq magic-keys-mode nil) to your .emacs (before loading this file)
+  ;; to disable the magic keys in C++ mode.
+  (and (boundp 'magic-keys-mode) magic-keys-mode
        (progn
 	 (define-key c++-mode-map [\(] 'insert-parens)
 	 (define-key c++-mode-map [\)] 'insert-parens2)
