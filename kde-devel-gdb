@@ -86,3 +86,22 @@ document printqcolor
   Usage: 'qcolor <QColor col>
 end
 
+# Prints the contents of a QPtrVector. Pass the type as second argument.
+# (Maybe we could find it out from parsing "print &$arg0"?)
+define printqptrvector
+	set $arr = $arg0
+	set $len = $arr->len
+	set $i = 0
+	while $i < $len
+	   # print "%s[%d] = %s\n", $arr, $i, *($arg1 *)(($arr->vec)[$i])
+	   print *($arg1 *)(($arr->vec)[$i])
+	   $i++
+	end
+end
+# Print one item of a QPtrVector
+define printqptrvectoritem
+	set $arr = $arg0
+	set $i = $arg2
+	print ($arg1 *)(($arr->vec)[$i])
+	print *($arg1 *)(($arr->vec)[$i])
+end
