@@ -156,7 +156,7 @@ CONFIGUREFLAGS="--enable-debug --disable-closure"
 
 # List modules here for which unsermake should not be used.
 #
-NO_UNSERMAKE_MODULES="kdenonbeta kdebindings"
+NO_UNSERMAKE_MODULES="kdenonbeta kdebindings kdeextragear-2"
 
 # If you use an extra build directory (KDEBUILDDIR), setting this to yes will
 # remove a module's build directory before configure is called.
