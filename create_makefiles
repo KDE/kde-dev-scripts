@@ -7,10 +7,14 @@
 # David Faure <faure@kde.org>
 
 if test ! -f Makefile && test -n "$OBJ_REPLACEMENT"; then
-   objdir=`pwd | sed -e $OBJ_REPLACEMENT`
+   objdir=`pwd | sed -e "$OBJ_REPLACEMENT"`
    cd $objdir
 fi
  
+if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
+   cd $OBJ_SUBDIR
+fi
+
 if test ! -f Makefile; then
    echo "$0: in the current directory there is no Makefile"
    echo "you will have to run it from the top build dir."
