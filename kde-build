@@ -358,6 +358,13 @@ if [ "$dousage" -eq 1 ]; then
   exit $err_no_error
 fi
 
+# Expand ~
+QTDIR=`echo "$QTDIR" | sed -e "s,^\~/,$HOME/,"`
+KDESRCDIR=`echo "$KDESRCDIR" | sed -e "s,^\~/,$HOME/,"`
+KDEBUILDDIR=`echo "$KDEBUILDDIR" |sed -e "s,^\~/,$HOME/,"`
+KDEDIRS=`echo "$KDEDIRS" |sed -e "s,^\~/,$HOME/,"`
+KDELOGDIR=`echo "$KDELOGDIR" |sed -e "s,^\~/,$HOME/,"`
+
 # Make sure some paths are according to the rc file. Note that there are AFAIK
 # UNIX flavors which don't support LD_LIBRARY_PATH
 PATH=$QTDIR/bin:$KDEDIRS/bin:$PATH
