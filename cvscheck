@@ -127,9 +127,6 @@ sub processEntries
           next if ($e =~ /^.+\.kidl$/);
           next if ($e =~ /^.+_skel\.[^\.]+$/);
 
-          # ignore unusual files
-          next if (-l "$dir/$e" );
-
           $dirunknown{$e} = 1;
         }
         closedir(DIR);
@@ -250,7 +247,8 @@ sub processEntries
         my @unknownlist = sort keys (%dirunknown);
         foreach $entry (@unknownlist) {
           next if ($dirunknown{$entry} == 0);
-          next if ($entry =~ /^\.\#.+$/);
+          # ignore unusual files
+          next if (-l "$dir/$entry" );
           push @unknown, "$dir/$entry";
         }
 }
