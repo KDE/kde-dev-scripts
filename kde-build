@@ -551,7 +551,7 @@ for module in $modules; do
         echo -n "  Removing build dir..."
         set_title "Removing build dir for module $module..."
         rm -rf $KDEBUILDDIR/$module
-        echo " done"
+        echo $str_okay
       fi
     fi
     mkdir -p $KDEBUILDDIR/$module
