@@ -84,3 +84,38 @@
     obj:*libc-2.2.?.so
     obj:/usr/X11R6/lib/libX11.so.6.2
 }
+
+#
+# SSL errors
+#
+
+{
+    various1/libcrypto
+    Memcheck:Value4
+    obj:*libcrypto.so.0.9.7
+}
+
+{
+    various2/libcrypto
+    Memcheck:Cond
+    obj:*libcrypto.so.0.9.7
+}
+
+{
+    ssl3_read_bytes1/libssl
+    Memcheck:Cond
+    fun:memcpy
+    fun:ssl3_read_bytes
+}
+
+{
+    ssl3_read_bytes2/libssl
+    Memcheck:Cond
+    fun:ssl3_read_bytes
+}
+
+{
+    ssl3_get_message/libssl
+    Memcheck:Cond
+    fun:ssl3_get_message
+}
