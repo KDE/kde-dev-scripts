@@ -2,7 +2,7 @@
 exec awk -F / "{ if (\$2 == \"`basename $1`\") print \$3 }" < `dirname $1`/CVS/Entries
 
 =head1 NAME
- 
+
 cvsversion -- Displays version of the file passed as argument.
 
 =head1 SYNOPSIS
