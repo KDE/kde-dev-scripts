@@ -473,7 +473,7 @@ for module in $modules; do
       echo -n "  Configuring..."
       set_title "Configuring module $module..."
       configureflags=$CONFIGUREFLAGS;
-      varname="CONFIGUREFLAGS_`echo $module|tr a-z A-Z`"; # e.g. CONFIGUREFLAGS_ARTS etc.
+      varname="CONFIGUREFLAGS_`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`"; # e.g. CONFIGUREFLAGS_ARTS etc.
       varvalue=`eval echo '$'$varname`
       test -n "$varvalue" && configureflags="$configureflags $varvalue"
       cmd_configure="$KDESRCDIR/$module/configure $configureflags --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
