@@ -167,7 +167,8 @@ sub fix_captions($)
 	  $line =~ m/<string>(.*)<\/string>/ || die "Malformed XML (no string under caption)";
 	  my $caption = $1;
 	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
-	  if ( $caption eq $class && !defined $knowncaptions{$caption} ) {
+	  if ( ( $caption eq $class && !defined $knowncaptions{$caption} ) ||
+		 ($caption =~ m/Form[0-9]/) ) {
 	      if ( $caption =~ m/^[A-Z][a-z]*$/ ) {
 		  print "$srcfile: removing caption '$caption' (warning! could be real caption)\n";
 	      } else {
@@ -201,7 +202,8 @@ sub fix_captions($)
 sub process_ui_file($)
 {
   my $file = shift @_;
-  my $pure = basename($file);
+  my $dir = dirname($file);
+  # ...
   print "Checking: $file\n" if($verbose);
   &fix_version($file);
   &fix_accels($file);
