@@ -443,6 +443,9 @@ sub fix_unnecessary($)
     # I also like to have kdebug.h still in
     # so that it's easy to add kdDebug calls
     next if( $include eq "kdebug.h");
+    # avoid this one as it might cause
+    # certain code parts to be disabled from compilation	
+    next if( $include eq "qmodules.h");
     # check if it is its own header file
     my $blankhdr = $include;
     $blankhdr =~ s/(.*)\.[^\.]+/$1/;
