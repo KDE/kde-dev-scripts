@@ -2,10 +2,13 @@
 
 # Simple Source metrics for C++
 # Taj Sun Apr 26 03:31:00 EST 1998
+# $Id$
 
-$bigtotal = 0;
-$bigcommt = 0;
 $bigblank = 0;
+$bigcommt = 0;
+$bigstrcount = 0;
+$bigstrsize = 0;
+$bigtotal = 0;
 $numfiles = 0;
 
 $blocklen = 0;
@@ -23,6 +26,8 @@ sub processFile
 	$comment  = 0;
 	$total  = 0;
 	$incomment  = 0;
+	$strcount = 0;
+	$strsize = 0;
 
 	open( SOURCE, "$file" ) || 
 		die "cxxmetric.pl: Couldn't read from $file.\n";
@@ -89,8 +94,12 @@ sub processFile
 			$comment++;
 			$incomment = 0;
 		}
+		elsif ( $incomment ) {
+				$comment++;
+		}
 		else {
-			$comment++ if $incomment;
+				my $line = $_;
+				countStrings( $line );
 		}
 	}
 
@@ -98,8 +107,25 @@ sub processFile
 	$bigtotal += $total;
 	$bigcommt += $comment;
 	$bigblank += $blank;
+	$bigstrcount += $strcount;
+	$bigstrsize += $strsize;
 	
+	$stravglen = $strcount ? ($strsize / $strcount) : 0;
+
 	write;
+}
+
+
+sub countStrings
+{
+		my $line = shift;
+
+		foreach my $string ( split( /("[^"]*)"/, $line ) ) {
+				next unless $string =~ /^\"/;
+
+				$strcount++;
+				$strsize += length( $string ) - 1;
+		}
 }
 
 sub pct
@@ -138,22 +164,27 @@ if ( $numblocks > 0 ) {
 	$median = $blenlist[ int( $numblocks / 2 )];
 print<<EOF;
 
-blocks:\t$numblocks
-minlen:\t$blockmin
-maxlen:\t$blockmax
-median:\t$median
-avglen:\t$avg
+Blocks:\t$numblocks
+\tLengths (lines):\tmin: $blockmin\tmax: $blockmax\tmed: $median\taverage: $avg
 EOF
 }
+
+$bigstravglen = $bigstrcount ? int($bigstrsize / $bigstrcount) : 0;
+
+print<<EOF;
+Strings:\t$bigstrcount
+\tSize (bytes):\ttotal: $bigstrsize\taverage: $bigstravglen
+EOF
 
 exit;
 
 format STDOUT_TOP =
- Lines	Code	Comment	 Blank	File
- ------	-------	-------- ------	------
+ Lines	Code	Comment	 Blank	Strs   AvgLen File
+ ------	-------	-------- ------	------ ------ ------
+
 .
 
 format STDOUT =
-@######	@######	@######	@######	@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-$total, $code, $comment, $blank, $file
+@######	@######	@######	@######	@######	@######	@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+$total, $code, $comment, $blank, $strcount, $stravglen, $file
 .
