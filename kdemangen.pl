@@ -42,8 +42,7 @@
 # 1 cd to /path/to/kde/srcs/kdeedu/debian  ( necessary so the script
 #   finds the Debian control file.. )
 # 2 run "/path/to/kdemangen.pl $(which kstars) > kstars.1"
-# 3 run "cat kstars.1 | groff -man -Tascii | less" to check out the
-#   generated page..
+# 3 run "man ./kstars.1" to check out the generated page..
 
 # PROBLEMS:
 # Only works for full KDE applications that use KCmdLineArgs (
