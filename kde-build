@@ -694,7 +694,7 @@ for module in $modules; do
     cmd_make_install="$cmd_make_install install"
     if test ! -w $KDEDIRS; then
       echo -n "  To install module $module, please enter the root "
-      su -c "$cmd_make_install"
+      sudo $cmd_make_install
     else
       install_module
     fi
