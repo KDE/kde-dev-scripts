@@ -52,7 +52,7 @@
   (and (eq major-mode 'c++-mode)
        (agulbra-clean-out-spaces)))
 
-;(add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
+(add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
 (add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
 
 (defun agulbra-delete-into-nomenclature (&optional arg)
@@ -75,7 +75,7 @@ With arg, to it arg times."
                c-basic-offset 4
                c-access-key "\\<\\(signals\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
                c-hanging-comment-ender-p nil
-               c-offsets-alist (append '((case-label   . 4)
+               c-offsets-alist (append '((case-label   . 0)
                                          (access-label . -)
                                          (label        . 0)
                                          (statement-cont . c-lineup-math)
@@ -104,7 +104,14 @@ With arg, to it arg times."
          (define-key c++-mode-map "\C-i" 'agulbra-c++-tab)
          (define-key c++-mode-map "\ef" 'c-forward-into-nomenclature)
          (define-key c++-mode-map "\ed" 'agulbra-delete-into-nomenclature)
-         (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)))
+         (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
+
+         ;; keybindings for adding spaces around parenthesises
+         ;(define-key c++-mode-map [\(] 'insert-parens)
+         ;(define-key c++-mode-map [\)] 'insert-parens2)
+         ;(define-key c++-mode-map [,] 'insert-comma)
+         ;(define-key c++-mode-map [\{] 'insert-curly-brace)
+))
 
 
 (setq c-mode-hook
@@ -1079,11 +1086,18 @@ With arg, to it arg times."
       (insert " )") ))))
 ; Makes ',' insert ', '
 (defun insert-comma () (interactive) (insert ", "))
-
-; The keybindings for the above. You need to uncomment them out if they suit you.
-;(define-key c++-mode-map [\(] 'insert-parens)
-;(define-key c++-mode-map [\)] 'insert-parens2)
-;(define-key c++-mode-map [,] 'insert-comma)
+(defun insert-curly-brace () (interactive) 
+  (let ((n "" ))
+    (save-excursion
+      (forward-char -2) 
+      (setq n (looking-at " )")) )
+    (cond
+     (n (progn
+	  (insert " {")
+          (newline-and-indent)))
+     (t ;else
+      (insert "{") )))
+)
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
 (defun scroll-me-up () (interactive) (scroll-up 3))
@@ -1119,9 +1133,10 @@ With arg, to it arg times."
 (define-key global-map [(f6)] 'agulbra-switch-cpp-h)
 (define-key global-map [(f7)] 'switch-to-function-def)
 (define-key global-map 'f8 'function-menu)
-;;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
+;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(control meta d)] 'insert-kdDebug)
 
 ;; pc-like textmarking
 (load "pc-select")
 (pc-select-mode)
+
