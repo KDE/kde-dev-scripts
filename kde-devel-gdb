@@ -85,11 +85,13 @@ define printqptrvector
     # Maybe we could find it out the type by parsing "whatis $arg0"?
     set $arr = $arg0
     set $len = $arr->len
+    output $len
+    printf " items in the vector\n"
     set $i = 0
     while $i < $len
        # print "%s[%d] = %s\n", $arr, $i, *($arg1 *)(($arr->vec)[$i])
        print *($arg1 *)(($arr->vec)[$i])
-       $i++
+       set $i++
     end
 end
 document printqptrvector
