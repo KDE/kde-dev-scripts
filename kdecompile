@@ -34,7 +34,7 @@ class Config:
     installDir = "/opt/kde"
     cvsRoot = os.environ['CVSROOT']
     xmessage = "kmessage"
-    kdepackages=["kdesupport", "kdelibs", "kdebase", "kdeutils",
+    kdepackages=["kdesupport", "arts", "kdelibs", "kdebase", "kdeutils",
                  "kdenetwork","kdemultimedia", "kdegraphics",
                  "kdepim", "kdeadmin", "kdebindings",
                  "kdetoys", "kdegames", "koffice",
