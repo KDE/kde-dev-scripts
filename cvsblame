@@ -224,7 +224,8 @@ while (<ANNOTATE>) {
 	  $oldrevision = $revision;
       }
       print OUTPUT "<tr><td nowrap style=\"background: ", ($color==1)? "#EEEEE0" : "#FFFFCC", "\"><pre>";
-      print OUTPUT sprintf "%-5i$linkstr%-14s$linkendstr$content", $lineno, $revauthor;
+
+      print OUTPUT sprintf '%-5i%s%-14s%s%s', $lineno, $linkstr, $revauthor,$linkendstr, $content;
       print OUTPUT "</pre></td></tr>\n";
       $lineno++;
 }
