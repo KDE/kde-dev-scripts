@@ -11,3 +11,6 @@ cvsversion      Display CVS version of a file without connecting to the server.
 
 cxxmetric	Counts lines of code, comments and blank space in C and C++
 		source files.
+
+fixheaders      Adds header files as it recognices make error output
+
