@@ -250,7 +250,7 @@
 	  (parts (nreverse (split-string f "/")))
 	  (i)
 	  (first-iter t)
-	  (iters (max (length parts) kde-header-protection-parts-to-show)))
+	  (iters (min (length parts) kde-header-protection-parts-to-show)))
      (dotimes (i iters)
        (let ((part (pop parts)))
 	 (setq definablestring
