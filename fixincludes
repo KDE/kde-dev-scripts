@@ -178,6 +178,7 @@ sub warn_before_modifying ($)
   my $srcfile = shift @_;
   if ($file_was_modified && $modify) {
     print "$srcfile: WARNING: file was already modified. You might commit local changes by mistake.\n";
+    $file_was_modified = 0;
   } else {
     print "Program error, warn_before_modifying wrongly called\n";
   }
@@ -360,8 +361,18 @@ sub fix_unnecessary($)
 {
   my $srcfile = shift @_;
   my $srcdir = dirname($srcfile);
-  
-  my $builddir = $srcdir; # FIXME!
+
+  # find canonical path for srcdir
+  my $origdir = cwd;
+  chdir($srcdir);
+  $srcdir = cwd;
+  #print "srcdir=$srcdir\n";
+
+  my $builddir = $srcdir;
+  my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
+  # we have to use sed here, because perl can't do s#a#b#
+  $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT` if (defined $objreplacement);
+  #print "builddir=$builddir\n";
 
   my @includes = &find_removable_includes($srcfile);
 
@@ -374,23 +385,24 @@ sub fix_unnecessary($)
   my $blanksrc = $srcfile;
   $blanksrc =~ s/(.*)\.[^\.]+/$1/;
 
-  my $origdir = cwd;
-  chdir($builddir);
-
+  print "Checking for initial compilation: ";
   my $objextension = "BUG";
-  `make $blanksrc.o &>/dev/null`;
-  $objextension = ".o" if ( 0 == $?);
+  my $makecmd = "make";
+  $makecmd = "makeobj" if (defined $objreplacement);
+  my $output = `$makecmd $blanksrc.lo 2>&1`;
+  $objextension = ".lo" if ( 0 == $?);
   if($objextension eq "BUG") {
-    `make $blanksrc.lo &>/dev/null`;
-    $objextension = ".lo" if ( 0 == $?);
+    $output = `$makecmd $blanksrc.o 2>&1`;
+    $objextension = ".o" if ( 0 == $?);
   }
   if($objextension eq "BUG") {
-    warn "can't figure out right compile command :-(\n??? unused?\n";
+    warn "can't figure out right compile command for $srcfile :-(\n??? unused, or didn't compile in the first place?\n";
+    warn "$output";
     chdir($origdir);
     return;
   } 
 
-  print "found objextension: $objextension\n" if($verbose);
+  print "worked with $objextension\n";
 
   # now try to drop some includes 
   foreach $include (@includes) {
@@ -414,8 +426,8 @@ sub fix_unnecessary($)
       chdir($origdir);
       chdir($builddir);
       unlink "$blanksrc$objextension";
-      `make $blanksrc$objextension &> /dev/null`;
-      die "unexpected error" if($?);
+      `$makecmd $blanksrc$objextension 2>&1`;
+      die "unexpected error $output\nexitcode=$?" if($?);
       chdir($origdir);
       chdir($srcdir);
     }
@@ -429,7 +441,7 @@ sub fix_unnecessary($)
 
     # try if it compiles
     unlink "$blanksrc$objextension";
-    `make $blanksrc$objextension &> /dev/null`;
+    `$makecmd $blanksrc$objextension 2>&1`;
     my $retcode = $?;
 
     chdir($origdir);
@@ -486,7 +498,7 @@ foreach $dir(@dirlist) {
   @sources = &find_fixable_sources($dir);
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
-    my $dummy = `cvscheck | grep $file | grep '^[MmC]'`;
+    `cvscheck | grep $file | grep '^[MmC]'`;
     $file_was_modified = 1 - $?; # $?=0 if modified, $?=1 if not
     &fix_compat_includes($file);
     &fix_duplicates($file);
