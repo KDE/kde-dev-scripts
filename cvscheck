@@ -158,9 +158,9 @@ sub processEntries
           next if ($e =~ /^.+_skel\.[^\.]+$/);
 
           # Qt specific entries
-          next if ($e =~ /^\.ui$/);
-          next if ($e =~ /^\.moc$/);
-          next if ($e =~ /^\.obj$/);
+          next if ($e eq ".ui");
+          next if ($e eq ".moc");
+          next if ($e eq ".obj");
 
           $dirunknown{$e} = 1;
         }
