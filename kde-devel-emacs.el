@@ -1779,10 +1779,14 @@ With arg, to it arg times."
 (put 'newline-and-indent 'pending-delete t)
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
-(defun scroll-me-up () (interactive) (scroll-up 3))
-(defun scroll-me-down () (interactive) (scroll-down 3))
+(defun scroll-me-up () (interactive) (scroll-up 4))
+(defun scroll-me-down () (interactive) (scroll-down 4))
+(defun scroll-me-up-a-bit () (interactive) (scroll-up 1))
+(defun scroll-me-down-a-bit () (interactive) (scroll-down 1))
 (define-key global-map [(button4)] 'scroll-me-down)
 (define-key global-map [(button5)] 'scroll-me-up)
+(define-key global-map [(shift button4)] 'scroll-me-down-a-bit)
+(define-key global-map [(shift button5)] 'scroll-me-up-a-bit)
 
 ; Compilation
 (defun makeclean () (interactive) (compile "make clean"))
@@ -1833,6 +1837,14 @@ With arg, to it arg times."
 (define-key global-map [(f10)] 'kdab-insert-header)
 (define-key global-map [(shift f10)] 'kdab-lookup-qt-documentation)
 (define-key global-map [(control meta d)] 'insert-kdDebug)
+
+; Standard Qt/KDE shortcuts: Ctrl+Backspace, Ctrl+Delete
+(define-key global-map [(control backspace)] 'backward-kill-word)
+(define-key global-map [(control delete)] 'kill-word)
+
+; Standard Qt/KDE shortcuts: Control Pageup and Pagedown
+(define-key global-map [(control prior)] 'beginning-of-buffer)
+(define-key global-map [(control next)] 'end-of-buffer)
 
 ; currently no binding for header-protection and add-file-to-makefile-am,
 ; you need to call them from M-x
