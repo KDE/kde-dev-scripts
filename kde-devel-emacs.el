@@ -1885,3 +1885,6 @@ With arg, to it arg times."
 ; C-x r m    to set a named bookmark in the buffer
 ; C-x r b    to jump to a named bookmark in the buffer
 
+(setq-default initial-scratch-message
+      "File kde-devel-emacs.el is deprecated! 
+Please use KDE-Emacs from kdesdk/scripts/kde-emacs.")
