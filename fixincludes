@@ -438,6 +438,7 @@ sub fix_unnecessary($)
     if($retcode == 0) {
       # wow, it worked, lets continue!
       print "SUCCESS!\n";
+      unlink $localbackup;
       $exp_success = $exp_success + 1;
     }
     else {
