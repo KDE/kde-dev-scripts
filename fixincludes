@@ -439,7 +439,7 @@ sub fix_unnecessary($)
     unlink "$blanksrc$objextension";
     $output=`$makecmd $blanksrc$objextension 2>&1`;
     my $retcode = ($? >> 8);
-    print "retcode=$retcode\n$output" if ($verbose);
+    #print "retcode=$retcode\n$output" if ($verbose);
 
     chdir($srcdir);
     
