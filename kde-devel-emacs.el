@@ -1080,12 +1080,7 @@ With arg, to it arg times."
 (c-set-style "bsd")
 
 ; Move in other window
-(defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; eheh :)
-(define-key global-map [(meta up)] 'scroll-other-up)
-(defun scroll-other-down () (interactive) (scroll-other-window 1))
-
-; Move in other window
-(defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; eheh :)
+(defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
 (define-key global-map [(meta up)] 'scroll-other-up)
 (defun scroll-other-down () (interactive) (scroll-other-window 1))
 (define-key global-map [(meta down)] 'scroll-other-down)
