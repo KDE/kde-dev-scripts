@@ -365,8 +365,7 @@ sub fix_unnecessary($)
   my $origdir = cwd;
   chdir($srcdir);
   $srcdir = cwd;
-  print "srcdir=$srcdir\n";
-  chdir($origdir);
+  print "srcdir=$srcdir\n" if($verbose);
 
   my $builddir = $srcdir;
   my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
@@ -376,16 +375,16 @@ sub fix_unnecessary($)
     $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
     chomp $builddir;
   }
-  #print "builddir=$builddir\n";
-
-  my @includes = &find_removable_includes($srcfile);
+  print "builddir=$builddir\n" if($verbose);
 
   my $tot = $exp_success + $exp_failure;
   print "=============== $srcfile (successes: $exp_success; total: $tot)\n";
 
   $srcfile = basename($srcfile);
- 
+
   # first figure out some details
+  my @includes = &find_removable_includes($srcfile);
+
   my $blanksrc = $srcfile;
   $blanksrc =~ s/(.*)\.[^\.]+/$1/;
 
@@ -443,13 +442,11 @@ sub fix_unnecessary($)
 
     # try if it compiles
     unlink "$builddir/$blanksrc$objextension";
-    print "$builddir/$blanksrc$objextension\n";
     $output=`$makecmd $blanksrc$objextension 2>&1`;
     my $retcode = ($? >> 8);
     #print "retcode=$retcode\n$output" if ($verbose);
 
     chdir($srcdir);
-    
     if($retcode == 0) {
       # wow, it worked, lets continue!
       print "SUCCESS!\n";
