@@ -80,8 +80,7 @@
 (define-key global-map [(meta up)] 'scroll-other-up)
 (define-key global-map [(meta down)] 'scroll-other-down)
 (define-key global-map [(control j)] 'goto-line)
-(global-set-key "%" 'match-paren);;for all buffers :)
-(global-set-key [(control %)] 'match-paren)
+(global-set-key [(control %)] 'match-paren) ;;for all buffers :)
 
 (if (featurep 'igrep)
     (progn
