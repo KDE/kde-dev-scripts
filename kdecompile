@@ -34,8 +34,12 @@ def runCVSCheckOut(parentdir, packagename):
         print "Done."
     value = os.system("cvs -q checkout "+packagename)
     if (value != 0):
-        print "CVS checkout was not successfull"
+        print "CVS checkout was not successfull."
+	print "The compilation will continue in 10 seconds. "
+	print "Press Ctrl-C now, if you don't want to continue."
+	time.sleep(10)
 #        exit(1);
+	return 
     if (verbose):
         print "CVS checkout done."
     os.chdir(currdir)
@@ -153,7 +157,7 @@ def ParseLogfile():
       logfile = open("logfile", "r")
   except:
       return
-  searchstring = re.compile("Entering directory")
+  searchstring = re.compile("Leaving directory")
   while 1:
       temp = logfile.readline()
       if temp == "":
@@ -171,7 +175,7 @@ def ParseLogfile():
                      break
              if alreadythere == 0:
                  compileddirs.append(value)
-                 print "( %d / %d ) - compiling %s" % (len(compileddirs), len(compileDirsPre), value)
+                 print "( %d / %d ) - compiled %s" % (len(compileddirs), len(compileDirsPre), value)
   logfile.close()
 
 #
@@ -181,24 +185,22 @@ def countDirs(cvsdir):
     if verbose:
         print "Reading the directories to compile..."
     currdir = os.getcwd()
-    os.chdir(cvsdir)
+    try:
+	os.chdir(cvsdir)
+    except:
+	print "The source directory does not exists. We exit now because "
+	print "the compilation will fail anyhow here."
+	sys.exit(1)
+# Fixme use tmp file here, or a pipe
     os.system("find -name Makefile.am >x")
     dirsfile = open("x", "r")
     countdirs = 0
-    cvssearch = re.compile("CVS")
-    depsearch = re.compile(".dep")
-    libsearch = re.compile(".lib")
     while 1:
         temp = dirsfile.readline()
         if temp == "":
             break      
-        if not (cvssearch.search(temp) or
-                depsearch.search(temp) or
-                libsearch.search(temp)):
-            countdirs = countdirs+1
-            compileDirsPre.append(temp[:-1])
-#    print countdirs
-#    print compileDirsPre
+        countdirs = countdirs+1
+        compileDirsPre.append(temp[:-1])
     os.chdir(currdir)
     
   
@@ -276,9 +278,9 @@ packagename = direlems[-1]
 for x in newdir:
     cvsdir = cvsdir + "/"+x
 print cvsdir
-countDirs(cvsdir+"/"+packagename)
 
 runCVSCheckOut(cvsdir, packagename)
+countDirs(cvsdir+"/"+packagename)
 runAutoConf(cvsdir+"/"+packagename)
 runConfigure(currdir, packagename, installDir)
 if noOptimizations:
