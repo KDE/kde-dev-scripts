@@ -324,6 +324,18 @@ if echo $MAKE_OPTS_COMPILE | grep DISTCC > /dev/null; then
 	MAKE_OPTS_COMPILE=`echo $MAKE_OPTS_COMPILE | sed -e "s,DISTCC,$hosts,"`
 fi
 
+if echo $MAKE_OPTS_COMPILE | grep TEAMBUILDER > /dev/null; then
+        if ! which tbcompiler > /dev/null 2>&1; then
+	    echo "TEAMBUILDER is not in PATH and OPTS_COMPILE has TEAMBUILDER"
+	    exit 1
+	fi
+	hosts=`tbcompiler -joblimit`
+	if test -z "$hosts"; then
+	    hosts=1
+	fi
+	MAKE_OPTS_COMPILE=`echo $MAKE_OPTS_COMPILE | sed -e "s,TEAMBUILDER,$hosts,"`
+fi
+
 # This checks whether the user wants a certain branch and generates the
 # command line. For cvsup users it even generates a supfile. :-)
 #

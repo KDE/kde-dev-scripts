@@ -154,6 +154,8 @@ MAKE_OPTS=""
 # 'MAKE_OPTS_COMPILE="-jDISTCC"' will result in 'MAKE_OPTS_COMPILE="-j6"'.
 # If you set something here, the value will be used alone, otherwise
 # MAKE_OPTS will be used alone
+# You can use the special "TEAMBUILDER" keyword too, it will put the
+# returned value of tbcompiler -joblimit in there
 MAKE_OPTS_COMPILE=""
 
 # If you would like to compile with a different make, please set it
