@@ -1,39 +1,52 @@
-;; klaralv.el
+;; ------------------------------ COPYRIGHT NOTICE ------------------------------
+;; klaralv.el version 1.1
+;; Copyright Klaralvdalens Datakonsult AB.
 ;;
-;; Copyright (C)  2002  KDE Development team
-;; Authors : Klaralvdalens Datakonsult
+;; This program is free software; you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation; either version 2 of the License, or (at your option)
+;; any later version.
 ;;
-;; This library is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU Lesser General Public
-;; License as published by the Free Software Foundation; either
-;; version 2.1 of the License, or (at your option) any later version.
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+;; for more details.
 ;;
-;; This library is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; Lesser General Public License for more details.
-;;
-;; You should have received a copy of the GNU Lesser General Public
-;; License along with this library; if not, write to the Free Software
-;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-;; 02111-1307  USA
+;; You should have received a copy of the GNU General Public License along
+;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
+;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
 
-(require 'kde-emacs-core)
-(require 'kde-emacs-general)
+;; ------------------------------ INSTALLATION ------------------------------
+;; To use this file, add the current directory to your load path.
+;; you do this by inserting something like the following to your .emacs:
+;; (setq load-path (cons "/home/blackie/Emacs/" load-path))
+;;
+;; Next insert the following line into your .emacs
+;; (require 'klaralv)
+;; (global-set-key [(f5)] 'kdab-insert-header)
+;; (global-set-key [(shift f5)] 'kdab-insert-forward-decl)
+;; (setq kdab-qt-documentation "file://usr/local/qt/html/doc/XXX.html")
+;; (global-set-key [(control f5)] 'kdab-lookup-qt-documentation)
+;; 
+;; If you use QTopia, and do not want include files to be prefixed with qpe/,
+;; as in qpe/qpeapplication, then insert the following code in your setup
+;; (setq kdab-prefix-qpe nil)
 
-;*---------------------------------------------------------------------*/
-;*    Variables ...                                                    */
-;*---------------------------------------------------------------------*/
-
-(defcustom kdab-qt-documentation
+;; ------------------------------ CONFIGURATION ------------------------------
+(defvar kdab-qt-documentation
   "http://doc.trolltech.com/3.0/XXX.html"
-  "*URL for Qt documentation. XXX must be in the string. 
-  Example: file:/packages/kde-src/qt-copy/doc/html/XXX.html"
-  :group 'kde-devel
-  :version "0.1"
-  :type 'string)
+  "URL for Qt documentation. XXX must be in the string. 
+  Example: file://packages/kde-src/qt-copy/doc/html/XXX.html")
 
+(defvar kdab-qpe-documentation
+  "file://opt/qtopia/doc/XXX.html"
+  "URL for QTopia documentatin. XXX must be in the string. 
+  Example: file:/opt/qtopia/doc/XXX.html")
+
+
+(defvar kdab-prefix-qpe 't
+  "set this to nil if you do not want QPE header files prefixed with qpe/")
 
 ;; special case for include files
 ;; Please notify blackie@klaralvdalens-datakonsult.se with any modification to this variable!
@@ -51,7 +64,11 @@
               QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
               QChildEvent QCustomEvent)
     (qdatetime.h QTime QDateTime QDate)
+    (qcstring.h QByteArray)
+    (qwidgetlist.h QWidgetListIt)
+    (qtabbar.h QTab)
     (qpalette.h QColorGroup)
+    (qaction.h QActionGroup)
     
     ; Qt/Embedded
     (qcopchannel_qws.h QCopChannel)
@@ -91,17 +108,79 @@
 
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
-    
-    ) "List of special include files which do not follow the normal scheme")
 
+    )
+    "List of special include files which do not follow the normal scheme")
 
-;*---------------------------------------------------------------------*/
-;*    Functions ...                                                    */
-;*---------------------------------------------------------------------*/
+(defvar kdab-qpe-includes 
+  '(
+    (alarmserver.h AlarmServer)
+    (applnk.h AppLnk DocLnk AppLnkSet DocLnkSet)
+    (calendar.h Calendar)
+    (categories.h CategoryGroup CategoryGroup Categories CheckedListView)
+    (categorymenu.h CategoryMenu)
+    (categoryselect.h CategoryCombo CategorySelect CategoryEdit CategoryWidget)
+    (config.h Config)
+    (contact.h Contact)
+    (database.h QWSDatabase DatabaseDefaultView Database DatabaseView DatabaseDefaultView)
+    (datebookdb.h DateBookDB)
+    (datebookmonth.h DateBookMonthHeader DayItemMonth DateBookMonthTable DateBookMonth DateButton)
+    (event.h Event EffectiveEvent EffectiveEventSizeSorter EffectiveEventTimeSorter)
+    (filemanager.h FileManager)
+    (fileselector.h FileSelectorItem FileSelector)
+    (finddialog.h FindDialog)
+    (fontdatabase.h FontDatabase)
+    (fontmanager.h FontManager)
+    (global.h Global)
+    (imageedit.h ImageEdit)
+    (inputmethodinterface.h InputMethodInterface)
+    (ir.h Ir)
+    (lightstyle.h LightStyle)
+    (lnkproperties.h LnkProperties)
+    (mediaplayerplugininterface.h MediaPlayerDecoder)
+    (menubutton.h MenuButton)
+    (mimetype.h MimeType)
+    (network.h Network)
+    (palmtoprecord.h Record)
+    (palmtopuidgen.h UidGen)
+    (password.h Password)
+    (power.h PowerStatus PowerStatusManager )
+    (process.h Process)
+    (qcopenvelope_qws.h QCopEnvelope)
+    (qdawg.h QDawg)
+    (qlibrary.h QLibrary)
+    (qpeapplication.h QPEApplication)
+    (qpedecoration_qws.h QPEDecoration QPEManager)
+    (qpedialog.h QPEDialogListener)
+    (qpemenubar.h  QPEMenuToolFocusManager QPEMenuBar)
+    (qpemessagebox.h QPEMessageBox)
+    (qpestyle.h QPEStyle : public QWindowsStyle)
+    (qpetoolbar.h QPEToolBar)
+    (record.h Record)
+    (resource.h Resource)
+    (sound.h Sound)
+    (storage.h StorageInfo FileSystem)
+    (task.h Task)
+    (timeconversion.h TimeConversion)
+    (timestring.h DateFormat TimeString)
+    (tzselect.h TZCombo TimeZoneSelector)
+    ))
+
+;; ------------------------------ SOURCE CODE ------------------------------
+
+;; Merge in qpe classes
+(defun kdab-get-special-include-list ()
+  (let (elm header classes (list kdab-qpe-includes) filename (result kdab-special-includes))
+    (while list
+      (setq elm (car list))
+      (setq list (cdr list))
+      (setq filename (concat (if kdab-prefix-qpe "qpe/" "") (symbol-name (car elm))))
+      (setq result (cons (cons (intern filename) (cdr elm)) result)))
+    result))
 
 ;; Lookup class `cls' in kdab-special-includes and return the associate include file name
 (defun kdab-map-special (cls)
-  (let ((list kdab-special-includes)
+  (let ((list (kdab-get-special-include-list))
         (found nil))
     (while (and list (not found))
       (let* ( (elm (car list))
@@ -116,18 +195,27 @@
         (symbol-name found)
       nil)  ; return value
     ))
-            
+        
+
+(defun kdab-word-under-point ()
+  (save-excursion
+    (let* ((start (if (= (preceding-char) ?\ )
+                      (point)
+                    (progn (backward-word 1) (point))))
+           (end (progn (forward-word 1) (point))))
+      (buffer-substring start end))))
+    
 
 ;--------------------------------------------------------------------------------
-; Insert include file.
-; Place point anywhere on a class, and invoke this function. A result of
+; Insert include file for Qt program.
+; Place point anywhere on a Qt class, and invoke this function. A result of
 ; this is that an include line is added (if it does not already exists) for
 ; the given class.
 ;--------------------------------------------------------------------------------
 (defun kdab-insert-header ()
   (interactive "")
   (save-excursion
-    (let* ((word (downcase (kde-word-under-point)))
+    (let* ((word (downcase (kdab-word-under-point)))
            (header (cond
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
@@ -136,8 +224,8 @@
       (beginning-of-buffer)
       (if (not (re-search-forward (concat "#include *<" header ">") nil t))
           (progn
-                                        ; No include existsed
-            (goto-char (point-max)) ; Using end-of-buffer makes point move, dispete save-excursion
+                                        ; No include existed
+            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
             (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
                 (beginning-of-buffer)
               (progn (end-of-line) (forward-char 1)))
@@ -153,19 +241,60 @@
 
 
 
+;----------------------------------------------------------------------------
+; Insert a forward declaration for a Qt class.
+; Place point anywhere on a Qt class, and invoke this function. A
+; result of this is that a forward declaration line is added (if it does
+; not already exist) for the given class.
+;----------------------------------------------------------------------------
+(defun kdab-insert-forward-decl ()
+  (interactive "")
+  (save-excursion
+    (let* ((word (kdab-word-under-point)))
+      (beginning-of-buffer)
+      (if (not (re-search-forward (concat "class *" word ";") nil t))
+          (progn
+                                        ; No forward decl existed
+            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
+            (if (re-search-backward "^[ \t]*class .*;" nil t)
+                (progn (end-of-line) (forward-char 1))
+              ; No forward declarations found, lets search for include lines.
+              (if (re-search-backward "#include" nil t)
+                  (progn (end-of-line) (forward-char 1))
+                (beginning-of-buffer)))
+            
+            (progn
+              (insert "class " word ";\n")
+              (message (concat "inserted " "class " word ";")))))
+      (message (concat "forward decl for \"" word "\" already exists")))))
 
-;-----------------------------------------------------------------------------
+
+(defun is-qpe-class (class)
+  (let ((list kdab-qpe-includes) classes (found nil))
+    (while (and (not found) list)
+      (setq classes (cdr (car list)))
+      (while classes
+        (if (string= (downcase (symbol-name (car classes))) (downcase class))
+            (setq found 't))
+        (setq classes (cdr classes)))
+      (setq list (cdr list)))
+    found))
+        
+;--------------------------------------------------------------------------------
 ; Start konqueror with documentation for the class under point.
-; set `kdab-qt-documentation' to specify the replacement for the documentation
-;-----------------------------------------------------------------------------
+; set `kdab-qt-documentation' and 'kdab-qpe-documentation' 
+; to specify the replacement for the documentation
+;--------------------------------------------------------------------------------
 (defun kdab-lookup-qt-documentation ()
   (interactive "")
   (save-excursion
-    (let* ((word (downcase (kde-word-under-point)))
-          (url (if (not (string-match "XXX" kdab-qt-documentation))
-                   (error "didn't find three X's in kdab-qt-documentation")
-                 (replace-match word t t kdab-qt-documentation))))
+    (let* ((word (downcase (kdab-word-under-point)))
+           (doc (if (is-qpe-class word) kdab-qpe-documentation kdab-qt-documentation))
+           (url (if (not (string-match "XXX" doc))
+                   (error "didn't find three X's in kdab-qt-documentation or kdab-qpe-documentation")
+                 (replace-match word t t doc))))
       (start-process "qt documentation" nil "kfmclient" "openURL" url)
       (message (concat "Loading " url)))))
+
 
 (provide 'klaralv)
