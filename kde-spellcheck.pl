@@ -1135,6 +1135,7 @@ my %fix = (
 	 "visualisation" => "visualization",
 	 "Visualisation" => "Visualization",
 	 "visualisations" => "visualizations",
+	 "volonteer" => "volunteer",
 	 "Volumen" => "Volume",
 	 "Voribis" => "Vorbis",
 	 "vrtual" => "virtual",
