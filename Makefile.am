@@ -5,6 +5,7 @@ bin_SCRIPTS = \
   cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
   noncvslist pruneemptydirs cvs-clean \
   cvs2dist  cvsblame \
+  findmissingcrystal \
   kdedoc qtdoc extractrc zonetab2pot.py \
   licensecheck fixkdeincludes includemocs create_cvsignore \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py
