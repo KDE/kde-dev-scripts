@@ -369,11 +369,13 @@ sub fix_unnecessary($)
 
   my $builddir = $srcdir;
   my $objreplacement =  $ENV{"OBJ_REPLACEMENT"};
+  my $makecmd = "make";
   # we have to use sed here, because perl can't do s#a#b#
   if (defined $objreplacement)
   {
     $builddir = `echo $srcdir | sed -e \$OBJ_REPLACEMENT`;
     chomp $builddir;
+    $makecmd = "makeobj";
   }
   print "builddir=$builddir\n" if($verbose);
 
@@ -391,12 +393,12 @@ sub fix_unnecessary($)
   print "Checking for initial compilation: ";
   chdir($builddir);
   my $objextension = "BUG";
-  my $makecmd = "make";
-  $makecmd = "makeobj" if (defined $objreplacement);
+  unlink "$blanksrc.lo";
   my $output = `$makecmd $blanksrc.lo 2>&1`;
   $objextension = ".lo" if ( 0 == ($? >> 8));
   if($objextension eq "BUG") {
     print "failed with .lo... ";
+    unlink "$blanksrc.o";
     $output = `$makecmd $blanksrc.o 2>&1`;
     $objextension = ".o" if ( 0 == ($? >> 8));
   }
