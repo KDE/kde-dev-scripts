@@ -9,5 +9,3 @@ else
 fi
 
 compadd -a tmp
-
-return 1

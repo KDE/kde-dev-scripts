@@ -14,5 +14,3 @@ for i in `kde-config --path $resource| sed -e 's/:/ /g'`; do
 	tmp=($i/$dir/**/*.desktop($flags))
 	compadd -a tmp
 done
-
-return 1
