@@ -6,7 +6,7 @@ all: $(TARGET)
 doc: $(TARGET).1 $(TARGET).txt
 
 $(TARGET).1: $(TARGET)
-	pod2man $(TARGET) > $(TARGET).1
+	pod2man -center="K Desktop Environment" $(TARGET) > $(TARGET).1
 
 $(TARGET).txt: $(TARGET)
 	pod2text $(TARGET) > $(TARGET).txt
