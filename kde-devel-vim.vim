@@ -58,7 +58,7 @@ function! SmartParens( char, ... )
 	if ! ( &syntax =~ '^\(c\|cpp\|java\)$' )
 		return a:char
 	endif
-	let s = getline( '.' )
+	let s = strpart( getline( '.' ), 0, col( '.' ) - 1 )
 	if s =~ '//'
 		return a:char
 	endif
