@@ -50,9 +50,12 @@ while (<>)
 	    { $line .= "()";  }
 
             $arguments = ""; # for final test
+            $commented = 0;
 	    if ( !s/^\"([^\"]*)\"// ) # There is no format
 	    {
-		$line = $line . " << \"" . $_ . "\"";
+		s/[\s]*\)[\s]*;[\s]*$//;
+		$commented = s/[\s]*\)[\s]*;[\s]*\*\/$//; # terminating with */
+		$line = $line . " << " . $_ ;
 	    } else
 	    {
 		$format = $1;
