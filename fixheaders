@@ -63,11 +63,12 @@ $lastdir = '.';
  'no method `QCursor::pos' => "qcursor",
  '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
+ '`KIcon\' undeclared \(first use this function\)' => "kiconloader",
 );
 
 %changes = ();
-
-while(<>)
+open(INPUT,"makeobj 2>&1 |") || die "Couldn't run makeobj";
+while(<INPUT>)
 {
   if (/make.*Entering directory \`(.+)\'/) {
     $lastdir = $1;
@@ -81,10 +82,18 @@ while(<>)
     if ($file !~ m,^\/,) {
       $file = "$lastdir/$file";
     }
-     print STDERR "file=$file\n";
+    #print STDERR "file=$file\n";
   } else {
-    print STDERR $_;
-    next;
+    # This could be a continuation line
+    if ( defined $line && $line ne "" ) {
+      $line .= $_;
+      #print STDERR "file still $file\n";
+      #print STDERR "line=$line\n";
+    } else {
+      # Compilation line, or other unparsable line -> ignore
+      print STDERR $_;
+      next;
+    }
   }
   
   print STDERR "Already having changes for $file\n" if defined($changes{$file});
@@ -99,7 +108,10 @@ while(<>)
     }
   }
   
+  if (defined($changes{$file})) { $file=""; $line=""; }
 }
+close(INPUT);
+print "exitcode: " . ($?>>8) . "\n";
 
 sub fixFile
 {
