@@ -229,7 +229,7 @@ sub processEntries
           }
           $mtm = strToTime( $stamp );
           if( $mtm < 0 ) {
-            if ( $stamp =~ /dummy/ ) {
+            if ( ($stamp =~ /dummy/) || ($stamp =~ /^Initial /) ) {
               push @uncommitted, "$dir/$fname$taginfo";
             }
             else {
