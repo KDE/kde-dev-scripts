@@ -33,6 +33,7 @@ sub read_required_version($);
 
 # some global variables
 my $verbose = 0; # turns on debugging
+my $omit_Qt_check = 0; # turns off Qt version checking
 my @explicitfiles = (); # filled in if passing files on the command line
 my $minversion_maj = $default_minversion_maj;
 my $minversion_min = $default_minversion_min;
@@ -41,11 +42,16 @@ while (defined ($ARGV[0]))
 {
   $_ = shift;
   if (/^--help$|^-h$/)  {
-    print "Usage: fixuifiles [--verbose | -v] files...\n";
+    print "Usage: fixuifiles [OPTIONS] files...\n";
+    print "Options are:\n";
+    print "\t-v, --verbose\tBe verbose\n";
+    print "\t--omitqtcheck\tDoes not check for Qt minimum version\n";
     exit 0;
   }
   elsif (/^--verbose$|^-v$/) {
     $verbose = 1;
+  }elsif (/^--omitqtcheck/) {
+    $omit_Qt_check = 1;
   }
   elsif (!/^-/) {
     push @explicitfiles, $_;
@@ -242,7 +248,7 @@ sub process_ui_file($)
   &read_required_version( dirname($file) );
 
   print "Checking: $file\n" if($verbose);
-  &fix_version($file);
+  &fix_version($file) if(!$omit_Qt_check);
   &fix_accels($file);
   &fix_captions($file);
 }
