@@ -1,7 +1,7 @@
-#compdef kcmshell appletproxy
+#compdef kcmshell=kcmshell appletproxy=appletproxy
 
 local i tmp dir flags
-if [ "$words[0]" = "kcmshell" ]; then
+if [ "$service" = "kcmshell" ]; then
 	dir="applnk/Settings";
 	flags=":t:r";
 else
