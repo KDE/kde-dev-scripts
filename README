@@ -1,6 +1,8 @@
 
 Stuff in this directory:
 
+adddebug        Modifies the Makefile to add debug info (-g)
+
 create_makefile Create the Makefile in a directory containing a Makefile.am
                 Saves time compared to re-running configure completely 
 

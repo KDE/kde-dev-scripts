@@ -1,0 +1,5 @@
+#!/bin/sh
+# Modifies the Makefile in the current directory, to add
+# debug info (-g), and to remove stripping (-s) and optimizations (-O2)
+
+perl -pi -e 's|(^CXXFLAGS = .*)$|\1 -g|;s|-O2||;s|^LDFLAGS =.*$|LDFLAGS = -g |;' Makefile
