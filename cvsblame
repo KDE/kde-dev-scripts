@@ -108,7 +108,7 @@ print OUTPUT <<EOF;
     function poplog(target, rev) {
       var popup = document.getElementById("popup");
       var x = 120, y = 0;
-      while (target != document)
+      while (target && target != document)
       {
           x += target.offsetLeft;
           y += target.offsetTop;
@@ -143,9 +143,9 @@ while (<LOG>) {
              }
              $content = "<b>$revision</b>&nbsp;&nbsp;$author&nbsp;&nbsp;<b>$date<b>";
       } elsif ($line eq "----------------------------" && !($revision eq "")) {
-             print OUTPUT "$revstr = \"$content\";\n";
+             print OUTPUT "var $revstr = \"$content\";\n";
       } elsif ($line eq "=============================================================================" && !($revision eq "")) {
-             print OUTPUT "$revstr = \"$content\";\n";
+             print OUTPUT "var $revstr = \"$content\";\n";
       } else {
              $line =~ s/\"/\\\"/g;
              $content = "$content<br>$line";
