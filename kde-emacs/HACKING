@@ -1,0 +1,7 @@
+Rules are simple:
+1) Make sure that your functions work both on GNU/Emacs and XEmacs.
+2) Put general variables in kde-emacs-vars.el, file related variables 
+inside the related file.
+3) Export general functions to kde-emacs-general.el.
+4) Always provide documentation for both variables and functions that
+you're adding.

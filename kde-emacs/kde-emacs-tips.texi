@@ -1,0 +1,250 @@
+\input texinfo  @c -*-texinfo-*-
+
+@finalout
+
+@c %**start of header
+@setfilename  kde-emacs-tips
+@settitle     KDE Emacs usefull programming tips
+@footnotestyle end
+@c @setchapternewpage odd !! we don't want blank pages
+@c %**end of header
+
+@dircategory Emacs
+@direntry
+* KDE Emacs: (kde-emacs).   Emacs mode for editing KDE/QT C++/C code.
+@end direntry
+
+@ifnottex
+Copyright @copyright{} 2002 Zack Rusin and KDE Development Team
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``The GNU Manifesto'', ``Distribution'' and
+``GNU GENERAL PUBLIC LICENSE'', with the Front-Cover texts being ``A GNU
+Manual'', and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License'' in the Emacs manual.
+
+(a) The FSF's Back-Cover Text is: ``You have freedom to copy and modify
+this GNU Manual, like GNU software.  Copies published by the Free
+Software Foundation raise funds for GNU development.''
+
+This document is part of a collection distributed under the GNU Free
+Documentation License.  If you want to distribute this document
+separately from the collection, you can do so by adding a copy of the
+license to the document, as described in section 6 of the license.
+@end ifnottex
+
+@titlepage
+@sp 10
+
+@center @titlefont{KDE Emacs Package}
+@sp 2
+@center @subtitlefont{KDE Emacs package documentation and programming tips.}
+@sp 2
+@author Zack Rusin
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2002 Zack Rusin & KDE Development Team
+@sp 1
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``The GNU Manifesto'', ``Distribution'' and
+``GNU GENERAL PUBLIC LICENSE'', with the Front-Cover texts being ``A GNU
+Manual'', and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License'' in the Emacs manual.
+
+(a) The FSF's Back-Cover Text is: ``You have freedom to copy and modify
+this GNU Manual, like GNU software.  Copies published by the Free
+Software Foundation raise funds for GNU development.''
+
+This document is part of a collection distributed under the GNU Free
+Documentation License.  If you want to distribute this document
+separately from the collection, you can do so by adding a copy of the
+license to the document, as described in section 6 of the license.
+@end titlepage
+
+@node    Top, Introduction, (dir), (dir)
+@comment node-name, next, previous, up
+
+@macro kdeemacs
+KDE Emacs
+@end macro
+
+@ifinfo
+@top @kdeemacs{}
+
+@kdeemacs{} is an Emacs package with tons of useful features
+which ease KDE development process. 
+KDE Emacs usefull programming tips.
+
+@end ifinfo
+
+@menu
+* Introduction::
+* Getting Connected::
+* Generating stubs::
+* Tips::
+@end menu
+
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@node    Introduction, Getting Connected, Top, Top
+@comment node-name, next, previous, up
+@chapter    Introduction
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@node    Getting Connected, Generating stubs, Introduction, Top
+@comment node-name, next, previous, up
+@chapter    Getting Connected
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@menu
+* Sect. 2.1:: Installation
+* Sect. 2.2:: Files
+* Sect. 2.3:: Keybindings
+@end menu
+
+@node     Sect. 2.1, Sect. 2.2, Chapter 2, Chapter 2
+@section @code{Installation}
+@comment  node-name, next,      previous,  up
+
+@node     Sect. 2.2, Sect. 2.3, Sect. 2.1, Chapter 2
+@section @code{Files}
+@comment  node-name, next,      previous,  up
+
+@node     Sect. 2.3, , Sect 2.2, Chapter 2
+@section @code{Keybindings}
+@comment  node-name, next,      previous,  up
+
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@node    Generating stubs , Tips, Getting Connected, Top
+@comment node-name, next, previous, up
+@chapter    Generating stubs
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@node    Tips, Top, Generating stubs, Top
+@comment node-name, next, previous, up
+@chapter    Tips
+@comment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@sp 1
+@strong{Q.} @emph{How do I hide #ifdef's in source files without
+actually changing them?}
+
+@strong{A.}  Use @code{hide-ifdef-mode} which supports hiding of ifdef
+blocks without actually changing the file. In this mode @kbd{C-c @@
+C-d} hides ifdef block and @kbd{C-c @@ C-s} shows it again.
+
+@sp 1
+@strong{Q.} @emph{How do I get more informations about the keybindings
+of the currently active modes?}
+
+@strong{A.} Type @kbd{M-x describe-mode}.
+
+@sp 1
+@strong{Q.} @emph{How do I get automatic syntax higlighting of my
+custom types?}
+
+@strong{A.} Use a package named @file{ctypes.el} which does exactly
+that.
+
+@sp 1
+@strong{Q.} @emph{Is it possible to highlight dengerous syntax, just
+like Borland JBuilder does it?} 
+
+@strong{A.} Yes, use the @file{cwarn.el} package.
+
+@sp 1
+@strong{Q.} @emph{How do I easily customize Emacs faces/colors?}
+
+@strong{A.} Use the @file{color-theme.el} package.
+
+@sp 1
+@strong{Q.} @emph{How do I set the taskbar Emacs identification string?}
+
+@strong{A.} To your @file{.emacs} add a line like:
+@example
+(setq frame-title-format "%b (%m)")
+@end example
+which will display ``filename (mode)'' type of string in the
+taskbar. Type @kbd{C-h v frame-title-format}  to get more info.
+
+@sp 1
+@strong{Q.} @emph{Can I make Emacs jump to the matching parenthesis
+with @kbd{%} just like vi?}
+
+@strong{A.} Yes, just add to your @file{.emacs} something like:
+@example
+;; Make the % key jump to the matching {}[]() if on another, like VI
+(global-set-key "%" 'match-paren)
+
+(defun match-paren (arg)
+  "Go to the matching parenthesis if on parenthesis otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+        (t (self-insert-command (or arg 1)))))
+@end example
+
+@sp 1
+@strong{Q.} @emph{Can I have words like FIXME, TODO, HACK or NOTE 
+higlighted in documentation strings?}
+
+@strong{A.} Yes, either use @file{code-keywords.el} package or wait
+till I'll add it to @kdeemacs{}.
+
+@sp 1
+@strong{Q.} @emph{I really, really hate identifiersNamedLikeThis. I'd
+like to change them to identifiers_named_like_this but the
+maintainer of the application/library that I'm hacking on doesn't
+agree with me. What can I do? }
+
+@strong{A.} Use the @file{glasses.el} package which changes
+identifiersNamedLikeThis to identifiers_named_like_this in the
+buffers you're editting and switches them back to their original form
+once you save those buffers.
+
+@sp 1
+@strong{Q.} @emph{Is it possible to get function completion or
+signature display in Emacs? Will it ever be done?}
+
+@strong{A.} Yes and yes. I've been planning on doing this for quite a
+while and hopefully will have this finished pretty soon (no dates
+though :) ) The first thing that should be done is writting a few
+fixes for the Semantic package (@file{c.bnf} to be more exact),
+because Semantic doesn't handle templates, member function declared
+as const or KDE access specifiers, once this is done all that will be
+left is using smenaticdb package which efficiently stores and retrieves
+large amounts of tokens and then displaying tokens belonging to types at
+point which match current context.
+
+@sp 1
+@strong{Q.} @emph{Is there a package that would highlight changes that
+I made to a certain file?}
+
+@strong{A.} I wouldn't be writting this if there wouldn't - try
+@kbd{M-x highlight-changes-mode}.
+
+
+@sp 1
+@strong{Q.} @emph{I want to temporarily highlight certain variable in
+a file, how to do it?}
+
+@strong{A.} Type @kbd{M-x hi-lock-mode}, now @kbd{C-x w h
+@emph{regexp} @key{RET} @emph{face} @key{RET}} highlights regexp with
+face in the current file and @kbd{C-x w r @emph{regexp} @key{RET}}
+unhighlights it.
+
+@node    Concept Index,     , Variables Index, Top
+@c        node-name,    next, previous,        up
+@unnumbered Concept Index
+
+@printindex cp
+
+@contents
+@bye
