@@ -748,9 +748,12 @@ for module in $modules; do
   echo -n "  Configuring..."
   set_title "Configuring module $module..."
   if [ -n "$KDEBUILDDIR" ]; then
-    cmd_configure="$KDESRCDIR/$module/configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
+    cmd_configure="$KDESRCDIR/$module/configure $CONFIGUREFLAGS --with-qt-dir=$QTDIR"
   else
-    cmd_configure="./configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
+    cmd_configure="./configure $CONFIGUREFLAGS --with-qt-dir=$QTDIR"
+  fi
+  if echo $CONFIGUREFLAGS | grep -v -- "--prefix=" 2>/dev/null >/dev/null; then
+    cmd_configure="$cmd_configure --prefix=$KDEDIRS"
   fi
   [ "$NICECOMPILE" = yes ] && cmd_configure="nice $cmd_configure"
   configure_skipped=0
