@@ -179,7 +179,7 @@
     (unistd.h unlink sleep usleep)
     (iostream cout cerr)
     (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
-
+    (qeventloop.h eventloop)
 
     )
     "List of special include files which do not follow the normal scheme")
