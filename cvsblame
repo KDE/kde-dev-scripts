@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-cvsblame - Shows a blame-annotated representation of a CVS controlled file in netscape.
+cvsblame - Shows a blame-annotated representation of a CVS controlled file in Konqueror.
 
 =head1 SYNOPSIS
 
@@ -13,7 +13,7 @@ cvsblame <filename>
 
 =head1 DESCRIPTION
 
-cvsblame opens netscape to display the output of cvs annotate of
+cvsblame opens Konqueror to display the output of cvs annotate of
 a cvs controlled file. When the mouse is on a revision number shown
 in the second column, a popup with the respective log message
 appears. 
@@ -68,7 +68,10 @@ if (open(CONFIG, $configfile)) {
 if ($accountfile) {
     open(ACCOUNTS, $accountfile) || die "Account file not found: $accountfile";
     while (<ACCOUNTS>) {
-	if (/([^\s]*)\s+([^\s]*)/) {
+        if (/([^\s]*)\s+([^\s].*[^\s])\s+([^\s]+)/) {
+            $mail{$1} = "$2 &lt;$3&gt;";
+        }
+	elsif (/([^\s]*)\s+([^\s]*)/) {
 	    $mail{$1} = $2;
         }
     }
@@ -87,16 +90,34 @@ print OUTPUT <<EOF;
   <head>
     <title>Blame annotation for $file</title>
   </head>
-  <script>
-    function poplog(event, rev) {
-      var popup = document.layers['popup'];
-      popup.left = event.target.x;
-      popup.top = event.target.y;
-      popup.document.write("<table border=0 cellspacing=0 cellpadding=10><tr><td bgcolor='#FFCC99'<tt>");
-      popup.document.write(rev);
-      popup.document.write("</td></tr></table>");
-      popup.document.close();
-      popup.visibility = "show";
+  <script type="text/javascript">
+    function hidelog(event) {
+      var target = event.relatedTarget;
+      while (target && target.id != "popup")
+        target = target.offsetParent;
+      if (target)
+        return;
+      target = event.target;
+      while (target.id != "popup")
+        target = target.offsetParent;
+      target.style.visibility = "hidden";
+    }
+    function init() {
+      document.getElementById("popup").addEventListener("mouseout", hidelog, false);
+    }
+    function poplog(target, rev) {
+      var popup = document.getElementById("popup");
+      var x = 120, y = 0;
+      while (target != document)
+      {
+          x += target.offsetLeft;
+          y += target.offsetTop;
+          target = target.offsetParent;
+      }
+      popup.style.pixelLeft = x;
+      popup.style.pixelTop = y;
+      popup.innerHTML = rev;
+      popup.style.visibility = "normal";
       return true;
     }
 EOF
@@ -118,7 +139,7 @@ while (<LOG>) {
              $date = $1;
              $author = $2;
              if ($mail{$author}) {
-		 $author = "<a href=mailto:$mail{$author}>$author</a>";
+		 $author = "<a href=\\\"mailto:$mail{$author}\\\">$author</a>";
              }
              $content = "<b>$revision</b>&nbsp;&nbsp;$author&nbsp;&nbsp;<b>$date<b>";
       } elsif ($line eq "----------------------------" && !($revision eq "")) {
@@ -134,8 +155,24 @@ close LOG;
 
 print OUTPUT <<EOF;
   </script>
-  <body bgcolor="#EEEEE0">
-     <layer name='popup' onmouseout="this.visibility='hide';" visibility='hide'></layer>
+  <style type="text/css">
+        body {
+            background: #eeeee0;
+        }
+        #popup {
+            position: absolute;
+            background: #ffcc99;
+            border: 1px solid #80664D;
+            padding: 2px;
+         }
+         a:link {
+            text-decoration: none;
+         }
+         a:hover {
+            text-decoration: underline;
+         }
+  </style>
+  <body onload="init()">
     <h1>$file</h1>
     <table border=0 cellpadding=0 cellspacing=0 width="100%">
 EOF
@@ -166,8 +203,8 @@ while (<ANNOTATE>) {
       $revstr =~ s/\./_/g;
       if ($revision eq $oldrevision) {
 	  if ($lineno == $oldlineno+20) {
-	      $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
-	      $linkendstr = "</a>";
+	      $linkstr = "<span onmouseover=\"return poplog(this, $revstr)\"'>";
+	      $linkendstr = "</span>";
               $revauthor = "$author $revision";
               $oldlineno = $lineno;
 	  } else {
@@ -177,15 +214,15 @@ while (<ANNOTATE>) {
 	  }
       } else {
           $color = ($color == 0)? 1 : 0;
-	  $linkstr = "<a href=\"\" onmouseover='return poplog(event,$revstr)'>";
-	  $linkendstr = "</a>";
+          $linkstr = "<span onmouseover=\"return poplog(this, $revstr)\"'>";
+	  $linkendstr = "</span>";
 	  $revauthor = "$author $revision";
 	  $oldlineno = $lineno;
 	  $oldrevision = $revision;
       }
-      print OUTPUT "<tr><td bgcolor=\"", ($color==1)? "#EEEEE0" : "#FFFFCC", "\"><pre>";
+      print OUTPUT "<tr><td nowrap style=\"background: ", ($color==1)? "#EEEEE0" : "#FFFFCC", "\"><pre>";
       print OUTPUT sprintf "%-5i$linkstr%-14s$linkendstr$content", $lineno, $revauthor;
-      print OUTPUT "</td></tr>\n";
+      print OUTPUT "</pre></td></tr>\n";
       $lineno++;
 }
 close ANNOTATE;
@@ -196,11 +233,12 @@ close ANNOTATE;
 
 print OUTPUT <<EOF;
     </table>
+    <div id="popup" style="visibility: hidden"></div>
   </body>
 </html>
 EOF
 
 close OUTPUT;
 
-system("netscape file://`pwd`/%23cvsblame.html%23");
+system("kfmclient openProfile webbrowsing file:/`pwd`/%23cvsblame.html%23");
 
