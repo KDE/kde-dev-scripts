@@ -10,7 +10,7 @@ SRCDIR=/home/devel/src/kde-cvs
 
 # Where shall I put the binaries?
 #
-KDE2DIR=/opt/kde2new
+KDE2DIR=/opt/kde2
 
 # Where is your Qt 2.2.0?
 #
@@ -40,14 +40,14 @@ MODULES="kde-qt-addon kdesupport kdelibs kdebase kdegraphics kdenetwork \
 # running. Set this to "no" to install the new snapshot over the previous
 # one, otherwise set it to "yes".
 #
-INSTALLFROMSCRATCH=no
+INSTALLFROMSCRATCH=yes
 
 # Do you plan to use this box otherwise while compiling? If so, you'd
 # probably set this variable to "yes". If this is set to "no", the
 # compilation process will try to eat up all the ressources, which speeds up
-# the overall progress but makes it a PITA to work on this box.
+# the overall progress but makes it a PITA to work on this box. ;)
 #
-COMPILENICE=no
+COMPILENICE=yes
 
 # Set this variable to "yes" to actiave certain cheap tweaks to speed up the
 # compilation process. Those tweaks mainly consist of lowering the
@@ -120,7 +120,7 @@ DATE=`date +%Y%m%d`
 # directory for the logfile in case it doesn't exist already.
 #
 if test -n "$LOGDIR" -a ! -d "$LOGDIR"; then
-  if ! mkdir -p "$LOGDIR" &> /dev/null; then
+  if ! mkdir -p "$LOGDIR" > /dev/null 2>&1; then
     echo "WARNING: Could not create logfile-directory."
     echo "WARNING: Logfile generation deactivated."
     LOGDIR=""
@@ -202,11 +202,12 @@ for MODULE in $MODULES; do
       #
       echo -n "  Configuring..."
       CONFIGURE="configure --enable-debug --prefix=$KDE2DIR --with-qt-libs=$QTDIR"
-      CONFIGURE_LOG="$LOGDIR/$MODULE-configure-$DATE"
-      test $LOGDIR && CONFIGURE="$CONFIGURE &> $CONFIGURE_LOG"
       test "$NICECOMPILE" = yes && CONFIGURE="nice $CONFIGURE"
-      test $CMD_COMPRESS && CONFIGURE="$CONFIGURE; $CMD_COMPRESS $CONFIGURE_LOG"
-      test $LOGDIR && STARTTIME=$(date +%s)
+      CONFIGURE_LOG="$LOGDIR/$MODULE-configure-$DATE"
+      if test $LOGDIR; then
+        CONFIGURE="$CONFIGURE > $CONFIGURE_LOG 2>&1"
+        STARTTIME=$(date +%s)
+      fi
 
       if eval "$CONFIGURE"; then
         if test $LOGDIR; then
@@ -214,8 +215,9 @@ for MODULE in $MODULES; do
           HOURS=$[$DURATION / 3600]
           MINUTES=$[$[$DURATION % 3600] / 60]
           SECONDS=$[$DURATION % 60]
-          echo "Time needed for configuration: $HOURS:$MINUTES:$SECONDS" >> $CONFIGURE_LOG
+          echo "Time needed for configuration of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $CONFIGURE_LOG
         fi
+        test $CMD_COMPRESS && $CMD_COMPRESS $CONFIGURE_LOG
         echo -e $STR_OKAY
 
         # Compile the module.
@@ -224,10 +226,11 @@ for MODULE in $MODULES; do
         MAKE="make"
         MAKE_LOG="$LOGDIR/$MODULE-build-$DATE"
         echo $CRITICAL_MODULES | grep -q $MODULE || MAKE="$MAKE -k"
-        test $LOGDIR && MAKE="$MAKE &> $MAKE_LOG"
+        if test $LOGDIR; then
+          MAKE="$MAKE > $MAKE_LOG 2>&1"
+          STARTTIME=$(date +%s)
+        fi
         test "$NICECOMPILE" = yes && MAKE="nice $MAKE"
-        test $CMD_COMPRESS && MAKE="$MAKE; $CMD_COMPRESS $MAKE_LOG"
-        test $LOGDIR && STARTTIME=$(date +%s)
 
         if eval "$MAKE"; then
           if test $LOGDIR; then
@@ -235,17 +238,18 @@ for MODULE in $MODULES; do
             HOURS=$[$DURATION / 3600]
             MINUTES=$[$[$DURATION % 3600] / 60]
             SECONDS=$[$DURATION % 60]
-            echo "Time needed for compilation: $HOURS:$MINUTES:$SECONDS" >> $MAKE_LOG
+            echo "Time needed for compilation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_LOG
           fi
+          test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_LOG
           echo -e $STR_OKAY
 
           # Install the module.
           #
+          export INSTALL="/usr/bin/install -c -p"          
           MAKE_INSTALL="make install"
           MAKE_INSTALL_LOG="$LOGDIR/$MODULE-install-$DATE"
-          test $LOGDIR && MAKE_INSTALL="$MAKE_INSTALL &> $MAKE_INSTALL_LOG"
+          test $LOGDIR && MAKE_INSTALL="$MAKE_INSTALL > $MAKE_INSTALL_LOG 2>&1"
           test "$NICECOMPILE" = yes && MAKE_INSTALL="nice $MAKE_INSTALL"
-          test $CMD_COMPRESS && MAKE_INSTALL="$MAKE_INSTALL; $CMD_COMPRESS $MAKE_INSTALL_LOG"
           if test ! -w $KDE2DIR; then
             echo "  Please enter the root password to install module $MODULE."
             echo -n "  "
@@ -257,8 +261,9 @@ for MODULE in $MODULES; do
                 HOURS=$[$DURATION / 3600]
                 MINUTES=$[$[$DURATION % 3600] / 60]
                 SECONDS=$[$DURATION % 60]
-                echo "Time needed for installation: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
+                echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
               fi
+              test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
               echo -e $STR_OKAY;
               echo Module $MODULE successfully installed in $KDE2DIR!;
               else
@@ -274,8 +279,9 @@ for MODULE in $MODULES; do
                 HOURS=$[$DURATION / 3600]
                 MINUTES=$[$[$DURATION % 3600] / 60]
                 SECONDS=$[$DURATION % 60]
-                echo "Time needed for installation: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
+                echo "Time needed for installation of module $MODULE: $HOURS:$MINUTES:$SECONDS" >> $MAKE_INSTALL_LOG
               fi
+              test $CMD_COMPRESS && $CMD_COMPRESS $MAKE_INSTALL_LOG
               echo -e $STR_OKAY
               echo "Module $MODULE successfully installed in $KDE2DIR!"
             else
@@ -289,7 +295,7 @@ for MODULE in $MODULES; do
         fi
       else
         echo -e $STR_ERROR
-        exit $ERR_CONFIGURE_FAIL
+        echo $CRITICAL_MODULES | grep -q $MODULE && exit $ERR_CONFIGURE_FAIL
       fi
     fi
   fi
