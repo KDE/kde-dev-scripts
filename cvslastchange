@@ -2,13 +2,35 @@
 
 use File::Basename;
 
-die "need a filename!" if (!length($ARGV[0]));
+sub usage()
+{
+  print "Usage:\n";
+  print "  $0 [ <filename > | <filename> <rev> | \n" .
+        "       M +<digits> -<digits> <filename <rev> ]\n";
+  print "\n";
+  
+  exit 5;
+}
 
-$cvsversion= dirname($0) . "/cvsversion";
-$version=`$cvsversion $ARGV[0]`;
-$version=$ARGV[1] if ($ARGV[1] =~ /^[\d\.]{3,}$/);
+my $filename;
 
-chomp $version;
+my $argc = scalar @ARGV;
+
+if ($argc > 0 and $argc < 3 ) {
+  $filename = $ARGV[0];
+  $cvsversion= dirname($0) . "/cvsversion";
+  $version=`$cvsversion $filename`;
+  chomp $version;
+} elsif ($argc == 5) {
+  $filename=$ARGV[3] if (-f $ARGV[3]);
+  $version=$ARGV[4] if ($ARGV[4] =~ /^[\d\.]{3,}$/);
+} else {
+  &usage();
+}
+
+die "$0: filename expected" if(!length($filename));
+die "$filename: $!\n" if (! -f $filename);
+
 my $vold = $version;
 my $vnew = $version;
 
@@ -20,7 +42,7 @@ else {
   $v2old = ${v2}-1;
   $vold = $v1 . '.' . $v2old;
 }
-print "cvs -f log -N -r$vnew $ARGV[0]\n";
-system("cvs -f log -N -r$vnew $ARGV[0]");
-print "cvs -f diff -bp -u -r$vold -r$vnew $ARGV[0]\n";
-system("cvs -f diff -bp -u -r$vold -r$vnew $ARGV[0]");
+print "cvs -f log -N -r$vnew $filename\n";
+system("cvs -f log -N -r$vnew $filename");
+print "cvs -f diff -bp -u -r$vold -r$vnew $filename\n";
+system("cvs -f diff -bp -u -r$vold -r$vnew $filename");
