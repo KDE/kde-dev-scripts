@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # this is a script around make which basicly checks
 # if it's in srcdir or in builddir and changes to 
@@ -13,7 +13,7 @@
 
 file=Makefile
 dir=.
-args=
+args=()
 
 while test $# -gt 0 ; do
    case "${1}" in
@@ -21,17 +21,14 @@ while test $# -gt 0 ; do
 	shift
 	file="${1}" 
 	shift 
-	args="$args -f $file"
+	args=("${args[@]}" -f $file)
 	;;
       -C)
 	shift
 	dir="${1}"
 	shift ;;
       *)
-	if test -n "$args"; then
-		args="$args "	
-	fi
-	args="$args${1}"
+	args=("${args[@]}" "$1")
 	shift 
 	;;
     esac
@@ -86,7 +83,7 @@ if test -z "$MAKE"; then
         MAKE=/usr/bin/make
     fi
 fi
-LANGUAGE=C $MAKE "$args"
+LANGUAGE=C $MAKE "${args[@]}"
 retval=$?
 echo "makeobj[0]: Leaving directory \`$PWD'"
 exit $retval
