@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 
 use POSIX;
+use strict;
 
 my %fix = (
          "aasumes" => "assumes",
@@ -469,15 +470,15 @@ sub spell_file($)
         my @c = <IN>;
 
         my $matches = 0;
-        foreach $line (@c) {
+        foreach my $line (@c) {
             my @words = split /\W/, $line;
-            foreach $w (@words) {
+            foreach my $w (@words) {
                 if(defined($fix{$w})) {
                     $matches++;
                     $line =~ s/\b$w\b/$fix{$w}/g;
                 }
             }
-            foreach $w (keys %fix) {
+            foreach my $w (keys %fix) {
                 if ($line =~ /$w/ and $line !~ /$fix{$w}/) {
                     if ($firsttime) {
                         print "spelling $f\n";
@@ -496,7 +497,7 @@ sub spell_file($)
     }
 }
 
-@dirqueue = ();
+my @dirqueue = ();
 
 sub processDir($)
 {
@@ -511,6 +512,7 @@ sub processDir($)
         next if ($e eq "..");
         next if ($e eq "CVS");
         next if ($e =~ /\.desktop$/);
+        next if ($e =~ /^\./);
         push (@dirqueue, "$d/$e") if (-d ("$d/$e"));
         next if (-d ("$d/$e"));
 
