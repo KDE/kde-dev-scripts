@@ -145,7 +145,7 @@ sub find_removable_includes ($)
   
   my @includes = ();
 
-  # we skip all inludes that are somehow ifdefed
+  # we skip all includes that are somehow ifdefed
 
   my $cpplevel = 0;
   while (<SRC>) {
@@ -238,9 +238,6 @@ sub replace_include ($$$)
   close(I);
 
   # ok, CPU time doesn't count so we do it the lazy way
-  # we should remove the last occurence of the include in the
-  # file because in case its a duplicate removing the first
-  # one could make a difference. 
   my @revcontents = reverse @contents;
   @contents = ();
 
@@ -399,14 +396,11 @@ sub fix_unnecessary($)
       chdir($origdir);
       chdir($builddir);
       unlink "$blanksrc$objextension";
-      my $output = `make $blanksrc$objextension &> /dev/null`;
-      my $retcode = $?; #system("make", "$blanksrc$objextension");    
-
-      die "unexpected error" if($retcode);
+      `make $blanksrc$objextension &> /dev/null`;
+      die "unexpected error" if($?);
+      chdir($origdir);
+      chdir($srcdir);
     }
-
-    chdir($origdir);
-    chdir($srcdir);
 
     # duplicates have to be nuked here , so it will be dropped maximum once
     print "trying without $include: ";
