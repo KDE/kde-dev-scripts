@@ -441,11 +441,6 @@ for module in $modules; do
     cmd_update_raw="$cmd_update"
   fi
 
-  # Hack for the kdemultimedia/noatun/noatun problem
-  if test "x$module" = xkdemultimedia -a "x$KDEBUILDDIR" = x -a ! -d noatun/noatun; then
-    rm -f noatun/noatun
-  fi
-
   if test "x$KDELOGDIR" != x; then
     echo "-> Update $cmd_update <---------------------------------------------------------------" >> $logfile
     cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
