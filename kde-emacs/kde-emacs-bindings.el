@@ -23,7 +23,13 @@
 ; -----------------------------------------------------------------
 ; The list below defines the following bindings:
 ;
-; F2 : offer a grep command  (use C-u F2 if you need to specify options, like -i or -w)
+; F2 : offer a grep command to search all files in the current
+; directory.  Use Shift-F2 or F12 if you want to search below
+; directories too.. This grep omits annoying uninteresting files like
+; "*~", "CVS", etc.
+;
+; Shift-F2/F12: see F2, but searches in directories below the current
+; too..
 ;
 ; F3/Shift-F3/F8/Shift-RMB : different ways to see the list of methods in the current buffer
 ;
@@ -79,12 +85,9 @@
 (define-key global-map [(meta down)] 'scroll-other-down)
 (define-key global-map [(control j)] 'goto-line)
 (global-set-key "%" 'match-paren);;for all buffers :)
-(if (featurep 'igrep)
-    (progn
-      (define-key global-map [(f2)] 'igrep)
-      (setq igrep-files-default 'ignore) ; too hard to use *.cc *.h with it, because of the full path
-      )
-  (define-key global-map [(f2)] 'grep))
+(define-key global-map [(f2)] 'kde-grep-all-files-in-current-directory)
+(define-key global-map [(shift f2)] 'kde-grep-all-files-in-current-directory-and-below)
+(define-key global-map [(f12)] 'kde-grep-all-files-in-current-directory-and-below)
 (define-key global-map [(shift backspace)] 'kde-delete-backward-ws)
 
 ;; FIXME: remember to get these working on Gnu/Emacs (Zack)
