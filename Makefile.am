@@ -2,7 +2,7 @@
 bin_SCRIPTS = \
   create_makefile create_makefiles adddebug \
   cheatmake makeobj kde-build build-progress.sh \
-  cvsversion cvscheck cvschanged cvslastchange cvslastlog cvsrevertlast \
+  cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
   noncvslist pruneemptydirs cvs-clean \
   cvs2pack cvs2dist  cvsblame \
   kdedoc qtdoc extractrc zonetab2pot.py \
@@ -12,7 +12,7 @@ bin_SCRIPTS = \
 # sorted by bin_SCRIPTS reference
 man1_MANS = \
   kde-build.1 \
-  cvsversion.1 cvscheck.1 cvschanged.1 \
+  cvsversion.1 cvscheck.1 \
   noncvslist.1 \
   cvs2pack.1  cvsblame.1 \
   includemocs.1 
@@ -25,7 +25,7 @@ noinst_SCRIPTS = \
   cvsaddcurrentdir fixheaders kDebug2kdDebug.sh kdecompile
 
 EXTRA_DIST = completions kde-emacs \
-  colorcvsrc-sample gettext.patch kde-buildrc \
+  colorcvsrc-sample cvschanged gettext.patch kde-buildrc \
   kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
   kde.supp kdecompile.README 
 
