@@ -69,9 +69,13 @@ err_inv_cvsup_server="9"
 #
 err_no_temp_supfile="10"
 
+# The configuration file couldn't be found.
+#
+err_no_config="11"
+
 # Certain modules depend on others - those "base" modules which are required
 # by others to compile and/or run should be listed here to ensure that the
-# script is aborted.
+# script is aborted in case on of these modules doesn't build.
 #
 critical_modules="kdesupport kdelibs kdebase"
 
@@ -122,9 +126,13 @@ install_module() {
   fi
 }
 
-# Get current configuration.
+# Get current configuration, bail out if it couldn't be found.
 #
-test -e ./kde-buildrc && . ./kde-buildrc
+if !(test -e ./kde-buildrc); then
+  echo "ERROR: Cannot load configuration file ./kde-buildrc!"; exit $err_no_config
+else
+  . ./kde-buildrc
+fi
 
 # This generates in 'modules' a list of the modules which shall be updated.
 #
@@ -400,7 +408,7 @@ kde-build - Updates and recompiles a tree of KDE CVS modules
 
         kde-build
 
-=head1 DESCRIPTIONS
+=head1 DESCRIPTION
 
 kde-build has been designed to keep a local copy of several KDE CVS
 modules up to date and recompile them. Those modules have to be saved in a
@@ -408,9 +416,9 @@ common directory, e.g. something like
 
     ~/kde-src/
       |
-      \-> kdelibs/
+      +-> kdelibs/
       |
-      \-> kdebase/
+      +-> kdebase/
       |
       \-> kdenetwork/
 
@@ -419,7 +427,7 @@ take care of compiling them in the correct order, checks for dependencies
 and resolves them as far as possible.
 
 Please not that, prior to first invokation of the script, the configuration
-file 'kde-buildrc' has to be modified to reflect the local environment,
+file 'F<kde-buildrc>' has to be modified to reflect the local environment,
 such as paths etc.
 
 =head1 RETURN VALUE
@@ -446,11 +454,13 @@ The following error codes are returned by the script.
 
 9 - No cvsup server was specified.
 
+10 - The temporary CVSUP configuration file couldn't be created.
+
+11 - The configuration file F<kde-buildrc> couldn't be loaded.
+
 =head1 EXAMPLES
 
-        cd ~/scripts
-	vi kde-buildrc
-	kde-build
+        cd ~/scripts/; vi ./kde-buildrc; ./kde-build
 
 =head1 BUGS
 
