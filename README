@@ -6,6 +6,23 @@ adddebug        Modifies the Makefile to add debug info (-g)
 add_trace	Modifies a source file to add a trace as the first line
 		of every method, using kdDebug, and showing args values.
 
+authors2xml	Extract author information from C++ files and print it out
+		in DocBook format as a list
+
+cheatmake	Helper for saving time when recompiling, skipping files that
+		haven't changed in a meaningful way (e.g. if you only change
+		a comment...)
+
+check_licenses	
+
+licensecheck	Simple license checker for source files
+
+makeobj		Script around make which basicly checks if it's in srcdir
+		or in builddir and changes to the right directory for
+		calling /usr/bin/make
+
+colorcvs
+
 create_makefile Create the Makefile in a directory containing a Makefile.am
                 Saves time compared to re-running configure completely 
 
@@ -26,6 +43,8 @@ cvsblame	Bonsai-like cvs annotate
 cvschanged	Check for edited or merged files in a checked out CVS module,
 		without connecting to the CVS server.
 
+cvscheck	Offline check for status of files in a checked-out
+
 noncvslist	List all files in a checked out CVS module that are unknown to
 		to the CVS server.
 
@@ -36,6 +55,8 @@ cxxmetric	Counts lines of code, comments and blank space in C and C++
 
 fixheaders      Adds header files as it recognices make error output
 
+fixincludes	Tries to reduce the number of includes in KDE source files
+
 cvslastchange   launches "cvs diff -u" to display the last applied changes for a
                 given file. HEAD branch only.
 
@@ -43,6 +64,9 @@ cvslastlog      Shows the log associated with the last change on a given file.
 
 cvsremovealltags Remove all tags from a CVS file. Use with care, and for instance
 		after copying a file on the server.
+
+cvsrevertlast	Reverts all the files given on the command by one version, then
+		you can commit them.
 
 gendebug        Generate C++/Qt code for printing debug output.
 
@@ -55,10 +79,33 @@ extractrc	Extract text tags from designer's UI files and XML GUI-RC files
 gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
 		extract scoped messages
 
+includemocs	Adds missing "#include foobar.moc" lines
+
 kde-devel-emacs.el An emacs file that contains many helpful functions and keybindings
 		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
 
 kde-devel-gdb	A gdb macro definition file, to e.g. print QStrings from gdb.
+
+extend_dmalloc	Script to run gdb on return-addresses
+
+kde-devel-vim.vim 
+
+kde.supp	Some valgrind suppressions handy for ignoring stuff we don't
+		care about when valgrinding kde applications
+
+kdecompile	Python script for compiling and installing a KDE package
+
+kdedoc		Open a kde help page in kfm/konqueror
+
+qtdoc		Open a qt help page in kfm/konqueror
+
+kdekillall	Kills the process "kdeinit: <process> with signal <signal>
+
+kdelnk2desktop
+
+zone		Reads timezone list as its first argument or from
+		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
+		 template
 
 ----------------
 Looking to add a script?
