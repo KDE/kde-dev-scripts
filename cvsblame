@@ -45,10 +45,12 @@ Bernd Gehrmann <bernd@physik.hu-berlin.de>
 =cut
 
 $file = $ARGV[0];
-$outputfile = ">#cvsblame.html#";
+$outputfile = `kde-config --path tmp` || './#'; # if we put the file in the cwd, then we keep a '#' at the beggining to help CVS ignore it
+chomp $outputfile;
+$outputfile .= "cvsblame.$$.html";
 $configfile = $ENV{HOME}. "/.cvsblame";
 $rootfile = "`pwd`/CVS/Root";
-$cvsroot = `cat $rootfile`;
+$cvsroot = `cat "$rootfile"`;
 chop $cvsroot;
 
 #
@@ -83,7 +85,7 @@ if ($accountfile) {
 #
 
 
-open(OUTPUT, $outputfile);
+open(OUTPUT, ">$outputfile");
 print OUTPUT <<EOF;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -127,7 +129,7 @@ EOF
 #
 
 $revision = "";
-open (LOG, "cvs log $file|");
+open (LOG, "cvs log \"$file\"|");
 while (<LOG>) {
       chop;
       $line = $_;
@@ -186,7 +188,7 @@ $lineno = 1;
 $oldrevision = "";
 $oldlineno = "";
 $oldrevstr = "";
-open (ANNOTATE, "cvs annotate $file 2>/dev/null|");
+open (ANNOTATE, "cvs annotate \"$file\" 2>/dev/null|");
 while (<ANNOTATE>) {
       chop;
       $line = $_;
@@ -240,5 +242,6 @@ EOF
 
 close OUTPUT;
 
-system("kfmclient openProfile webbrowsing file:/`pwd`/%23cvsblame.html%23");
+system("kfmclient openProfile webbrowsing $outputfile");
 
+exit 0;
