@@ -23,6 +23,9 @@ else
 
   # Handle arg with missing "/Makefile"
   relpath=$1
+  if ! test -z "`echo $relpath | grep \/$`"; then
+    relpath=`echo $relpath | sed 's/\/$//'`
+  fi
   if test -z "`echo $relpath | grep 'Makefile$'`"; then 
     relpath="$relpath/Makefile"
   fi
