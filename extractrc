@@ -60,11 +60,11 @@ unless( @ARGV )
 }
 
 $opt_tag_group ||= "default";
-my $tags = TAG_GROUP->{$opt_tag_group};
 
 die "Unknown tag group: '$opt_tag_group', should be one of " . TAG_GROUPS
-    if $opt_tag_group and $opt_tag_group cmp "none" and not $tags;
+    unless exists TAG_GROUP->{$opt_tag_group};
 
+my $tags = TAG_GROUP->{$opt_tag_group};
 my $extra_tags  = join "", map "|" . quotemeta, @opt_extra_tags;
 my $text_string = qr/($tags$extra_tags)>/;                       # Precompile regexp
 
