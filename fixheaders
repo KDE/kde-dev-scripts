@@ -64,12 +64,21 @@ $lastdir = '.';
  '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`KIcon\' undeclared \(first use this function\)' => "kiconloader",
+ '`DCOPClient\' undeclared \(first use this function\)' => "dcopclient",
 );
 
-%changes = ();
-open(INPUT,"makeobj 2>&1 |") || die "Couldn't run makeobj";
-while(<INPUT>)
+# Initial values are simply to get into the while
+$exitcode=2; # exit-code from last 'make' command
+$addedone=1; # 1 when something has been fixed, means we can try again
+
+while ( $exitcode != 0 && $addedone != 0 )
 {
+ $addedone = 0;
+
+ %changes = ();
+ open(INPUT,"makeobj 2>&1 |") || die "Couldn't run makeobj";
+ while(<INPUT>)
+ {
   if (/make.*Entering directory \`(.+)\'/) {
     $lastdir = $1;
     $lastdir =~ s/^$topdir\///;
@@ -105,13 +114,15 @@ while(<INPUT>)
     if ($line =~ /$message/) {
       $changes{$file} = $messages{$message};
       fixFile($file, $messages{$message});
+      $addedone = 1;
     }
   }
   
   if (defined($changes{$file})) { $file=""; $line=""; }
-}
-close(INPUT);
-print "exitcode: " . ($?>>8) . "\n";
+ } # end of while(<INPUT>)
+ close(INPUT);
+ $exitcode=($?>>8);
+} # end of main while
 
 sub fixFile
 {
