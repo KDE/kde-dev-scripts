@@ -39,8 +39,8 @@
              (replace-match "" t t))
            (untabify (point-min) (point-max))
            (set-buffer-modified-p bmp)
-           (and (> count 0)
-                  (message "Cleaned %d lines" count))))))
+           (and (buffer-modified-p)
+                  (write-file))))))
 
 (defun agulbra-c++-clean-out-spaces ()
   "Remove spaces at ends of lines and untabifies, only in c++ mode"
