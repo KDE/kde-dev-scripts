@@ -1,15 +1,30 @@
-#!/bin/zsh
+#!/bin/sh
+function addignore() {
+	test -f .cvsignore || \
+	( touch .cvsignore && echo "created new .cvsignore" && cvs add .cvsignore )
+	grep -q "^$1\$" .cvsignore || \
+	( echo "$1" >> .cvsignore && echo "added $1 to .cvsignore" )
+}
+
 if test -f Makefile.am; then
-  cat >.cvsignore <<EOF
-Makefile
-Makefile.in
-EOF
-  bins=`grep _PROGRAMS Makefile.am | grep -v '^#' | sed -e 's/.*=\s*//'`
-  if ! test -z "$bins"; then
-    print -l `echo $bins` >> .cvsignore
-  fi
-  cvs add .cvsignore
+	addignore Makefile
+	addignore Makefile.in
+
+	bins=`grep _PROGRAMS Makefile.am | grep -v '^#' | sed -e 's/.*=\s*//'`
+	if ! test -z "$bins"; then
+		for prog in $bins; do
+			addignore "$prog"
+		done
+	fi
+
+	libs=`grep _LTLIBRARIES Makefile.am | grep -v '^#' | sed -e 's/.*=\s*//'`
+	if ! test -z "$libs"; then
+		for lib in $libs; do
+			meta_unload="${lib%.la}"_la_meta_unload.cpp
+			test -f $meta_unload && addignore $meta_unload
+		done
+	fi
 else
-  print "No Makefile.am found!"
+	print "No Makefile.am found!"
 fi
 
