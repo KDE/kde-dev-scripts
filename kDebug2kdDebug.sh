@@ -20,7 +20,7 @@ while (<>)
 	#print "Reading line : " . $_ . "\n";
 	$statement .= $_;
     }
-    elsif ( /kDebug/ )
+    elsif ( /kDebug[a-zA-Z]*[\s]*\(/ )
     {
 	$inkdebug = 1;
 	chop;
@@ -35,9 +35,8 @@ while (<>)
 	    $_ = $statement;
 	    ## Ok, now we have the full line
 	    ## 1 - Parse
-	    m/(^.*kDebug[a-zA-Z]*)[\s]*\(/ || die "parse error on kDebug...";
+	    s/(^.*kDebug[a-zA-Z]*)[\s]*\([\s]// || die "parse error on kDebug...";
 	    $line=$1; # has the indentation, //, and the kDebug* name
-	    s/$line[\s]*\([\s]*//; # remove line and (
 	    $line =~ s/kDebugInfo/kdDebug/;
 	    $line =~ s/kDebugWarning/kdWarning/;
 	    $line =~ s/kDebugError/kdError/;
@@ -52,14 +51,14 @@ while (<>)
 
 	    if ( !s/^\"([^\"]*)\"// ) # There is no format
 	    {
-		$line = $line . " << \"" . $1 . "\"";
+		$line = $line . " << \"" . $_ . "\"";
 	    } else
 	    {
 		$format = $1;
                 # If we stopped on a \" we need to keep adding to format
                 while ( $format =~ m/\\$/ )
                     { s/^([^\"]*)\"// || die "problem"; $format .= "\"" . $1; }
-		s/[\s]*\);$/,/; # replace trailing junk with , for what follows
+		s/[\s]*\)[\s]*;[\s]*$/,/; # replace trailing junk with , for what follows
 		$arguments = $_;
 
 		## 2 - Look for %x
@@ -70,7 +69,7 @@ while (<>)
 		    if ( /(%[0-9]*[a-z])/ ) # This item is a format
 		    {
 			## 3 - Find argument
-			$arguments =~ s/[\s]*([^,]+)[\s]*[,]//;
+			$arguments =~ s/[\s]*([^,]+)[\s]*,//;
 			# Remove trailing .ascii() and latin1()
 			$arg = $1;
 			$arg =~ s/\.ascii\(\)$//;
@@ -83,6 +82,10 @@ while (<>)
 		}
 		
 	    }
+            $arguments =~ s/,$//; # Remove trailing slash before next check
+            if ( $arguments ) {
+               print STDERR "Non-processed : " . $arguments . "\n";
+            }
 	    $line = $line . " << endl;\n";
 	    print $line;
 	}
@@ -92,6 +95,11 @@ while (<>)
         # Normal line
 	print;
     }
+}
+if ( $inkdebug )
+{
+   print STDERR "Warning, unterminated kDebug call !! Check the file !\n";
+   print $arguments;
 }
 ' $file
 
