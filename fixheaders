@@ -33,6 +33,7 @@ $lastdir = '.';
  'warning: implicit declaration of function `int kdDebug' => "kdebug",
  'warning: implicit declaration of function `int kdWarning' => "kdebug",
  '`QFile\' undeclared \(first use this function' => "qfile",
+ 'variable `QFile \S*\' has initializer but incomplete type' => "qfile",
  'type `KConfigBase\' is not a base type for type `KConfig' => "kconfig",
  'invalid use of undefined type `class QAccel' => "qaccel",
  'invalid use of undefined type `class KAboutData' => "kaboutdata",
@@ -67,6 +68,7 @@ $lastdir = '.';
  '`UserIcon\' undeclared \(first use this function\)' => "kiconloader",
  '`KIcon\' undeclared \(first use this function\)' => "kiconloader",
  'invalid use of undefined type `class KIconLoader' => "kiconloader",
+ 'invalid use of undefined type `class KInstance' => "kinstance",
  'invalid use of undefined type `class DCOPClient' => "dcopclient",
  '`DCOPClient\' undeclared \(first use this function\)' => "dcopclient",
  'invalid use of undefined type `class KStatusBar' => "kstatusbar",
@@ -74,6 +76,7 @@ $lastdir = '.';
  'invalid use of undefined type `class QImage' => "qimage",
  'invalid use of undefined type `class QLineEdit' => "qlineedit",
  'invalid use of undefined type `class KPopupMenu' => "kpopupmenu",
+ 'invalid use of undefined type `class QPopupMenu' => "qpopupmenu",
  'cannot convert `KPopupMenu \*\' to `QPopupMenu \*' => "kpopupmenu",
  'aggregate `QPopupMenu \S*\' has incomplete type' => "qpopupmenu",
  'invalid use of undefined type `class KURL' => "kurl",
@@ -128,6 +131,7 @@ while ( $exitcode != 0 && $addedone != 0 )
       $changes{$file} = $messages{$message};
       fixFile($file, $messages{$message});
       $addedone = 1;
+      last; # no need to keep going, abort here
     }
   }
   
