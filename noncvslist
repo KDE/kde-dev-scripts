@@ -33,6 +33,15 @@ sub processEntries
 	}
 
 	close( ENTRIES );
+
+        open( IGNORE, $dir."/.cvsignore" ) || return;
+
+        while( <IGNORE> ) {
+                chop;
+                $entries{ "$dir/$_" } = "ignored";
+        }
+
+        close( IGNORE );
 }
 
 # month assoc array for name -> index lookups
@@ -100,8 +109,6 @@ Checking checked out subdirectories:
 This script will list all files and directories in the module(s) that are 
 not listed in the CVS/Entries files. These may be files created during builds,
 new un-added sources files etc. It is a useful housekeeping tool.
-
-A current limitation is that .cvsignore files are not checked.
 
 =head1 EXAMPLES
 
