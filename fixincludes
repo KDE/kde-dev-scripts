@@ -113,6 +113,7 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'ktmainwindow.h'=>  "kmainwindow.h",
  'kcolorbtn.h'   =>  "kcolorbutton.h",
  'kcolordlg.h'   =>  "kcolordialog.h",
+ 'kxmlgui.h'     =>  "kxmlfactory.h",
 );
 
 
