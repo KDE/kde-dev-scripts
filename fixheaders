@@ -50,6 +50,8 @@ $lastdir = '.';
  'no method `KStandardDirs::' => "kstddirs",
  'variable `class QFile \S*\' has initializer but incomplete type' => "qfile",
  'warning: implicit declaration of function `int ICON\(\.\.\.\)' => "kiconloader",
+ '`QMessageBox\' undeclared \(first use this function\)' => "qmessagebox",
+ 'no matching function for call to `QBoxLayout::QBoxLayout' => "qlayout",
  
 );
 
