@@ -742,10 +742,10 @@ for module in $modules; do
   echo -n "  Compiling..."
   set_title "Compiling module $module..."
   use_compile_target=no
-  [ -f $KDESRCDIR/$module/Makefile.am.in ] && [ -n "$USE_UNSERMAKE" ] \
+  [ -f $KDESRCDIR/$module/Makefile.am.in ] && [ -n "$MAKE_OPTS_COMPILE" ] && [ -n "$USE_UNSERMAKE" ] \
        && ! echo $NO_UNSERMAKE_MODULES | \
-       grep $module > /dev/null 2>&1 && use_compile_target=yes
-  if [ "$use_compile_target" = yes -a -n "$MAKE_OPTS_COMPILE" ]; then
+       grep $module > /dev/null 2>&1 && use_compile_target=yes 
+  if [ "$use_compile_target" = yes ]; then
     cmd_make="$MAKE $MAKE_OPTS_COMPILE"
   else
     cmd_make="$MAKE $MAKE_OPTS"

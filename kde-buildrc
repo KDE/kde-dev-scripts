@@ -183,7 +183,7 @@ MAKE_OPTS=""
 # You can use the special "TEAMBUILDER" keyword too, it will put the
 # returned value of tbcompiler -joblimit in there.
 #
-MAKE_OPTS_COMPILE=""
+#MAKE_OPTS_COMPILE=""
 
 # If you would like to compile with a different make, please set it
 # here.
