@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 
 # ************************************************
 #
@@ -41,49 +41,52 @@ class Config:
     def parseArguments(self):
         readpackage = 0
 	for x in sys.argv[1:]:
-	    # print x
-	    if readpackage:
-		self.packagename = x
-		readpackage = 0
-		print "Package is:"+self.packagename
 	    if (x == "-h") or (x == "--help"):
 		self.printHelp()
 		sys.exit(0)
+                continue
 	    if x == "-i":
 		print "Will install without asking"
 		self.installWithoutAsking = 1
+                continue
 	    if x == "-d":
 		print "Will compile without debug info"
 		self.noDebug = 1
+                continue
 	    if x == "-o":		
 		print "Optimizations enabled"
 		self.noOptimizations = 0
+                continue
 	    if x == "--remove-admin-dir":
 		print "Will remove admin dir before cvs checkout"
 		self.removeAdminDir = 1
+                continue
 	    if x == "--no-cvs-checkout":
 		print "Will not do CVS checkout"
 		self.RunCVSCheckOut = 0
+                continue
 	    if x == "--no-configure":
 		print "Will not run configure"
 		self.RunConfigure = 0
+                continue
 	    if x == "--disable-compile":
 		print "Compilation disabled"
 		self.RunCompile = 0
-	    if x == "--packagename":
-		readpackage = 1
+                continue
+            self.packagename = x
+            print "Package is:"+self.packagename
 
     def printHelp(self):
-	  print version()
-	  print "\t-h\t\t\tPrint this help"
+          print "\nSyntax: kdecompile [options] [packagename]"
+	  print "\t-h, --help\t\tPrint this help"
 	  print "\t-i\t\t\tInstall without asking"
 	  print "\t-d\t\t\tDisable debug info"
 	  print "\t-o\t\t\tEnable optimization"
-	  print "\t-packagename package\tCompile the specified package"
 	  print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
 	  print "\t--no-cvs-checkout\tDo not do cvs checkout"
 	  print "\t--no-configure\tDo not run configure"    
 	  print "\t--disable-compile\tDo not compile"
+          print ""
 		
 ## end of configuration class 
 
@@ -301,18 +304,23 @@ def runInstall(compiledir):
 #   Version 
 #
 def version():
-    return "kdecompile v.0.3.6 as of November 29, 2000"
-
+    return "kdecompile v.0.3.7 as of December 14, 2000"
 
 #
-# And here comes the main function
 #
-print "KDE compilation, installation etc (c) Boloni Laszlo"
+#
+def createDir(dir):
+    try:
+        os.mkdir(dir)
+    except:
+        pass    
+
 
 #
 #  Perform the compilation process
 #
 def doAll(packagename, currdir, cvsdir):
+    createDir(currdir)
     if config.RunCVSCheckOut:
 	runCVSCheckOut(cvsdir, packagename)
     if config.RunConfigure:
@@ -327,7 +335,11 @@ def doAll(packagename, currdir, cvsdir):
     else:
 	print "Package "+packagename+" was checked out and configured"
 
-    
+
+#
+# And here comes the main function
+#
+print version()
 config=Config()    
 compileddirs = []
 compileDirsPre = []
@@ -359,6 +371,7 @@ else:
     packagename = direlems[-1]
     for x in newdir:
 	cvsdir = cvsdir + "/"+x    
+
 
 
 print "\n\nCompiling package: "+packagename
