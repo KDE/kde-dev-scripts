@@ -156,7 +156,7 @@ sub processEntries
         my $staginfo = "";
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
-          if($line =~ /^T(.+)$/) {
+          if($line =~ /^[TN](.+)$/) {
             $standardtag = $1;
             $staginfo = $1;
           }
