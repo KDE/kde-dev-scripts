@@ -18,7 +18,7 @@ until test $# -eq 0; do
   less $TMPFILE
   cvs up -r$BRANCH $1
   patch < $TMPFILE
-  rm -f $TMFILE
+  rm -f $TMPFILE
   echo "showing diff for $1..."
   cvs diff $1 | less
 
