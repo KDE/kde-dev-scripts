@@ -35,7 +35,7 @@
 
 ;; ------------------------------ CONFIGURATION ------------------------------
 (defvar kdab-qt-documentation
-  "http://doc.trolltech.com/3.0/XXX.html"
+  "file://home/lukas/cvs/qt-copy/doc/html/XXX.html"
   "URL for Qt documentation. XXX must be in the string. 
   Example: file://packages/kde-src/qt-copy/doc/html/XXX.html")
 
@@ -142,7 +142,7 @@
     ; Fake entries, which is usefull
     (qapplication.h qApp)
     (kapplication.h kapp)
-    (klocale.h i18n i18N_NOOP)
+    (klocale.h i18n I18N_NOOP)
     (kstandarddirs.h locate locateLocal)
     (stdlib.h getenv)
     (unistd.h unlink)
@@ -342,7 +342,7 @@
         
 ;--------------------------------------------------------------------------------
 ; Start konqueror with documentation for the class under point.
-; set `kdab-qt-documentation' and 'kdab-qpe-documentation' 
+; set `kdab-qt-documentation' and `kdab-qpe-documentation'
 ; to specify the replacement for the documentation
 ;--------------------------------------------------------------------------------
 (defun kdab-lookup-qt-documentation ()
