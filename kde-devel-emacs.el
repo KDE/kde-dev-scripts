@@ -64,6 +64,7 @@ With arg, to it arg times."
 (setq c++-mode-hook
       (lambda ()
          (font-lock-mode)
+         (c-set-style "bsd")
          (setq c-tab-always-indent nil
                c-basic-offset 4
                c-access-key "\\<\\(signals\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
