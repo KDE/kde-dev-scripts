@@ -11,12 +11,18 @@ if [ $# = 1 ]; then
     # Docs are laid out in doxygen style.
     if [ -f "$KDEDOCS/class$1.html" ]; then
       kfmclient exec "$KDEDOCS/class$1.html"
+    elif [ -f "$KDEDOCS"/*/html/"class$1.html" ]; then
+      kfmclient exec "$KDEDOCS"/*/html/"class$1.html"
     else
       classstring=`echo "$1" | sed -e 's/::/_1_1/'`
       if [ -f "$KDEDOCS/class$classstring.html" ]; then
         kfmclient exec "$KDEDOCS/class$classstring.html"
+      elif [ -f "$KDEDOCS"/*/html/"class$classstring.html" ]; then
+        kfmclient exec "$KDEDOCS"/*/html/"class$classstring.html"
       elif [ -f "$KDEDOCS"/class*_1_1"$1.html" ]; then
         kfmclient exec "$KDEDOCS"/class*_1_1"$1.html"
+      elif [ -f "$KDEDOCS"/*/html/class*_1_1"$1.html" ]; then
+        kfmclient exec "$KDEDOCS"/*/html/class*_1_1"$1.html"
       else
         echo "No class $1 in $KDEDOCS/*"
         exit 1
