@@ -49,6 +49,7 @@ while (<>)
 	    } else
 	    { $line .= "()";  }
 
+            $arguments = ""; # for final test
 	    if ( !s/^\"([^\"]*)\"// ) # There is no format
 	    {
 		$line = $line . " << \"" . $_ . "\"";
@@ -59,6 +60,7 @@ while (<>)
                 while ( $format =~ m/\\$/ )
                     { s/^([^\"]*)\"// || die "problem"; $format .= "\"" . $1; }
 		s/[\s]*\)[\s]*;[\s]*$/,/; # replace trailing junk with , for what follows
+		$commented = s/[\s]*\)[\s]*;[\s]*\*\/$/,/; # terminating with */
 		$arguments = $_;
 
 		## 2 - Look for %x
@@ -74,10 +76,14 @@ while (<>)
 			$arg = $1;
 			$arg =~ s/\.ascii\(\)$//;
 			$arg =~ s/\.latin1\(\)$//;
+                        # If "a ? b : c" then add parenthesis
+                        if ( $arg =~ m/.+[\s]*?[\s]*.+[\s]*:[\s]*.+/ ) {
+                           $arg = "(" . $arg . ")";
+                        }
 			$line = $line . " << " . $arg;
 		    } else # This item is some litteral
 		    {
-			$line = $line . " << \"" . $_ . "\"";
+			$line = $line . " << \"" . $_ . "\"" if ($_);
 		    }
 		}
 		
@@ -87,6 +93,7 @@ while (<>)
                print STDERR "Non-processed : " . $arguments . "\n";
             }
 	    $line = $line . " << endl;\n";
+            if ( $commented ) { $line .= "\*/"; }
 	    print $line;
 	}
     }
