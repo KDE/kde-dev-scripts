@@ -314,7 +314,7 @@ if test "x$CVSCLIENT" = xcvs; then
   cmd_update="cvs up"
   if test "x$BRANCH" != x; then
     cmd_update="$cmd_update -dPr $BRANCH"
-  elseif test $BRANCH = HEAD; then
+  elif test "$BRANCH" = "HEAD"; then
     cmd_update="$cmd_update -dPA"
   else
     cmd_update="$cmd_update -dP"
@@ -387,7 +387,7 @@ for module in $modules; do
     fi
 
     if test "x$KDELOGDIR" != x; then
-        echo "-> Update <---------------------------------------------------------------" >> $logfile
+        echo "-> Update $cmd_update <---------------------------------------------------------------" >> $logfile
         cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
         starttime=`date +%s`
     fi
