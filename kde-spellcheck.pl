@@ -670,6 +670,7 @@ my %fix = (
 	 "Minimun" => "Minimum",
 	 "mimimum" => "minimum",
 	 "minimising" => "minimizing",
+	 "minumum" => "minimum",
 	 "miscellaneaous" => "miscellaneous",
 	 "miscellanous" => "miscellaneous",
 	 "miscelaneous" => "miscellaneous",
