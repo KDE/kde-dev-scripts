@@ -199,7 +199,7 @@ endfunction
 function! AddQtSyntax()
 	if expand( "<amatch>" ) == "cpp"
 		syn keyword qtKeywords     signals slots emit
-		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS
+		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT
 		syn keyword qtCast         qt_cast
 		syn keyword kdeKeywords    k_dcop k_dcop_signals
 		syn keyword kdeMacros      K_DCOP ASYNC
