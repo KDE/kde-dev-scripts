@@ -10,4 +10,6 @@ Test these class:
 	* QSocket
 	* KShellProcess
 	* KProcess
+	* QPixmap
+	* QDir
 
