@@ -151,8 +151,8 @@ check_admin() {
 check_libltdl() {
   if test "x$module" == xarts -a ! -e libltdl/Makefile.am; then
     if test -d ../kdelibs; then
-      ln -s ../kdelibs/libltdl
-      echo "Making link to ../kdelibs/libltdl" >> $logfile 2>&1
+      cp -a ../kdelibs/libltdl .
+      echo "Making copy of ../kdelibs/libltdl" >> $logfile 2>&1
     else
       echo "WARNING: Could not find libltdl/ subdirectory for this module!" >> $logfile 2>&1
     fi
