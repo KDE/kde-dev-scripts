@@ -29,5 +29,21 @@ EXTRA_DIST = completions kde-emacs \
   kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
   kde.supp kdecompile.README 
 
-%.1: %
+# it'd be too good if this worked everywhere ...
+#%.1: %
+#	pod2man $< $@
+
+kde-build.1: kde-build
+	pod2man $< $@
+cvsversion.1: cvsversion
+	pod2man $< $@
+cvscheck.1: cvscheck
+	pod2man $< $@
+noncvslist.1: noncvslist
+	pod2man $< $@
+cvs2pack.1: cvs2pack
+	pod2man $< $@
+cvsblame.1: cvsblame
+	pod2man $< $@
+includemocs.1: includemocs
 	pod2man $< $@
