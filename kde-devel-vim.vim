@@ -57,6 +57,12 @@ iab #i <C-R>=SmartInclude()<CR>
 " Insert a stripped down CVS diff
 iab DIFF <Esc>:call RunDiff()<CR>
 
+" mark 'misplaced' tab characters
+set listchars=tab:·\ ,trail:·
+set list
+
+set incsearch
+
 function! SmartTab()
 	if strpart( getline( '.' ), 0, col( '.' ) - 1 ) =~ '^\s*$'
 		return "\<Tab>"
