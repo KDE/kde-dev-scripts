@@ -578,7 +578,7 @@ for module in $modules; do
   configure_okay="$str_okay"
   if test $doconfigure -eq 0 -a -e "Makefile"; then
     cmd_configure="echo Warning: no configure for module $module - as requested"
-    configure_okay="skipped."
+    configure_okay="skipped." # see below if you change hte string here
   fi
   if test -n "$KDELOGDIR"; then
     logfile="$KDELOGDIR/$module-build-$dateformat.log"
@@ -595,6 +595,27 @@ for module in $modules; do
     test "x$critical" = "x0" || exit $err_compile_fail
     move_logfile
     continue
+  fi
+
+  if test "$configure_okay" = "skipped."; then
+    echo -n "Updating Makefile..."
+    cmd_make_makefile="$MAKE $MAKE_OPTS Makefile"
+    test "$NICECOMPILE" = yes && cmd_make_makefile="nice $cmd_make_makefile"
+    if test -n "$KDELOGDIR"; then
+      logfile="$KDELOGDIR/$module-build-$dateformat.log"
+      echo "-> Updating Makefile <--------------------------------------------------------------" >> $logfile
+      echo $cmd_make_makefile >> $logfile
+      echo "-> Configuration <--------------------------------------------------------------" >> $logfile
+      cmd_make_makefile="$cmd_make_makefile >> $logfile 2>&1"
+      starttime=`date +%s`
+    fi
+    if ! eval ${cmd_make_makefile}; then
+      echo -e "$str_error"
+      test "x$cmd_compress" != x && eval "$cmd_compress $logfile"
+      test "x$critical" = "x0" || exit $err_compile_fail
+      move_logfile
+      continue
+    fi
   fi
 
   if test "x$KDELOGDIR" != x; then
