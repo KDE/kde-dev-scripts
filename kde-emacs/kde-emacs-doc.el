@@ -127,6 +127,15 @@ Free Documentation License\"."
 	  'symbol))
 (make-variable-buffer-local 'kde-doc-style)
 
+(defcustom kde-license-comment-style 'box
+  "Style to be used for `kde-license-insert'.
+See `comment-styles' for a list of available styles."
+  :group 'kde-devel
+  :version "0.1"
+  :type (if (boundp 'comment-styles)
+	    `(choice ,@(mapcar (lambda (s) `(const ,(car s))) comment-styles))
+	  'symbol))
+
 ;*---------------------------------------------------------------------*/
 ;*    Functions  ...                                                   */
 ;*---------------------------------------------------------------------*/
@@ -149,8 +158,7 @@ buffer."
     (let ((start (point-min))
 	  (end)
 	   )
-      ;; FIXME : maybe change this?
-      (setq comment-style 'box)
+      (setq comment-style kde-license-comment-style)
       (goto-char start)
       (if license
 	  (progn
