@@ -27,10 +27,10 @@ KDELOGDIR="$KDESRCDIR/log"
 #
 COMPRESSLOGS="yes"
 
-# Add modules you want to get compiled to this space-seperated list. Please
-# note that the moduleskdelibs, and kdebase
-# (if you want a KDE2 desktop and not just develope applications for it)
-# must be compiled in exactly that order. Any other modules are optional.
+# Add modules you want to get compiled to this space-seperated list. Note that
+# you don't have to mention the fundamental modules 'kdesupport', 'kdelibs'
+# and 'kdebase' here since the kde-build script will care about them
+# automatically.
 #
 KDEMODULES="kdenetwork kdegames kdeutils"
 
@@ -101,3 +101,5 @@ CONFIGUREFLAGS="--disable-debug"
 # MAKE_OPTS="-j 4 -l 4"
 #
 MAKE_OPTS=""
+
+# vim:et:ts=2:sw=2
