@@ -103,6 +103,11 @@ ANONCVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
 BRANCH=""
 # BRANCH_ARTS=ARTS_1_2_BRANCH
 
+# Do you want only some subdirs from some module? Specify similiar to the
+# below syntax
+#CHECKOUT_PARTIAL_KDEMULTIMEDIA=juk
+#CHECKOUT_PARTIAL_KDEEXTRAGEAR_2="kile konversation"
+
 # For cvsup users only: specify your preferred cvsup mirror here, check
 # http://www.kde.org/cvsupmirrors.html for a list of cvsup mirrors.
 #
