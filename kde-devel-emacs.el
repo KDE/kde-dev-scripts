@@ -1454,7 +1454,7 @@ With arg, to it arg times."
               QChildEvent QCustomEvent)
     (qdatetime.h QTime QDateTime QDate)
     
-    ; Qt/Embeded
+    ; Qt/Embedded
     (qcopchannel_qws.h QCopChannel)
     (qdirectpainter_qws.h QDirectPainter)
     (qfontfactorybdf_qws.h QFontFactoryBDF)
@@ -1488,8 +1488,12 @@ With arg, to it arg times."
     (qwsproperty_qws.h QWSPropertyManager)
     (qwsregionmanager_qws.h QWSRegionManager)
     (qwssocket_qws.h QWSSocket QWSServerSocket)
-    (qwswindowsdecoration_qws.h QWSWindowsDecoration))
-    "List of special include files which do not follow the normal scheme")
+    (qwswindowsdecoration_qws.h QWSWindowsDecoration)
+
+    ; KDE
+    (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
+    
+    ) "List of special include files which do not follow the normal scheme")
 
 ;; Lookup class `cls' in kdab-special-includes and return the associate include file name
 (defun kdab-map-special (cls)
@@ -1533,7 +1537,6 @@ With arg, to it arg times."
                     ((kdab-map-special word) (kdab-map-special word))
                     ((string-match "^qdom" word) "qdom.h")
                     ((string-match "^qxml" word) "qxml.h")
-                    ((string-match "^kddebug" word) "kdebug.h")
                     (t (concat word ".h")))))
       (beginning-of-buffer)
       (if (not (re-search-forward (concat "#include *<" header ">") nil t))
