@@ -1112,13 +1112,19 @@ With arg, to it arg times."
 ; Makes ',' insert ', '
 (defun insert-comma () (interactive) (insert ", "))
 (defun insert-curly-brace () (interactive) 
-  (let ((n "" ))
+  (let ((n 0) (o 0))
     (save-excursion
       (forward-char -2) 
-      (setq n (looking-at " )")) )
+      (setq n (looking-at " )"))
+      (setq o (looking-at "()"))
+    )
     (cond
      (n (progn
 	  (insert " {")
+          (newline-and-indent)))
+     (o (progn
+          (newline)
+          (insert "{")
           (newline-and-indent)))
      (t (progn ;else
           (insert "{") 
