@@ -266,7 +266,12 @@ function! AddHeader()
     while i > 0 && strpart( s, i, 1 ) =~ '[A-Za-z0-9_:]'
         let i = i - 1
     endwhile
-    let ident = matchstr( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    let start = match( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    let end = matchend( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    if end > col( '.' )
+        let end = matchend( s, '[A-Za-z0-9_]\+', i )
+    endif
+    let ident = strpart( s, start, end - start )
     let include = '#include ' . MapIdentHeader( ident )
 
     let line = 1
