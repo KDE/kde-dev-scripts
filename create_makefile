@@ -11,15 +11,20 @@ if [ $# -ne 1 ]; then
   echo "So the argument is the file you want to create."
   echo
 else
-  if test ! -f Makefile; then 
-    echo "$0: in the current directory there is no Makefile"
-    echo "you will have to run it from the top build dir."
-    echo "if you do not have a Makefile there - rerun configure"
-    exit
-  fi
+  srcdir=
+  if test -f config.status && test -f configure; then
+	srcdir=.
+  else
+    if test ! -f Makefile; then 
+      echo "$0: in the current directory there is no Makefile"
+      echo "you will have to run it from the top build dir."
+      echo "if you do not have a Makefile there - rerun configure"
+      exit
+    fi
 
-  # Find out srcdir
-  srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+    # Find out srcdir
+    srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+  fi
 
   # Handle arg with missing "/Makefile"
   relpath=$1
