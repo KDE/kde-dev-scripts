@@ -80,8 +80,8 @@ This function does not do any hidden buffer changes."
 	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
 	  (save-excursion
 	    (forward-word 1)
-	    (while (looking-at "[ \t]*[A-Z]*_EXPORT")
-	      (forward-word 2))
+	    (while (looking-at "[ \t]*[A-Z_]*_EXPORT")
+	      (forward-word 1))
 	    (while (looking-at "[ \t]")
 	      (forward-char 1))
 	    (setq start (point))
