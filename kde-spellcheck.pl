@@ -193,7 +193,6 @@ my %fix = (
 	 "choosen" => "chosen",
 	 "Choosen" => "Chosen",
 	 "cricles" => "circles",
-	 "Cristian" => "Christian",
 	 "childs" => "children",
 	 "chosing" => "choosing",
 	 "cirumstances" => "circumstances",
