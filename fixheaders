@@ -12,7 +12,7 @@ if ($ARGV[0]) {
 }
 chomp $topdir;
 
-$lastdir = '';
+$lastdir = '.';
 
 
 # this is the important part. Left from the '=>' you find the regular
@@ -30,6 +30,7 @@ $lastdir = '';
  '`KDNDIcon\' was not declared in this scope' => "drag",
  'no matching function for call to `QPopupMenu::' => "qpopupmenu",
  '`Dnd_\S*\' undeclared \(first use this function\)' => "drag",
+ '`QTextStream\' undeclared \(first use this function\)' => "qtextstream",
 );
 
 %changes = ();
@@ -73,10 +74,17 @@ sub fixFile
   open ( FILE, "$file" ) || die "Can't read $file";
   
   my $flines;
-  
+  my $cpplevel = 0;
+
   while (<FILE>) {
     $flines .= $_;
-    if ($_ =~ m/^(#include\s*[\"<]\S*\.h[\">]\S*)/) {
+    if ($_ =~ m/^#if/) {
+       $cpplevel = $cpplevel + 1;
+    }
+    if ($_ =~ m/^#endif/) {
+       $cpplevel = $cpplevel - 1;
+    }
+    if ($cpplevel == 0 && $_ =~ m/^(#include\s*[\"<]\S*\.h[\">]\S*)/) {
        $lastinclude = $1;
     }
   }
@@ -90,9 +98,10 @@ sub fixFile
     return;
   }
 
-  if ($flines =~ m/#include\s*[\"<]$adding\.h\s*\n/) {
+  if ($flines =~ m/#include\s*[\"<]$adding\.h[\">]\s*\n/) {
     print STDERR "ERROR: $adding.h already included!\n";
     $success = 0;
+    return;
   }
   if ($flines =~ /(\n$lastinclude)/) {
     $flines =~ s/$lastinclude/$lastinclude\n#include <$adding.h>/;
