@@ -1,6 +1,7 @@
 ################################################################################
 # Configures the kde-build script.                                             #
-# (c)2000, 2001, 2002 by Frerich Raabe <raabe@kde.org>                         #
+# (c) 2000, 2001, 2002, 2003 by Frerich Raabe <raabe@kde.org>                  #
+# (c) 2002, 2003 by Stephan Kulow <coolo@kde.org>                              #
 ################################################################################
 
 # Where are your KDE sources?
