@@ -1049,6 +1049,33 @@ With arg, to it arg times."
           )
 )))
 
+; Adds the current file to Makefile.am.
+; Written by David.
+(defun add-file-to-makefile-am ()
+  "add the current file to the _SOURCES tag in the Makefile.am"
+  (interactive)
+  (let ((file (buffer-name))
+        (makefile "Makefile.am"))
+    (if (file-readable-p makefile )
+	(message "")
+      (error "Makefile.am not found!")
+      )
+    (find-file makefile)
+    (goto-char (point-min))
+    (if (re-search-forward "_SOURCES" nil t)
+	(progn
+	  (end-of-line)
+          ; check if line ends with '\' [had to read make-mode.el to find this one!]
+	  (while (= (char-before) ?\\)
+	    (end-of-line 2)) ; moves to end of next line
+	  (insert " ")
+	  (insert file)
+	  )
+      (error "_SOURCES not found")
+      )
+    )
+  )
+
 ; Inserts a kdDebug statement showing the name of the current method.
 ; You need to create the empty line first.
 (defun insert-kdDebug ()
@@ -1193,6 +1220,10 @@ With arg, to it arg times."
 ;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(control meta d)] 'insert-kdDebug)
 
+; currently no binding for header-protection and add-file-to-makefile-am,
+; you need to call them from M-x
+
+; -----------------------------------------------------------------
 ; The above list defines the following bindings:
 ;
 ; F2 : offer a grep command
@@ -1210,5 +1241,12 @@ With arg, to it arg times."
 ; F9 (if enabled) : Create a member method in the .cpp, the cursor being on the definition in the .h
 ;
 ; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
+; [the new hide-all-windows shortcut conflicts with that, you may have to
+;  change it, or use Ctrl+Meta+Shift+D (!!)]
 ;
 ; Meta Up/Down : scroll the other window (when window is split)
+
+; Other very useful keybindings to know about:
+; C-x r m    to set a named bookmark in the buffer
+; C-x r b    to jump to a named bookmark in the buffer
+
