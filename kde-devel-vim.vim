@@ -116,29 +116,22 @@ function! SmartParens( char, ... )
 endfunction
 
 function! SwitchHeaderImpl()
+    let headers = '\.\([hH]\|hpp\|hxx\)$'
+    let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
     let fn = expand( '%' )
-    if fn =~ '\.\(cpp\|cc\|C\|c\)$'
-        let fn = substitute( fn, '\.\(cpp\|cc\|C\|c\)$', '.h', '' )
-        execute( "edit ".fn )
-    elseif fn =~ '\.h$'
-        let fn = substitute( fn, '\.h$', '.cpp', '' )
-        if filereadable( fn )
-            execute( "edit ".fn )
-            return
-        endif
-        let fn = substitute( fn, '\.cpp$', '.C', '' )
-        if filereadable( fn )
-            execute( "edit ".fn )
-            return
-        endif
-        let fn = substitute( fn, '\.C$', '.c', '' )
-        if filereadable( fn )
-            execute( "edit ".fn )
-            return
-        endif
-        let tmp = substitute( fn, '\.c$', '.cc', '' )
-        execute( "edit ".tmp )
+    if fn =~ headers
+        let list = glob( substitute( fn, headers, '.*', '' ) )
+    elseif fn =~ impl
+        let list = glob( substitute( fn, impl, '.*', '' ) )
     endif
+    while strlen( list ) > 0
+        let file = substitute( list, "\n.*", '', '' )
+        let list = substitute( list, ".*\n", '', '' )
+        if ( fn =~ headers && file =~ impl ) || ( fn =~ impl && file =~ headers )
+            execute( "edit " . file )
+            return
+        endif
+    endwhile
 endfunction
 
 function! IncludeGuard()
