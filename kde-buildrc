@@ -6,19 +6,19 @@
 
 # Where are your KDE sources?
 #
-KDESRCDIR="/home/coolo/prod"
+KDESRCDIR="$PWD"
 
 # Where your KDE should be build
 # set to empty if built in KDESRCDIR
-KDEBUILDDIR="/build/coolo"
+KDEBUILDDIR=""
 
 # Where shall I put the binaries?
 #
-KDEDIRS="/home/coolo/prod/KDE"
+KDEDIRS="/opt/kde"
 
-# Where is your Qt 3.1.x?
+# Where is your Qt 3.2.x?
 #
-QTDIR="/home/coolo/prod/qt-copy"
+QTDIR="/usr/lib/qt3"
 
 # If you would like logfiles of the compilation process, specify a directory
 # here in which the logfiles will be saved. If you want to disable logfile
@@ -34,14 +34,14 @@ COMPRESSLOGS="no"
 
 # Whether or not you want to compile and install the kdesupport module.
 #
-USEKDESUPPORT="yes"
+USEKDESUPPORT="no"
 
 # Add modules you want to get compiled to this space-seperated list. Note that
 # you don't have to mention the fundamental modules 'arts, 'kdesupport',
 # 'kdelibs' and 'kdebase' here since the kde-build script will care about them
 # automatically.
 #
-KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kdeaddons kde-i18n"
+KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kdeaddons"
 
 # If you only want to cvs update the listed modules, set it to yes
 # 
@@ -132,7 +132,7 @@ CONFIGUREFLAGS="--enable-debug --disable-closure"
 
 # set it to the path for unsermake if you want to test it instead of
 # automake
-USE_UNSERMAKE=""
+# USE_UNSERMAKE="$KDESRCDIR/kdenonbeta/unsermake/unsermake"
 
 # List modules here for which unsermake should not be used.
 #
