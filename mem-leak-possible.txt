@@ -8,4 +8,6 @@ Test these class:
 	* KTempFile
 	* QTextStream
 	* QSocket
+	* KShellProcess
+	* KProcess
 
