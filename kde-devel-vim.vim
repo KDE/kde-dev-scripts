@@ -16,6 +16,9 @@ set path=.,/usr/include,/usr/local/include,
 if $QTDIR != ''
 	let &path = &path . $QTDIR . '/include/,'
 endif
+if $KDEDIR != ''
+	let &path = &path . $KDEDIR . '/include/,'
+endif
 if $KDEDIRS != ''
 	let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include,', 'g' )
 endif
@@ -187,7 +190,7 @@ endfunction
 function! AddQtSyntax()
 	if expand( "<amatch>" ) == "cpp"
 		syn keyword qtKeywords     signals slots emit
-		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY
+		syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS
 		syn keyword qtCast         qt_cast
 		syn keyword kdeKeywords    k_dcop k_dcop_signals
 		syn keyword kdeMacros      K_DCOP ASYNC
