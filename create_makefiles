@@ -10,9 +10,9 @@ srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
  
 ( cd $srcdir ; find $1 -type d ) | \
   while read a; do 
-      if [ -f $srcdir/$a/Makefile.am ]; then
-      	 test -d $a || mkdir -p $a
-         create_makefile $a/Makefile
+      if test -f "$srcdir/$a/Makefile.am"; then
+      	 test -d "$a" || mkdir -p "$a"
+         create_makefile "$a/Makefile"
       fi
   done
 
