@@ -53,6 +53,8 @@ $lastdir = '.';
  'no matching function for call to `QBoxLayout::QBoxLayout' => "qlayout",
  '`QUriDrag\' undeclared \(first use this function\)' => "qdragobject",
  'no matching function for call to `KMenuBar::' => "kmenubar",
+ 'invalid use of undefined type `class QPointArray' => "qpointarray",
+ 'variable `QPainter \S*\' has initializer but incomplete type' => "qpainter",
 );
 
 %changes = ();
