@@ -271,13 +271,16 @@
 ; Makes '(' insert '(' or ' ( ' where appropiate
 (defun insert-parens (arg) (interactive "*P")
   (if (not (c-in-literal))
-      (let ((n nil))
+      (let ((n nil) (except nil))
         (save-excursion
           (setq n (or (progn (forward-char -2) (looking-at "if"))
                       (progn (forward-char -1) (looking-at "for"))
                       (progn (forward-char -1) (looking-at "case"))
                       (progn (forward-char -1) (looking-at "while"))
                       )
+                )
+          (setq except (or (progn (forward-char -2) (looking-at "kdDebug"))
+                           )
                 )
           )
         (cond
@@ -288,7 +291,7 @@
               ))
          (t ;else
           (self-insert-command (prefix-numeric-value arg))
-          (insert kde-emacs-after-parent-string)
+          (cond ((not except) (insert kde-emacs-after-parent-string)))
           )))
     (self-insert-command (prefix-numeric-value arg)))
   )
@@ -299,7 +302,16 @@
         (forward-char -2)
         (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
         (forward-char 1)
-        (setq nospac (or (looking-at " ") (looking-at "(")) ) ; no space to be added
+        (setq nospac ; no space to be added
+              (or (looking-at " ")
+                  (looking-at "(")
+                  (save-excursion ; check for kdDebug(123
+                    (while (looking-at "[0-9]")
+                      (forward-char -1))
+                    (forward-char -7)
+                    (looking-at "kdDebug("))
+                  )
+              )
         (forward-char 1)
         (cond
          (remv (progn
