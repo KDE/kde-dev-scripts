@@ -154,8 +154,8 @@ install_module() {
   log_section "Installation"
 
   if log_cmd "$cmd_make_install"; then
+    log_endsection "Installation"
     if [ -n "$KDELOGDIR" ]; then
-      log_endsection "Installation"
       echo "Build of module $module successfully finished at `date +%c`" >> $logfile
       [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     fi
@@ -547,9 +547,7 @@ for module in $modules; do
     echo -e "$str_error"
   fi
 
-  if [ -n "$KDELOGDIR" ]; then
-    log_endsection "Updating"
-  fi
+  log_endsection "Updating"
 done
 
 for module in $modules; do
@@ -633,9 +631,7 @@ for module in $modules; do
     continue
   fi
 
-  if [ -n "$KDELOGDIR" ]; then
-    log_endsection "Configuration"
-  fi
+  log_endsection "Configuration"
   echo -e "$configure_okay"
 
   if [ "$configure_okay" = "skipped." ]; then
@@ -654,9 +650,7 @@ for module in $modules; do
       continue
     fi
 
-    if [ -n "$KDELOGDIR" ]; then
-      log_endsection "Updating Makefile"
-    fi
+    log_endsection "Updating Makefile"
     echo -e "$str_okay"
   fi
 
@@ -683,9 +677,7 @@ for module in $modules; do
   compile_ret=$?
 
   if [ $compile_ret -eq 0 ]; then
-    if [ -n "$KDELOGDIR" ]; then
-      log_endsection "Compilation"
-    fi
+    log_endsection "Compilation"
     echo -e "$str_okay"
 
     # Link the module
@@ -700,9 +692,7 @@ for module in $modules; do
       log_cmd "$cmd_make"
       link_ret=$?
       if [ "$link_ret" -eq 0 ]; then
-        if [ -n "$KDELOGDIR" ]; then
-          log_endsection "Linking"
-        fi
+        log_endsection "Linking"
         echo -e "$str_okay"
       else
         compile_ret=$link_ret
