@@ -67,6 +67,7 @@ $lastdir = '.';
  'invalid use of undefined type `class DCOPClient' => "dcopclient",
  '`DCOPClient\' undeclared \(first use this function\)' => "dcopclient",
  'invalid use of undefined type `class KStatusBar' => "kstatusbar",
+ 'invalid use of undefined type `class KPopupMenu' => "kpopupmenu",
  'invalid use of undefined type `class KURL' => "kurl",
 );
 
