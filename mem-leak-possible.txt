@@ -16,4 +16,6 @@ Test these class:
 	* KSimpleConfig
 	* QDataStream
 	* QBuffer
-	* QStringList 
+	* QStringList
+	* QFont
+	* QFontMetrics
