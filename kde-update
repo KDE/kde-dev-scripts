@@ -15,7 +15,7 @@ CVSCLIENT=cvs
 # this empty.
 BRANCH=
 
-# For cvs users only: specify your preferred cvsup mirror here, check
+# For cvsup users only: specify your preferred cvsup mirror here, check
 # http://www.kde.org/cvsupmirrors.html for a list of cvsup mirrors.
 CVSUPSERVER=cvsup.kde.org
 
