@@ -48,7 +48,7 @@
                  (kde-switch-cpp-h)
                  (goto-char 0)
                  (re-search-forward
-		  (concat "\\(class\\|struct\\|namespace\\)[^{;]+"
+		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
 			  class "[^;]+{") nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
                  (re-search-forward (concat "[ \t]+" fn "[ \t]*(") nil t)))))
