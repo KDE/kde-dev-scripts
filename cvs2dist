@@ -295,7 +295,7 @@ remove="$remove $modulename.lsm"
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "cvs co kde-i18n/subdirs" >> $log
-    cvs -z4 -q -d "$cvsroot" co "$branch" -P kde-i18n/subdirs > /dev/null 2>&1
+    cvs -z4 -q -d "$cvsroot" co $branch -P kde-i18n/subdirs > /dev/null 2>&1
     i18nlangs="$(cat kde-i18n/subdirs)"
     echo "available languages: $i18nlangs" >> $log
     popd
@@ -313,7 +313,7 @@ if [ -d $module/doc/$name ]; then
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
 		docdirname="kde-i18n/$lang/docs/$modulename/$name"
 		echo "cvs co $docdirname" >> $log
-		cvs -z4 -q -d "$cvsroot" co "$branch" -P "$docdirname" > /dev/null 2>&1
+		cvs -z4 -q -d "$cvsroot" co $branch -P "$docdirname" > /dev/null 2>&1
 		if [ ! -d "$docdirname" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
 		    continue
@@ -353,7 +353,7 @@ if [ $doi18n = "yes" ]; then
 	for lang in $i18nlangs; do
 		pofilename="kde-i18n/$lang/messages/$modulename/$name.po";
 		echo "cvs co $pofilename" >> $log
-		cvs -z4 -q -d "$cvsroot" co "$branch" -P "$pofilename" > /dev/null 2>&1
+		cvs -z4 -q -d "$cvsroot" co $branch -P "$pofilename" > /dev/null 2>&1
 		if [ ! -f "$pofilename" ]; then
 			echo "$lang's $name.po does not exist." >> $log
 			continue
