@@ -36,7 +36,8 @@ $lastdir = '.';
  'type `KConfigBase\' is not a base type for type `KConfig' => "kconfig",
  'invalid use of undefined type `class QAccel' => "qaccel",
  'invalid use of undefined type `class KAboutData' => "kaboutdata",
- 'incomplete type `KAboutData\'.*' => "kaboutdata",
+ 'incomplete type `KAboutData\'' => "kaboutdata",
+ 'incomplete type `QGrid\'' => "qgrid",
  'aggregate `class KConfig \S*\' has incomplete type' => "kconfig",
  '`stderr\' undeclared \(first use this function' => "stdio",
  'invalid use of undefined type `class KConfig' => "kconfig",
@@ -76,6 +77,7 @@ $lastdir = '.';
  'cannot convert `KPopupMenu \*\' to `QPopupMenu \*' => "kpopupmenu",
  'aggregate `QPopupMenu \S*\' has incomplete type' => "qpopupmenu",
  'invalid use of undefined type `class KURL' => "kurl",
+ 'no method `QApplication::' => "qapplication",
 );
 
 # Initial values are simply to get into the while
