@@ -33,7 +33,10 @@ EXCLUDE="qt-copy"
 
 # If you would like a virgin cvs copy set this field to "yes", otherwise set
 # this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'
-# is executed).
+# is executed). Developers might find this pretty dangerous considering that
+# they might have forgotten to 'cvs add' a file... ;)
+# Users who want to stay at the bleeding-edge will want to activate this in
+# order to make sure there aren't any remains of a previous compile.
 CVS_CLEAN=yes
 
 ## Don't modify anything below this line! ######################################
@@ -83,7 +86,11 @@ fi
 #
 if test "$CVSCLIENT" = cvs; then
   UPDATE_COMMAND="cvs up"
-  test $BRANCH && UPDATE_COMMAND="$UPDATE_COMMAND -r $BRANCH"
+  if test $BRANCH; then
+    UPDATE_COMMAND="$UPDATE_COMMAND -r $BRANCH"
+  else
+    UPDATE_COMMAND="$UPDATE_COMMAND -A"
+  fi
 else
   if test -z "$CVSUPSERVER"; then
     echo "ERROR: No cvsup server specified!"
@@ -123,34 +130,42 @@ for MODULE in $MODULES; do
   else
     if test $LOGDIR; then
       LOGFILE="$LOGDIR/$MODULE-update-$DATE"
-      UPDATE_COMMAND="$UPDATE_COMMAND 2>&1 | tee -a $LOGFILE > /dev/null"
+      UPDATE_COMMAND="$UPDATE_COMMAND >> $LOGFILE 2>&1"
     fi
 
     echo -n "Updating module '$MODULE'..."
     echo "====> Updating CVS module" > $LOGFILE
     if eval "$UPDATE_COMMAND"; then
 
-      if test "$CVS_CLEAN" = yes -a -e admin/Makefile.common; then
-        MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
-        if test $LOGDIR; then
-          MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
-          echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
-        fi
-        eval "$MAKE_CVS_CLEAN"
+    if test "$MODULE" != kde-common -a "$CVSCLIENT" = cvs -a ! -e admin/Makefile.common; then
+      if test -d ../kde-common; then
+        ln -s ../kde-common/admin .
+      else
+        echo "WARNING: Could not find admin/ subdirectory for this module!"
+        echo "         This means that you cannot compile this module as long"
+        echo "         as you didn't checkout the 'kde-common' module!"
       fi
-
-      if test -e Makefile.cvs; then
-        MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
-        if test $LOGDIR; then
-          MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
-          echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
-        fi
-        eval "$MAKE_MAKEFILE_CVS"
-      fi
-      echo "done!"
-    else
-      echo "failed!"
     fi
+    if test "$CVS_CLEAN" = yes -a -e admin/Makefile.common; then
+      MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
+      if test $LOGDIR; then
+        MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN >> $LOGFILE 2>&1"
+        echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
+      fi
+      eval "$MAKE_CVS_CLEAN"
+    fi
+
+    if test -e Makefile.cvs; then
+      MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
+      if test $LOGDIR; then
+        MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS >> $LOGFILE 2>&1"
+        echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
+      fi
+      eval "$MAKE_MAKEFILE_CVS"
+    fi
+    echo "done!"
+  else
+    echo "failed!"
   fi
 done
 
