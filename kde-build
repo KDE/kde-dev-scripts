@@ -418,7 +418,7 @@ for module in $modules; do
           check_admin
           cmd_make_makefile_cvs="$MAKE -f Makefile.cvs"
           test "x$NICECOMPILE" = xyes && cmd_make_makefile_cvs="nice $cmd_make_makefile_cvs"
-          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE" && test "x$module" != xkdepim; then
+          if test -f Makefile.am.in && test -n "$USE_UNSERMAKE"; then
               export UNSERMAKE=$USE_UNSERMAKE
           else
               unset UNSERMAKE || :
