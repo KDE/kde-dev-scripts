@@ -9,7 +9,7 @@
 ## 17/03/2000
 
 find $1 -name '*[cCph]' -type f | while read file; do
-perl -i -e \
+perl -w -i -e \
 '
 $inkdebug=0;
 while (<>)
@@ -35,7 +35,7 @@ while (<>)
 	    $_ = $statement;
 	    ## Ok, now we have the full line
 	    ## 1 - Parse
-	    m/(^.*kDebug[a-zA-Z]*)[\s]*\(/ || die "parse error on kDebug*";
+	    m/(^.*kDebug[a-zA-Z]*)[\s]*\(/ || die "parse error on kDebug...";
 	    $line=$1; # has the indentation, //, and the kDebug* name
 	    s/$line[\s]*\([\s]*//; # remove line and (
 	    $line =~ s/kDebugInfo/kdDebug/;
@@ -56,6 +56,9 @@ while (<>)
 	    } else
 	    {
 		$format = $1;
+                # If we stopped on a \" we need to keep adding to format
+                while ( $format =~ m/\\$/ )
+                    { s/^([^\"]*)\"// || die "problem"; $format .= "\"" . $1; }
 		s/[\s]*\);$/,/; # replace trailing junk with , for what follows
 		$arguments = $_;
 
