@@ -210,6 +210,12 @@ if !(test -e ./kde-buildrc); then
 fi
 . ./kde-buildrc
 
+# Make sure some paths are according to the rc file. Note that there are AFAIK
+# UNIX flavors which don't support LD_LIBRARY_PATH
+PATH=$QTDIR/bin:$KDEDIRS/bin:$PATH
+MANPATH=$QTDIR/doc/man:$MANPATH
+LD_LIBRARY_PATH=$KDEDIR/lib:$QTDIR/lib:$LD_LIBRARY_PATH
+
 if test -z "$MAKE"; then
   MAKE=make
 fi
