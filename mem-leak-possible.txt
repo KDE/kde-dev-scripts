@@ -12,4 +12,5 @@ Test these class:
 	* KProcess
 	* QPixmap
 	* QDir
-
+	* KConfig
+	* KSimpleConfig
