@@ -109,6 +109,11 @@ $line = "";
 
 while ( <malloc> ) {
 
+  # ignore our own input
+  if ($_ =~ m/^x 0x/ || $_ =~ m/^echo ------/ || $_ =~ m/^info line/) {
+    next;
+  }
+
   if ($_ =~ m/^--------/) {
     if ($line) {
       $lines{$address} = "$line";
