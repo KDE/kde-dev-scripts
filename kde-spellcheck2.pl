@@ -36,7 +36,7 @@ spellcheck [flags] filenames/directories
 This script checks for, and optionally replaces, commonly misspelled words
 with the correct US English equivalents. The behaviour has changed from
 kde-spellcheck.pl - to check subdirectories you must specify --recurse,
-omitting arguments doesn't check the current directory, and changes are
+omitting arguments does not check the current directory, and changes are
 not made to files unless you specify --make-changes
 
 CAUTION IS NEEDED WHEN USING THIS SCRIPT - changes are made to the original
