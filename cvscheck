@@ -156,7 +156,7 @@ sub processEntries
         my $staginfo = "";
         if( open(CVSTAG, $dir."/CVS/Tag" ) ) {
           my $line = <CVSTAG>;
-          if($line =~ /^T(.+)$/) {
+          if($line =~ /^[TN](.+)$/) {
             $standardtag = $1;
             $staginfo = $1;
           }
@@ -219,21 +219,17 @@ sub processEntries
               next;
             }
           }
-          if ( $stamp =~ /merge/ ) {
-            push @merged, "$dir/$fname$taginfo";
-            next;
-          }
           if ( $ver =~ /^\-.*/ ) {
             push @removed, "$dir/$fname$taginfo";
             next;
           }
           $mtm = strToTime( $stamp );
           if( $mtm < 0 ) {
-            if ( ($stamp =~ /dummy/) || ($stamp =~ /^Initial /) ) {
+            if ( $ver eq "0" ) {
               push @uncommitted, "$dir/$fname$taginfo";
             }
             else {
-              warn "I Bad mod time for $dir/$fname: $stamp\n";
+              push @merged, "$dir/$fname$taginfo";
             }
             next;
           }
