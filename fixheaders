@@ -46,6 +46,7 @@ $lastdir = '.';
  'no method `KGlobal::' => "kglobal",
  '`KGlobal\' undeclared \(first use this function\)' => "kglobal",
  'warning: implicit declaration of function `int locate\(\.\.\.\)' => "kstddirs",
+ 'no matching function for call to `KStandardDirs::' => "kstddirs",
  
 );
 
