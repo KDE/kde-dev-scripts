@@ -412,7 +412,8 @@ if [ $doi18n = "yes" ]; then
 		
 		echo "KDE_LANG = $lang
 SUBDIRS = \$(AUTODIRS)
-POFILES = AUTO" > $dest/Makefile.am
+POFILES = AUTO
+CLEANFILES = *.gmo" > $dest/Makefile.am
 
 		subdirs="non_empty"
 	done
