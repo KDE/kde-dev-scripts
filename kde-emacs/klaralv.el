@@ -66,6 +66,7 @@
     (qdatetime.h QTime QDateTime QDate)
     (qdatetimeedit.h QTimeEdit QDateTimeEditBase QDateEdit QDateTimeEdit)
     (qcstring.h QByteArray)
+    (qobjectlist.h QObjectListIt QObjectListIterator)
     (qwidgetlist.h QWidgetListIt)
     (qtabbar.h QTab)
     (qpalette.h QColorGroup)
