@@ -29,11 +29,31 @@ while test $# -gt 0 ; do
 done
 
 if test ! -f $dir/$file; then
-  pwd=`echo $PWD | sed -e $OBJ_REPLACEMENT`
-  if test ! -f $pwd/$dir/$file; then
-  	echo "no objdir found"
+  if test -n "$OBJ_REPLACEMENT"; then
+    pwd=`echo $PWD | sed -e "$OBJ_REPLACEMENT"`
+    if test ! -f $pwd/$dir/$file; then
+  	 echo "no objdir found. Tried $pwd"
+	 exit 1
+    fi
+    cd $pwd/$dir
+  else
+    if test -n "$OBJ_SUBDIR"; then
+       dir=$PWD
+       subdir=.
+       while test ! -f $dir/$OBJ_SUBDIR/$file; do
+	 subdir=`basename $dir`"/$subdir"
+	 dir=`dirname $dir`
+	 if test "$dir" = "/"; then
+	    # the case that someone puts the compile dir in /
+	    # is very unlikely, so we better skip here ;)
+	    echo "can't find $OBJ_SUBDIR above current dir"
+	    exit 1
+	 fi
+       done
+       cd $dir/$OBJ_SUBDIR/$subdir
+
+    fi
   fi
-  cd $pwd/$dir
 else
   cd $dir
 fi
