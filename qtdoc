@@ -5,11 +5,11 @@
 
 if [ $# = 1 ]; then
   fname=`echo $1 | tr '[A-Z]' '[a-z]'`
-  if [ -f $QTDIR/html/$fname.html ]; then
-    kfmclient openURL file:$QTDIR/html/$fname.html
+  if [ -f $QTDIR/doc/html/$fname.html ]; then
+    kfmclient openURL file:$QTDIR/doc/html/$fname.html
   else
     echo "No such file $fname.html"
   fi
 else
-  kfmclient openURL file:$QTDIR/html/
+  kfmclient openURL file:$QTDIR/doc/html/
 fi
