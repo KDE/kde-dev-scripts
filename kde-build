@@ -123,7 +123,7 @@ log_cmd() {
 
 module_variable() {
   eval "$1=\$BASE_$1"
-  varname="$1_"`echo $module|tr a-z A-Z|sed "s/\(.*\)-[0-9]*/\1/g"`; # e.g. $1_ARTS etc.
+  varname="$1_"`echo $module|tr a-z A-Z|tr - _|sed "s/\(.*\)-[0-9]*/\1/g"`; # e.g. $1_ARTS etc.
   varvalue=`eval echo '$'$varname`
   if [ -n "$varvalue" ]; then
     eval "$1=\"$varvalue\""
@@ -179,6 +179,9 @@ prepare_update() {
       fi
     fi
     cmd_update="$cmd_update up"
+    if [ -n "$CHECKOUT_PARTIAL" -a "$1" = "toponly" ]; then
+      cmd_update="$cmd_update -l"
+    fi
     if [ "$BRANCH" = "HEAD" ]; then
       cmd_update="$cmd_update -dPA"
     elif [ -n "$BRANCH" ]; then
@@ -509,9 +512,11 @@ fi
 
 BASE_CONFIGUREFLAGS="$CONFIGUREFLAGS"
 BASE_BRANCH=$BRANCH
+BASE_CHECKOUT_PARTIAL="$CHECKOUT_PARTIAL"
 
 for module in $modules; do
   module_variable BRANCH
+  module_variable CHECKOUT_PARTIAL
 
   if [ -n "$KDELOGDIR" ]; then
     rm -f $KDELOGDIR/$module-build-*
@@ -546,6 +551,10 @@ for module in $modules; do
 
   check_libltdl
 
+  if [ -n "$CHECKOUT_PARTIAL" ]; then
+    cmd_update_raw="$cmd_update -l $module"
+  fi
+
   if ! log_cmd "$cmd_update_raw"; then
     echo "$str_error"
     continue
@@ -558,6 +567,17 @@ for module in $modules; do
     if [ "$docvsupdate" -ne 0 ]; then
        log_cmd "$cmd_update_raw"
     fi
+  fi
+
+  if [ -n "$CHECKOUT_PARTIAL" ]; then
+    prepare_update toponly
+    echo "defined subdirs!"
+    for part_dir in $CHECKOUT_PARTIAL; do
+      echo -n "Updating subdirectory $part_dir"
+      log_cmd "$cmd_update $module/$part_dir"
+      echo "$str_okay"
+    done
+    echo -n "Final touch..."
   fi
 
   if [ "$module" != kde-common -a "$CVSCLIENT" = cvs -a ! -e admin/Makefile.common ]; then
