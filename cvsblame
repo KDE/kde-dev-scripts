@@ -151,6 +151,9 @@ while (<LOG>) {
              print OUTPUT "var $revstr = \"$content\";\n";
       } else {
              $line =~ s/\"/\\\"/g;
+	     $line =~ s/&/&amp;/g;
+	     $line =~ s/</&lt;/g;
+	     $line =~ s/>/&gt;/g;
              $content = "$content<br>$line";
       }
 }
