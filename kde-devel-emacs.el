@@ -1082,3 +1082,6 @@ With arg, to it arg times."
 ;;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(control meta d)] 'insert-kdDebug)
 
+;; pc-like textmarking
+(load "pc-select")
+(pc-select-mode)
