@@ -67,12 +67,13 @@
   (require 'kde-emacs-semantic)
   (require 'kde-emacs-doc))
 
-;; Some example bindings, feel free to customize :)
-
+;; Wheelmouse support
 (define-key global-map [(button4)] 'scroll-me-down)
 (define-key global-map [(button5)] 'scroll-me-up)
 (define-key global-map [(shift button4)] 'scroll-me-down-a-bit)
 (define-key global-map [(shift button5)] 'scroll-me-up-a-bit)
+
+;; Some example bindings, feel free to customize :)
 (define-key global-map [(meta up)] 'scroll-other-up)
 (define-key global-map [(meta down)] 'scroll-other-down)
 (define-key global-map [(control j)] 'goto-line)
