@@ -123,6 +123,7 @@
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
     (kconfig.h KConfigGroup)
     (kicondialog.h KIconCanvas KIconButton)
+    (knuminput.h KDoubleNumInput KIntNumInput)
 
     ; KDGear - http://www.klaralvdalens-datakonsult.se
     (KDCheckableGroupBox.h KDCheckableGroupBox)
