@@ -53,7 +53,7 @@ ERR_INV_SRCDIR=6
 # This generates in MODULES a list of the modules which shall be updated.
 #
 for MODULE in $POTENTIAL_MODULES; do
-  if test -d $SRCDIR/$MODULE/CVS -a -w $SRCDIR/$MODULE && ! (echo $MODULE | grep -q $EXCLUDE); then
+  if test -d $SRCDIR/$MODULE/CVS -a -w $SRCDIR/$MODULE && ! (echo $EXCLUDE | grep -q $MODULE); then
     MODULES="$MODULES $MODULE"
   fi
 done
@@ -65,7 +65,7 @@ if test -z "$CVSCLIENT"; then
   echo "ERROR: No CVS client specified!"; exit $ERR_NO_CVSCLIENT
 fi
 if test "$CVSCLIENT" != cvs -a "$CVSCLIENT" != cvsup; then
-  echo "ERROR: Invalid CVS client specified, valid clients are 'cvs' and 'cvsup'!"; exit $ERR_INV_CVSCLIENT
+  echo "ERROR: Invalid CVS type specified, valid types are 'cvs' and 'cvsup'!"; exit $ERR_INV_CVSCLIENT
 fi
 if test -z "$SRCDIR"; then
   echo "ERROR: No source directory specified!"; exit $ERR_NO_SRCDIR
@@ -114,8 +114,6 @@ else
   done
 fi
 
-export UPDATE_COMMAND
-
 # Guess what? We'll finally start checking out the modules. :-)
 #
 for MODULE in $MODULES; do
@@ -123,34 +121,35 @@ for MODULE in $MODULES; do
     echo "WARNING: Could not change into directory $SRCDIR/$MODULE."
     echo "Update for module $MODULE skipped."
   else
-    if test -d CVS && ! (echo $EXCLUDE | grep -q $MODULE); then
-      if test $LOGDIR; then
-        LOGFILE="$LOGDIR/$MODULE-update-$DATE"
-        UPDATE_COMMAND="$UPDATE_COMMAND &> $LOGFILE"
+    if test $LOGDIR; then
+      LOGFILE="$LOGDIR/$MODULE-update-$DATE"
+      UPDATE_COMMAND="$UPDATE_COMMAND 2>&1 | tee -a $LOGFILE > /dev/null"
+    fi
+
+    echo -n "Updating module '$MODULE'..."
+    echo "====> Updating CVS module" > $LOGFILE
+    if eval "$UPDATE_COMMAND"; then
+
+      if test "$CVS_CLEAN" = yes -a -e admin/Makefile.common; then
+        MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
+        if test $LOGDIR; then
+          MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
+          echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
+        fi
+        eval "$MAKE_CVS_CLEAN"
       fi
 
-      echo -n "Updating module '$MODULE'..."
-      if eval "$UPDATE_COMMAND"; then
-
-        if test "$CVS_CLEAN" = yes; then
-          MAKE_CVS_CLEAN="make -f admin/Makefile.common cvs-clean"
-          test $LOGDIR && MAKE_CVS_CLEAN="$MAKE_CVS_CLEAN 2>&1 | tee -a $LOGFILE > /dev/null"
-          if test -e admin/Makefile.common; then
-            test $LOGDIR && echo "====> Doing 'make -f admin/Makefile.common cvs-clean'" >> $LOGFILE
-            eval "$MAKE_CVS_CLEAN"
-          fi
-        fi
-
+      if test -e Makefile.cvs; then
         MAKE_MAKEFILE_CVS="make -f Makefile.cvs"
-        test $LOGDIR && MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
-        if test -e Makefile.cvs; then
-          test $LOGDIR && echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
-          eval "$MAKE_MAKEFILE_CVS"
+        if test $LOGDIR; then
+          MAKE_MAKEFILE_CVS="$MAKE_MAKEFILE_CVS 2>&1 | tee -a $LOGFILE > /dev/null"
+          echo "====> Doing 'make -f Makefile.cvs'" >> $LOGFILE
         fi
-        echo "done!"
-      else
-        echo "failed!"
+        eval "$MAKE_MAKEFILE_CVS"
       fi
+      echo "done!"
+    else
+      echo "failed!"
     fi
   fi
 done
