@@ -41,9 +41,11 @@
 ; This works with all Qt classes but can easily be extended to KDE classes.
 ; Shift-F10: Place point on a class name, and "class Blah" will be inserted near the top.
 ; Meta-F10: Place point on a class name, and press Meta-F10, and konqueror will load
-;            Qt documentation. Customize the location of the Qt documentation with the 
+;            Qt documentation. Customize the location of the Qt documentation with the
 ;            variable kdab-qt-documentation. XXX will be replace with the class name.
 ;            Example (setq kdab-qt-location "file:/packages/kde-src/qt-copy/doc/html/XXX.html")
+;
+; M-n: jump to the next error (after compiling) or grep matches
 ;
 ; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
 ; [the new hide-all-windows shortcut conflicts with that, you may have to
@@ -58,7 +60,6 @@
 ; M-x bookmark-write 
 ; and to load bookmarks from a file write:
 ; M-x bookmark-load
-;
 
 (require 'kde-emacs-core)
 (require 'kde-emacs-general)
@@ -125,9 +126,9 @@
     (define-key c++-mode-map "\;" 'insert-semicolon))
 (define-key c++-mode-map [(f6)] 'kde-switch-cpp-h)
 (define-key c-mode-map [(f6)] 'kde-switch-cpp-h)
-(define-key global-map [(shift f7)] 'next-error)
 (define-key c++-mode-map [(f7)] 'switch-to-function-def)
 (define-key c++-mode-map [(f9)] 'agulbra-make-member)
+(define-key global-map [(meta n)] 'next-error)
 
 ; kde-emacs-headers:
 (define-key c++-mode-map [(f10)] 'kdab-insert-header)
