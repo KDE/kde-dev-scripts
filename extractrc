@@ -38,7 +38,7 @@ READING: while ( <FILE> ) {
    $string .= "\\n" . $_;
    chomp($string);
  
-   $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label|name)>';
+   $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label)>';
 
    # The 'database' property contains strings that shouldn't be translated
    if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/ || $string=~ /<property name=\"associations\"/)) {
