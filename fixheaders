@@ -47,6 +47,7 @@ $lastdir = '.';
  '`KGlobal\' undeclared \(first use this function\)' => "kglobal",
  'warning: implicit declaration of function `int locate\(\.\.\.\)' => "kstddirs",
  'no matching function for call to `KStandardDirs::' => "kstddirs",
+ 'variable `class QFile \S*\' has initializer but incomplete type' => "qfile",
  
 );
 
