@@ -216,5 +216,23 @@ function! InsertMethodTracer()
 	:normal [[kf(yBjokdDebug() << ""()" << endl;
 endfunction
 
+function! UpdateMocFiles()
+	if &syntax == "cpp"
+		let i = 1
+		while i < 80
+			let s = getline( i )
+			if s =~ '^#include ".*\.moc"'
+				let s = substitute( s, '.*"\(.*\)\.moc"', '\1.h', '' )
+				if stridx( &complete, s ) == -1
+					let &complete = &complete . ',k' . s
+				endif
+				break
+			endif
+			let i = i + 1
+		endwhile
+	endif
+endfunction
+
 autocmd Syntax * call AddQtSyntax()
+autocmd CursorHold * call UpdateMocFiles()
 
