@@ -1,5 +1,5 @@
 ## kDebug2kdDebug.sh
-## Script to port from kDebugInfo and friends to kdDebug and friends.
+## Script to port from qDebug, kdebug, kDebugInfo etc. to kdDebug/kdWarning/...
 ## Example:
 ## kDebugInfo( [area,] "format %a - %b", arga, argb )
 ## becomes
@@ -8,7 +8,7 @@
 ## Written by David Faure <faure@kde.org>, licensed under GPL.
 ## 17/03/2000
 
-find $1 -name '*[cCph]' -type f | xargs grep -l kDebug | while read file; do
+find $1 -name '*[cCph]' -type f | xargs grep -l ebug | while read file; do
 perl -w -i -e \
 '
 $inkdebug=0;
@@ -20,8 +20,15 @@ while (<>)
 	#print "Reading line : " . $_ . "\n";
 	$statement .= $_;
     }
-    elsif ( /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ )
+    elsif ( /kdebug\s*\(/ || /kDebug[a-zA-Z]*\s*\(/ || /qDebug\s*/ )
     {
+	# Very old kdebug stuff :)
+	s/kdebug\s*\(\s*KDEBUG_INFO,/kDebugInfo\(/;
+	s/kdebug\s*\(\s*0,/kDebugInfo\(/;
+	s/kdebug\s*\(\s*KDEBUG_WARN,/kDebugWarning\(/;
+	s/kdebug\s*\(\s*KDEBUG_ERROR,/kDebugError\(/;
+	s/kdebug\s*\(\s*KDEBUG_FATAL,/kDebugFatal\(/;
+
 	$inkdebug = 1;
 	chop;
 	$statement = $_;
@@ -86,8 +93,9 @@ while (<>)
 			# Remove trailing .ascii() and latin1()
 			$arg = $1;
 			$arg =~ s/QStrKLUDGE/$kludge/; ## restore original arg
-			$arg =~ s/\.ascii\(\)$//;
-			$arg =~ s/\.latin1\(\)$//;
+			$arg =~ s/\.ascii\(\)$//;              # remove
+			$arg =~ s/\.latin1\(\)$//;             # remove
+			$arg =~ s/debugString\(([^\)]+)\)/$1/; # remove
                         # If "a ? b : c" then add parenthesis
                         if ( $arg =~ m/.+\s*\?\s*.+\s*:\s*.+/ ) {
                            $arg = "(" . $arg . ")";
@@ -102,7 +110,7 @@ while (<>)
 	    }
             $arguments =~ s/,$//; # Remove trailing slash before next check
             if ( $arguments ) {
-               print STDERR "Non-processed : " . $arguments . "\n";
+               print STDERR "Non-processed (Information lost! Check the file!) : " . $arguments . "\n";
             }
 	    $line = $line . " << endl;\n";
             if ( $commented ) { $line .= "\*/"; }
