@@ -117,5 +117,31 @@
   (define-key global-map [(control c)(control k)(e)] 'kde-function-expand-at-point)
   (define-key global-map [(control c)(control k)(s)] 'kde-create-skeletons))
 
+(modify-frame-parameters (selected-frame) '((menu-bar-lines . 2)))
+(define-key c++-mode-map [menu-bar KDE]
+  (cons "KDE" c++-mode-map))
+(when (featurep 'semantic)
+  (define-key c++-mode-map [menu-bar KDE kde-doc-function-insert]
+    '("kde-doc-function-insert" . kde-doc-function-insert))
+  (define-key c++-mode-map [menu-bar KDE kde-function-expand-at-point]
+    '("kde-function-expand-at-point" . kde-function-expand-at-point))
+  (define-key c++-mode-map [menu-bar KDE kde-create-skeletons]
+    '("kde-create-skeletons" . kde-create-skeletons))
+  (define-key c++-mode-map [menu-bar KDE kde-doc-multiline-insert]
+    '("kde-doc-multiline-insert" . kde-doc-multiline-insert)))
+(define-key c++-mode-map [menu-bar KDE makeclean]
+  '("make clean" . makeclean))
+(define-key c++-mode-map [menu-bar KDE make]
+  '("make" . make))
+(define-key c++-mode-map [menu-bar KDE makeinstall]
+  '("make install" . makeinstall))
+(define-key c++-mode-map [menu-bar KDE makethisfile]
+  '("make this file" . makethisfile))
+(define-key c++-mode-map [menu-bar KDE kdeswitchcpph]
+  '("Switch to .h/.cpp file" . kde-switch-cpp-h))
+(define-key c++-mode-map [menu-bar KDE insert-kdDebug]
+  '("Insert kdDebug" . insert-kdDebug))
+
+
 (provide 'kde-emacs-bindings)
 
