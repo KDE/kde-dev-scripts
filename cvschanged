@@ -13,6 +13,8 @@ use Time::Local qw( timegm );
 @uncommitted = ();
 @missing = ();
 
+$reportmissing = 1;
+
 @monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
  "Sep", "Oct", "Nov", "Dec" );
 %months = ();
@@ -89,6 +91,7 @@ sub processEntries
 
 # month assoc array for name -> index lookups
 $mctr = 0;
+$reportmissing = 0 if ($ENV{"REPORTMISSING"} eq 'no');
 
 foreach $month ( @monthlist ) {
 	$months{ $month } = $mctr;
@@ -106,7 +109,7 @@ foreach $dir ( @dirqueue ) {
 	processEntries( $dir );
 }
 
-if ( $#missing >= 0 ) {
+if ( $#missing >= 0 && $reportmissing) {
 	print "\nMissing files:\n\n";
 	foreach $f ( @missing ) {
 		print $f,"\n";
