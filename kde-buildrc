@@ -157,10 +157,12 @@ INCREMENTAL_BUILD="no"
 # CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. 
 # NOTE: These used to be appended to the general $CONFIGUREFLAGS value.
 # This is no longer true, you need to use $CONFIGUREFLAGS in the _MODNAME
-# version
+# version. In case the module name contains dashes ('-'), those needs to
+# be replaced with underscores.
 #
 CONFIGUREFLAGS="--enable-debug --disable-closure"
 # example: CONFIGUREFLAGS_KDEPIM="$CONFIGUREFLAGS --enable-debug=full"
+# example: CONFIGUREFLAGS_KDEEXTRAGEAR_2="$CONFIGUREFLAGS --without-java"
 
 # Set it to the path for unsermake if you want to test it instead of
 # automake.
