@@ -23,8 +23,8 @@ test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
 # getopt usage from the getopt bash example
 # --log has optional argument
 TEMP=`getopt \
--o v:n:r:e:a:dhmbgol \
---long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,no-i18n,cvs-root:,debug \
+-o v:n:r:e:a:B:dhmbgol \
+--long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,cvs-root:,debug \
 -n cvs2dist -- $extraoptions "$@"`
 
 if [ $? != 0 ]; then
@@ -49,6 +49,7 @@ while true; do
 				admindir="`pwd`/$admindir"
 			fi
 			shift 2 ;;
+		-B|--branch) branch="-r$2"; shift 2;;
 		--debug) debug="non-empty"; shift 1 ;;
 		--cvs-root) cvsroot="$2"; shift 2 ;;
 		-r|--required-header) requiredheader=$2; shift 2 ;;
@@ -113,6 +114,7 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "                    environment variable."
 	echo "  --admin-dir <dir> admin/ location (default is module/admin)"
 	echo "                    (symbolic links are OK.)"
+	echo "  -B --branch <branch> use branch for i18n checkouts."
 	echo "  --no-i18n  don't try to automatically checkout the translations from cvs."
 	echo "  --log=<logfile> If logfile unspecified, default file is used."
 	echo "                  (The '=' is essential and may not be ommited"
@@ -293,7 +295,7 @@ remove="$remove $modulename.lsm"
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "cvs co kde-i18n/subdirs" >> $log
-    cvs -z4 -q -d "$cvsroot" co -P kde-i18n/subdirs > /dev/null 2>&1
+    cvs -z4 -q -d "$cvsroot" co "$branch" -P kde-i18n/subdirs > /dev/null 2>&1
     i18nlangs="$(cat kde-i18n/subdirs)"
     echo "available languages: $i18nlangs" >> $log
     popd
@@ -311,7 +313,7 @@ if [ -d $module/doc/$name ]; then
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
 		docdirname="kde-i18n/$lang/docs/$modulename/$name"
 		echo "cvs co $docdirname" >> $log
-		cvs -z4 -q -d "$cvsroot" co -P "$docdirname" > /dev/null 2>&1
+		cvs -z4 -q -d "$cvsroot" co "$branch" -P "$docdirname" > /dev/null 2>&1
 		if [ ! -d "$docdirname" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
 		    continue
@@ -351,7 +353,7 @@ if [ $doi18n = "yes" ]; then
 	for lang in $i18nlangs; do
 		pofilename="kde-i18n/$lang/messages/$modulename/$name.po";
 		echo "cvs co $pofilename" >> $log
-		cvs -z4 -q -d "$cvsroot" co -P "$pofilename" > /dev/null 2>&1
+		cvs -z4 -q -d "$cvsroot" co "$branch" -P "$pofilename" > /dev/null 2>&1
 		if [ ! -f "$pofilename" ]; then
 			echo "$lang's $name.po does not exist." >> $log
 			continue
