@@ -558,6 +558,9 @@ sub fix_unnecessary($)
     # don't remove this one either. causes conditional
     # code to be compiled incorrectly
     next if( $include eq "kdeversion.h");
+    # don't remove the config.h include
+    # conditional code may depend on this file
+    next if( $include eq "config.h");
     # check if it is its own header file
     my $blankhdr = $include;
     $blankhdr =~ s/(.*)\.[^\.]+/$1/;
