@@ -1,5 +1,0 @@
-#!/bin/sh
-kdekillall 'Running...'
-kdekillall klauncher
-kdeinit
-
