@@ -1794,7 +1794,7 @@ With arg, to it arg times."
 (defun makeinstall () (interactive) (compile "make install"))
 (defun makeinstallexec () (interactive) (compile "make install-exec"))
 (defun makethisfile () (interactive)
-    (let ((f (buffer-file-name)))
+    (let ((f (buffer-name)))
       (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
       (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
       (compile (concat "make " f ))))
