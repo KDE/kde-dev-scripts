@@ -3,7 +3,7 @@
 # adding some standard stuff according to Makefile.am.
 # License: GPL
 
-function addignore() {
+addignore() {
 	test -f .cvsignore || \
 	( touch .cvsignore && echo "created new .cvsignore" && cvs add .cvsignore )
 	grep -q "^$1\$" .cvsignore || \
@@ -17,7 +17,7 @@ if test $# -eq 1; then
 	fi
 fi
 
-function handledir() {
+handledir() {
 	(
 	cd $1
 	if test -f Makefile.am; then
