@@ -47,7 +47,7 @@ sub processEntries
 
 	while( <ENTRIES> ) {
 		if ( m#^\s*D/([^/]+)/# ) {
-			push ( @dirqueue, "$dir/$1" );
+			push ( @dirqueue, "$dir/$1" ) if (-d "$dir/$1");
 			next;
 		}
 
