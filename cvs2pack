@@ -123,7 +123,7 @@ sub main
 		unlink $packagedir."/".$file;
 	}
 
-	open (RM, "find \"$packagedir\" -name .deps |" );
+	open (RM, "find \"$packagedir\" -name .deps -o -name .libs |" );
 
 	my @rem = ();
 	while ( <RM> ) {
@@ -143,7 +143,7 @@ sub main
 
 # Run Makefile.cvs
 	print "$myname: Running Makefile.cvs...\n";
-	system "cd \"$packagedir\" && make -f Makefile.cvs".
+	system "cd \"$packagedir\" && make -f admin/Makefile.common dist".
 		" && cd .. && tar cf \"$packagedir\".tar \"$packagedir\""
 		|| die;
 
