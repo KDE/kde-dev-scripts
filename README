@@ -3,6 +3,9 @@ Stuff in this directory:
 
 adddebug        Modifies the Makefile to add debug info (-g)
 
+add_trace	Modifies a source file to add a trace as the first line
+		of every method, using kdDebug, and showing args values.
+
 create_makefile Create the Makefile in a directory containing a Makefile.am
                 Saves time compared to re-running configure completely 
 
