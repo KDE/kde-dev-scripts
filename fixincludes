@@ -247,8 +247,8 @@ sub remove_include ($$$)
       next;
     }
 
-    #if ($cpplevel == 0 && $level > 0 && $line =~ m/^\#include\s*[\"<]$include[\">]\S*$/) {
-    if ($cpplevel == 0 && (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
+    if ($level && $cpplevel == 0 && 
+       (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       $level = $level - 1;
       # skipping the line..
       next;
