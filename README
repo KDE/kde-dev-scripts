@@ -16,6 +16,11 @@ create_cvsignore Create a .cvsignore file (using the contents of Makefile.am)
 cvs2pack	Create a standalone source distribution tarball for an app
 		in a KDE CVS module.
 
+cvsaddcurrentdir Add all files in and below the current dir to cvs.
+                 *.c, *.h, *.C, *.cpp, *.cc are added automatically,
+                 *~, *.o, *.so, *.lo, *.la, .libs/, .deps/, .#* are ignored.
+                 You will be asked for the remaining files.
+
 cvsblame	Bonsai-like cvs annotate 
 
 cvschanged	Check for edited or merged files in a checked out CVS module,
