@@ -14,3 +14,5 @@ Test these class:
 	* QDir
 	* KConfig
 	* KSimpleConfig
+	* QDataStream
+	 
