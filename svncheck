@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# This script is the counterpart to cvscheck
+#
+
+echo "svncheck is not necessary" >&2
+echo "Please use 'svn status'" >&2
+
+svn status "$*"
