@@ -65,7 +65,11 @@ fi
 
 echo "makeobj[0]: Entering directory \`$PWD'"
 if test -z "$MAKE"; then
-	MAKE=/usr/bin/make
+    if head -n 1 $dir/$file | grep unsermake >/dev/null; then
+        MAKE=`type -p unsermake`
+    else
+        MAKE=/usr/bin/make
+    fi
 fi
 LANGUAGE=C $MAKE $args
 retval=$?
