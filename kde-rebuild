@@ -6,15 +6,15 @@
 
 # Where are your KDE sources?
 #
-SRCDIR="/home/devel/src/kde-cvs"
+SRCDIR=""
 
 # Where shall I put the binaries?
 #
-KDE2DIR="/opt/kde2"
+KDE2DIR=""
 
 # Where is your Qt 2.2.0?
 #
-QTDIR="/usr/local/lib/qt"
+QTDIR=""
 
 # If you would like logfiles of the compilation process, specify a directory
 # here in which the logfiles will be saved. If you want to disable logfile
@@ -40,7 +40,7 @@ COMPRESSLOGS="yes"
 # (if you want a KDE2 desktop and not just develope applications for it)
 # must be compiled in exactly that order. Any other modules are optional.
 #
-MODULES="kdegraphics kdenetwork"
+MODULES=""
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
