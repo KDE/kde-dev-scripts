@@ -65,7 +65,14 @@ fi
 
 echo "makeobj[0]: Entering directory \`$PWD'"
 if test -z "$MAKE"; then
+    using_new_unsermake=0
     if head -n 1 $dir/$file | grep unsermake >/dev/null; then
+        using_new_unsermake=1
+    fi
+    if head -n 1 $dir/$file | grep automake >/dev/null; then
+        using_new_unsermake=0
+    fi
+    if test $using_new_unsermake -eq 1; then
         MAKE=`type -p unsermake`
 	if test ! -x "$MAKE"; then
 		echo 'Makefile was created with unsermake, but there'
