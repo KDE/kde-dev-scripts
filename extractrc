@@ -64,6 +64,7 @@ READING: while ( <FILE> ) {
      $text =~ s/&lt;/</g;
      $text =~ s/&gt;/>/g;
      $text =~ s/&amp;/&/g; 
+     $text =~ s/\\/\\\\/g;
      $text =~ s/\"/\\\"/g;
      writeoutstring($text); 
      $string =~ s/^.*<\/$textstring//;
