@@ -23,7 +23,8 @@ my %knowncaptions = (
   'General' => '',
   'Tracks' => '',
   'Constants' => '',
-  'Preferences' => ''
+  'Preferences' => '',
+  'Encryption' => ''
 );
 
 # declaration of useful subroutines
