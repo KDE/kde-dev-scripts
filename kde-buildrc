@@ -111,6 +111,10 @@ EXCLUDE=""
 #
 CVS_CLEAN="no"
 
+# Rely on the dependencies for Makefiles and configure
+# If you trust the build system, set it to yes ;-)
+INCREMENTAL_BUILD="no"
+
 # Flags to be passed to the 'configure' script.
 # A note: --enable-debug adds minimum debug symbols while an appended
 # =full gives you the full power and fills up your beloved hdd much better

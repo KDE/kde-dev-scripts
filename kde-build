@@ -159,11 +159,28 @@ check_libltdl() {
   fi
 }
 
+
+# Get current configuration, bail out if it couldn't be found.
+#
+if !(test -e ./kde-buildrc); then
+  cd `dirname $0`
+  if !(test -e ./kde-buildrc); then
+    echo "ERROR: Cannot load configuration file ./kde-buildrc!"; exit $err_no_config
+  fi
+fi
+. ./kde-buildrc
+
 docvsupdate=1
 domakefilecvs=1
 doconfigure=1
 dousage=0
 specifiedModules=""
+
+if test "$INCREMENTAL_BUILD" != "no"; then
+  domakefilecvs=0
+  doconfigure=0
+fi
+
 # Parse args
 #
 while [ $# != 0 ]
@@ -179,9 +196,12 @@ do
         exit $err_no_error ;;
     --no-update)
         docvsupdate=0 ;;
-    --incremental) ### This is experimental, don't use
+    --incremental)
         domakefilecvs=0
         doconfigure=0 ;;
+    --full)
+	domakefilecvs=1
+	doconfigure=1 ;;
     -*)
         echo "Unhandled option $arg"
         dousage=1
@@ -196,19 +216,11 @@ done
 if test "$dousage" -eq 1; then
   echo "usage: $0 [--options] [modules]"
   echo "--no-update    do not update from cvs"
+  echo "--incremental  start make right after update - risky"
+  echo "--full         do full setup even when INCREMENTAL_BUILD is set"
   echo "--help         this message"
   exit $err_no_error
 fi
-
-# Get current configuration, bail out if it couldn't be found.
-#
-if !(test -e ./kde-buildrc); then
-  cd `dirname $0`
-  if !(test -e ./kde-buildrc); then
-    echo "ERROR: Cannot load configuration file ./kde-buildrc!"; exit $err_no_config
-  fi
-fi
-. ./kde-buildrc
 
 # Make sure some paths are according to the rc file. Note that there are AFAIK
 # UNIX flavors which don't support LD_LIBRARY_PATH
