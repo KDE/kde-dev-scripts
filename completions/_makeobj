@@ -1,0 +1,30 @@
+#compdef makeobj
+
+local index olddir dir subdir
+
+olddir=$PWD
+index="$words[(I)-[fCI]]"
+if ! ((index)); then
+  if [ ! -f Makefile ]; then
+    if [ -n "$OBJ_SUBDIR" ]; then
+      dir=$PWD
+      subdir=.
+      while [ -n "$dir" -a $dir != '/' -a ! -f $dir/$OBJ_SUBDIR/$subdir/Makefile ]; do
+        dir=$dir(:h)
+        subdir=$dir(:t)/$subdir
+      done
+      if -f $dir/$OBJ_SUBDIR/$subdir/Makefile; then
+        cd $dir/$OBJ_SUBDIR/$subdir
+      fi
+    elif [ -n "$OBJ_REPLACEMENT" ]; then
+      dir=$(echo $PWD | sed -e "$OBJ_REPLACEMENT")
+      if [ -f $dir/Makefile ]; then
+        cd $dir
+      fi
+    fi
+  fi
+fi
+
+_make
+
+cd $olddir
