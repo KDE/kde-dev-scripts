@@ -509,7 +509,7 @@ sub fix_unnecessary($)
 
 # warn about modified files
 if($modify) {
-  `cvscheck | grep $file | grep '^[MmC]'`;
+  `cvscheck | grep '^[MmC]'`;
   print "WARNING: you have pending local changes.You might commit them by accident!\n" if($? >> 8);
 }
 
