@@ -105,7 +105,9 @@ set_title() {
 
 # moves a log file to be named failed, so one can see on first glance
 move_logfile() {
-  mv $logfile `echo $logfile | sed -e "s,-build-,-failed-,"`
+  rename_logfile=`echo $logfile | sed -e "s,-build-,-failed-,"`
+  mv "$logfile" "$rename_logfile"
+  logfile=$rename_logfile
 }
 
 # Executes the given command, logging the output to $logfile if requested.
@@ -231,9 +233,9 @@ install_module() {
     echo "Module $module successfully installed in $KDEDIRS!"
   else
     echo "$str_error"
+    move_logfile
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
-    move_logfile
   fi
 }
 
@@ -650,9 +652,9 @@ for module in $modules; do
 
   if ! log_cmd "$cmd_configure"; then
     echo "$str_error"
+    move_logfile
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
-    move_logfile
     continue
   fi
 
@@ -673,9 +675,9 @@ for module in $modules; do
     fi
     if ! log_cmd "$cmd_make_makefile"; then
       echo "$str_error"
+      move_logfile
       [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
       [ $critical -eq 0 ] || exit $err_compile_fail
-      move_logfile
       continue
     fi
 
@@ -740,12 +742,12 @@ for module in $modules; do
       install_module
     fi
   else
-    echo "$str_error"
-    [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
-    [ $critical -eq 0 ] || exit $err_compile_fail
+   echo "$str_error"
     # Attempt to display the actual error
     grep -m1 -A2 ":[0-9]*: error:" $logfile
     move_logfile
+    [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
+    [ $critical -eq 0 ] || exit $err_compile_fail
   fi
 done
 
