@@ -142,7 +142,7 @@ With arg, do it arg times."
 (defun kde-c++-mode-hook ()
   (font-lock-mode)
   (c-set-style kde-c++-style)
-  (define-key c++-mode-map "\C-m" 'newline-and-indent)
+  (define-key c++-mode-map "\C-m" 'c-context-line-break)
   (when (or
 	 (eq kde-tab-behavior 'default)
 	 (eq kde-tab-behavior 'abbrev-indent))
