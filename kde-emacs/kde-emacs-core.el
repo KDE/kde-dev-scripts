@@ -133,7 +133,8 @@ With arg, do it arg times."
 			 (c-access-key . ,kde-access-labels)
 			 (c-opt-access-key . ,kde-access-labels)
 					; (c-hanging-comment-under-p nil)
-			 (c-offsets-alist (case-label . 0))
+			 (c-offsets-alist . ((case-label . 0)
+					     (inline-open . 0)))
 			 ))
 		    
 ;; KDE C++ mode
