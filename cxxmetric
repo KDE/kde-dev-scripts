@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 
 # Simple Source metrics for C++
 # Taj Sun Apr 26 03:31:00 EST 1998

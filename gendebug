@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 # Generate debug-output statement to debug C++/Qt programs
 #
 # Parameters : [-label1] var1 [-label2] var2
