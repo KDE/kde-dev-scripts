@@ -513,7 +513,7 @@ fi
 # all the modules make use of the most recent unsermake version.
 #
 if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
-  echo -n "Updating unsermake copy in $unsermake_dir..."
+  echo -n "Updating unsermake copy in $UNSERMAKE_PATH..."
   if [ -d "$UNSERMAKE_PATH/CVS" ]; then
     cd "$UNSERMAKE_PATH"
     cvs up > /dev/null 2>&1
