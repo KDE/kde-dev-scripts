@@ -349,7 +349,7 @@ fi
 if [ -d $module/doc/$name ]; then
 	mkdir -p $temp_dist/doc/$name
 	cp -Rf $module/doc/$name $temp_dist/doc
-	find $module/doc/ ! -xtype d -maxdepth 1 | xargs --replace={} cp {} $temp_dist/doc
+	find $module/doc/ -maxdepth 1 ! -xtype d | xargs --replace={} cp {} $temp_dist/doc
 
 	if [ $doi18n = "yes" ]; then
 	    pushd $temp_dir
@@ -435,7 +435,7 @@ fi
 
 # and all files from the base dir, except directories
 echo "Copying over files from the module directory:" >> $log
-find $module ! -xtype d -maxdepth 1 | xargs --verbose --replace={} cp {} $temp_dist 2>> $log
+find $module -maxdepth 1 ! -xtype d | xargs --verbose --replace={} cp {} $temp_dist 2>> $log
 echo "--------" >> $log
 
 # we now enter the temp_dist and delete all unwanted files
