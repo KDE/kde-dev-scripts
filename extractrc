@@ -1,147 +1,112 @@
 #! /usr/bin/perl
-
-###########################################################################################
-# 2004-05-08: Changes by Richard Evans <rich@ridas.com>
 #
-# Add getopt support, tag groups, make code (hopefully) more
-# idiomatic. If anything is broken here, you know who to blame!
+# This script extracts messages from designer (.ui) and XMLGIU (.rc) files
+# and writes on standard output (usually redirected to rc.cpp)
+# the equivalent i18n() calls so that xgettext can parse them.
 
-sub usage
+# known flags:
+# --tag=name : extract also the tag name
+# --contect=name : give all i18n calls a context name: i18n( "name",...)
+
+$filename = "";
+@filenames = ();
+
+sub writeoutstring
 {
-  warn <<"EOF";
-
-extractrc [flags] filenames
-
-This script extracts messages from designer (.ui) and XMLGIU (.rc) files and
-writes on standard output (usually redirected to rc.cpp) the equivalent
-i18n() calls so that xgettext can parse them.
-
---tag=name        : Also extract the tag name(s). Repeat the flag to specify 
-                    multiple names: --tag=tag_one --tag=tag_two
-
---tag_group=group : Use a group of tags - defaults to 'kdesdk' if omitted.
-                    Valid groups are: @{[TAG_GROUPS()]}
-
---context=name    : Give i18n calls a context name: i18n("name", ...)
---lines           : Include source line numbers in comments
---help|?          : Display this summary
-
-EOF
-
-  exit;
+   print STDOUT "i18n(\"";
+   if (@_[0])
+   {
+      # We have a I18N context
+      print STDOUT @_[0];
+      print STDOUT "\",\"";
+   }
+   print STDOUT @_[1];
+   print STDOUT "\"); // $filename \n";
 }
 
-###########################################################################################
+$extratags = "";
+$context = ""; # I18N context
 
-use strict;
-use warnings;
-use Getopt::Long;
-
-use constant TAG_GROUP => 
+ARGUMENTS: while (defined ($ARGV[0]))
 {
-  none    => "",
-  kdesdk  => "[tT][eE][xX][tT]|title|string|whatsthis|tooltip|label",
-  koffice => "Example|GroupName|Text|Comment|Syntax|TypeName",
-};
+   $_ = shift;
 
-use constant TAG_GROUPS => join ", ", map "'$_'", sort keys %{&TAG_GROUP};
+   if (/^--tag=(\w+)/) # --tag=name
+   {
+        $extratags .= "|" . $1;
+        next ARGUMENTS;
+   }
+   elsif (/^--context=(\w+)/) # --context=name
+   {
+        $context = $1;
+        next ARGUMENTS;
+   }
 
+   $filename = $_; # maybe check for more options
 
-###########################################################################################
-# Add options here as necessary - perldoc Getopt::Long for details on GetOptions
+if (! $filename) {
+   print STDERR "no file to open\n";
+   exit 1;
+}
 
-die "extractrc --help for usage\n"
-  unless GetOptions ( "tag=s"       => \my @opt_extra_tags,
-                      "tag_group=s" => \my $opt_tag_group,
-                      "context=s"   => \my $opt_context,       # I18N context
-                      "lines"       => \my $opt_lines,
-                      "help|?"      => \&usage );
+$string = "";
+$intext = 0;
+$linenr = 0;
+$inskippedprop = 0;
 
-die "No filename specified\n" unless @ARGV;
+open(FILE, $filename);
 
-$opt_tag_group ||= "kdesdk";
+READING: while ( <FILE> ) {
+   $linenr++;
+   if ($linenr == 1 && ($_ !~ /^<!DOCTYPE/) && ($_ !~ /^<\?xml/)) {
+   	last READING;
+   }
 
-die "Unknown tag group: '$opt_tag_group', should be one of: " . TAG_GROUPS . "\n"
-    if $opt_tag_group and not my $tags = TAG_GROUP->{$opt_tag_group};
+   $string .= "\\n" . $_;
+   chomp($string);
 
-my $extra_tags  = join "", map "|" . quotemeta, @opt_extra_tags;
-my $text_string = qr/($tags$extra_tags)>/;                       # Precompile regexp
+   $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip|label' . $extratags .')>';
 
+   # The 'database' property contains strings that shouldn't be translated
+   if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/ || $string=~ /<property name=\"associations\"/)) {
+     $inskippedprop = 1;
+   } elsif ($inskippedprop == 1 && ($string =~ /<\/property/)) {
+     $inskippedprop = 0;
+     $string = "";
+   }
 
-###########################################################################################
-# Program start proper - NB $. is the current line number
-
-for my $file_name ( @ARGV )
-{
-  open my $fh, "<", $file_name or die "Failed to open: '$file_name': $!";
-
-  my $string          = "";
-  my $in_text         = 0;
-  my $start_line_no   = 0;
-  my $in_skipped_prop = 0;
-
-  while ( <$fh> )
-  {
-     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml)/;
-
-     chomp;
-
-     $string .= '\n' . $_;
-
-     # 'database', 'associations' properties contain strings that shouldn't be translated
-
-     if ( $in_skipped_prop == 0 and $string =~ /<property name=\"(?:database|associations)\"/ )
-     {
-       $in_skipped_prop = 1;
+   if ($inskippedprop == 0 && $intext == 0) {
+     if ($string =~ /<$textstring/) {
+       $string =~ s/^.*<$textstring//;
+       $intext = 1;
+       $starting_linenr = $linenr;
+     } else {
+       $string = "";
      }
-     elsif ( $in_skipped_prop and $string =~ /<\/property/ )
-     {
-       $string          = "";
-       $in_skipped_prop = 0;
-     }
+   }
 
-     unless ( $in_skipped_prop or $in_text )
-     {
-       if ( $string =~ /<$text_string/o )
-       {
-         $string        =~ s/^.*<$text_string//o;
-         $in_text       =  1;
-         $start_line_no =  $.;
-       }
-       else
-       {
-         $string = "";
-       }
-     }
-
-     next unless $in_text;
-     next unless $string =~ /<\/$text_string/o;
-
+   if (($intext == 1) && ($string =~ /<\/$textstring/)) {
      my $text = $string;
-
-     $text =~ s/<\/$text_string.*$//o;
+     $text =~ s/<\/$textstring.*$//;
      $text =~ s/&lt;/</g;
      $text =~ s/&gt;/>/g;
      $text =~ s/&amp;/&/g; 
      $text =~ s/\\([^n])/\\\\$1/g;
      $text =~ s/\"/\\\"/g;
-
-     print  q|i18n("|;
-     print qq|$opt_context","|        if $opt_context;   # We have a I18N context
-     print qq|$text"); // $file_name|;
-     print qq| $.|                    if $opt_lines;
-     print qq| \n|;
-
-     $string  =~ s/^.*<\/$text_string//o;
-     $in_text =  0;
-
+     writeoutstring($context, $text); 
+     $string =~ s/^.*<\/$textstring//;
+     $intext = 0;
      # Text can be multiline in .ui files (possibly), but we warn about it in XMLGUI .rc files.
+     if ($linenr != $starting_linenr && $filename =~ m/\.rc$/) {
+       print STDERR "there is <text> floating $filename\n";
+     }
+   }
 
-     warn "there is <text> floating in: '$file_name'" if $. != $start_line_no and $file_name =~ /\.rc$/i;
-  }
-
-  close $fh or warn "Failed to close: '$file_name': $!";
-
-  die "parsing error in $file_name" if $in_text;
 }
 
+if ($intext == 1) {
+ print STDERR "parsing error in $filename $linenr\n";
+ exit 1;
+}
+
+}
