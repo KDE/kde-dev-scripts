@@ -597,8 +597,16 @@ for module in $modules; do
     continue
   fi
 
+  if test "x$KDELOGDIR" != x; then
+    compute_time
+    echo "--------------------------------------------------------------------------------" >> $logfile
+    echo "Time needed for configuration of module $module: $hours:$minutes:$seconds" >> $logfile
+    echo "" >> $logfile
+  fi
+  echo -e "$configure_okay"
+
   if test "$configure_okay" = "skipped."; then
-    echo -n "Updating Makefile..."
+    echo -n "  Updating Makefile..."
     cmd_make_makefile="$MAKE $MAKE_OPTS Makefile"
     test "$NICECOMPILE" = yes && cmd_make_makefile="nice $cmd_make_makefile"
     if test -n "$KDELOGDIR"; then
@@ -616,15 +624,15 @@ for module in $modules; do
       move_logfile
       continue
     fi
-  fi
 
-  if test "x$KDELOGDIR" != x; then
-    compute_time
-    echo "--------------------------------------------------------------------------------" >> $logfile
-    echo "Time needed for configuration of module $module: $hours:$minutes:$seconds" >> $logfile
-    echo "" >> $logfile
+    if test "x$KDELOGDIR" != x; then
+      compute_time
+      echo "--------------------------------------------------------------------------------" >> $logfile
+      echo "Time needed for updating Makefile of module $module: $hours:$minutes:$seconds" >> $logfile
+      echo "" >> $logfile
+    fi
+    echo -e "$str_okay"
   fi
-  echo -e "$configure_okay"
 
   # Compile the module.
   #
