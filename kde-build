@@ -76,6 +76,7 @@ err_no_config="11"
 # Certain modules depend on others - those "base" modules which are required
 # by others to compile and/or run should be listed here to ensure that the
 # script is aborted in case on of these modules doesn't build.
+# These modules needs to be build and installed in this specific order!
 #
 critical_modules="kdesupport kdelibs kdebase"
 
@@ -129,6 +130,15 @@ install_module() {
     echo "$critical_modules" | grep -q $module && exit $err_install_fail
   fi
 }
+
+
+
+# Show help info
+#
+if test "$1" = "--help"; then
+    echo "--no-update    do not update from cvs"
+    echo "--help         this message"
+fi
 
 # Get current configuration, bail out if it couldn't be found.
 #
@@ -273,15 +283,23 @@ for module in $modules; do
     echo "WARNING: Could not change into directory $KDESRCDIR/$module."
     echo "Update for module $module skipped."
   else
-    echo -n "Updating module $module..."
     set_title "Updating module $module..."
+    if test "$1" = "--no-update"; then
+	echo -n "Checking module $module (no cvs update)..."
+	cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
+    else
+	echo -n "Updating module $module..."
+	cmd_update_raw="$cmd_update"
+    fi
+
     if test "x$KDELOGDIR" != x; then
-      echo "-> Update <---------------------------------------------------------------" >> $logfile
-      cmd_update_raw="$cmd_update >> $logfile 2>&1"
-      starttime=`date +%s`
+	echo "-> Update <---------------------------------------------------------------" >> $logfile
+	cmd_update_raw="$cmd_update_raw >> $logfile 2>&1"
+	starttime=`date +%s`
     fi
     
     eval ${cmd_update_raw}
+
     if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
       if test -d ../kde-common; then
         ln -s ../kde-common/admin .
@@ -316,7 +334,7 @@ for module in $modules; do
   fi
 done
 
-for module in $KDEMODULES; do
+for module in $critical_modules $KDEMODULES; do
   if ! cd $KDESRCDIR/$module; then
     if echo "$critical_modules" | grep -q $module; then
       echo "ERROR: Could not change into directory $KDESRCDIR/$module!"
