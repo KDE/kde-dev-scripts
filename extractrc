@@ -50,8 +50,8 @@ while ( <FILE> ) {
      writeoutstring($text); 
      $string =~ s/^.*<\/$textstring//;
      $intext = 0;
-	 if ($linenr != $starting_linenr) {
-		print STDERR "there is <text> floating\n";
+	 if ($linenr != $starting_linenr && $filename =~ m/\.rc$/) {
+		print STDERR "there is <text> floating $filename\n";
      }
    }
 
