@@ -368,8 +368,8 @@ if [ -d $module/doc/$name ]; then
 		# build system assume that the name of the app is the
 		# same as the name of the dir the Makefile.am is in.
 		# Instead, we explicitly pass the name..
-		cat $temp_dist/doc/$lang/Makefile.am | sed -e "s/AUTO/$name/" > $temp_dist/doc/$lang/Makefile.am.nw
-		mv $temp_dist/doc/$lang/Makefile.am.nw $temp_dist/doc/$lang/Makefile.am
+		echo "KDE_LANG=$lang" >  $temp_dist/doc/$lang/Makefile.am
+		echo "KDE_DOCS=$name" >> $temp_dist/doc/$lang/Makefile.am
 		echo "done."
 		echo "$lang documentation included." >> $log
 	    done
@@ -435,7 +435,7 @@ fi
 
 # and all files from the base dir, except directories
 echo "Copying over files from the module directory:" >> $log
-find $module -maxdepth 1 ! -xtype d | xargs --verbose --replace={} cp {} $temp_dist 2>> $log
+find $module ! -xtype d -maxdepth 1 | xargs --verbose --replace={} cp {} $temp_dist 2>> $log
 echo "--------" >> $log
 
 # we now enter the temp_dist and delete all unwanted files
