@@ -56,6 +56,7 @@ $lastdir = '.';
  '`QUriDrag\' undeclared \(first use this function\)' => "qdragobject",
  '`kdDebug\' undeclared \(first use this function\)' => "kdebug",
  '`kdWarning\' undeclared \(first use this function\)' => "kdebug",
+ 'no matching function for call to `KMenuBar::insertItem\(QString, KPopupMenu' => "kpopupmenu",
  'no matching function for call to `KMenuBar::' => "kmenubar",
  'invalid use of undefined type `class QPointArray' => "qpointarray",
  'variable `QPainter \S*\' has initializer but incomplete type' => "qpainter",
