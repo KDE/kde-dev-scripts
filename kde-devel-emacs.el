@@ -105,6 +105,16 @@ With arg, to it arg times."
          (define-key c++-mode-map "\ef" 'c-forward-into-nomenclature)
          (define-key c++-mode-map "\ed" 'agulbra-delete-into-nomenclature)
          (define-key c++-mode-map "\eb" 'c-backward-into-nomenclature)
+
+         ; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
+         ; to enable the magic keys in C++ mode.
+	 (and (boundp 'magic-keys-mode)
+	      (progn
+		(define-key c++-mode-map [\(] 'insert-parens)
+		(define-key c++-mode-map [\)] 'insert-parens2)
+		(define-key c++-mode-map [,] 'insert-comma)
+		(define-key c++-mode-map [\{] 'insert-curly-brace)
+		))
 ))
 
 (setq c-mode-hook
@@ -1166,14 +1176,6 @@ With arg, to it arg times."
 
 ; Add (setq magic-keys-mode t) to your .emacs (before loading this file)
 ; to enable the magic keys in C++ mode (auto-insertion of spaces and newlines).
-(and (boundp 'magic-keys-mode)
-     (setq c++-mode-hook
-	   (lambda ()
-	     (define-key c++-mode-map [\(] 'insert-parens)
-	     (define-key c++-mode-map [\)] 'insert-parens2)
-	     (define-key c++-mode-map [,] 'insert-comma)
-	     (define-key c++-mode-map [\{] 'insert-curly-brace)
-)))
 
 ;; pc-like textmarking
 (load "pc-select")
