@@ -2,7 +2,7 @@
 
 unless (scalar(@ARGV) == 1)
 {
-  die "Usage: license_check directory";
+  die "Usage: check_licenses directory";
 }
 
 my $gpl = 'General Public License';
