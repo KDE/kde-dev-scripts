@@ -601,6 +601,7 @@ for module in $modules; do
   if [ -n "$KDELOGDIR" ]; then
     rm -f $KDELOGDIR/$module-build-*
     rm -f $KDELOGDIR/$module-failed-*
+    rm -f $KDELOGDIR/$module-finished-*
     logfile="$KDELOGDIR/$module-build-$dateformat.log"
     echo "===============================================================================" > $logfile
     echo "Build log of module $module, started on `date +%c`" >> $logfile
