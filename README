@@ -73,6 +73,8 @@ cvsrevertlast	Reverts all the files given on the command by one version, then
 
 cvsbackport	Backport the last commit in HEAD, to a branch.
 
+cvsforwardport  Forwardport the last commit in a branch to HEAD
+
 gendebug        Generate C++/Qt code for printing debug output.
 
 pruneemptydirs	Detects stale source dirs in a CVS tree
