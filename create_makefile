@@ -23,7 +23,7 @@ else
 
   # Handle arg with missing "/Makefile"
   relpath=$1
-  if ! ( echo $relpath | grep -q 'Makefile$' ) ; then 
+  if test -z "`echo $relpath | grep -q 'Makefile$'`"; then 
     relpath="$relpath/Makefile"
   fi
 
