@@ -1,0 +1,35 @@
+#!/bin/sh
+
+file=Makefile
+dir=.
+args=
+
+while test $# -gt 0 ; do
+   case "${1}" in
+      -f)
+	shift
+	file="${1}" 
+	shift 
+	args="$args -f $file"
+	;;
+      -C)
+	shift
+	dir="${1}"
+	shift ;;
+      *)
+	args="$args ${1}"
+	shift 
+	;;
+    esac
+done
+
+if test ! -f $dir/$file; then
+  pwd=`echo $PWD | sed -e $OBJ_REPLACEMENT`
+  if test ! -f $pwd/$dir/$file; then
+  	echo "no objdir found"
+  fi
+  cd $pwd/$dir
+fi
+
+/usr/bin/make $args
+
