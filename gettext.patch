@@ -1,0 +1,142 @@
+# This is a patch for gettext-0.10.35 to allow translated messages
+# to have a context as used in Qt and KDE. 
+# (C) 2000 Stephan Kulow <coolo@kde.org>
+
+--- src/xget-lex.h.orig	Sun May 14 18:16:25 2000
++++ src/xget-lex.h	Sun May 14 18:17:09 2000
+@@ -22,13 +22,14 @@
+ 
+ enum xgettext_token_type_ty
+ {
+-  xgettext_token_type_eof,
+-  xgettext_token_type_keyword1,
+-  xgettext_token_type_keyword2,
+-  xgettext_token_type_lp,
+-  xgettext_token_type_comma,
+-  xgettext_token_type_string_literal,
+-  xgettext_token_type_symbol
++  xgettext_token_type_eof = 0,
++  xgettext_token_type_keyword1 = 1,
++  xgettext_token_type_keyword2 = 2,
++  xgettext_token_type_lp = 3,
++  xgettext_token_type_rp = 4,
++  xgettext_token_type_comma = 5,
++  xgettext_token_type_string_literal = 6,
++  xgettext_token_type_symbol = 7
+ };
+ typedef enum xgettext_token_type_ty xgettext_token_type_ty;
+ 
+--- src/xget-lex.c.orig	Sun May 14 18:16:25 2000
++++ src/xget-lex.c	Sun May 14 18:17:09 2000
+@@ -83,6 +83,7 @@
+   token_type_eoln,
+   token_type_hash,
+   token_type_lp,
++  token_type_rp,
+   token_type_comma,
+   token_type_name,
+   token_type_number,
+@@ -941,6 +942,10 @@
+       tp->type = token_type_lp;
+       return;
+ 
++    case ')':
++      tp->type = token_type_rp;
++      return;
++
+     case ',':
+       tp->type = token_type_comma;
+       return;
+@@ -1236,6 +1241,11 @@
+ 	  tp->type = xgettext_token_type_lp;
+ 	  return;
+ 
++	case token_type_rp:
++	  last_non_comment_line = newline_count;
++	  tp->type = xgettext_token_type_rp;
++	  return;
++
+ 	case token_type_comma:
+ 	  last_non_comment_line = newline_count;
+ 
+--- src/xgettext.c.orig	Sun May 14 18:16:25 2000
++++ src/xgettext.c	Sun May 14 18:27:20 2000
+@@ -835,7 +835,8 @@
+      int is_cpp_file;
+ {
+   int state;
+-
++  char *msgid = 0;
++  
+   /* Inform scanner whether we have C++ files or not.  */
+   if (is_cpp_file)
+     xgettext_lex_cplusplus ();
+@@ -861,8 +862,11 @@
+ 	State 3 = seen one of our keywords with string in second parameter
+ 	State 4 = was in state 3 and now saw a left paren
+ 	State 5 = waiting for comma after being in state 4
+-	State 6 = saw comma after being in state 5  */
++	State 6 = saw comma after being in state 5  
++	State 7 = after comma and State 2
++     */
+      xgettext_lex (&token);
++
+      switch (token.type)
+        {
+        case xgettext_token_type_keyword1:
+@@ -886,18 +890,51 @@
+ 	     state = 0;
+ 	   }
+ 	 continue;
++       
++       case xgettext_token_type_rp:
++	 if (state == 2) {
++	   token.string = strdup(msgid);
++	   remember_a_message (mlp, &token);
++	   free(msgid);
++	   msgid = 0;
++	   state = 0;
++	 }
++	 continue;   
+ 
+        case xgettext_token_type_comma:
+-	 state = state == 5 ? 6 : 0;
++	 switch (state) {
++	 case 5:
++	   state = 6;
++	   break;
++	 case 2:
++	   state = 7;
++	   break;
++	 default:
++	   state = 0;
++	   break;
++	 }
+ 	 continue;
+ 
+        case xgettext_token_type_string_literal:
+ 	 if (extract_all || state == 2 || state == 6)
+ 	   {
+-	     remember_a_message (mlp, &token);
+-	     state = 0;
++	     if (msgid)
++	       free(msgid);
++	     msgid = strdup(token.string);
++	     //	     state = 0;
++	   }
++	 else if (state == 7) 
++	   {
++	     if (msgid) {
++	       char *newstring = (char*)malloc(strlen(msgid) + strlen(token.string) + 20);
++	       sprintf(newstring, "_: %s\n%s", msgid, token.string);
++	       free(msgid);
++	       free(token.string);
++	       token.string = msgid = newstring;
++	       state = 2;
++	     }
+ 	   }
+-	 else
++	 else 
+ 	   {
+ 	     free (token.string);
+ 	     state = (state == 4 || state == 5) ? 5 : 0;
