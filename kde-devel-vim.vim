@@ -234,9 +234,9 @@ function! MapIdentHeader( ident )
         return '<kstandarddirs.h>'
 
     " Standard Library stuff
-    elseif a:ident =~ '\(std::\)?\(cout|cerr|endl\)'
+    elseif a:ident =~ '\(std::\)\?\(cout\|cerr\|endl\)'
         return '<iostream>'
-    elseif a:ident =~ '\(std::\)?is\(alnum|alpha|ascii|blank|graph|lower|print|punct|space|upper|xdigit\)'
+    elseif a:ident =~ '\(std::\)\?is\(alnum\|alpha\|ascii\|blank\|graph\|lower\|print\|punct\|space\|upper\|xdigit\)'
         return '<cctype>'
     endif
 
