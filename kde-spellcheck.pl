@@ -1207,6 +1207,7 @@ sub processDir($)
         next if ($e eq "CVS");
         next if ($e =~ /\.desktop$/);
         next if ($e =~ /^\./);
+        next if ($e =~ /\.moc$/);
         push (@dirqueue, "$d/$e") if (-d ("$d/$e"));
         next if (-d ("$d/$e"));
 
