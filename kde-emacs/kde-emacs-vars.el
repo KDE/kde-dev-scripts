@@ -100,6 +100,12 @@
   :group 'kde-devel
   :type 'boolean)
 
+(defcustom kde-emacs-newline-semicolon nil
+  "Set this to true to have typing \";\" automatically insert
+a newline."
+  :group 'kde-devel
+  :type 'boolean)
+
 (defcustom kde-header-protection-parts-to-show 1
   "Set this variable to the number of parts from the file name you want to be used for the defined word in the 
 header-protection function..  E.g. setting this to 3 makes header-protection define KIG_MISC_NEWTYPE_H for a 
@@ -112,6 +118,8 @@ file named /home/domi/src/kdenonbeta/kig/misc/newtype.h"
 magic-keys-mode is set to true. "
   :group 'kde-devel
   :type 'string)
+
+
 
 ; a grep in the part of kde-source I have gives: 
 ; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
