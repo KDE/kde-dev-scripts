@@ -701,7 +701,7 @@ for module in $modules; do
       log_section "Linking $cmd_make"
       log_cmd "$cmd_make"
       link_ret=$?
-      if [ "$link_ret" -eq 0]; then
+      if [ "$link_ret" -eq 0 ]; then
         if [ -n "$KDELOGDIR" ]; then
           log_endsection "Linking"
         fi
@@ -717,7 +717,7 @@ for module in $modules; do
     #
     cmd_make_install="$MAKE"
     [ $critical -eq 0 ] && cmd_make_install="$cmd_make_install -k"
-    ["$NICECOMPILE" = yes ] && cmd_make_install="nice $cmd_make_install"
+    [ "$NICECOMPILE" = yes ] && cmd_make_install="nice $cmd_make_install"
     cmd_make_install="$cmd_make_install install"
     if [ ! -w $KDEDIRS ]; then
       eval "$cmd_sudo $cmd_make_install"
@@ -727,7 +727,7 @@ for module in $modules; do
   else
     echo -e "$str_error"
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
-    [ $critical -eq 0 || exit $err_compile_fail
+    [ $critical -eq 0 ] || exit $err_compile_fail
     # Attempt to display the actual error
     grep -B3 Error $logfile | head -2
     move_logfile
