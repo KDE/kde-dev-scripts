@@ -31,7 +31,7 @@ sub usage
 {
   warn <<"EOF";
 
-spellcheck [flags] filenames/directories
+kde-spellcheck2.pl [flags] filenames/directories
 
 This script checks for, and optionally replaces, commonly misspelled words
 with the correct US English equivalents. The behaviour has changed from
@@ -74,7 +74,7 @@ my $DICTIONARY = build_dictionary_lookup_table();
 ###########################################################################################
 # Add options here as necessary - perldoc Getopt::Long for details on GetOptions
 
-die "spellcheck --help for usage\n"
+die "kde-spellcheck2 --help for usage\n"
       unless GetOptions ( "check-dictionary"    => \my $opt_check_dictionary,
                           "suggest-corrections" => \my $opt_suggest_corrections,
                           "quiet"               => \my $opt_quiet,
