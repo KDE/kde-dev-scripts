@@ -117,10 +117,12 @@
     (qwsregionmanager_qws.h QWSRegionManager)
     (qwssocket_qws.h QWSSocket QWSServerSocket)
     (qwswindowsdecoration_qws.h QWSWindowsDecoration)
+    (qstatusbar.h statusBar())
 
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
     (kconfig.h KConfigGroup)
+    (kicondialog.h KIconCanvas KIconButton)
 
     ; KDGear - http://www.klaralvdalens-datakonsult.se
     (KDCheckableGroupBox.h KDCheckableGroupBox)
@@ -156,6 +158,7 @@
     (KDChartPlaneSeries.h KDChartPlaneSeries)
     (KDChartPropertySet.h KDChartPropertySet)
     (KDChartSeriesCollection.h  KDChartSeriesCollection)
+    (KDChartTable.h KDChartTableData)
     (KDChartTableBase.h KDChartTableDataBase)
     (KDChartTextPiece.h KDChartTextPiece)
     (KDChartUnknownTypeException.h KDChartUnknownTypeException)
