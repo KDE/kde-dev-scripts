@@ -250,7 +250,7 @@
   (save-excursion
     (let* ((word-at-point (if prefix
                               (read-from-minibuffer "Class: ")
-                            current-word)))
+                            (current-word)))
            (word (downcase word-at-point))
            (special-header (cond
                     ((kdab-map-special word) (kdab-map-special word))
