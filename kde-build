@@ -78,7 +78,7 @@ err_no_config="11"
 # script is aborted in case on of these modules doesn't build.
 # These modules needs to be build and installed in this specific order!
 #
-critical_modules="kdesupport kdelibs kdebase"
+critical_modules="kdesupport arts kdelibs kdebase"
 
 # Internal variable, do not change.
 #
@@ -131,7 +131,27 @@ install_module() {
   fi
 }
 
+check_admin() {
+  if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
+    if test -d ../kde-common; then
+      ln -s ../kde-common/admin .
+      echo "Making link to ../kde-common/admin" >> $logfile 2>&1
+    else
+      echo "WARNING: Could not find admin/ subdirectory for this module!" >> $logfile 2>&1
+    fi
+  fi
+}
 
+check_libltdl() {
+  if test "x$module" == xarts -a ! -e libltdl/Makefile.am; then
+    if test -d ../kdelibs; then
+      ln -s ../kdelibs/libltdl .
+      echo "Making link to ../kdelibs/libltdl" >> $logfile 2>&1
+    else
+      echo "WARNING: Could not find libltdl/ subdirectory for this module!" >> $logfile 2>&1
+    fi
+  fi
+}
 
 # Show help info
 #
@@ -301,11 +321,7 @@ for module in $modules; do
     eval ${cmd_update_raw}
 
     if test "x$module" != xkde-common -a "x$CVSCLIENT" = xcvs -a ! -e admin/Makefile.common; then
-      if test -d ../kde-common; then
-        ln -s ../kde-common/admin .
-      else
-        echo "WARNING: Could not find admin/ subdirectory for this module!"
-      fi
+      check_admin
     fi
     if test "x$CVS_CLEAN" = xyes -a -e admin/Makefile.common; then
       cmd_make_cvs_clean="make -f admin/Makefile.common cvs-clean"
@@ -314,6 +330,8 @@ for module in $modules; do
     
     if eval ${cmd_make_cvs_clean}; then
       if test -e Makefile.cvs; then
+        check_admin
+        check_libltdl
         cmd_make_makefile_cvs="make -f Makefile.cvs"
         test "x$KDELOGDIR" != x && cmd_make_makefile_cvs="$cmd_make_makefile_cvs >> $logfile 2>&1"
         if eval ${cmd_make_makefile_cvs}; then
