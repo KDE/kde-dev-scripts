@@ -79,9 +79,9 @@ diff -ru src/xget-lex.h gettext-0.10.35.new/src/xget-lex.h
  };
  typedef enum xgettext_token_type_ty xgettext_token_type_ty;
  
-diff -ru gettext-0.10.35/src/xgettext.c gettext-0.10.35.new/src/xgettext.c
---- gettext-0.10.35/src/xgettext.c	Wed Apr 29 18:57:50 1998
-+++ gettext-0.10.35.new/src/xgettext.c	Mon Apr  2 18:35:02 2001
+diff -ru src/xgettext.c gettext-0.10.35.new/src/xgettext.c
+--- src/xgettext.c	Wed Apr 29 18:57:50 1998
++++ src/xgettext.c	Mon Apr  2 18:35:02 2001
 @@ -835,7 +835,8 @@
       int is_cpp_file;
  {
