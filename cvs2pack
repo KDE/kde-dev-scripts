@@ -86,6 +86,8 @@ sub main
 	push @fromfiles, basedirFiles();
 
 # admin files
+# Special case is when admin dir is a link, then link is not properly made
+# This is now covered by using different options to cp
 	push @fromfiles, "\"$basedir/admin\"";
 
 # override files
@@ -113,7 +115,7 @@ sub main
 	$src =~ s/\n/ /g;
 
 	print "$myname: No. files in copy queue: ", $#fromfiles + 1,"\n";
-	system "cp -a $src \"$packagedir\"";
+	system "cp -pRL $src \"$packagedir\"";
 
 # files to remove
 
@@ -135,6 +137,10 @@ sub main
 	
 	close RM;
 
+# Creating a Makefile.am for the top dir
+
+	ModifyMakefileAm( $package, $packagedir );
+
 # Run Makefile.cvs
 	print "$myname: Running Makefile.cvs...\n";
 	system "cd \"$packagedir\" && make -f Makefile.cvs".
@@ -149,16 +155,14 @@ sub main
 	print "Working dir:", `pwd`, "\n";
 # Create tar.gz file
 
-	print "$myname: tarring... ";
-	system "tar cf \"$packagedir.tar\" \"$packagedir\"";
+	print "tar cjf \"$packagedir.tar.bz2\" \"$packagedir\"\n";
+	system "tar cjf \"$packagedir.tar.bz2\" \"$packagedir\"\n";
+	print "tar czf \"$packagedir.tar.gz\" \"$packagedir\"\n";
+	system "tar czf \"$packagedir.tar.gz\" \"$packagedir\"\n";
 
-	print "$packagedir.tar\n$myname: gzipping... ";
-	system "gzip -9 < \"$packagedir.tar\" > \"$packagedir.tar.gz\" ";
-
-	print "$packagedir.tar.gz\n$myname: bzipping... ";
-	system "bzip2 < \"$packagedir.tar\" > \"$packagedir.tar.bz2\" ";
-	print "$packagedir.tar.bz2\n"
-
+	print "Cleaning up after ourselves:\n";
+	print "rm -rf \"$packagedir\"\n";
+	system "rm -rf \"$packagedir\"\n"; 
 }
 
 sub basedirFiles
@@ -192,6 +196,29 @@ sub MakefileCVS
 {
 }
 
+sub ModifyMakefileAm
+{
+	my ( $package, $packagedir ) = @_;
+
+	my $old = "$packagedir/Makefile.am";
+	my $new = "$packagedir/Makefile.am.new";
+	my $bak = "$packagedir/Makefile.am.orig";
+
+	open ( OLD, "< $old" ) or die ( "Can't open $old: $!" );
+	open ( NEW, "> $new" ) or die ( "Can't open $new: $!" );
+
+	# Correct SUBDIRS variable
+	while (<OLD>) {
+		s/SUBDIRS.*=.*\n/SUBDIRS=\$\(TOPSUBDIRS\)\n/i;
+		(print NEW $_) or die "Can't write to $new: $!";
+	}
+
+	close ( OLD ) or die ( "Can't close $old: $!" );
+	close ( NEW ) or die ( "Can't close $new: $!" );
+
+	rename( $old, $bak ) or die ( "Can't rename $old to $bak: $!" );
+	rename( $new, $old ) or die ( "Can't rename $new to $old: $!" );
+}
 
 =head1 DESCRIPTION
 
