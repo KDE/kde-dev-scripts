@@ -75,6 +75,7 @@ my %fix = (
 	 "agressively" => "aggressively",
 	 "alligned" => "aligned",
 	 "alignement" => "alignment",
+	 "allmost" => "almost",
 	 "allready" => "already",
 	 "alrady" => "already",
 	 "Allways" => "Always",
