@@ -4,6 +4,10 @@
 # - optionally (default) remove optimizations (-O[1-9]?)
 # - optionally remove -DNDEBUG and -DNO_DEBUG
 
+if [ -f Makefile.rules ]; then
+    echo "Warning, unsermake detected. adddebug can add -g3 but can't remove flags (like -O2 or -DNDEBUG)"
+fi
+
 mxdp="-maxdepth 1"
 for i in $*; do
   case $i in
@@ -24,3 +28,9 @@ if test -z $ndebug; then
   xpr="$xpr;"'s/[\t ]-DNO_DEBUG\b//g'
 fi
 find . $mxdp -name Makefile -exec perl -pi -e "$xpr" {} \;
+
+# unsermake support
+if [ -f Makefile.rules ]; then
+  xpr='s/(\$\(CXXFLAGS\) )/\1 -g3 /'
+  find . $mxdp -name Makefile.rules -exec perl -pi -e "$xpr" {} \;
+fi
