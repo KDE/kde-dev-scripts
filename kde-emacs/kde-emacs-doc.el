@@ -132,7 +132,7 @@ Free Documentation License\"."
 ;*---------------------------------------------------------------------*/
 
 (defun kde-license-header ()
-  (let ((ret (buffer-name)))
+  (let ((ret (file-name-nondirectory (buffer-file-name))))
     (setq ret (concat ret " \n\n"))
     (setq ret (concat ret "Copyright (C)  " (format-time-string "%Y  ")
 		      kde-full-name " <"kde-email">\n\n"))
