@@ -158,6 +158,7 @@ check_libltdl() {
 if test "$1" = "--help"; then
     echo "--no-update    do not update from cvs"
     echo "--help         this message"
+    exit $err_no_error
 fi
 
 # Get current configuration, bail out if it couldn't be found.
