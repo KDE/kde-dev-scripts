@@ -1,27 +1,28 @@
 #!/usr/bin/perl -w
 # fixuifiles processes .ui files and removes some insanity:
 # * Too high minimum Qt version (see $minversion_* in the top of the script)
-# * Hardcoded untranslatable Alt+Letter accels
-# * TODO: generated form names
+# * Hardcoded untranslatable Alt+Letter accels (auto-added by Qt Designer)
+# * Captions that are equal to classname (auto-added by Qt Designer)
 
 # This script is licensed under the GPL version 2.
 # (c) 2004 David Faure <faure@kde.org>
 # Based on fixkdeincludes, (c) 2001-2003 Dirk Mueller <mueller@kde.org>
 
+use strict;
 use File::Basename;
 use Cwd;
 
 # Fix the version number in .ui files if it's bigger than this:
-$minversion_maj = 3;
-$minversion_min = 2;
+my $minversion_maj = 3;
+my $minversion_min = 2;
 
 # declaration of useful subroutines
 sub process_ui_file($);
 sub find_ui_files($);
 
 # some global variables
-$verbose = 0; # turns on debugging
-@explicitfiles = (); # filled in if passing files on the command line
+my $verbose = 0; # turns on debugging
+my @explicitfiles = (); # filled in if passing files on the command line
 
 while (defined ($ARGV[0]))
 {
@@ -51,13 +52,14 @@ sub find_ui_files($)
 
   # prefix them with $dir
   my @retfiles = ();
-  foreach $file(@files) {
+  foreach my $file(@files) {
     push @retfiles, "$dir/$file";
   }
 
   return @retfiles;
 }
 
+# Ensure the version at the top of the file is not too high
 sub fix_version($)
 {
   my $srcfile = shift @_;
@@ -67,7 +69,7 @@ sub fix_version($)
   close(SRC);
   my $needfix = 0;
   my $foundversion = 0;
-  foreach $line (@contents) {
+  foreach my $line (@contents) {
       if (!$foundversion && $line =~ m/version=\"([0-9]+)\.([0-9]+)\"/) {
 	  my $version_maj = $1;
 	  my $version_min = $2;
@@ -88,6 +90,7 @@ sub fix_version($)
   }
 }
 
+# Ensure no auto-added Alt+letter accel exists - those are untranslatable
 sub fix_accels($)
 {
   my $srcfile = shift @_;
@@ -95,6 +98,7 @@ sub fix_accels($)
   my @contents = <SRC>;
   close(SRC);
   return if ( !grep( /<string>Alt\+[A-Z]<\/string>/, @contents ));
+  my @fixedcontents = ();
 
   my $firstline;
   my $accelsremoved = 0;
@@ -102,7 +106,7 @@ sub fix_accels($)
   # inside_accel is 0 before <property>
   # 1 after <property> and before <string>
   # 2 after <string> if alt+letter, and before </property>
-  foreach $line (@contents) {
+  foreach my $line (@contents) {
       if ( $inside_accel == 1 ) {
 	  if ( $line =~ m/<string>(Alt\+[A-Z])<\/string>/ ) {
 	      print "$srcfile: accel $1 removed\n" if ($verbose);
@@ -123,8 +127,56 @@ sub fix_accels($)
       $inside_accel = 0 if ($inside_accel && $line =~ m/<\/property>/);
   }
   if ($accelsremoved) {
-      print "$srcfile: $accelsremoved accels removed\n" if ($verbose);
+      print "$srcfile: $accelsremoved accels removed\n";
       open(SRC, "> $srcfile") || die "fix_accels: couldn't open '$srcfile' for writing\n";
+      print SRC @fixedcontents;
+      close(SRC);
+  }
+}
+
+# Ensure no auto-added caption exists - it's pretty stupid to have to
+# translate Form1 or MyClassName
+sub fix_captions($)
+{
+  my $srcfile = shift @_;
+  open(SRC, "< $srcfile") || die "fix_captions: couldn't open '$srcfile'\n";
+  my @contents = <SRC>;
+  close(SRC);
+  my @fixedcontents = ();
+
+  my $firstline;
+  my $class = "";
+  my $captionsremoved = 0;
+  my $inside_caption = 0;
+  # inside_caption is 0 before <property>
+  # 1 after <property> and before <string>
+  # 2 after <string> if caption should be removed, and before </property>
+  foreach my $line (@contents) {
+      $class = $1 if ($line =~ m/<class>(.*)<\/class>/);
+      if ( $inside_caption == 1 ) {
+	  $line =~ m/<string>(.*)<\/string>/ || die "Malformed XML (no string under caption)";
+	  my $caption = $1;
+	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
+	  if ( $caption eq $class ) {
+	      print "$srcfile: removing caption '$caption'\n";
+	      $inside_caption = 2;
+	      $captionsremoved++;
+	  } else {                # Real caption, keep it
+	      push @fixedcontents, $firstline;
+	      $inside_caption = 0;
+	  }
+      }
+      if ($line =~ m/property name=\"caption\"/) {
+	  $inside_caption = 1;
+	  $firstline = $line;
+      }
+      if ($inside_caption == 0) {
+	  push @fixedcontents, $line;
+      }
+      $inside_caption = 0 if ($inside_caption && $line =~ m/<\/property>/);
+  }
+  if ($captionsremoved) {
+      open(SRC, "> $srcfile") || die "fix_captions: couldn't open '$srcfile' for writing\n";
       print SRC @fixedcontents;
       close(SRC);
   }
@@ -133,11 +185,12 @@ sub fix_accels($)
 # Process one .ui file
 sub process_ui_file($)
 {
-  local $file = shift @_;
+  my $file = shift @_;
   my $pure = basename($file);
   print "Checking: $file\n" if($verbose);
   &fix_version($file);
   &fix_accels($file);
+  &fix_captions($file);
 }
 
 #############################################################################
@@ -146,16 +199,16 @@ sub process_ui_file($)
 
 # process files from the command line, if any
 if ( $#explicitfiles >= 0 ) {
-  foreach $file( @explicitfiles ) {
+  foreach my $file( @explicitfiles ) {
     &process_ui_file( $file );
   }
   exit 0;
 }
 
 # first generate a list of subdirectories
-@dirlist = ();
+my @dirlist = ();
 push @dirlist, ".";
-foreach $dir ( @dirlist ) {
+foreach my $dir ( @dirlist ) {
  opendir (DIR, "$dir") || warn "Couldn't read '$dir'";
  my $subdir = "";
  while( $subdir = readdir(DIR)) {
@@ -167,9 +220,9 @@ foreach $dir ( @dirlist ) {
 }
 
 # now iterate over all subdirs
-foreach $dir(@dirlist) {
-  @uifile = find_ui_files($dir);
-  foreach $file(@uifile) {
+foreach my $dir(@dirlist) {
+  my @uifile = find_ui_files($dir);
+  foreach my $file(@uifile) {
     &process_ui_file($file);
   }
 }
