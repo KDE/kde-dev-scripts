@@ -27,7 +27,7 @@ open(FILE, $filename);
 while ( <FILE> ) {
    $linenr++;
    if ($linenr == 1 && ! /<!DOCTYPE/) {
-   	exit 0;
+   	next;
    }
 
    $string .= $_;   
