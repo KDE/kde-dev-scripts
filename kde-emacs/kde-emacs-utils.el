@@ -84,50 +84,60 @@
 	(msubstr nil)
         (start nil))
     (save-excursion
-      (while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
-	(save-excursion
-             (forward-word 1)
-             (while (looking-at "[ \t]*Q_EXPORT")
-               (forward-word 2))
-             (while (looking-at "[ \t]")
-               (forward-char 1))
-             (setq start (point))
-             (while (looking-at "[A-Za-z0-9_:]")
-               (forward-char 1))
-             (cond 
-	      (class ; class found already, so the rest goes into the namespace
-	       (setq namespace (concat (buffer-substring start (point)) "::" namespace)))
-	      (t ;class==nil
-	       (setq class (buffer-substring start (point)))))
-	     )
+      (progn
         ; Go up a level, skipping entire classes etc.
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
 	(let ((pos (scan-lists (point) -1 1 nil t)))
-          ; +1 added here so that the regexp in the while matches the { too.
+        ; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
-	))
+	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
+	  (save-excursion
+	    (forward-word 1)
+	    (while (looking-at "[ \t]*Q_EXPORT")
+	      (forward-word 2))
+	    (while (looking-at "[ \t]")
+	      (forward-char 1))
+	    (setq start (point))
+            ; Parse class name ("Foo" or "Foo::Bar::Blah"). 
+            ; Beware of "Foo:"
+	    (while (or (looking-at "[A-Za-z0-9_]") (looking-at "::"))
+	      (while (looking-at "[A-Za-z0-9_]")
+		(forward-char 1))
+	      (while (looking-at "::")
+		(forward-char 2))
+	      )
+	    (cond 
+	     (class			; class found already, so the rest goes into the namespace
+	      (setq namespace (concat (buffer-substring start (point)) "::" namespace)))
+	     (t				; class==nil
+	      (setq class (buffer-substring start (point)))))
+	    )
+        ; Go up one level again
+	(let ((pos (scan-lists (point) -1 1 nil t)))
+	  (goto-char (if pos (+ pos 1) (point-min))))
+	)))
+    ; Back to where we were, parse function name
     (progn
       (and (looking-at "$")
            (progn
              (search-backward ")" nil t)
              (forward-char)
              (backward-sexp)))
-      (and (stringp class)
-           (re-search-backward "^[ \t]*")
-           (progn
-             (while (looking-at "[ \t]")
-               (forward-char 1))
-             (setq start (point))
-             (and (search-forward "(" nil t)
-                  (progn
-                    (forward-char -1)
-                    (forward-sexp)))
-             (and (looking-at "[ \t]+const")
-                  (forward-word 1))
-             (and (looking-at ";")
-                  (setq function (buffer-substring start (point))))
-             (re-search-forward "(" nil t))))
+      (re-search-backward "^[ \t]*")
+      (progn
+	(while (looking-at "[ \t]")
+	  (forward-char 1))
+	(setq start (point))
+	(and (search-forward "(" nil t)
+	     (progn
+	       (forward-char -1)
+	       (forward-sexp)))
+	(and (looking-at "[ \t]+const")
+	     (forward-word 1))
+	(and (looking-at ";")
+	     (setq function (buffer-substring start (point))))
+	(re-search-forward "(" nil t)))
     (and (stringp function)
          (progn ;; get rid of virtual, static, multiple spaces, default values.
            (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
@@ -136,77 +146,84 @@
                 (setq function (replace-match "" t t function)))
            (and (string-match "^\\(static\\>\\)?[ \t]*" function)
                 (setq function (replace-match "" t t function)))
-           (while (string-match "  +" function)
+           (while (string-match "  +" function) ; simplifyWhiteSpace
              (setq function (replace-match " " t t function)))
-           (while (string-match "^ " function)
-             (setq function (replace-match "" t t function)))
            (while (string-match "\t+" function)
              (setq function (replace-match " " t t function)))
-           (while (string-match " ?=[^,)]+" function)
-             (setq function (replace-match " " t t function)))
-           (while (string-match " +," function)
+           (while (string-match "^ " function)  ; remove leading whitespace
+             (setq function (replace-match "" t t function)))
+	   (let ((startargs (string-match "(" function)))
+		(while (string-match " ?=[^,)]+" function startargs) ; remove default values
+		  (setq function (replace-match " " t t function))))
+           (while (string-match " +," function) ; remove space before commas
              (setq function (replace-match "," t t function)))))
     (and (stringp function)
-         (stringp class)
          (stringp file)
-         (progn
-           (cond ((string-match (concat "^ *" class "[ \\t]*(") function) ; constructor
-                  (progn
-                  (setq insertion-string
-                        (concat
-                         (replace-match
-                          (concat namespace class "::" class "(")
-                          t t function)
-                         "\n{\n    \n}\n"))))
-                  ((string-match (concat "^ *~" class "[ \\t]*(") function) ; destructor
-                   (progn
-                     (setq insertion-string
-                           (concat
-                            (replace-match
-                             (concat namespace class "::~" class "(")
-                             t t function)
-                            "\n{\n    \n}\n"))))
-                  ((string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function)
-                   (progn
-                     (setq insertion-string
-                           (concat
-                            (replace-match
-                             (concat " " namespace class "::" "\\1(")
-                             t nil function)
-                            "\n{\n    \n}\n"))))
-                  (t
-                   (error (concat "Can't parse declaration ``"
-                                  function "'' in class ``" class
-                                  "'', aborting"))))
-           (stringp insertion-string)))
-        (if (string-match "\\.h$" file)
-	    (kde-switch-cpp-h)
-	  )
-	(progn
-           (goto-char (point-max))
-	   (kde-comments-begin)
-	   (kde-skip-blank-lines)
-	   (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
-	   (if (string-match "^#include.*moc.*" msubstr)
-	       (progn 
-		 (forward-line -1)
-		 (end-of-line)
-		 (insert "\n")))
-	   (if (string-match "}" msubstr)
-	       (progn
-		 (end-of-line)
-		 (insert "\n")
-		 (forward-line 1)
-	     ))
-	   (insert insertion-string)
-	   (forward-char -3)
-	   (c-indent-command)
-	   (save-excursion
-	     (and (string-match ".*/" file)
-		  (setq file (replace-match "" t nil file)))
-	     (and (string-match "\\.h$" file)
-		  (functionp 'kdab-insert-include-file)
-		  (kdab-insert-include-file file 't nil)))))
+	 (progn
+	   (and (stringp class)
+		(cond
+		 ((string-match (concat "^ *" class "[ \\t]*(") function) ; constructor
+		  (progn
+		    (setq insertion-string
+			  (concat
+			   (replace-match
+			    (concat namespace class "::" class "(")
+			    t t function)
+			   "\n{\n    \n}\n"))))
+		 ((string-match (concat "^ *~" class "[ \\t]*(") function) ; destructor
+		  (progn
+		    (setq insertion-string
+			  (concat
+			   (replace-match
+			    (concat namespace class "::~" class "(")
+			    t t function)
+			   "\n{\n    \n}\n"))))
+		 ))			; end of "class required"
+	   (if (not (stringp insertion-string)) ; no ctor nor dtor
+	       (if (or (string-match " *\\([a-zA-Z0-9_]+\\)[ \\t]*(" function) ; normal method
+		       (string-match " *\\(operator[^ \\t]+\\)[ \\t]*(" function)) ; operator
+		   (progn
+		     (setq insertion-string
+			   (concat
+			    (replace-match
+			     (if class
+				 (concat " " namespace class "::" "\\1(") ; c++ method
+			       (concat " " "\\1(")) ; c function
+			     t nil function)
+			    "\n{\n    \n}\n")))
+					; else
+		 (error (concat "Can't parse declaration ``"
+				function "'' in class ``" class
+				"'', aborting")))))
+	 (stringp insertion-string))
+    (if (string-match "\\.h$" file)
+	(kde-switch-cpp-h)
+      )
+    (progn
+      (goto-char (point-max))
+      (kde-comments-begin)
+      (kde-skip-blank-lines)
+      (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
+      (if (string-match "^#include.*moc.*" msubstr)
+	  (progn 
+	    (forward-line -1)
+	    (end-of-line)
+	    (insert "\n")))
+      (if (string-match "}" msubstr)
+	  (progn
+	    (end-of-line)
+	    (insert "\n")
+	    (forward-line 1)
+	    ))
+      (insert insertion-string)
+      (forward-char -3)
+      (c-indent-command)
+      (save-excursion
+	(and (string-match ".*/" file)
+	     (setq file (replace-match "" t nil file)))
+	(and (string-match "\\.h$" file)
+	     (functionp 'kdab-insert-include-file)
+	     (kdab-insert-include-file file 't nil)))))
   (when (featurep 'fume-rescan-buffer)
     (fume-rescan-buffer))
   )
