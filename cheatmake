@@ -1,0 +1,57 @@
+#!/bin/sh
+# Helper for saving time when recompiling, skipping files that haven't
+# changed in a meaningful way (e.g. if you only change a comment...)
+#
+# LGPL v2, David Faure <david@mandrakesoft.com>
+
+usage()
+{
+  echo "Usage:"
+  echo " $0 hidechange file    Hides the fact that file was changed (use with care!)"
+  echo " $0 show               Lists what make currently has to rebuild"
+  echo " $0 why file           Explains why make must rebuild file"
+  exit 1;
+}
+
+if [ $# -eq 0 ]; then usage; fi
+CDPATH=
+builddir=$PWD
+
+# 'srcdir != builddir' stuff
+if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
+  builddir=$OBJ_SUBDIR
+else
+  if test ! -f Makefile && test -n "$OBJ_REPLACEMENT"; then
+     builddir=`pwd | sed -e "$OBJ_REPLACEMENT"`
+  fi
+fi
+
+if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
+   builddir=$OBJ_SUBDIR
+fi 
+cd $builddir
+srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+
+case $1 in
+  hidechange )
+    if [ $# -ne 2 ]; then usage; fi
+    deps=`make -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'`;
+    if [ -n "$deps" ]; then
+      oldestdep=`ls -t $deps| tail -1`
+      thefile=$2
+      if [ -f $srcdir/$thefile ]; then
+          thefile=$srcdir/$thefile
+      fi
+      echo "touch -r $oldestdep $thefile" ; touch -r $oldestdep $thefile
+    fi
+    ;;
+  show )
+    if [ $# -ne 1 ]; then usage; fi
+    make -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
+    ;;
+  why )
+    if [ $# -ne 2 ]; then usage; fi
+    make -n -d $2 | egrep -e '(newer|Must)'
+    ;;
+  * ) usage ;;
+esac
