@@ -12,8 +12,10 @@ use Time::Local qw( timegm );
 @merged = ();
 @uncommitted = ();
 @missing = ();
+@tagged = ();
 
 $reportmissing = 1;
+$reporttagged = 0;
 
 @monthlist = ( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
  "Sep", "Oct", "Nov", "Dec" );
@@ -51,12 +53,17 @@ sub processEntries
 			next;
 		}
 
-		next if !m#^\s*/([^/]+)/([\d\.]*)/([^/]+)/#;
+		next if !m#^\s*/([^/]+)/([\d\.]*)/([^/]+)/(/T)?(\w+)?#;
 
 		$fname = $1;
 		$ver = $2;
 		$stamp = $3;
-		
+		$tag = $5;
+
+		if ( !( $tag eq "" ) ) {
+			push @tagged, "$dir/$fname - $tag";
+		}
+
 		if ( $stamp =~ /merge/ ) {
 			push @merged, "$dir/$fname";
 			next;
@@ -92,6 +99,7 @@ sub processEntries
 # month assoc array for name -> index lookups
 $mctr = 0;
 $reportmissing = 0 if ($ENV{"REPORTMISSING"} eq 'no');
+$reporttagged = 0 if ($ENV{"REPORTTAGGED"} eq 'no');
 
 foreach $month ( @monthlist ) {
 	$months{ $month } = $mctr;
@@ -120,6 +128,13 @@ if ( $#missing >= 0 && $reportmissing) {
 if ( $#merged >= 0 ) {
 	print "\nMerged files:\n\n";
 	foreach $f ( @merged ) {
+		print $f,"\n";
+	}
+}
+
+if ( $#tagged >= 0 && $reporttagged ) {
+	print "\nTagged files:\n\n";
+	foreach $f ( @tagged ) {
 		print $f,"\n";
 	}
 }
