@@ -31,6 +31,7 @@ for file in $*
 do
   license=""
   gl=""
+  qte=""
   header=`head -30 $file| sed 's/	/ /g;s/$/ /g' | tr -d -c ' A-Za-z.,/@1-9()'`
   if test ! -z "$verbose"; then
     echo "----- header -----"
@@ -40,7 +41,7 @@ do
   if echo $header | egrep "$gpl_lateroption" >/dev/null; then
     gl=" (version 2 or later)"
   fi
-  if echo $header | egrep "$gpl_lateroption" >/dev/null; then
+  if echo $header | egrep "$gpl_qtexception" >/dev/null; then
     qte=" with Qt exception"
   fi
    if echo $header | egrep "$lgpl" >/dev/null; then
