@@ -3,8 +3,6 @@
 # this script is written by Stephan Kulow <coolo@kde.org> with
 # much help from Sirtaj Singh Kang <ssk@physics.unimelb.edu.au>
 
-%files = ();
-
 if ($ARGV[0]) {
   $topdir = $ARGV[0];
 } else {
@@ -23,7 +21,7 @@ $lastdir = '.';
  'warning: implicit declaration of function `int i18n\(\.\.\.\)\'' => "klocale",
  '`i18n\' undeclared \(first use this function\)' => "klocale",
  'variable `class QPixmap \S*\' has initializer but incomplete type' => "qpixmap",
- '`kapp\' undeclared \(first use this function\)' => "kapp",
+ '`kapp\' undeclared \(first use this function\)' => "kapplication",
  'no matching function for call to `KLocale::' => "klocale",
  '`klocale\' undeclared \(first use this function\)' => "klocale",
  'no matching function for call to `QPopupMenu::' => "qpopupmenu",
@@ -37,6 +35,8 @@ $lastdir = '.';
  '`QFile\' undeclared \(first use this function' => "qfile",
  'type `KConfigBase\' is not a base type for type `KConfig' => "kconfig",
  'invalid use of undefined type `class QAccel' => "qaccel",
+ 'invalid use of undefined type `class KAboutData' => "kaboutdata",
+ 'incomplete type `KAboutData\'.*' => "kaboutdata",
  'aggregate `class KConfig \S*\' has incomplete type' => "kconfig",
  '`stderr\' undeclared \(first use this function' => "stdio",
  'invalid use of undefined type `class KConfig' => "kconfig",
@@ -52,11 +52,17 @@ $lastdir = '.';
  '`QMessageBox\' undeclared \(first use this function\)' => "qmessagebox",
  'no matching function for call to `QBoxLayout::QBoxLayout' => "qlayout",
  '`QUriDrag\' undeclared \(first use this function\)' => "qdragobject",
+ '`kdDebug\' undeclared \(first use this function\)' => "kdebug",
+ '`kdWarning\' undeclared \(first use this function\)' => "kdebug",
  'no matching function for call to `KMenuBar::' => "kmenubar",
  'invalid use of undefined type `class QPointArray' => "qpointarray",
  'variable `QPainter \S*\' has initializer but incomplete type' => "qpainter",
  'invalid use of undefined type `class QRegExp' => "qregexp",
+ 'invalid use of undefined type `class QPushButton' => "qpushbutton",
+ 'invalid use of undefined type `class QButton' => "qbutton",
  'no method `QCursor::pos' => "qcursor",
+ '`DesktopIcon\' undeclared \(first use this function\)' => "kiconloader",
+ '`SmallIcon\' undeclared \(first use this function\)' => "kiconloader",
 );
 
 %changes = ();
@@ -75,12 +81,13 @@ while(<>)
     if ($file !~ m,^\/,) {
       $file = "$lastdir/$file";
     }
-    
+     print STDERR "file=$file\n";
   } else {
     print STDERR $_;
     next;
   }
   
+  print STDERR "Already having changes for $file\n" if defined($changes{$file});
   next if defined($changes{$file});
 
   print STDERR $_;
@@ -135,7 +142,7 @@ sub fixFile
   }
   if ($flines =~ /(\n$lastinclude)/) {
     $flines =~ s/$lastinclude/$lastinclude\n#include <$adding.h>/;
-      print STDERR "ADDED after \"$lastinclude\" $adding.h\n";
+      print STDERR "ADDED <$adding.h> after \"$lastinclude\"\n";
     $success = 1;
   } else {
     print STDERR "ERROR: can't find $lastinclude in $file\n";
