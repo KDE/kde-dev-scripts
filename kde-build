@@ -143,7 +143,7 @@ log_endsection() {
   [ -z "$logfile" ] && return 0
   compute_time
   echo "----------------------------------------------------------------------------" >> $logfile 2>&1
-  printf "%s for module %s done. Time needed: %02d:%02d:%02d\n" $1 $module $hours $minutes $seconds >> $logfile 2>&1
+  printf "%s for module %s done. Time needed: %02d:%02d:%02d\n" "$1" $module $hours $minutes $seconds >> $logfile 2>&1
   echo "" >> $logfile 2>&1
 }
 
