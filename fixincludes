@@ -1,0 +1,178 @@
+#!/usr/bin/perl -w
+# tries to reduce the number of includes in KDE source files
+# (c) 2001 Dirk Mueller <mueller@kde.org>
+
+$verbose = 0; # turns on debugging
+$modify = 1;  # if 1 it should try to fix the files as well
+
+$cppExt     = "(cpp|cc|cxx|C|c\\+\\+)";
+#$hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
+
+
+sub find_fixable_sources ()
+{
+  # for now I grep the directory (requires srcdir==builddir)
+  # actually it should read the Makefile and
+  # find the _SOURCES / _OBJECTS tags that are put there by
+  # automake and am_edit, but thats an excercise to the reader ;-)
+
+  my ( $dir ) = @_;
+
+  opendir (DIR, "$dir") || die "Couldn't read '$dir'\n";
+  my @sources = grep { /^.*\.$cppExt$/o } readdir(DIR);
+  closedir(DIR);
+  
+  print "found sources: [ " . join(' ', @sources) . " ] in $dir\n" if ($verbose);
+
+  # prefix them with $dir
+  my @retsources = ();
+  foreach $source(@sources) {
+    push @retsources, "$dir/$source";
+  }
+  
+  return @retsources;
+}
+
+sub find_removable_includes ($)
+{
+  my $srcfile = shift @_;
+  open(SRC, "< $srcfile") || die "couldn't open '$srcfile'\n";
+  
+  my @includes = ();
+
+  # we skip all inludes that are somehow ifdefed
+
+  my $cpplevel = 0;
+  while (<SRC>) {
+    if ($_ =~ m/^\#if/) {
+      $cpplevel = $cpplevel + 1;
+      next;
+    }
+    if ($_ =~ m/^\#endif/) {
+      $cpplevel = $cpplevel - 1;
+      next;
+    }
+    if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<]([qk]\S*\.h)[\">]\S*/) {
+      push @includes, $1;
+      next;
+    }
+  }
+  close SRC;
+
+  print "No fixable includes found in $srcfile\n" if ($verbose and not @includes);
+  print "found includes: [ " . join(' ', @includes) . " ]\n" if ($verbose and @includes);
+
+  return @includes;
+}
+
+# first parameter: srcfile
+# second parameter: include to remove
+# third parameter is the duplicate level: this include is removed $level times
+sub remove_include ($$$)
+{
+  my $srcfile = shift @_;
+  my $include = quotemeta(shift @_);
+  my $level = shift @_;
+
+  die "$srcfile is not read/writeable!\n" if( ! -r $srcfile || ! -w $srcfile);
+  open(I, "< $srcfile") or die "couldn't open '$srcfile'\n";
+  my @contents = <I>;
+  close(I);
+
+  # ok, CPU time doesn't count so we do it the lazy way
+  # we should remove the last occurence of the include in the
+  # file because in case its a duplicate removing the first
+  # one could make a difference. 
+  my @revcontents = reverse @contents;
+  @contents = ();
+
+  # we skip all inludes that are somehow ifdefed
+  # note the logic is reversed because it operates
+  # on reversed lines :)
+  my $cpplevel = 0;
+  foreach $line (@revcontents) {
+    if ($line =~ m/^\#if/) {
+      $cpplevel = $cpplevel - 1;
+      push @contents, $line;
+      next;
+    }
+
+    if ($line =~ m/^\#endif/) {
+      $cpplevel = $cpplevel + 1;
+      push @contents, $line;
+      next;
+    }
+
+    if ($cpplevel == 0 && $level > 0 && $line =~ m/^(\#include\s*[\"<]$include[\">]\S*)/) {
+      print "HAH! found $include in $srcfile!\n" if($verbose);
+      $level = $level - 1;
+      # skipping the line..
+      next;
+    }
+
+    push @contents, $line;
+  }
+
+  # now we have the fixed contents in @contents
+  open(O, "> $srcfile") || die "couldn't open '$srcfile' for writing\n";
+  print O reverse @contents;
+  close (O);
+}
+
+
+sub fix_duplicates($) 
+{
+  my $srcfile = shift @_;
+
+  my @includes = &find_removable_includes($srcfile);
+
+  my %inclMap = ();
+
+  # initialize
+  foreach $include (@includes) {
+    $inclMap{$include} = 0;
+  }
+  
+  # count number of occurences
+  foreach $include (@includes) {
+    $inclMap{$include} = $inclMap{$include} + 1;
+  }
+  
+  # check for duplicates
+  foreach $include (keys %inclMap) {
+    next if $inclMap{$include} <= 1;
+    
+    print "$srcfile: duplicate level ". $inclMap{$include} .": ". $include ."\n";
+
+    &remove_include($srcfile, $include, $inclMap{$include} - 1) if($modify);
+  }
+}
+
+
+# here is the main logic
+
+# first generate a list of subdirectories
+@dirlist = (".");
+foreach $dir ( @dirlist ) {
+ opendir (DIR, "$dir") || warn "Couldn't read '$dir'";
+ my $subdir = "";
+ while( $subdir = readdir(DIR)) {
+   next if ($subdir =~ /^\..*/);
+   push @dirlist, "$dir/$subdir" if ( -d "$dir/$subdir");
+ }
+ closedir(DIR);
+}
+
+# now iterate over all subdirs
+foreach $dir(@dirlist) {
+  @sources = &find_fixable_sources($dir);
+
+  foreach $file(@sources) {
+    print "Checking: $file\n" if($verbose);
+    &fix_duplicates($file);
+
+    print "\n" if ($verbose);
+  }
+}
+
+
