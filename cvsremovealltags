@@ -7,9 +7,9 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 file=$1
-tags=`cvs log -h $file | grep '^	' | sed -e 's/:.*//g'`
+tags=`cvs log -h $file | grep '^	' | sed -e 's/:.*//g' | sort -u`
 for tag in `echo $tags`; do
   echo -n "Removing tag $tag.... "
-  cvs tag -d $tag $file
+  cvs tag -r $tag -d $tag $file
 done
 
