@@ -14,7 +14,7 @@
 ;;
 ;; You should have received a copy of the GNU General Public License along
 ;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02111-1307, USA.
+;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
 
 ;; ------------------------------ INSTALLATION ------------------------------
@@ -79,7 +79,8 @@
                QCanvasChunk QCanvas QCanvasItem QCanvasView QCanvasPixmap)
     (qgl.h QGLFormat QGL QGLContext QGLWidget QGLColormap)
     (qtable.h QTableSelection QTableItem QComboTableItem QCheckTableItem) 
-
+    (qsqlfield.h QSqlField QSqlFieldInfo)
+    (qsqlrecord.h QSqlRecord QSqlRecordInfo)
     
     ; Qt/Embedded
     (qcopchannel_qws.h QCopChannel)
@@ -139,6 +140,30 @@
     (KDSizingControl.h KDSizingControl)
     (KDStream.h KDStream)
     (KDTimeWidget.h KDTimeWidget)
+
+    ; KDChart - http://www.klaralvdalens-datakonsult.se
+    (KDChart.h KDChart)
+    (KDChartAxisParams.h KDChartAxisParams)
+    (KDChartBaseSeries.h KDChartBaseSeries)
+    (KDChartCustomBox.h KDChartCustomBox)
+    (KDChartData.h KDChartData)
+    (KDChartEnums.h KDChartEnums)
+    (KDChartListTable.h KDChartListTableData KDChartListTablePrivate)
+    (KDChartNotEnoughSpaceException.h KDChartNotEnoughSpaceException)
+    (KDChartPainter.h KDChartPainter)
+    (KDChartParams.h KDChartFrameSettings KDChartParams ModeAndChart)
+    (KDChartPlaneSeries.h KDChartPlaneSeries)
+    (KDChartPropertySet.h KDChartPropertySet)
+    (KDChartSeriesCollection.h  KDChartSeriesCollection)
+    (KDChartTableBase.h KDChartTableDataBase)
+    (KDChartTextPiece.h KDChartTextPiece)
+    (KDChartUnknownTypeException.h KDChartUnknownTypeException)
+    (KDChartVectorSeries.h KDChartVectorSeries)
+    (KDChartVectorTable.h KDChartVectorTableData KDChartVectorTablePrivate)
+    (KDChartWidget.h KDChartWidget)
+    (KDFrame.h KDFrame KDFrameCorner)
+    (KDFrameProfileSection.h KDFrameProfileSection)
+
 
     ; Useful fake entries
     (qapplication.h qApp)
