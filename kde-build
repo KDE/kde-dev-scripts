@@ -619,7 +619,7 @@ for module in $modules; do
     configure_okay="skipped." # see below if you change the string here
   fi
   log_section "Configuration"
-  if [ -n "$KDELOGDIR" ]; then
+  if [ -n "$KDELOGDIR" -a "$configure_okay" != "skipped." ]; then
     echo $cmd_configure >> $logfile
   fi
 
