@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# Simple license checker for source files
+#
+
+if test -z "$*"; then
+  echo "Usage: $0 [-v] filename..."
+  exit 1
+fi
+
+if test "x$1" == "x-v"; then
+  shift
+  verbose=yes
+fi
+
+gpl="This program is free software you can redistribute it and/or modify it under the terms of the GNU General Public License"
+
+lgpl="This (program|library) is free software you can redistribute it and/or modify it under the terms of the GNU Library General Public License"
+
+gpl_lateroption="either version 2 of the License, or .at your option. any later version"
+
+gpl_qtexception="Permission is also granted to link this program with the Qt library, treating Qt like a library that normally accompanies the operating system kernel, whether or not that is in fact the case"
+
+qplqt="This file is part of the Qt GUI Toolkit. This file may be distributed under the terms of the Q Public License as defined by Troll Tech AS of Norway and appearing in the file LICENSE.QPL included in the packaging of this file."
+
+x11="Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files .the Software., to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS IS"
+
+copyright="[Cc][Oo][Pp][Yy][Rr][Ii][Gg][Hh][Tt]"
+
+for file in $*
+do
+  license=""
+  gl=""
+  header=`head -30 $file| sed 's/	/ /g;s/$/ /g' | tr -d -c ' A-Za-z.,/@1-9()'`
+  if test ! -z "$verbose"; then
+    echo "----- header -----"
+    echo $header
+    echo "--- end header ---"
+  fi
+  if echo $header | egrep "$gpl_lateroption" >/dev/null; then
+    gl=" (version 2 or later)"
+  fi
+  if echo $header | egrep "$gpl_lateroption" >/dev/null; then
+    qte=" with Qt exception"
+  fi
+   if echo $header | egrep "$lgpl" >/dev/null; then
+    license="LGPL$gl $license"
+  fi
+  if echo $header | egrep "$gpl" >/dev/null; then
+    license="GPL$gl$qte $license"
+  fi
+  if echo $header | egrep "$qplqt" >/dev/null; then
+    license="QPL (part of Qt) $license"
+  fi
+  if echo $header | egrep "$x11" >/dev/null; then
+    license="X11 (BSD like) $license"
+  fi
+  if echo $header | egrep -v "$copyright" >/dev/null; then
+    license="no_copyright $license"
+  fi
+  if test -z "$license"; then
+    license="unknown"
+  fi
+  echo "$file: $license"
+done
+
