@@ -83,8 +83,9 @@ sub optionstonroff
 	  {
 	    $ret .= "$1\n";
 	  }
-	elsif( ! /^$/ )
+	elsif( /^(.*)$/ )
 	  {
+	    $ret .= ".SS $1\n";
 	    # this means a header like "Qt Options:" I'm wondering
 	    # what to do with this, I don't know enough nroff to
 	    # format it nicely, I'm affraid..
