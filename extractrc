@@ -1,4 +1,8 @@
 #! /usr/bin/perl
+#
+# This script extracts messages from designer (.ui) and XMLGIU (.rc) files
+# and writes on standard output (usually redirected to rc.cpp)
+# the equivalent i18n() calls so that xgettext can parse them.
 
 $filename = "";
 @filenames = ();
@@ -21,6 +25,7 @@ if (! $filename) {
 $string = "";
 $intext = 0;
 $linenr = 0;
+$inskippedprop = 0;
 
 open(FILE, $filename);
 
@@ -30,33 +35,42 @@ READING: while ( <FILE> ) {
    	last READING;
    }
 
-   $string .= "\\n" . $_;   
+   $string .= "\\n" . $_;
    chomp($string);
  
    $textstring = '([tT][eE][xX][tT]|title|string|whatsthis|tooltip)>';
 
-   if ($intext == 0) {
+   # The 'database' property contains strings that shouldn't be translated
+   if ($inskippedprop == 0 && ($string =~ /<property name=\"database\"/)) {
+     $inskippedprop = 1;
+   } elsif ($inskippedprop == 1 && ($string =~ /<\/property/)) {
+     $inskippedprop = 0;
+     $string = "";
+   }
+
+   if ($inskippedprop == 0 && $intext == 0) {
      if ($string =~ /<$textstring/) {
        $string =~ s/^.*<$textstring//;
        $intext = 1;
-	   $starting_linenr = $linenr;
+       $starting_linenr = $linenr;
      } else {
        $string = "";
      }
    }
-   
+
    if (($intext == 1) && ($string =~ /<\/$textstring/)) {
      my $text = $string;
      $text =~ s/<\/$textstring.*$//;
-	 $text =~ s/&lt;/</g;
+     $text =~ s/&lt;/</g;
      $text =~ s/&gt;/>/g;
      $text =~ s/&amp;/&/g; 
      $text =~ s/\"/\\\"/g;
      writeoutstring($text); 
      $string =~ s/^.*<\/$textstring//;
      $intext = 0;
-	 if ($linenr != $starting_linenr && $filename =~ m/\.rc$/) {
-		print STDERR "there is <text> floating $filename\n";
+     # Text can be multiline in .ui files (possibly), but we warn about it in XMLGUI .rc files.
+     if ($linenr != $starting_linenr && $filename =~ m/\.rc$/) {
+       print STDERR "there is <text> floating $filename\n";
      }
    }
 
