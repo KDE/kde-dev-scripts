@@ -7,6 +7,7 @@ use Cwd;
 
 # declaration of useful subroutines
 sub find_fixable_sources ($);
+sub find_fixable_headers($);
 sub find_removable_includes ($);
 sub warn_before_modifying ($);
 sub remove_include ($$$);
@@ -47,7 +48,7 @@ while (defined ($ARGV[0]))
 }
 
 $cppExt     = "(cpp|cc|cxx|C|c\\+\\+)";
-#$hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
+$hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
 
 # list of compat headers. scroll down ... much of boring stuff here..
 %compatmap = (
@@ -139,6 +140,31 @@ sub find_fixable_sources ($)
   }
   
   return @retsources;
+}
+
+# Look for header files in the given directory ($dir, first parameter)
+sub find_fixable_headers ($)
+{
+  # for now I grep the directory (requires srcdir==builddir)
+  # actually it should read the Makefile and
+  # find the _HEADERS tags that are put there by
+  # automake and am_edit, but thats an excercise to the reader ;-)
+
+  my ( $dir ) = @_;
+
+  opendir (DIR, "$dir") || die "Couldn't read '$dir'\n";
+  my @headers = grep { /^.*\.$hExt$/o } readdir(DIR);
+  closedir(DIR);
+  
+  print "found headers: [ " . join(' ', @headers) . " ] in $dir\n" if ($verbose);
+
+  # prefix them with $dir
+  my @retheaders = ();
+  foreach $source(@headers) {
+    push @retheaders, "$dir/$source";
+  }
+  
+  return @retheaders;
 }
 
 sub find_removable_includes ($)
@@ -519,6 +545,15 @@ foreach $dir(@dirlist) {
     }
   }
 
+  @headers = &find_fixable_headers($dir);
+  foreach $file(@headers) {
+    print "Checking: $file\n" if($verbose);
+    `cvscheck | grep $file | grep '^[MmC]'`;
+    $file_was_modified = 1 - ($? >> 8); # $?=0 if modified, $?=1 if not
+    print "$file was modified $file_was_modified\n" if ($file_was_modified && $verbose);
+    &fix_compat_includes($file);
+    &fix_duplicates($file);
+  }
   @sources = &find_fixable_sources($dir);
   foreach $file(@sources) {
     print "Checking: $file\n" if($verbose);
