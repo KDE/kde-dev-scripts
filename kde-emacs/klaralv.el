@@ -367,13 +367,22 @@
         (if (not (re-search-forward (concat "class *" word ";") nil t))
             (progn
                                         ; No forward decl existed
-              (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-              (if (re-search-backward "^[ \t]*class .*;" nil t)
-                  (progn (end-of-line) (forward-char 1))
+                                        ; Look for other forward declarations and insert this one before them
+                                        ; (this avoids finding class Private; inside a class, or other stuff in the middle of the file)
+              (if (re-search-forward "^[ \t]*class .*;" nil t)
+                  (progn
+					; Exit namespace foo { class bar; } if necessary
+					; This is a modified version of (backward-up-list) which doesn't
+					; throw an error when not found.
+		    (goto-char (or (scan-lists (point) -1 1 nil t) (point))) ; ### do multiple times if necessary
+		    (re-search-backward "^[ \t]*namespace " nil t) ; in case of namespace foo\n{
+		    (beginning-of-line))
                                         ; No forward declarations found, lets search for include lines.
-                (if (re-search-backward "#include" nil t)
-                    (progn (end-of-line) (forward-char 1))
-                  (beginning-of-buffer)))
+                                        ; For those we start from the end, because we want to leave file.h first.
+                (progn (goto-char (point-max))
+		       (if (re-search-backward "#include" nil t)
+			   (progn (end-of-line) (forward-char 1))
+			 (beginning-of-buffer))))
               
               (progn
                 (insert "class " word ";\n")
