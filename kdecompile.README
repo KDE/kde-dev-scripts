@@ -29,13 +29,13 @@ configurable.
 * To compile package kdelibs, you need to go to compile/kdelibs and type
      
      kdecompile
+
+  or to compile and type:
+
+     kdecompile kdelibs
 	
 * It assumes that you have a CVS account or you are using anonymous CVS.
-You should modify in the script the values for the variables:
-  cvsRoot -- to your CVSROOT variable. 
-  installDir --- defaults to /opt/kde
-  
-These are around line 245 in the script.   
+You should set the CVSROOT variable to the right account, or
 
 * For the install functionality, you need to run kdecompile with the 
 corresponding rights - for example:  sudo kdecompile
@@ -43,3 +43,16 @@ corresponding rights - for example:  sudo kdecompile
 * There are various options, which can be found out by typing
 
    kdecompile --help
+
+  As of 0.3.9 this gives:
+
+Syntax: kdecompile [options] [packagename]
+        -h, --help              Print this help
+        --install               Install without asking
+        -d                      Disable debug info
+        -o                      Enable optimization
+        --remove-admin-dir      Remove the admin dir before cvs checkout
+        --no-cvs-checkout       Do not do cvs checkout
+        --no-configure          Do not run configure
+        --disable-compile       Do not compile   
+

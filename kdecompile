@@ -29,7 +29,8 @@ class Config:
     RunCVSCheckOut = 1
     RunCompile = 1
     installDir = "/opt/kde"
-    cvsRoot = ":pserver:boloni@cvs.kde.org:/home/kde"    
+    cvsRoot = os.environ['CVSROOT']
+    xmessage = "kmessage"
 
     # these wont
     packagename = ""
@@ -140,7 +141,7 @@ class Config:
 	  print "\t-o\t\t\tEnable optimization"
 	  print "\t--remove-admin-dir\tRemove the admin dir before cvs checkout"
 	  print "\t--no-cvs-checkout\tDo not do cvs checkout"
-	  print "\t--no-configure\tDo not run configure"    
+	  print "\t--no-configure\t\tDo not run configure"    
 	  print "\t--disable-compile\tDo not compile"
           print ""
 		
@@ -360,7 +361,7 @@ def runInstall(compiledir):
 #   Version 
 #
 def version():
-    return "kdecompile v.0.3.8 as of December 20, 2000"
+    return "kdecompile v.0.3.9 as of December 29, 2000"
 
 #
 #
@@ -440,7 +441,7 @@ print "\n"
 
 doAll(packagename, currdir, cvsdir)
 
-xmessline = "xmessage -buttons ThatsAll:0,Install:1 "
+xmessline = config.xmessage + "-buttons ThatsAll:0,Install:1 "
 xmessline = xmessline + "\"Compilation of " + packagename + " terminated\""
 
 logfile = open("../compile_log", "a+")
