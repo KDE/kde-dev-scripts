@@ -83,8 +83,8 @@
 	(msubstr nil)
         (start nil))
     (save-excursion
-      (and (re-search-backward "^\\(class\\|namespace\\)[ \t]" nil t)
-           (progn
+      (while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
+	(save-excursion
              (forward-word 1)
              (while (looking-at "[ \t]*Q_EXPORT")
                (forward-word 2))
@@ -93,7 +93,17 @@
              (setq start (point))
              (while (looking-at "[A-Za-z0-9_]")
                (forward-char 1))
-             (setq class (buffer-substring start (point))))))
+             (cond 
+	      (class
+	       (setq class (concat (buffer-substring start (point)) "::" class)))
+	      (t ;class==nil
+	       (setq class (buffer-substring start (point)))))
+	     )
+        ; Go up a level, skipping entire classes etc.
+        ; This is a modified version of (backward-up-list) which doesn't
+        ; throw an error when not found.
+	(goto-char (or (scan-lists (point) -1 1 nil t) (buffer-end -1)))
+	))
     (progn
       (and (looking-at "$")
            (progn
