@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Simple license checker for source files
-#
+# See also CVSROOT/loginfo.pl (we should port licensecheck to perl)
 
 if test -z "$*"; then
   echo "Usage: $0 [-v] filename..."
@@ -19,7 +19,7 @@ lgpl="This (program|library) is free software you can redistribute it and/or mod
 
 gpl_lateroption="either version 2 of the License, or .at your option. any later version"
 
-gpl_qtexception="Permission is also granted to link this program with the Qt library, treating Qt like a library that normally accompanies the operating system kernel, whether or not that is in fact the case"
+gpl_qtexception="([Pp]ermission is given|[pP]ermission is also granted|[pP]ermission) to link (the code of )?this program with (any edition of )?(Qt|the Qt library)"
 
 qplqt="This file is part of the Qt GUI Toolkit. This file may be distributed under the terms of the Q Public License as defined by Troll Tech AS of Norway and appearing in the file LICENSE.QPL included in the packaging of this file."
 
