@@ -31,10 +31,12 @@ if test ! -f Makefile && test -n "$OBJ_SUBDIR"; then
 fi
 cd $builddir
 srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+UNSERMAKE=`type -p unsermake`
 
 case $1 in
   hidechange )
     if [ $# -ne 2 ]; then usage; fi
+    ## TODO: unsermake support (or support in unsermake itself)
     deps=`make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'`;
     if [ -n "$deps" ]; then
       oldestdep=`ls -t $deps 2>/dev/null | tail -1`
@@ -49,10 +51,21 @@ case $1 in
     ;;
   show )
     if [ $# -ne 1 ]; then usage; fi
-    make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
+    if test -z "$UNSERMAKE"; then
+      # Look at the commands that make will issue, and extract "-o output".
+      # The only trouble, with libtool, is that this gives us .libs/foo.o instead of foo.lo
+      make SUBDIRS='' -n | grep '\-o' | sed -e 's/.*-o \([^ ]*\).*/\1/'
+    else
+      # Solve the above problem (when using unsermake) by watching the "echo" lines for creating .lo files
+      # separately from the rest of the "-o target" lines (for libs and binaries)
+      # (For libs and bins another way would be to grep for "linking")
+      # The "ls" is for sorting by date
+      $UNSERMAKE -n | perl -e 'while(<>) { if (/by libtool/) { s/.*> //; print; } if (m/-o ([^ ]*)/ && $1!~/\.o$/) { print "$1\n"; } }' | xargs --no-run-if-empty ls -t -1
+    fi
     ;;
   why )
     if [ $# -ne 2 ]; then usage; fi
+    ## TODO: unsermake support (or support in unsermake itself)
     make SUBDIRS='' -n -d $2 | egrep -e "(newer than target \`$2'|Must)"
     ;;
   * ) usage ;;
