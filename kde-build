@@ -613,13 +613,13 @@ for module in $modules; do
     cmd_configure="./configure $configureflags --prefix=$KDEDIRS --with-qt-dir=$QTDIR"
   fi
   [ "$NICECOMPILE" = yes ] && cmd_configure="nice $cmd_configure"
-  configure_okay="$str_okay"
+  configure_skipped=0
   if [ "$INCREMENTAL_BUILD" = "yes" -a -e "Makefile" ]; then
     cmd_configure="echo Warning: no configure for module $module - as requested"
-    configure_okay="skipped." # see below if you change the string here
+    configure_skipped=1
   fi
   log_section "Configuration"
-  if [ -n "$KDELOGDIR" -a "$configure_okay" != "skipped." ]; then
+  if [ -n "$KDELOGDIR" -a $configure_skipped -ne 1 ]; then
     echo $cmd_configure >> $logfile
   fi
 
@@ -632,9 +632,13 @@ for module in $modules; do
   fi
 
   log_endsection "Configuration"
-  echo -e "$configure_okay"
+  if [ $configure_skipped -eq 1 ]; then
+    echo -e " skipped."
+  else
+    echo -e "$str_okay"
+  fi
 
-  if [ "$configure_okay" = "skipped." ]; then
+  if [ $configure_skipped -eq 1 ]; then
     echo -n "  Updating Makefile..."
     cmd_make_makefile="$MAKE $MAKE_OPTS Makefile"
     [ "$NICECOMPILE" = yes ] && cmd_make_makefile="nice $cmd_make_makefile"
