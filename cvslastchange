@@ -45,5 +45,5 @@ else {
 }
 print "cvs -f log -N -r$vnew $filename\n";
 system("cvs -f log -N -r$vnew $filename");
-print "cvs -f diff -bp -u -r$vold -r$vnew $filename\n";
-system("cvs -f diff -bp -u -r$vold -r$vnew $filename");
+print "cvs -f diff -kk -bp -u -r$vold -r$vnew $filename\n";
+system("cvs -f diff -kk -bp -u -r$vold -r$vnew $filename");
