@@ -133,9 +133,9 @@ function! SwitchHeaderImpl()
             return
         endif
     endwhile
-    " The error message should be flagged as such (red or something), but I don't know
-    " how to do this. luis pedro
+    echohl ErrorMsg
     echo "File switch failed!"
+    echohl None
 endfunction
 
 function! IncludeGuard()
