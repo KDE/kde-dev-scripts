@@ -11,10 +11,25 @@ if [ $# -ne 1 ]; then
   echo "So the argument is the file you want to create."
   echo
 else
-  automake $* &&
-  (
-   ( [ -f admin/am_edit ] && perl admin/am_edit $*.in ) ||
-   ( [ -f admin/automoc ] && perl admin/automoc $*.in ) ||
-   ( [ -f automoc ] && perl automoc -v $*.in ) ) &&
+  if test ! -f Makefile; then 
+    echo "$0: in the current directory there is no Makefile"
+    echo "you will have to run it from the top build dir."
+    echo "if you do not have a Makefile there - rerun configure"
+    exit
+  fi
+
+  srcdir=`egrep '^srcdir *=' Makefile | sed -e "s#srcdir *= *##"`
+  (  
+    if cd $srcdir ; then 
+     automake $* || exit
+     if test -f admin/am_edit; then perl admin/am_edit $*.in ;\
+     else 
+       if test -f admin/automoc; then perl admin/automoc $*.in ; \
+       else
+         if test -f automoc; then perl automoc -v $*.in; fi
+       fi
+     fi
+    fi
+  )
   CONFIG_FILES=$* CONFIG_HEADERS= config.status
 fi
