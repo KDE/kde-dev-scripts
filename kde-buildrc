@@ -43,7 +43,7 @@ KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeartwork 
 ONLYLISTEDMODULES=yes
 
 # Do you want a clean install? This is recommended but please note that
-# you cannot use your previous KDE2 desktop while the compilation is
+# you cannot use your previous KDE desktop while the compilation is
 # running. Set this to "no" to install the new snapshot over the previous
 # one, otherwise set it to "yes".
 #
