@@ -35,7 +35,7 @@
 
 ;; ------------------------------ CONFIGURATION ------------------------------
 (defvar kdab-qt-documentation
-  "file://home/lukas/cvs/qt-copy/doc/html/XXX.html"
+  "http://doc.trolltech.com/3.0/XXX.html"
   "URL for Qt documentation. XXX must be in the string. 
   Example: file://packages/kde-src/qt-copy/doc/html/XXX.html")
 
