@@ -50,6 +50,15 @@
     fun:_dl_map_object
 }
 
+{
+   strlen/_dl_signal_cerror/_dl_lookup_symbol_internal
+   Memcheck:Cond
+   fun:strlen
+   fun:_dl_signal_cerror
+   fun:_dl_lookup_symbol_internal
+   fun:do_dlsym
+}
+
 #
 # X library errors
 #
@@ -62,27 +71,43 @@
 }
 
 {
-    write(buf)/libc/libICE
-    Addrcheck,Memcheck:Param
-    write(buf)
-    obj:*libc-2.2.?.so
-    obj:/usr/X11R6/lib/libICE.so.6.3
+   write(buf)/libc/libICE
+   Memcheck:Param
+   write(buf)
+   fun:__GI___libc_write
+   fun:_IceTransWrite
+   fun:_IceWrite
+   fun:IceFlush
 }
 
 {
-    write(buf)/libc/libX11
-    Addrcheck,Memcheck:Param
-    write(buf)
-    obj:*libc-2.2.?.so
-    obj:/usr/X11R6/lib/libX11.so.6.2
+   write(buf)/libc/libX11
+   Memcheck:Param
+   write(buf)
+   fun:__GI___libc_write
+   fun:_X11TransWrite
+   fun:_XFlushInt
+   fun:_XFlush
 }
 
 {
-    writev(vector[...])/libc/libX11
-    Addrcheck,Memcheck:Param
-    writev(vector[...])
-    obj:*libc-2.2.?.so
-    obj:/usr/X11R6/lib/libX11.so.6.2
+   write(buf)/libc/libX11
+   Memcheck:Param
+   write(buf)
+   fun:__GI___libc_write
+   fun:_X11TransWrite
+   fun:_XFlushInt
+   fun:_XReply
+}
+
+{
+   writev(vector[...])
+   Memcheck:Param
+   writev(vector[...])
+   fun:do_writev
+   fun:_X11TransSocketWritev
+   fun:_X11TransWritev
+   fun:_XSend
 }
 
 #
