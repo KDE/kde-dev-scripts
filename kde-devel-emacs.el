@@ -114,7 +114,7 @@ With arg, to it arg times."
 
 
 (defun agulbra-make-member ()
-  "make a skeleton member function in the .cpp file"
+  "make a skeleton member function in the .cpp or .cc file"
   (interactive)
   (let ((class nil)
         (function nil)
@@ -176,7 +176,6 @@ With arg, to it arg times."
                   (progn
                   (setq insertion-string
                         (concat
-                         "\n\n/*!  Constructs an empty\n\n*/\n\n"
                          (replace-match
                           (concat class "::" class "(")
                           t t function)
@@ -185,8 +184,6 @@ With arg, to it arg times."
                    (progn
                      (setq insertion-string
                            (concat
-                            "\n\n/*! Destroys the object and frees "
-                            "any allocated resources.\n\n*/\n\n"
                             (replace-match
                              (concat class "::~" class "(")
                              t t function)
@@ -195,7 +192,6 @@ With arg, to it arg times."
                    (progn
                      (setq insertion-string
                            (concat
-                            "\n\n/*!\n\n*/\n\n"
                             (replace-match
                              (concat " " class "::" "\\1(")
                              t nil function)
