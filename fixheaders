@@ -21,6 +21,7 @@ $lastdir = '.';
 %messages = 
 (
  'warning: implicit declaration of function `int i18n\(\.\.\.\)\'' => "klocale",
+ '`i18n\' undeclared \(first use this function\)' => "klocale",
  'variable `class QPixmap \S*\' has initializer but incomplete type' => "qpixmap",
  '`kapp\' undeclared \(first use this function\)' => "kapp",
  'no matching function for call to `KLocale::' => "klocale",
@@ -43,6 +44,7 @@ $lastdir = '.';
  'no method `KGlobal::' => "kglobal",
  '`KGlobal\' undeclared \(first use this function\)' => "kglobal",
  'warning: implicit declaration of function `int locate\(\.\.\.\)' => "kstddirs",
+ '`locate\' undeclared \(first use this function\)' => "kstddirs",
  'no matching function for call to `KStandardDirs' => "kstddirs",
  'no method `KStandardDirs::' => "kstddirs",
  'variable `class QFile \S*\' has initializer but incomplete type' => "qfile",
