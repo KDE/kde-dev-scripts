@@ -3,7 +3,7 @@
 # Argument : The classname (case sensitive !).
 
 # You need to edit this line, I can't guess where your KDE docs are installed
-KDEDOCS=/mnt/devel/kde/kde2/docs
+KDEDOCS=$KDEDIR/share/kdedoc
 
 if [ $# = 1 ]; then
   if [ -f $KDEDOCS/*/$1.html ]; then

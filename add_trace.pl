@@ -57,19 +57,19 @@ while (<>)
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
 	      ## int, long ?
-	      elsif ( m/int\s*([a-zA-Z0-9_]+)/ || m/long\s*([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/int\s+([a-zA-Z0-9_]+)/ || m/long\s*([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
 	      ## bool
-	      elsif ( m/bool\s*([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/bool\s+([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << (" . $1 . " ? \"true\" : \"false\" )";
 	      }
 	      ## QString and friends
-	      elsif ( m/QString[\&\s]*([a-zA-Z0-9_]+)/ || m/QCString[\&\s]*([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/QString[\&\s]+([a-zA-Z0-9_]+)/ || m/QCString[\&\s]*([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
 	      ## KURL
-	      elsif ( m/KURL[\&\s]*([a-zA-Z0-9_]+)/ ) {
+	      elsif ( m/KURL[\&\s]+([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1 . ".url()";
 	      }
 	    }
