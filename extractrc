@@ -5,7 +5,7 @@ $filename = "";
 
 sub writeoutstring($)
 {
-   print STDOUT "i18n(\"@_[0]\");\n";
+   print STDOUT "i18n(\"@_[0]\"); // $filename \n";
 }
 
 while (defined ($ARGV[0]))
