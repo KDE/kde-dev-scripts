@@ -127,10 +127,10 @@ def runCompileThread(compiledir):
     pid =0
     pid2 = 0
     pid = os.fork()
+    os.chdir(compiledir)
     if (pid == 0):
         # the compilation thread
         currdir = os.getcwd()
-        os.chdir(compiledir)
         value = os.system("make -k >logfile 2>errorfile")
         if (value != 0):
             print "There was a compilation error."
