@@ -1124,11 +1124,12 @@ With arg, to it arg times."
           (newline-and-indent)))
      (t (progn ;else
           (insert "{") 
-          (c-indent-command)))
+          (save-excursion
+            (beginning-of-line)
+            (c-indent-command))))
     )
   )
-;; doesn't work
-;;    (c-electric-brace)
+  (c-electric-brace nil)
 )
 
 ; A wheel mouse that doesn't beep, unlike mwheel-install
