@@ -75,6 +75,7 @@ With arg, to it arg times."
          (setq c-tab-always-indent nil
 	       insert-tab-mode nil
 	       indent-tabs-mode nil
+               fume-auto-rescan-buffer-p nil
                c-basic-offset 4
                c-access-key "\\<\\(signals\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
                c-hanging-comment-ender-p nil
