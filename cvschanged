@@ -13,6 +13,7 @@ use Time::Local qw( timegm );
 @uncommitted = ();
 @missing = ();
 @tagged = ();
+@removed = ();
 
 $reportmissing = 1;
 $reporttagged = 0;
@@ -53,7 +54,7 @@ sub processEntries
 			next;
 		}
 
-		next if !m#^\s*/([^/]+)/([\d\.]*)/([^/]+)/(/T)?(\w+)?#;
+		next if !m#^\s*/([^/]+)/([-]*[\d\.]*)/([^/]+)/(/T)?(\w+)?#;
 
 		$fname = $1;
 		$ver = $2;
@@ -68,6 +69,11 @@ sub processEntries
 			push @merged, "$dir/$fname";
 			next;
 		}
+
+                if ( $ver =~ /^\-.*/ ) {
+                  	push @removed, "$dir/$fname";
+			next;
+                }        
 
 		$mtm = strToTime( $stamp );
 
@@ -142,6 +148,13 @@ if ( $#tagged >= 0 && $reporttagged ) {
 if ( $#uncommitted >= 0 ) {
 	print "\nAdded but not committed:\n\n";
 	foreach $f ( @uncommitted ) {
+		print $f,"\n";
+	}
+}
+
+if( $#removed >= 0 ) {
+ 	print "\nRemoved but not committed:\n\n";
+        foreach $f ( @removed ) {
 		print $f,"\n";
 	}
 }
