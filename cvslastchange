@@ -43,7 +43,11 @@ else {
   $v2old = ${v2}-1;
   $vold = $v1 . '.' . $v2old;
 }
-print "cvs -f log -N -r$vnew $filename\n";
-system("cvs -f log -N -r$vnew $filename");
-print "cvs -f diff -kk -bp -u -r$vold -r$vnew $filename\n";
-system("cvs -f diff -kk -bp -u -r$vold -r$vnew $filename");
+my $base = basename($filename);
+my $dir = dirname($filename);
+my $cmd = "cd $dir; cvs -f log -N -r$vnew $base";
+print "$cmd\n";
+system("$cmd");
+$cmd = "cd $dir; cvs -f diff -kk -bp -u -r$vold -r$vnew $base";
+print "$cmd\n";
+system("$cmd");
