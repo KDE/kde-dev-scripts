@@ -3,18 +3,92 @@
 # cvs blame inspired by Bonsai
 # Author: Bernd Gehrmann <bernd@physik.hu-berlin.de>
 
-$file = $ARGV[0];
-$output = ">#cvsblame.html#";
+=head1 NAME
 
-open(OUTPUT, $output);
-# Header
+cvsblame - Shows a blame-annotated representation of a CVS controlled file in netscape.
+
+=head1 SYNOPSIS
+
+cvsblame <filename>
+
+=head1 DESCRIPTION
+
+cvsblame opens netscape to display the output of cvs annotate of
+a cvs controlled file. When the mouse is on a revision number shown
+in the second column, a popup with the respective log message
+appears. 
+
+In the popup, a proper mailto: link to the author of a revision
+can be created as follows: In your home directory, make a file
+.cvsblame. In that file, enter for each repository you are working
+with a line like
+
+      accounts :pserver:gehrmab@cvs.kde.org:/home/kde /home/bernd/.kdeaccounts
+
+where the accounts file contains a simple list of cvs usernames in
+the first column and the respective mail address in the second.
+
+=head1 BUGS
+
+=over 4
+
+=item Does not really work for files with html tags
+
+=item Does not really work for filenames which are not in the current directory
+
+=item Is a hack. Really.
+
+=back 
+
+=head1 AUTHOR
+
+Bernd Gehrmann <bernd@physik.hu-berlin.de>
+
+=cut
+
+$file = $ARGV[0];
+$outputfile = ">#cvsblame.html#";
+$configfile = $ENV{HOME}. "/.cvsblame";
+$rootfile = "`pwd`/CVS/Root";
+$cvsroot = `cat $rootfile`;
+chop $cvsroot;
+
+#
+# Look for a username -> mail address mapping
+#
+
+if (open(CONFIG, $configfile)) {
+    while (<CONFIG>) {
+	if (/accounts\s*([^\s]*)\s+([^\s]*)/) {
+	    if ($1 eq $cvsroot) {
+		$accountfile = $2;
+            }
+        }
+    }
+    close CONFIG;
+}
+if ($accountfile) {
+    open(ACCOUNTS, $accountfile) || die "Account file not found: $accountfile";
+    while (<ACCOUNTS>) {
+	if (/([^\s]*)\s+([^\s]*)/) {
+	    $mail{$1} = $2;
+        }
+    }
+}
+
+
+#
+# The real work, first the html header
+#
+
+
+open(OUTPUT, $outputfile);
 print OUTPUT <<EOF;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <title></title>
   </head>
-
   <script>
     function poplog(event, rev) {
       var popup = document.layers['popup'];
@@ -29,6 +103,10 @@ print OUTPUT <<EOF;
     }
 EOF
 
+#
+# Translate information from cvs log in javascript stuff
+#
+
 $revision = "";
 open (LOG, "cvs log $file|");
 while (<LOG>) {
@@ -39,7 +117,12 @@ while (<LOG>) {
              $revstr = "log$revision";
              $revstr =~ s/\./_/g;
       } elsif ($line =~ /date: ([^;]*);\s*author: ([^;]*);.*/) {
-             $content = "<b>$revision</b> $2 <b>$1<b>";
+             $date = $1;
+             $author = $2;
+             if ($mail{$author}) {
+		 $author = "<a href=mailto:$mail{$author}>$author</a>";
+             }
+             $content = "<b>$revision</b> $author <b>$date<b>";
       } elsif ($line eq "----------------------------" && !($revision eq "")) {
              print OUTPUT "$revstr = \"$content\";\n";
       } elsif ($line eq "=============================================================================" && !($revision eq "")) {
@@ -58,6 +141,10 @@ print OUTPUT <<EOF;
     <h1>$file</h1>
       <pre>
 EOF
+
+#
+# Information from cvs annotate
+#
 
 $lineno = 1;
 $oldrevision = "";
@@ -88,7 +175,10 @@ while (<ANNOTATE>) {
 }
 close ANNOTATE;
 
-# Footer
+# 
+# Finally, the html footer
+#
+
 print OUTPUT <<EOF;
     </pre>
   </body>
