@@ -1509,7 +1509,7 @@ With arg, to it arg times."
   )
 
 
-; Makes '(' insert '( ' or ' ( ' where appropiate
+; Makes '(' insert '(' or ' ( ' where appropiate
 (defun insert-parens (arg) (interactive "*P")
   (if (not (c-in-literal))
       (let ((n nil))
@@ -1525,11 +1525,11 @@ With arg, to it arg times."
          (n (progn
               (insert " ")
               (self-insert-command (prefix-numeric-value arg))
-              (insert " ")
+              ;(insert " ")
               ))
          (t ;else
           (self-insert-command (prefix-numeric-value arg))
-          (insert " ")
+          ;(insert " ")
           )))
     (self-insert-command (prefix-numeric-value arg)))
   )
@@ -1550,7 +1550,7 @@ With arg, to it arg times."
          (t ;else
           (if abbrev-mode ; XEmacs
               (expand-abbrev))
-          (insert " ")
+          ;(insert " ")
           (self-insert-command (prefix-numeric-value arg))
           ))) ; normal case, prepend a space
     ;;(blink-matching-open) ; show the matching parens
@@ -1573,8 +1573,9 @@ With arg, to it arg times."
       (let ((n nil) (o nil))
         (save-excursion
           (forward-char -2)
-          (setq n (looking-at " )"))
           (setq o (looking-at "()"))
+          (forward-char 1)
+          (setq n (looking-at ")"))
           )
         (cond
          (n (progn
