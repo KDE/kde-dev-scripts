@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+# Check for common spelling errors.
+# Artistic License, Dirk Mueller <mueller@kde.org> 2003.
+
 use POSIX;
 use strict;
 
