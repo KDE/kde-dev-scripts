@@ -715,7 +715,7 @@ for module in $modules; do
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
     # Attempt to display the actual error
-    grep -B3 Error $logfile | head -2
+    grep -m1 -A2 ":[0-9]*: error:" $logfile
     move_logfile
   fi
 done
