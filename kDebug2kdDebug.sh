@@ -35,7 +35,7 @@ while (<>)
 	    $_ = $statement;
 	    ## Ok, now we have the full line
 	    ## 1 - Parse
-	    s/(^.*kDebug[a-zA-Z]*)[\s]*\([\s]// || die "parse error on kDebug...";
+	    s/(^.*kDebug[a-zA-Z]*)[\s]*\([\s]*// || die "parse error on kDebug...";
 	    $line=$1; # has the indentation, //, and the kDebug* name
 	    $line =~ s/kDebugInfo/kdDebug/;
 	    $line =~ s/kDebugWarning/kdWarning/;
