@@ -141,6 +141,11 @@ sub main
 		" && cd .. && tar cf \"$packagedir\".tar \"$packagedir\""
 		|| die;
 
+# Move Debian directory one level up if it exists
+	if ( -d $packagedir."/".$package."/".debian ) {
+		system "mv $packagedir/$package/debian $packagedir/debian";
+	}
+
 	print "Working dir:", `pwd`, "\n";
 # Create tar.gz file
 
