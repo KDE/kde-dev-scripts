@@ -149,7 +149,7 @@ for my $file_name ( @ARGV )
      $text =~ s/&lt;/</g;
      $text =~ s/&gt;/>/g;
      $text =~ s/&amp;/&/g; 
-     $text =~ s/\\/\\\\/g;
+     $text =~ s/\\([^n])/\\\\$1/g;
      $text =~ s/\"/\\\"/g;
 
      if ( $text cmp "" )
