@@ -399,12 +399,12 @@ for file in $override; do
 	test -e $temp_dist/$name/$file && mv $temp_dist/$name/$file . && echo "mv $temp_dist/$name/$file ." >> $log
 done
 
-test ! -z $addfiles && echo "Addfiles: " >> $log
+test ! -z "$addfiles" && echo "Addfiles: " >> $log
 for file in $addfiles; do
 	test -e $file && cp -R $file $temp_dist && echo "cp -R $file $temp_dist" >> $log
 done
 
-test ! -z $appaddfiles && echo "Application addfiles: " >> $log
+test ! -z "$appaddfiles" && echo "Application addfiles: " >> $log
 for file in $appaddfiles; do
 	test -e $file && cp -R $file $temp_dist/$name/ && echo "cp -R $file $temp_dist/$name/" >> $log
 done
