@@ -6,7 +6,7 @@
 # Initial author: Dirk Mueller
 # Support for multiple command-line arguments: David Faure
 
-BRANCH=KDE_3_3_BRANCH
+BRANCH=KDE_3_4_BRANCH
 echo "Backporting to $BRANCH"
 TMPFILE=`mktemp cvsbackport.XXXXXX` || exit 1
 files=$*
