@@ -122,6 +122,14 @@ BUILD_CLEAN=no
 #
 MAKE_OPTS=""
 
+# if you use unsermake, you can define different flags for the actual
+# compilation process. This is useful if you distribute the compilation
+# process over several computers, but need to link on one. So you would
+# define -j3 here and nothing above. 
+# If you set something here, the value will be used alone, otherwise
+# MAKE_OPTS will be used alone
+MAKE_OPTS_COMPILE=""
+
 # If you would like to compile with a different make, please set it
 # here
 MAKE=make

@@ -503,17 +503,27 @@ for module in $modules; do
         #
         echo -n "  Compiling..."
         set_title "Compiling module $module..."
-        cmd_make="$MAKE $MAKE_OPTS"
+	test -f $KDESRCDIR/$module/Makefile.am.in && test -n "$USE_UNSERMAKE" && use_compile_target=yes
+	if test "$use_compile_target" = yes && test -n "$MAKE_OPTS_COMPILE"; then
+	    cmd_make="$MAKE $MAKE_OPTS_COMPILE"
+	else
+	    cmd_make="$MAKE $MAKE_OPTS"
+	fi
         test "x$critical" = "x0" && cmd_make="$cmd_make -k"
+        test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
+        test "$use_compile_target" = yes && cmd_make="$cmd_make compile"
+
         if test "x$KDELOGDIR" != x; then
           echo "-> Compilation <----------------------------------------------------------------" >> $logfile
           echo "-> $cmd_make <-" >> $logfile
           cmd_make="$cmd_make >> $logfile 2>&1"
           starttime=`date +%s`
         fi
-        test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
+       
+        eval ${cmd_make}
+	compile_ret=$?
 
-        if eval ${cmd_make}; then
+        if test $compile_ret = 0; then
           if test "x$KDELOGDIR" != x; then
             compute_time
             echo "--------------------------------------------------------------------------------" >> $logfile
@@ -521,7 +531,40 @@ for module in $modules; do
             echo "" >> $logfile
           fi
           echo -e "$str_okay"
+	 
+	  # Link the module
+	  if test "$use_compile_target" = yes; then
+	    echo -n "  Linking..."
+	    set_title "Linking module $module..."
+	    cmd_make="$MAKE $MAKE_OPTS"
+            test "x$critical" = "x0" && cmd_make="$cmd_make -k"
+            test "x$NICECOMPILE" = xyes && cmd_make="nice $cmd_make"
+	    
+	    if test "x$KDELOGDIR" != x; then
+               echo "-> Linking <----------------------------------------------------------------" >> $logfile
+	       echo "-> $cmd_make <-" >> $logfile
+               cmd_make="$cmd_make >> $logfile 2>&1"
+               starttime=`date +%s`
+            fi
 
+	    eval ${cmd_make}
+	    link_ret=$?
+	    if test "$link_ret" = 0; then
+              if test "x$KDELOGDIR" != x; then
+                compute_time
+                echo "--------------------------------------------------------------------------------" >> $logfile
+                echo "Time needed for linkage of module $module: $hours:$minutes:$seconds" >> $logfile
+                echo "" >> $logfile
+              fi
+              echo -e "$str_okay"
+	    else
+		compile_ret = $link_ret
+	    fi
+          fi
+	fi
+
+	if test $compile_ret = 0; then
+	      
           # Install the module.
           #
           cmd_make_install="$MAKE"
