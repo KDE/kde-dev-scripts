@@ -950,7 +950,7 @@ With arg, to it arg times."
 (defun agulbra-switch-cpp-h ()
   "Switch to the corresponding .cpp, .C, .cc or .h file."
   (interactive)
-  (let ((n (buffer-name))
+  (let ((n (buffer-file-name))
         (c nil))
     (cond ((and (string-match "\\.h$" n)
                 (progn
@@ -996,7 +996,7 @@ With arg, to it arg times."
 ;; Written by David and Reggie after much hair tearing
 (defun switch-to-function-def ()
   (interactive)
-  (let ((n (buffer-name))
+  (let ((n (buffer-file-name))
         (class "")
         (fn ""))
     (if (or (string-match "\\.cc$" n)
