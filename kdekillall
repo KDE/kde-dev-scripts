@@ -1,19 +1,17 @@
-#!/bin/sh
-signal=$1
-if test "x${signal:0:1}" = "x-"; then
-	shift
-else
-	signal=""
-fi
+#! /bin/sh
+
+case $1 in
+    -*) signal=$1; shift;;
+esac
 if [ $# = 0 ]; then
     echo "Usage: $0 [-<signal>] <process>"
     echo 'Kills the process "kdeinit: <process> with signal <signal>"'
 	echo "if <signal> is not specified, it defaults to SIGTERM,"
 	echo "see kill -l for a list of possible signals"
 else
-    list=`ps auwx | grep "kdeinit: $1" | grep -v grep | gawk '{print $2}'`
+    list=$(ps auwx | gawk "/[k]deinit: $1/ {print \$2}")
     if test -n "$list"; then 
-        for i in $list; do kill $signal $i; done; 
+        kill $signal $list
     else
         echo 'No process killed'
         exit 1
