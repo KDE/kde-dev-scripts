@@ -1,0 +1,15 @@
+#!/bin/sh
+# Run from command line, to open a qt help page in kfm/konqueror
+# No argument => main page
+# Classname (case insensitive) => page for this class
+
+if [ $# = 1 ]; then
+  fname=`echo $1 | tr '[A-Z]' '[a-z]'`
+  if [ -f $QTDIR/html/$fname.html ]; then
+    kfmclient openURL file:$QTDIR/html/$fname.html
+  else
+    echo "No such file $fname.html"
+  fi
+else
+  kfmclient openURL file:$QTDIR/html/
+fi
