@@ -42,6 +42,8 @@ case $1 in
       if [ -f $srcdir/$thefile ]; then
           thefile=$srcdir/$thefile
       fi
+      echo
+      echo "Setting date of $thefile back in time with:"
       echo "touch -r $oldestdep $thefile" ; touch -r $oldestdep $thefile
     fi
     ;;
@@ -51,7 +53,7 @@ case $1 in
     ;;
   why )
     if [ $# -ne 2 ]; then usage; fi
-    make -n -d $2 | egrep -e '(newer|Must)'
+    make -n -d $2 | egrep -e "(newer than target \`$2'|Must)"
     ;;
   * ) usage ;;
 esac
