@@ -93,7 +93,7 @@ SSHACCOUNT="no"
 ANONCVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
 
 # Do you want any special branch? If so, specify its tag here e.g.
-# KDE_3_2_BRANCH or KDE_3_2_1_RELEASE. If you want the
+# KDE_3_3_BRANCH or KDE_3_3_0_RELEASE. If you want the
 # checked out branch, leave this empty. Use "HEAD" if you want
 # the development branch for sure (leaving it empty will simply update
 # whatever is there)
@@ -101,7 +101,7 @@ ANONCVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
 # you can specify a module specific branch in through BRANCH_ARTS
 #
 BRANCH=""
-# BRANCH_ARTS=ARTS_1_2_BRANCH
+# BRANCH_ARTS=ARTS_1_3_BRANCH
 
 # Do you want only some subdirs from some module? Specify similiar to the
 # below syntax
