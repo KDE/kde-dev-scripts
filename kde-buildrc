@@ -8,8 +8,8 @@
 #
 KDESRCDIR="$PWD"
 
-# Where your KDE should be build
-# set to empty if built in KDESRCDIR
+# Where your KDE should be build, leave empty if built in KDESRCDIR
+#
 KDEBUILDDIR=""
 
 # Where shall I put the binaries?
@@ -43,8 +43,8 @@ USEKDESUPPORT="no"
 #
 KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kdeaddons"
 
-# If you only want to cvs update the listed modules, set it to yes
-# 
+# If you only want to cvs update the listed modules, set it to yes.
+#
 ONLYLISTEDMODULES=yes
 
 # Do you want a clean install? This is recommended but please note that
@@ -112,8 +112,9 @@ EXCLUDE=""
 #
 CVS_CLEAN="no"
 
-# Rely on the dependencies for Makefiles and configure
+# Rely on the dependencies for Makefiles and configure?
 # If you trust the build system, set it to yes ;-)
+#
 INCREMENTAL_BUILD="no"
 
 # Flags to be passed to the 'configure' script.
@@ -123,23 +124,23 @@ INCREMENTAL_BUILD="no"
 # not create closure targets but link with some compiler flags to make
 # sure the compiler will fail when undefined symbols are there - which
 # is much faster if it works for you.
-#
-CONFIGUREFLAGS="--enable-debug --disable-closure"
-
 # You can define module-specific configure flags using
 # CONFIGUREFLAGS_ARTS, CONFIGUREFLAGS_KDELIBS, etc. These are appended to the
 # general $CONFIGUREFLAGS value
+#
+CONFIGUREFLAGS="--enable-debug --disable-closure"
 
-# set it to the path for unsermake if you want to test it instead of
-# automake
+# Set it to the path for unsermake if you want to test it instead of
+# automake.
 # USE_UNSERMAKE="$KDESRCDIR/kdenonbeta/unsermake/unsermake"
 
 # List modules here for which unsermake should not be used.
 #
 NO_UNSERMAKE_MODULES="kdenonbeta"
 
-# if you use an extra build dir (KDEBUILDDIR), then set it to yes to
-# remove the module's directory before calling configure
+# If you use an extra build directory (KDEBUILDDIR), setting this to yes will
+# remove a module's build directory before configure is called.
+#
 BUILD_CLEAN=no
 
 # If you would like to pass any parameters to make add them here. If you
@@ -149,22 +150,24 @@ BUILD_CLEAN=no
 #
 MAKE_OPTS=""
 
-# if you use unsermake, you can define different flags for the actual
+# If you use unsermake, you can define different flags for the actual
 # compilation process. This is useful if you distribute the compilation
 # process over several computers, but need to link on one. So you would
-# define -j3 here and nothing above. 
+# define -j3 here and nothing above.
 # You can also use the special "DISTCC" keyword here; if found, it will
 # be replaced by the number of hosts listed in the $DISTCC_HOSTS
 # environment variable, multiplied by two. Hence, 'DISTCC_HOSTS="a b c"' and
 # 'MAKE_OPTS_COMPILE="-jDISTCC"' will result in 'MAKE_OPTS_COMPILE="-j6"'.
 # If you set something here, the value will be used alone, otherwise
-# MAKE_OPTS will be used alone
+# MAKE_OPTS will be used alone.
 # You can use the special "TEAMBUILDER" keyword too, it will put the
-# returned value of tbcompiler -joblimit in there
+# returned value of tbcompiler -joblimit in there.
+#
 MAKE_OPTS_COMPILE=""
 
 # If you would like to compile with a different make, please set it
-# here
+# here.
+#
 MAKE=make
 
 # vim:et:ts=2:sw=2
