@@ -143,8 +143,8 @@ def runCompileThread(compiledir):
         if pid2 == 0:
             # the grep thread
             while 1:
-                ParseLogfile()
                 time.sleep(3)
+                ParseLogfile()
         else:
             os.wait(pid,0)
             os.kill(pid2,9)
@@ -153,10 +153,15 @@ def runCompileThread(compiledir):
 #   Parsing the logfile!!!
 #
 def ParseLogfile():
+#  print "."
   try:
+      os.system("ls -l logfile* >x")
       logfile = open("logfile", "r")
-  except:
+  except IOError:
+      print "Cannot open logfile... "
       return
+  except:
+      print "Unexpected exception"
   searchstring = re.compile("Leaving directory")
   while 1:
       temp = logfile.readline()
@@ -209,7 +214,7 @@ def countDirs(cvsdir):
 #
 def runInstall(compiledir):
     if (verbose):
-        print "Now compiling the package"
+        print "Now proceeding with the installation"
     currdir = os.getcwd()
     os.chdir(compiledir)
     value = os.system("make -k install >logfile.install")
@@ -224,13 +229,14 @@ def runInstall(compiledir):
 #   Print help
 #
 def printHelp():
-    print "kdecompile v.0.3.0"
+    print "kdecompile v.0.3.1"
     print "-h\t\t\tPrint this help"
     print "-i\t\t\tInstall without asking"
     print "-d\t\t\tDisable debug info"
     print "-o\t\t\tEnable optimization"
     print "--remove-admin-dir\tRemove the admin dir before cvs checkout"
-        
+    print "--no-cvs-checkout\tDo not do cvs checkout"
+    print "--no-configure\tDo not run configure"    
 
 #
 # And here comes the main function
@@ -240,7 +246,10 @@ verbose = 1
 noOptimizations = 1
 installWithoutAsking = 0
 noDebug = 0
+cvscheckout = 1
 removeAdminDir = 0
+RunConfigure = 1
+RunCVSCheckOut = 1
 compileddirs = []
 compileDirsPre = []
 installDir = "/opt/kde"
@@ -263,7 +272,12 @@ for x in sys.argv[1:]:
     if x == "--remove-admin-dir":
         print "Will remove admin dir before cvs checkout"
         removeAdminDir = 1
-
+    if x == "--no-cvs-checkout":
+        print "Will not do CVS checkout"
+        RunCVSCheckOut = 0
+    if x == "--no-configure":
+        print "Will not run configure"
+	RunConfigure = 0
 
 # find the directories
 currdir = os.getcwd()
@@ -279,10 +293,12 @@ for x in newdir:
     cvsdir = cvsdir + "/"+x
 print cvsdir
 
-runCVSCheckOut(cvsdir, packagename)
+if RunCVSCheckOut:
+    runCVSCheckOut(cvsdir, packagename)
+if RunConfigure:
+    runAutoConf(cvsdir+"/"+packagename)
+    runConfigure(currdir, packagename, installDir)
 countDirs(cvsdir+"/"+packagename)
-runAutoConf(cvsdir+"/"+packagename)
-runConfigure(currdir, packagename, installDir)
 if noOptimizations:
     runRemoveO2(currdir)
 #runCompile(currdir);
