@@ -15,7 +15,7 @@ cmdline="$@"
 
 returndir=`pwd`
 override="README ChangeLog INSTALL AUTHORS AUTHOR COPYING"
-remove="config.cache config.log config.status Makefile configure inst-apps CVS acinclude.m4 aclocal.m4 config.h config.h.bot config.h.in configure.files libtool stamp-h stamp-h.in stamp-h1 subdirs *.moc *.la .libs .deps .cvsignore autom4te.cache"
+remove="config.cache config.log config.status Makefile configure inst-apps CVS acinclude.m4 aclocal.m4 config.h config.h.bot config.h.in configure.files libtool stamp-h stamp-h.in stamp-h1 subdirs *.moc *.la .libs .deps .cvsignore autom4te.cache {arch} .arch-ids"
 toplevelremove="configure.in.bot"
 
 test -e ~/.cvs2distrc && extraoptions=`cat ~/.cvs2distrc`
