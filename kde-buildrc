@@ -5,15 +5,19 @@
 
 # Where are your KDE sources?
 #
-KDESRCDIR="/home/dirk/src/kde"
+KDESRCDIR="/home/coolo/prod"
+
+# Where your KDE should be build
+# set to empty if built in KDESRCDIR
+KDEBUILDDIR="/build/coolo"
 
 # Where shall I put the binaries?
 #
-KDEDIRS="/opt/kde"
+KDEDIRS="/home/coolo/prod/KDE"
 
 # Where is your Qt 3.0.x?
 #
-QTDIR="/usr/X11/lib/qt"
+QTDIR="/home/coolo/prod/qt-copy"
 
 # If you would like logfiles of the compilation process, specify a directory
 # here in which the logfiles will be saved. If you want to disable logfile
@@ -25,14 +29,18 @@ KDELOGDIR="$KDESRCDIR/log"
 # make the script compress the logfiles using bzip2 (using gzip as a
 # fallback is bzip2 cannot be found) and thereby save some diskspace.
 #
-COMPRESSLOGS="yes"
+COMPRESSLOGS="no"
 
 # Add modules you want to get compiled to this space-seperated list. Note that
 # you don't have to mention the fundamental modules 'arts, 'kdesupport',
 # 'kdelibs' and 'kdebase' here since the kde-build script will care about them
 # automatically.
 #
-KDEMODULES="kdenetwork kdegames kdeutils"
+KDEMODULES="kdenetwork kdegames kdeutils kdepim kdesdk kdemultimedia kdeaddons kdeartwork koffice kdetoys kdeadmin kdeedu kdegraphics kde-i18n"
+
+# If you only want to cvs update the listed modules, set it to yes
+# 
+ONLYLISTEDMODULES=yes
 
 # Do you want a clean install? This is recommended but please note that
 # you cannot use your previous KDE2 desktop while the compilation is
@@ -63,7 +71,7 @@ CVSCLIENT="cvs"
 # For CVS users only: Do you have a CVS account? If so, set this variable to
 # the correct name, otherwise leave this blank to use anonymous CVS.
 #
-ACCOUNT="mueller"
+ACCOUNT="anonymous"
 
 # Do you want any special branch? If so, specify its tag here e.g.
 # KDE_2_2_BRANCH  or KDE_3_0_ALPHA_1. If you want the
@@ -79,7 +87,7 @@ CVSUPSERVER="cvsup.kde.org"
 # If there are any modules in $KDESRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
 #
-EXCLUDE="qt-copy kdenonbeta kde-i18n www qt kdeutils kde-common bugs"
+EXCLUDE=""
 
 # If you would like a virgin cvs copy set this field to "yes", otherwise set
 # this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'

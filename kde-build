@@ -169,14 +169,21 @@ else
   . ./kde-buildrc
 fi
 
-# This generates in 'modules' a list of the modules which shall be updated.
-#
-potential_modules=`find $KDESRCDIR -type d -mindepth 1 -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
-for module in $potential_modules; do
-  if test -d $KDESRCDIR/$module/CVS -a -w $KDESRCDIR/$module && !(echo $EXCLUDE | grep -q $module); then
-    modules="$modules $module"
-  fi
-done
+if test "x$ONLYLISTEDMODULES" = xyes; then
+   modules="$critical_modules $KDEMODULES"
+else
+
+  # This generates in 'modules' a list of the modules which shall be updated.
+  #
+  potential_modules=`find $KDESRCDIR -type d -mindepth 1 \
+      -maxdepth 1 -follow | sed -e "s@.*/?*@@"`
+  for module in $potential_modules; do
+    if test -d $KDESRCDIR/$module/CVS -a -w $KDESRCDIR/$module \
+          && !(echo $EXCLUDE | grep -q $module); then
+      modules="$modules $module"
+    fi
+  done
+fi
 
 # Various checks to ensure that the user didn't specify invalid data which
 # would make our script break.
@@ -378,11 +385,15 @@ for module in $critical_modules $KDEMODULES; do
     else
       echo "Building module: $module"
 
+      if test -n "$KDEBUILDDIR"; then
+        mkdir -p $KDEBUILDDIR/$module
+        cd $KDEBUILDDIR/$module
+      fi
       # Configure the module.
       #
       echo -n "  Configuring..."
       set_title "Configuring module $module..."
-      cmd_configure="./configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
+      cmd_configure="$KDESRCDIR/$module/configure $CONFIGUREFLAGS --prefix=$KDEDIRS --with-qt-libs=$QTDIR"
       test "x$NICECOMPILE" = xyes && cmd_configure="nice $cmd_configure"
       if test "x$KDELOGDIR" != x; then
         logfile="$KDELOGDIR/$module-build-$dateformat"
