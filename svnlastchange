@@ -8,8 +8,12 @@ Usage:
 EOF
     exit 1
 fi
-echo >&2 "Warning: svnlastchange is superfluous"
-echo >&2 "Use svn log -r COMMITTED and svn diff -r PREV:COMMITTED"
+
+if [ "$1" == "-q" ]; then
+    shift
+else
+    echo >/dev/tty "Hint: Use svn log -r COMMITTED and svn diff -r PREV:COMMITTED"
+fi
 
 svn log -r COMMITTED "$*"
 svn diff -r PREV:COMMITTED "$*" || \
