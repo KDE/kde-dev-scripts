@@ -2,4 +2,4 @@
 # Modifies the Makefile in the current directory, to add
 # debug info (-g), and to remove stripping (-s) and optimizations (-O2)
 
-perl -pi -e 's|(^CXXFLAGS\s*=\s*.*)$|\1 -g|;s|-O2||;s|(^LDFLAGS\s*=\s*.*)$|\1 -g|;' Makefile
+perl -pi -e 's|(^CXXFLAGS[ \t]*=[ \t]*.*)$|\1 -g|;s|-O2||;s|(^LDFLAGS[ \t]*=[ \t]*.*)$|\1 -g|;' Makefile
