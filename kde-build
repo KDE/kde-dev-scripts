@@ -401,7 +401,7 @@ if [ "$CVSCLIENT" = cvs ]; then
   cmd_update="cvs"
   if [ -z "$CVSROOT" ]; then
     if [ -z "$ACCOUNT" ]; then
-      cmd_update="$cmd_update -d:$ANONCVSROOT"
+      cmd_update="$cmd_update -d $ANONCVSROOT"
     else
       cmd_update="$cmd_update -d"
       if [ "$SSHACCOUNT" = "yes" ]; then
