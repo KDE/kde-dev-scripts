@@ -214,7 +214,7 @@ fi
 # UNIX flavors which don't support LD_LIBRARY_PATH
 PATH=$QTDIR/bin:$KDEDIRS/bin:$PATH
 MANPATH=$QTDIR/doc/man:$MANPATH
-LD_LIBRARY_PATH=$KDEDIR/lib:$QTDIR/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$KDEDIRS/lib:$QTDIR/lib:$LD_LIBRARY_PATH
 
 if test -z "$MAKE"; then
   MAKE=make
