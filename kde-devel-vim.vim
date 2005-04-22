@@ -29,6 +29,14 @@ set path+=,
 " Use makeobj to build
 set mp=makeobj
 
+" If TagList is Loaded then get a funny statusline
+" Only works if kde-devel-vim.vim is loaded after taglist.
+" Droping this script in ~/.vim/plugin works fine
+if exists('loaded_taglist')
+    let Tlist_Process_File_Always=1
+    set statusline=%<%f:[\ %{Tlist_Get_Tag_Prototype_By_Line()}\ ]\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+endif
+
 " Insert tab character in whitespace-only lines, complete otherwise
 inoremap <Tab> <C-R>=SmartTab()<CR>
 
@@ -75,7 +83,7 @@ set list
 
 set incsearch
 
-function SmartTab()
+function! SmartTab()
     let col = col('.') - 1
     if !col || getline('.')[col-1] !~ '\k'
         return "\<Tab>"
