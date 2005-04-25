@@ -70,7 +70,7 @@ This function does not do any hidden buffer changes."
         (namespace "") ; will contain A::B::
         (function nil))
     (save-excursion
-      (progn
+      (save-excursion
         ; Go up a level, skipping entire classes etc.
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
@@ -102,29 +102,30 @@ This function does not do any hidden buffer changes."
         ; Go up one level again
 	(let ((pos (c-safe-scan-lists (point) -1 1)))
 	  (goto-char (if pos (+ pos 1) (point-min))))
-	)))
+	))
 
-    (progn ; Back to where we were, parse function name
-      (and (looking-at "$")
-           (progn
+    ; Back to where we were, parse function name
+    (backward-char)             ; in case we're after the ';'
+    (search-forward ";" nil t)  ; look for the ';'
+    (backward-char)
+    (let ((end (point)))          ; remember where the function decl ends
+      (search-backward ")" nil t) ; look back for the end of the argument list
+      (forward-char)
+      (backward-sexp)             ; brings us back to the '('
+      (backward-word)
+      (when (looking-at "throw[ \t]") ; exception specification, look for () again
              (search-backward ")" nil t)
              (forward-char)
-             (backward-sexp)))
+             (backward-sexp))
+      ; now that we moved back enough, go to beginning of line.
+      ; (we assume that the return type, function name, and '(' are on the same line)
       (re-search-backward "^[ \t]*")
-      (progn
-	(while (looking-at "[ \t]")
-	  (forward-char 1))
-	(setq start (point))
-	(and (search-forward "(" nil t)
-	     (progn
-	       (forward-char -1)
-	       (forward-sexp)))
-	(and (looking-at "[ \t]+const")
-	     (forward-word 1))
-	(and (looking-at ";")
-	     (setq function (buffer-substring start (point))))
-	(re-search-forward "(" nil t)))
-    (cons namespace (cons class function))
+      (while (looking-at "[ \t]")
+	(forward-char 1))
+      (setq function (buffer-substring (point) end))
+      )
+    ) ; end of global save-excursion
+    (cons namespace (cons class function)) ; the returned value
     )
   )
 
@@ -272,10 +273,14 @@ This function does not do any hidden buffer changes."
 	 )
     (setq insertion-string 
 	  (concat (kde-function-impl-sig namespace class function) "\n{\n    \n}\n"))
+    ; move to next method, to be ready for next call
+    (backward-char)                ; in case we're after the ';'
+    (re-search-forward ";" nil t)  ; end of this method decl
+    (re-search-forward ";" nil t)  ; end of next method decl
+
     (if (string-match "\\.h$" file)
 	(kde-switch-cpp-h)
-    )
-    (progn
+      )
     (goto-char (point-max))
     (kde-comments-begin)
     (kde-skip-blank-lines)
@@ -299,9 +304,9 @@ This function does not do any hidden buffer changes."
 	   (setq file (replace-match "" t nil file)))
       (and (string-match "\\.h$" file)
 	   (functionp 'kdab-insert-include-file)
-	   (kdab-insert-include-file file 't nil))))
+	   (kdab-insert-include-file file 't nil)))
     (when (featurep 'fume-rescan-buffer)
-    (fume-rescan-buffer))
+      (fume-rescan-buffer))
     ))
 
 
