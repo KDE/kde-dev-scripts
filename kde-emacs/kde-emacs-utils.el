@@ -267,12 +267,14 @@ This function does not do any hidden buffer changes."
 	 (class (car (cdr mup)))
 	 (function (cdr (cdr mup)))
 	 (file (buffer-file-name))
-	 (insertion-string nil)
+	 (insertion-string (kde-function-impl-sig namespace class function))
 	 (msubstr nil)
 	 (start nil)
 	 )
     (setq insertion-string 
-	  (concat (kde-function-impl-sig namespace class function) "\n{\n    \n}\n"))
+	  (concat insertion-string "\n{\n"
+		  (replace-in-string kde-make-member-default-impl "FUNCTION" insertion-string t)
+		  "}\n"))
     ; move to next method, to be ready for next call
     (backward-char)                ; in case we're after the ';'
     (re-search-forward ";" nil t)  ; end of this method decl
@@ -298,7 +300,7 @@ This function does not do any hidden buffer changes."
 	  ))
     (insert insertion-string)
     (forward-char -3)
-    (c-indent-command)
+    (c-indent-defun)   
     (save-excursion
       (and (string-match ".*/" file)
 	   (setq file (replace-match "" t nil file)))

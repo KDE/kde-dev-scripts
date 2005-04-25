@@ -134,10 +134,14 @@ magic-keys-mode is set to true. "
   :group 'kde-devel
   :type 'string)
 
+(defcustom kde-make-member-default-impl "    \n"
+  "Default implementation added by agulbra-make-member. FUNCTION gets replaced by the full signature of the function/method."
+  :group 'kde-devel
+  :type 'string)
+
 ; a grep in the part of kde-source I have gives: 
 ; 5579 files uses .cpp, 1402 uses .cc, 10 uses .cxx, and 1 uses .C
 (defconst kde-prefered-source-extension "cpp"
   "Source extension which kde-* functions should use for creating new files.")
-
 
 (provide 'kde-emacs-vars)
