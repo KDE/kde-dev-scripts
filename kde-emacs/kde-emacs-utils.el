@@ -70,6 +70,9 @@ This function does not do any hidden buffer changes."
         (namespace "") ; will contain A::B::
         (function nil))
     (save-excursion
+      (backward-char)             ; in case we're after the ';'
+      (search-forward ";" nil t)  ; look for the ';'
+      (backward-char)
       (save-excursion
         ; Go up a level, skipping entire classes etc.
         ; This is a modified version of (backward-up-list) which doesn't
@@ -105,9 +108,6 @@ This function does not do any hidden buffer changes."
 	))
 
     ; Back to where we were, parse function name
-    (backward-char)             ; in case we're after the ';'
-    (search-forward ";" nil t)  ; look for the ';'
-    (backward-char)
     (let ((end (point)))          ; remember where the function decl ends
       (search-backward ")" nil t) ; look back for the end of the argument list
       (forward-char)
