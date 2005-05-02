@@ -14,6 +14,12 @@ end
 document printqstring
   Prints the contents of a QString
 end
+define printq4string
+    printq4stringdata $arg0.d
+end
+document printq4string
+  Prints the contents of a Qt QString
+end
 
 define printqstringdata
     set $i=0
@@ -29,6 +35,22 @@ document printqstringdata
   shows {d = 0xdeadbeef} for a QString, i.e. the qstringdata address
   instead of the QString object itself.
   printqstring $s and printqstringdata $s.d are equivalent.
+end
+
+define printq4stringdata
+    set $i=0
+    set $d = $arg0
+    while $i < $d->size
+        printf "%c", (char)($d->data[$i++] & 0xff)
+    end
+    printf "\n"
+end
+document printq4stringdata
+  Prints the contents of a Qt4 QString::Data
+  This is useful when the output of another command (e.g. printqmap)
+  shows {d = 0xdeadbeef} for a QString, i.e. the qstringdata address
+  instead of the QString object itself.
+  printq4string $s and printq4stringdata $s.d are equivalent.
 end
 
 define printqstring_utf8
@@ -61,6 +83,13 @@ define printqcstring
 end
 document printqcstring
   Prints the contents of a QCString (char * data, then length)
+end
+
+define printq4bytearray
+    print $arg0->d->data
+end
+document printq4bytearray
+  Prints the contents of a Qt4 QByteArray (when it contains a string)
 end
 
 define printqfont
@@ -223,4 +252,17 @@ end
 document printqstringlist
   Prints the contents of a QStringList.
   Usage: printqstringlist mylist
+end
+
+# Bad implementation, requires a running process.
+# Needs to be refined, i.e. figuring out the right void* pointers casts.
+# Simon says: each Node contains the d pointer of the QString.
+define printq4stringlist
+    set $list = $arg0
+    set $stringdata = QtPrivate::QStringList_join( &paths, "\n" ).d
+    printq4stringdata $stringdata
+end
+document printq4stringlist
+  Prints the contents of a Qt4 QStringList.
+  Usage: printq4stringlist mylist
 end
