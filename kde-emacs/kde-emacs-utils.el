@@ -273,7 +273,10 @@ This function does not do any hidden buffer changes."
 	 )
     (setq insertion-string 
 	  (concat insertion-string "\n{\n"
-		  (replace-in-string kde-make-member-default-impl "FUNCTION" insertion-string t)
+		  (replace-in-string kde-make-member-default-impl "FUNCTION" 
+				     ; the function name and args, without newlines
+				     (replace-in-string insertion-string "\n" " " t)
+				     t)
 		  "}\n"))
     ; move to next method, to be ready for next call
     (backward-char)                ; in case we're after the ';'
