@@ -46,7 +46,7 @@ COMPRESSLOGS="no"
 
 # Whether or not you want to compile and install the kdesupport module.
 #
-USEKDESUPPORT="no"
+USEKDESUPPORT="yes"
 
 # Add modules you want to get compiled to this space-seperated list. Note that
 # you don't have to mention the fundamental modules 'arts, 'kdesupport',
@@ -55,7 +55,8 @@ USEKDESUPPORT="no"
 # See http://wiki.kdenews.org/tiki-index.php?page=KDE+CVS+Structure for a list
 # of available modules including kdeextragear-* or koffice.
 
-KDEMODULES="kdeaccessibility kdeadmin kdeartwork kdebindings kdeedu kdegames kdegraphics kdemultimedia kdenetwork kdepim kdesdk kdetoys kdeutils kdeaddons kde-i18n kdevelop kdewebdev"
+#KDEMODULES="kdeaccessibility kdeadmin kdeartwork kdebindings kdeedu kdegames kdegraphics kdemultimedia kdenetwork kdepim kdesdk kdetoys kdeutils kdeaddons kdevelop kdewebdev extragear-libs extragear-multimedia extragear-sysadmin extragear-office extragear-addons extragear-graphics extragear-network extragear-pim extragear-toys extragear-utils"
+KDEMODULES="kdetoys extragear-libs extragear-multimedia"
 
 
 # If you only want to cvs update the listed modules, set it to yes.
@@ -82,48 +83,42 @@ NICECOMPILE="yes"
 #
 TWEAKCOMPILE="no"
 
-# Which command is used to update your sources?
-# anoncvs and cvs users: set this to "cvs"
-# cvsup users: set this to "cvsup"
-#
-CVSCLIENT="cvs"
-
 # For CVS users only: Do you have a CVS account? If so, set this variable to
 # the correct name, otherwise leave this blank to use anonymous CVS.
 #
-ACCOUNT=""
+ACCOUNT="coolo"
 
 #  For CVS users only: set this to "yes" in case you access cvs.kde.org via
 # SSH. Otherwise, set this to "no."
 #
-SSHACCOUNT="no"
+SSHACCOUNT="yes"
 
 # In case you left the ACCOUNT value empty (and thus use anonymous CVS
 # access), you can specify an anoncvs mirror here. Check
 # http://developer.kde.org/source/anoncvs.html for a list of mirror servers.
 #
-ANONCVSROOT=":pserver:anonymous@anoncvs.kde.org:/home/kde"
+ANONSVNROOT="https://svn.kde.org/home/kde"
 
-# Do you want any special branch? If so, specify its tag here e.g.
-# KDE_3_3_BRANCH or KDE_3_3_0_RELEASE. If you want the
-# checked out branch, leave this empty. Use "HEAD" if you want
-# the development branch for sure (leaving it empty will simply update
-# whatever is there)
+# Do you want any special path from subversion? If so, specify its path here e.g.
+# /branches/KDE/3.3 or /tags/KDE/3.3.0. If you want the checked out branch, 
+# leave this empty. Use "/trunk" if you want the development branch for sure 
+# (leaving it empty will simply update whatever is there)
 # 
-# you can specify a module specific branch in through BRANCH_ARTS
+# you can specify a module specific branch in through PATH_ARTS
 #
-BRANCH=""
-# BRANCH_ARTS=ARTS_1_3_BRANCH
+SUBDIR="/trunk/KDE/@MODULE@"
+SUBDIR_KDESUPPORT=/trunk/kdesupport
+for esubdir in libs multimedia sysadmin office addons graphics network pim toys utils; do
+  var=SUBDIR_EXTRAGEAR_`echo $esubdir | tr 'a-z' 'A-Z'`
+  eval "$var=/trunk/extragear/$esubdir"
+done
+
+# SUBDIR_ARTS=/branches/arts/1.3
 
 # Do you want only some subdirs from some module? Specify similiar to the
 # below syntax
 #CHECKOUT_PARTIAL_KDEMULTIMEDIA=juk
 #CHECKOUT_PARTIAL_KDEEXTRAGEAR_2="kile konversation"
-
-# For cvsup users only: specify your preferred cvsup mirror here, check
-# http://www.kde.org/cvsupmirrors.html for a list of cvsup mirrors.
-#
-CVSUPSERVER="cvsup.kde.org"
 
 # If there are any modules in $KDESRCDIR which you don't want to be updated,
 # you can specify them in this space-seperated list, e.g. "qt-copy kde-common".
@@ -143,7 +138,7 @@ CVS_CLEAN="no"
 # Rely on the dependencies for Makefiles and configure?
 # If you dare to trust the build system, set it to "yes" ;-)
 #
-INCREMENTAL_BUILD="no"
+INCREMENTAL_BUILD="yes"
 
 # Flags to be passed to the 'configure' script.
 # A note: --enable-debug adds minimum debug symbols while an appended
@@ -170,7 +165,7 @@ CONFIGUREFLAGS="--enable-debug --disable-closure"
 
 # List modules here for which unsermake should not be used.
 #
-NO_UNSERMAKE_MODULES="kdenonbeta kdebindings kdeextragear-2"
+NO_UNSERMAKE_MODULES="kdenonbeta kdebindings"
 
 # If you use an extra build directory (KDEBUILDDIR), setting this to yes will
 # remove a module's build directory before configure is called.

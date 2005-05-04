@@ -228,60 +228,28 @@ prepare_update() {
   # This checks whether the user wants a certain branch and generates the
   # command line. For cvsup users it even generates a supfile. :-)
   #
-  if [ "$CVSCLIENT" = cvs ]; then
-    cmd_update="cvs"
-    if [ -z "$CVSROOT" ]; then
-      if [ -z "$ACCOUNT" ]; then
-        cmd_update="$cmd_update -d $ANONCVSROOT"
-      else
-        cmd_update="$cmd_update -d"
-        if [ "$SSHACCOUNT" = "yes" ]; then
-          cmd_update="$cmd_update $ACCOUNT@cvs.kde.org:/home/kde"
-          CVS_RSH="ssh"; export CVS_RSH
-        else
-          cmd_update="$cmd_update :pserver:$ACCOUNT@cvs.kde.org:/home/kde"
-        fi
-      fi
-    fi
-    cmd_update="$cmd_update up"
-    if [ -n "$CHECKOUT_PARTIAL" -a "$1" = "toponly" ]; then
-      cmd_update="$cmd_update -l"
-    fi
-    if [ "$BRANCH" = "HEAD" ]; then
-      cmd_update="$cmd_update -dPA"
-    elif [ -n "$BRANCH" ]; then
-      cmd_update="$cmd_update -dPr $BRANCH"
-    else
-      cmd_update="$cmd_update -dP"
-    fi
+  cmd_update="svn"
+  if test -d $KDESRCDIR/$module; then
+    cmd_update="$cmd_update switch -r HEAD"
   else
-    if [ -z "$CVSUPSERVER" ]; then
-      echo "ERROR: No cvsup server specified!"
-      exit $err_inv_cvsup_server
-    fi
-    supfile=`mktemp /tmp/$0.XXXXXX`
-    if [ $? -ne 0 ]; then
-      echo "ERROR: Could not create temporare cvsup configuration file in /tmp!"
-      exit $err_no_temp_supfile
-    fi
-    cmd_update="cvsup $supfile"
-    echo "*default host=$CVSUPSERVER" >> $supfile
-    echo "*default base=$KDESRCDIR" >> $supfile
-    echo "*default prefix=$KDESRCDIR" >> $supfile
-    echo "*default release=cvs" >> $supfile
-    echo "*default delete" >> $supfile
-    echo "*default compress" >> $supfile
-    if [ -n "$BRANCH" ]; then
-      echo "*default tag=$BRANCH" >> $supfile
+    cmd_update="$cmd_update co"
+  fi
+  if [ -z "$ACCOUNT" ]; then
+    cmd_update="$cmd_update $ANONCVSROOT$SUBDIR"
+  else
+    cmd_update="$cmd_update"
+    if [ "$SSHACCOUNT" = "yes" ]; then
+      cmd_update="$cmd_update svn+ssh://$ACCOUNT@svn.kde.org/home/kde$SUBDIR"
     else
-      echo "*default tag=." >> $supfile
+      cmd_update="$cmd_update https://$ACCOUNT@svn.kde.org/home/kde$SUBDIR"
     fi
-    echo "*default use-rel-suffix" >> $supfile
-    if [ -d $KDESRCDIR/$module/CVS ] && \
-  		!(echo $EXCLUDE | grep -q $module); then
-      echo "$module" >> $supfile
-    fi
-  fi	
+  fi
+  if [ -n "$CHECKOUT_PARTIAL" -a "$1" = "toponly" ]; then # TODO
+    cmd_update="$cmd_update -N"
+  fi
+  if test ! -d $KDESRCDIR/$module; then
+    cmd_update="$cmd_update $module"
+  fi
 }
 
 # This function installs a compiled CVS module.
@@ -305,28 +273,6 @@ install_module() {
     move_logfile "failed"
     [ -n "$cmd_compress" ] && eval "$cmd_compress $logfile"
     [ $critical -eq 0 ] || exit $err_compile_fail
-  fi
-}
-
-check_admin() {
-  if [ "$module" != kde-common -a "$CVSCLIENT" = cvs -a ! -e admin/Makefile.common ]; then
-    if [ -d ../kde-common ]; then
-      ln -s ../kde-common/admin
-      echo "Making link to ../kde-common/admin" >> $logfile 2>&1
-    else
-      echo "WARNING: Could not find admin/ subdirectory for this module!" >> $logfile 2>&1
-    fi
-  fi
-}
-
-check_libltdl() {
-  if [ "$module" = arts -a ! -e libltdl/Makefile.am ]; then
-    if [ -d ../kdelibs ]; then
-      cp -a ../kdelibs/libltdl .
-      echo "Making copy of ../kdelibs/libltdl" >> $logfile 2>&1
-    else
-      echo "WARNING: Could not find libltdl/ subdirectory for this module!" >> $logfile 2>&1
-    fi
   fi
 }
 
@@ -477,9 +423,6 @@ fi
 # Various checks to ensure that the user didn't specify invalid data which
 # would make our script break.
 #
-if [ "$CVSCLIENT" != cvs -a "$CVSCLIENT" != cvsup ]; then
-  echo "ERROR: Invalid CVS type specified, valid types are 'cvs' and 'cvsup'!"; exit $err_cvsclient_fail
-fi
 if [ -n "$KDELOGDIR" -a ! -d "$KDELOGDIR" ]; then
   if ! mkdir -p "$KDELOGDIR" > /dev/null 2>&1; then
     echo "WARNING: Could not create logfile-directory."
@@ -595,11 +538,12 @@ if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
 fi
 
 BASE_CONFIGUREFLAGS="$CONFIGUREFLAGS"
-BASE_BRANCH=$BRANCH
+BASE_SUBDIR=$SUBDIR
 BASE_CHECKOUT_PARTIAL="$CHECKOUT_PARTIAL"
 
 for module in $modules; do
-  module_variable BRANCH
+  module_variable SUBDIR
+  SUBDIR=`echo $SUBDIR | sed -e "s,@MODULE@,$module,"`
   module_variable CHECKOUT_PARTIAL
 
   if [ -n "$KDELOGDIR" ]; then
@@ -611,11 +555,6 @@ for module in $modules; do
     echo "Build log of module $module, started on `date +%c`" >> $logfile
     echo "===============================================================================" >> $logfile
     echo "" >> $logfile
-  fi
-  if ! cd $KDESRCDIR/$module; then
-    echo "WARNING: Could not change into directory $KDESRCDIR/$module."
-    echo "Update for module $module skipped."
-    continue
   fi
 
   set_title "Updating module $module..."
@@ -634,26 +573,21 @@ for module in $modules; do
 
   log_section "Update $cmd_update"
 
-  check_libltdl
-
   if [ "$docvsupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
     cmd_update_raw="$cmd_update -l $module"
+  fi
+
+  if test -d $KDESRCDIR/$module; then
+    cd $KDESRCDIR/$module
+  else 
+    cd $KDESRCDIR 
   fi
 
   if ! log_cmd "$cmd_update_raw"; then
     echo "$str_error"
     continue
   fi
-
-  if [ "$module" = arts ]; then
-    # since the CVS dir of libltdl is copied along with the rest
-    # we can just cvs upd in libltdl
-    cmd_update_raw="cd libltdl ; $cmd_update; cd .."
-    if [ "$docvsupdate" -ne 0 ]; then
-       log_cmd "$cmd_update_raw"
-    fi
-  fi
-
+ 
   if [ "$docvsupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
     prepare_update toponly
     echo "defined subdirs!"
@@ -663,10 +597,6 @@ for module in $modules; do
       echo " $str_okay"
     done
     echo -n "Final touch..."
-  fi
-
-  if [ "$module" != kde-common -a "$CVSCLIENT" = cvs -a ! -e admin/Makefile.common ]; then
-    check_admin
   fi
 
   if [ "$CVS_CLEAN" = "yes" -a -e admin/Makefile.common -a "$INCREMENTAL_BUILD" != "yes" ]; then
@@ -683,7 +613,6 @@ for module in $modules; do
     continue
   fi
 
-  check_admin
   make_makefile_cvs
 
   log_endsection "Updating"
