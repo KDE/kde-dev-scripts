@@ -1,6 +1,6 @@
 #!/bin/sh
 ################################################################################
-# Updates and recompiles a local KDE CVS tree                                  #
+# Updates and recompiles a local KDE tree from SVN                             #
 # (c) 2000, 2001, 2002, 2003 by Frerich Raabe <raabe@kde.org>                  #
 # (c) 2002, 2003 by Stephan Kulow <coolo@kde.org>                              #
 ################################################################################
@@ -56,19 +56,7 @@ err_inv_kdesrcdir="6"
 #
 err_inv_qtdir="7"
 
-# There is no CVS client specified in the configuration file, or the
-# specified client is invalid.
-#
-err_cvsclient_fail="8"
-
-# There was no cvsup server specified in the configuration file.
-#
-err_inv_cvsup_server="9"
-
-# The script was unable to create a temporary cvsup configuration file
-# in /tmp, mostly due to insufficient diskspace.
-#
-err_no_temp_supfile="10"
+# ....
 
 # The configuration file couldn't be found.
 #
@@ -226,7 +214,7 @@ compute_time() {
 
 prepare_update() {
   # This checks whether the user wants a certain branch and generates the
-  # command line. For cvsup users it even generates a supfile. :-)
+  # command line.
   #
   cmd_update="svn"
   if test -d $KDESRCDIR/$module; then
@@ -322,7 +310,7 @@ if [ "${INCREMENTAL_BUILD}" = "yes" -a "${BUILD_CLEAN}" = "yes" ]; then
     echo "ERROR: Cannot use BUILD_CLEAN=\"yes\" and INCREMENTAL_BUILD=\"yes\" together!"; exit $err_buildclean_incremental
 fi
 
-docvsupdate=1
+dosvnupdate=1
 dousage=0
 specifiedModules=""
 
@@ -340,7 +328,7 @@ do
         echo "$0 version 0.8.15"
         exit $err_no_error ;;
     --no-update)
-        docvsupdate=0 ;;
+        dosvnupdate=0 ;;
     --incremental)
         INCREMENTAL_BUILD="yes"
         ;;
@@ -525,11 +513,11 @@ kppp_connect
 # If we want to use unsermake, update that at the very beginning, so that
 # all the modules make use of the most recent unsermake version.
 #
-if [ -n "$USE_UNSERMAKE" ] && [ "$docvsupdate" -eq 1 ]; then
+if [ -n "$USE_UNSERMAKE" ] && [ "$dosvnupdate" -eq 1 ]; then
   echo -n "Updating unsermake copy in $UNSERMAKE_PATH..."
   if [ -d "$UNSERMAKE_PATH/CVS" ]; then
     cd "$UNSERMAKE_PATH"
-    cvs up > /dev/null 2>&1
+    svn up > /dev/null 2>&1
     echo $str_okay
   else
     echo $str_failed
@@ -558,9 +546,9 @@ for module in $modules; do
   fi
 
   set_title "Updating module $module..."
-  if [ "$docvsupdate" -eq 0 ]; then
-    echo -n "Checking module $module (no cvs update)..."
-    cmd_update_raw="echo Warning: no cvs update of module $module - as requested"
+  if [ "$dosvnupdate" -eq 0 ]; then
+    echo -n "Checking module $module (no svn update)..."
+    cmd_update_raw="echo Warning: no svn update of module $module - as requested"
   else
     if [ -n "$BRANCH" ]; then
       echo -n "Updating module $module ($BRANCH)..."
@@ -573,7 +561,7 @@ for module in $modules; do
 
   log_section "Update $cmd_update"
 
-  if [ "$docvsupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
+  if [ "$dosvnupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
     cmd_update_raw="$cmd_update -l $module"
   fi
 
@@ -588,7 +576,7 @@ for module in $modules; do
     continue
   fi
  
-  if [ "$docvsupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
+  if [ "$dosvnupdate" -ne 0 -a -n "$CHECKOUT_PARTIAL" ]; then
     prepare_update toponly
     echo "defined subdirs!"
     for part_dir in $CHECKOUT_PARTIAL; do
@@ -822,7 +810,7 @@ exit $err_no_error
 
 =head1 NAME
 
-kde-build - Updates and recompiles a tree of KDE CVS modules
+kde-build - Updates and recompiles a tree of KDE modules
 
 =head1 SYNOPSIS
 
@@ -830,7 +818,7 @@ kde-build - Updates and recompiles a tree of KDE CVS modules
 
 =head1 DESCRIPTION
 
-kde-build has been designed to keep a local copy of several KDE CVS
+kde-build has been designed to keep a local copy of several KDE
 modules up to date and recompile them. Those modules have to be saved in a
 common directory, e.g. something like
 
@@ -870,13 +858,11 @@ The following error codes are returned by the script.
 
 7 - An invalid Qt directory was specified.
 
-8 - An invalid CVS client was specified.
-
-9 - No cvsup server was specified.
-
-10 - The temporary CVSUP configuration file couldn't be created.
-
 11 - The configuration file F<kde-buildrc> couldn't be loaded.
+
+12 - Both CVS_CLEAN and INCREMENTAL_BUILD were set
+
+13 - Both BUILD_CLEAN and INCREMENTAL_BUILD were set
 
 =head1 EXAMPLES
 
