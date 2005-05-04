@@ -78,25 +78,26 @@ This function does not do any hidden buffer changes."
         ; This is a modified version of (backward-up-list) which doesn't
         ; throw an error when not found.
 	(let ((pos (c-safe-scan-lists (point) -1 1)))
-        ; +1 added here so that the regexp in the while matches the { too.
+	; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
 	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
 	  (save-excursion
 	    (forward-word 1)
-	    (while (looking-at "[ \t]*[A-Z_]*_EXPORT")
-	      (forward-word 1))
+	   (when (looking-at "[ \t]*[A-Z_]*_EXPORT[A-Z_]*[ \t]")
+	     (forward-word 1)
+	     (re-search-forward "[ \t]" nil t))
 	    (while (looking-at "[ \t]")
 	      (forward-char 1))
 	    (setq start (point))
-            ; Parse class name ("Foo" or "Foo::Bar::Blah"). 
-            ; Beware of "Foo:"
+	    ; Parse class name ("Foo" or "Foo::Bar::Blah"). 
+	    ; Beware of "Foo:"
 	    (while (or (looking-at "[A-Za-z0-9_]") (looking-at "::"))
 	      (while (looking-at "[A-Za-z0-9_]")
 		(forward-char 1))
 	      (while (looking-at "::")
 		(forward-char 2))
 	      )
-	    (cond 
+	    (cond
 	     (class			; class found already, so the rest goes into the namespace
 	      (setq namespace (concat (buffer-substring start (point)) "::" namespace)))
 	     (t				; class==nil

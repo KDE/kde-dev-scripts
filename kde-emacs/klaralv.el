@@ -122,6 +122,7 @@
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
     (kconfig.h KConfigGroup)
+    (kiconloader.h BarIcon SmallIcon DesktopIcon KIcon)
     (kicondialog.h KIconCanvas KIconButton)
     (knuminput.h KDoubleNumInput KIntNumInput)
 
