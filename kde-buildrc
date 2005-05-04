@@ -53,13 +53,15 @@ USEKDESUPPORT="yes"
 # 'kdelibs' and 'kdebase' here since the kde-build script will care about them
 # automatically.
 # See http://wiki.kdenews.org/tiki-index.php?page=KDE+CVS+Structure for a list
-# of available modules including kdeextragear-* or koffice.
+# of available modules including extragear-* or koffice.
 
-#KDEMODULES="kdeaccessibility kdeadmin kdeartwork kdebindings kdeedu kdegames kdegraphics kdemultimedia kdenetwork kdepim kdesdk kdetoys kdeutils kdeaddons kdevelop kdewebdev extragear-libs extragear-multimedia extragear-sysadmin extragear-office extragear-addons extragear-graphics extragear-network extragear-pim extragear-toys extragear-utils"
-KDEMODULES="kdetoys extragear-libs extragear-multimedia"
+KDEMODULES="kdetoys"
+
+#KDEMODULES="kdeaccessibility kdeadmin kdeartwork kdebindings kdeedu kdegames kdegraphics kdemultimedia kdenetwork kdepim kdesdk kdetoys kdeutils kdeaddons kdevelop kdewebdev koffice"
+#KDEMODULES="$KDEMODULES extragear-libs extragear-multimedia extragear-sysadmin extragear-office extragear-addons extragear-graphics extragear-network extragear-pim extragear-toys extragear-utils"
 
 
-# If you only want to cvs update the listed modules, set it to yes.
+# If you only want to svn update the listed modules, set it to yes.
 #
 ONLYLISTEDMODULES=yes
 
@@ -83,19 +85,19 @@ NICECOMPILE="yes"
 #
 TWEAKCOMPILE="no"
 
-# For CVS users only: Do you have a CVS account? If so, set this variable to
-# the correct name, otherwise leave this blank to use anonymous CVS.
+# For SVN users only: Do you have a SVN account? If so, set this variable to
+# the correct name, otherwise leave this blank to use anonymous SVN.
 #
-ACCOUNT="coolo"
+ACCOUNT=""
 
-#  For CVS users only: set this to "yes" in case you access cvs.kde.org via
+#  For SVN users only: set this to "yes" in case you access svn.kde.org via
 # SSH. Otherwise, set this to "no."
 #
-SSHACCOUNT="yes"
+SSHACCOUNT="no"
 
-# In case you left the ACCOUNT value empty (and thus use anonymous CVS
-# access), you can specify an anoncvs mirror here. Check
-# http://developer.kde.org/source/anoncvs.html for a list of mirror servers.
+# In case you left the ACCOUNT value empty (and thus use anonymous SVN
+# access), you can specify an anonsvn mirror here. Check
+# http://developer.kde.org/source/anonsvn.html for a list of mirror servers.
 #
 ANONSVNROOT="https://svn.kde.org/home/kde"
 
@@ -125,15 +127,16 @@ done
 #
 EXCLUDE=""
 
-# If you would like a virgin cvs copy set this field to "yes", otherwise set
+#  --- TODO: not supported anymore with svn ---
+# If you would like a virgin svn copy set this field to "yes", otherwise set
 # this to "no" (if set to "yes", 'make -f admin/Makefile.common cvs-clean'
 # is executed for every module).
 # Developers might find this pretty dangerous considering that they could have
-# forgotten to 'cvs add' a file... ;-)
+# forgotten to 'svn add' a file... ;-)
 # Users who want to stay at the bleeding edge will want to activate this in
 # order to make sure there aren't any remains of a previous compile.
 #
-CVS_CLEAN="no"
+#CVS_CLEAN="no"
 
 # Rely on the dependencies for Makefiles and configure?
 # If you dare to trust the build system, set it to "yes" ;-)
