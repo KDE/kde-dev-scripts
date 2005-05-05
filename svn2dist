@@ -10,7 +10,7 @@
 # License: GPL (http://www.gnu.org/)
 # Last modification: 2005/01/08
 
-echo >&2 "Warning: this script is untested!"
+echo >&2 "Warning: this script needs more testing!"
 echo >&2 ""
 
 cmdline="$@"
@@ -68,7 +68,6 @@ while true; do
 				admindir="`pwd`/$admindir"
 			fi
 			shift 2 ;;
-		-B|--branch) branch="branches/$2"; shift 2;;
 		--debug) debug="non-empty"; shift 1 ;;
 		--svn-root) svnroot="$2"; shift 2 ;;
 		-r|--required-header) requiredheader=$2; shift 2 ;;
@@ -259,7 +258,7 @@ if [ $doi18n = "yes" ]; then
     if [ -z "$svnroot" ]; then
 	echo "No svn root specified, and --no-i18n option is not given.." >> $log
 	echo "Using anonymous svn.." >> $log
-	svnroot="http://anon@svn.kde.org/svn/kde"
+	svnroot="https://svn.kde.org/home/kde/trunk"
     fi
 fi
 
@@ -315,9 +314,9 @@ remove="$remove $modulename.lsm"
 # we check out kde-i18n/subdirs in temp_dir/kde-i18n..
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
-    echo "svn co $svnroot/kde-i18n/subdirs" >> $log
-    svn co "$svnroot/$branch/kde-i18n/subdirs" > /dev/null 2>&1
-    i18nlangs_tmp="$(cat kde-i18n/subdirs)"
+    echo "Getting i18n subdirs" >> $log
+    svn cat "$svnroot/KDE/kde-i18n/subdirs" >subdirs 2>&1 || rm subdirs
+    i18nlangs_tmp="$(cat subdirs)"
     skiplist="`echo $noi18nlang | sed -e 's/,/ /g'`"
     skiplist="$skiplist $always_skip_languages"
     for lang in $i18nlangs_tmp; do
@@ -342,12 +341,13 @@ if [ -d $module/doc/$name ]; then
 	find $module/doc/ ! -xtype d -maxdepth 1 | xargs --replace={} cp {} $temp_dist/doc
 
 	if [ $doi18n = "yes" ]; then
+	    echo "Getting documentation from i18n..."
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
 		docdirname="kde-i18n/$lang/docs/$modulename/$name"
 		echo "svn co $docdirname" >> $log
-		svn co "$svnroot/$branch/$docdirname" > /dev/null 2>&1
+		svn co "$svnroot/$docdirname" >> $log 2>&1
 		if [ ! -d "$docdirname" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
 		    continue
@@ -383,12 +383,14 @@ if [ $doi18n = "yes" ]; then
 	test -d $temp_dist/po && rm -Rf $temp_dist/po
 	mkdir $temp_dist/po
 
+	echo "Getting translations from i18n..."
+
 	pushd $temp_dir/
 	for lang in $i18nlangs; do
-		pofilename="kde-i18n/$lang/messages/$modulename/$name.po";
-		echo "svn co $pofilename" >> $log
-		svn co "$svnroot/$branch/$pofilename" > /dev/null 2>&1
-		if [ ! -f "$pofilename" ]; then
+		pofilename="KDE/kde-i18n/$lang/messages/$modulename/$name.po";
+		echo "Getting $pofilename" >> $log
+		svn cat "$svnroot/$pofilename" >$name.po 2>&1 || rm $name.po
+		if [ ! -f "$name.po" ]; then
 			echo "$lang's $name.po does not exist." >> $log
 			continue
 		fi
@@ -397,7 +399,7 @@ if [ $doi18n = "yes" ]; then
 		mkdir $dest
 		echo -n "Copying $lang's $name.po over... "
 		echo "$lang's $name.po file included." >> $log
-		cp $pofilename $dest
+		cp $name.po $dest
 		echo "done."
 		
 		echo "KDE_LANG = $lang
