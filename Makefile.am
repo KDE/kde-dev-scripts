@@ -1,15 +1,16 @@
 # sorted by function
 bin_SCRIPTS = \
   create_makefile create_makefiles adddebug \
-  cheatmake makeobj kde-build build-progress.sh \
+  cheatmake makeobj kde-build build-progress.sh pruneemptydirs \
   cvsbackport cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
-  noncvslist pruneemptydirs cvs-clean \
-  cvs2dist  cvsblame \
+  noncvslist cvs-clean cvs2dist cvsblame cvsforwardport create_cvsignore \
+  colorsvn create_svnignore nonsvnlist svn2dist svnaddcurrentdir svncheck \
+  svn-clean svngettags svnlastchange svnlastlog svnrevertlast svnversions
   findmissingcrystal \
   kdedoc qtdoc extractrc extractattr zonetab2pot.py \
-  licensecheck fixkdeincludes fixuifiles includemocs create_cvsignore \
+  licensecheck fixkdeincludes fixuifiles includemocs \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
-  package_crystalsvg png2mng.pl kdemangen.pl cvsforwardport
+  package_crystalsvg png2mng.pl kdemangen.pl
 
 # sorted by bin_SCRIPTS reference
 man_MANS = \
