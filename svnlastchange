@@ -1,20 +1,150 @@
-#!/bin/sh
+#!/usr/bin/env perl
+#
+# This file is Copyright (C) 2005 Thiago Macieira <thiago@kde.org>
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License as published
+# by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-if [ $# -eq 0 ]; then
-    cat <<EOF
-Usage:
-    svnlastchange <filename> [<filename> ...]
+# =====================================================================
+# This is a replacement for the old svnlastchange script, with a bit
+# more of functionality.
+#
+# The old one was:
+# svn log -r COMMITTED "$*"
+# svn diff -r PREV:COMMITTED "$*" || \
+#     echo >&2 "Error retrieving diff: the file was probably added in the last revision"
+#
+# =====================================================================
 
-EOF
-    exit 1
-fi
+# Turn on warnings the best way depending on the Perl version.
+BEGIN {
+  if ( $] >= 5.006_000)
+    { require warnings; import warnings; }                      
+  else  
+    { $^W = 1; }               
+}
+use strict;
 
-if [ "$1" == "-q" ]; then
-    shift
-else
-    echo >/dev/tty "Hint: Use svn log -r COMMITTED and svn diff -r PREV:COMMITTED"
-fi
+#
+# Read the parameters
+#
+my @files;
+my $rev;
+my $special = 0;
+my $onlyrev = 0;
+my $onlylog = 0;
+while (@ARGV)
+  {
+    my $arg = shift @ARGV;
+    if ($arg eq '-h')
+      {
+        &usage;
+        exit 0;
+      }
+    elsif ($arg =~ /^-r(.*)$/)
+      {
+        $rev = $1;
+        if (length($1) == 0)
+	  {
+	    $rev = shift @ARGV;
+	  }
+        $special = 1 if ($rev =~ /^-/);
+      }
+    elsif ($arg eq '-R')
+      {
+	$onlyrev = 1;
+	$special = 1;
+	$rev = -1 unless $rev;
+      }
+    elsif ($arg eq '-l')
+      {
+	$onlylog = 1;
+      }
+    else
+      {
+	push(@files, $arg);
+      }
+  }
+@files = ('.') unless @files;
 
-svn log -r COMMITTED "$*"
-svn diff -r PREV:COMMITTED "$*" || \
-    echo >&2 "Error retrieving diff: the file was probably added in the last revision"
+if (!$special)
+  {
+    my $prev;
+    if ($rev)
+      {
+	$prev = $rev - 1;
+      }
+    else
+      {
+	$rev = 'COMMITTED';
+	$prev = 'PREV';
+      }
+      
+    system('svn', 'log', '-r', $rev, @files);
+    system('svn', 'diff', '-r', "$prev:$rev", @files) unless $onlylog;
+    exit $?;
+  }
+  
+#
+# Special operation
+# Retrieve the full log in order to find the right version
+#
+foreach my $file (@files)
+  {
+    my $pid = open(LOG, '-|');
+    die "svnlastchange: cannot fork: $!\n" unless (defined $pid);
+    unless ($pid)
+      {
+	open(STDERR, ">&STDOUT")
+	  or die "svnlastchange: cannot dup STDOUT: $!\n";
+	exec('svn', 'log', $file)
+	  or die "svnlastchange: cannot exec svn: $!\n";
+      }
+      
+    my $is_header = 0;
+    while (<LOG>)
+      {
+	s/[\r\n]+$//;
+	
+	if ($is_header && /^r(\d+) \| /)
+	  {
+	    $rev = $rev + 1;
+	    if ($rev == 0)
+	      {
+		if ($onlyrev)
+		  {
+		    print "$1\n";
+		  }
+		else
+		  {
+		    system('svn', 'log', '-r', $1, $file);
+		    system('svn', 'diff', '-r', ($1 - 1) . ":$1", $file)
+		      unless $onlylog;
+		  }
+		last;
+	      }
+	  }
+	
+	if ($_ eq '------------------------------------------------------------------------')
+	  {
+	    $is_header = 1;
+	  }
+	else
+	  {
+	    $is_header = 0;
+	  }
+      }
+    close(LOG);
+    exit $? if $?;
+  }
