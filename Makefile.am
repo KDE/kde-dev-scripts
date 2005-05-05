@@ -4,7 +4,7 @@ bin_SCRIPTS = \
   cheatmake makeobj kde-build build-progress.sh pruneemptydirs \
   cvsbackport cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast \
   noncvslist cvs-clean cvs2dist cvsblame cvsforwardport create_cvsignore \
-  colorsvn create_svnignore nonsvnlist svn2dist svnaddcurrentdir svncheck \
+  colorsvn create_svnignore nonsvnlist svn2dist svnaddcurrentdir \
   svn-clean svngettags svnlastchange svnlastlog svnrevertlast svnversions
   findmissingcrystal \
   kdedoc qtdoc extractrc extractattr zonetab2pot.py \
