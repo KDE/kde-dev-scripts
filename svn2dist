@@ -258,7 +258,7 @@ if [ $doi18n = "yes" ]; then
     if [ -z "$svnroot" ]; then
 	echo "No svn root specified, and --no-i18n option is not given.." >> $log
 	echo "Using anonymous svn.." >> $log
-	svnroot="https://svn.kde.org/home/kde/trunk"
+	svnroot="svn://anonsvn.kde.org/home/kde/trunk"
     fi
 fi
 
