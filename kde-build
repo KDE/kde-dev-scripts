@@ -515,14 +515,9 @@ kppp_connect
 #
 if [ -n "$USE_UNSERMAKE" ] && [ "$dosvnupdate" -eq 1 ]; then
   echo -n "Updating unsermake copy in $UNSERMAKE_PATH..."
-  if [ -d "$UNSERMAKE_PATH/CVS" ]; then
-    cd "$UNSERMAKE_PATH"
-    svn up > /dev/null 2>&1
-    echo $str_okay
-  else
-    echo $str_failed
-    echo $unsermake_dir does not seem to contain a CVS copy of unsermake!
-  fi
+  cd "$UNSERMAKE_PATH"
+  svn up > /dev/null 2>&1
+  echo $str_okay
 fi
 
 BASE_CONFIGUREFLAGS="$CONFIGUREFLAGS"
