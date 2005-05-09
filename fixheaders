@@ -91,6 +91,8 @@ $lastdir = '.';
  'invalid use of undefined type `class KURL' => "kurl",
  'no method `QApplication::' => "qapplication",
  'no method `QFile::' => "qfile",
+ 'error: \'Q3CString\' is used as a type' => "q3cstring",
+ 'error: ISO C\+\+ forbids declaration of \`Q3CString\' with' => "q3cstring"
 );
 
 # Initial values are simply to get into the while
@@ -102,7 +104,7 @@ while ( $exitcode != 0 && $addedone != 0 )
  $addedone = 0;
 
  %changes = ();
- open(INPUT,"makeobj -k 2>&1 |") || die "Couldn't run makeobj";
+ open(INPUT,"makeobj -j10 -k 2>&1 |") || die "Couldn't run makeobj";
  while(<INPUT>)
  {
   if (/make.*Entering directory \`(.+)\'/) {
@@ -126,7 +128,7 @@ while ( $exitcode != 0 && $addedone != 0 )
       #print STDERR "line=$line\n";
     } else {
       # Compilation line, or other unparsable line -> ignore
-      print STDERR $_;
+      print STDOUT $_;
       next;
     }
   }
@@ -134,7 +136,7 @@ while ( $exitcode != 0 && $addedone != 0 )
   print STDERR "Already having changes for $file\n" if defined($changes{$file});
   next if defined($changes{$file});
 
-  print STDERR $_;
+  print STDOUT $_;
 
   foreach $message (keys %messages) {
     if ($line =~ /$message/) {
@@ -163,13 +165,13 @@ sub fixFile
 
   while (<FILE>) {
     $flines .= $_;
-    if ($_ =~ m/^#if/) {
+    if ($_ =~ m/^#if/ && $_ !~ m/^#ifn/) {
        $cpplevel = $cpplevel + 1;
     }
     if ($_ =~ m/^#endif/) {
        $cpplevel = $cpplevel - 1;
     }
-    if ($cpplevel == 0 && $_ =~ m/^(#include\s*[\"<]\S*\.h[\">]\S*)/) {
+    if ($cpplevel == 0 && $_ =~ m/^(#include\s*[\"<]q\S*\.h[\">]\S*)/) {
        $lastinclude = $1;
     }
   }
@@ -177,17 +179,17 @@ sub fixFile
   close FILE;
   
   if (!$lastinclude) {
-    print STDERR "ERROR: no include found!\n";
+    print STDERR "ERROR: no include found in $file! (tried to add $adding.h)\n";
     return 0;
   }
 
   if ($flines =~ m/#include\s*[\"<]$adding\.h[\">]\s*\n/) {
-    print STDERR "ERROR: $adding.h already included!\n";
+    print STDERR "ERROR: $adding.h already included in $file!\n";
     return 0;
   }
   if ($flines =~ /(\n$lastinclude)/) {
-    $flines =~ s/$lastinclude/$lastinclude\n#include <$adding.h>/;
-    print STDERR "ADDED <$adding.h> after \"$lastinclude\"\n";
+    $flines =~ s/$lastinclude(.*\n)/$lastinclude$1#include <$adding.h>\n/;
+    print STDERR "ADDED <$adding.h> after \"$lastinclude\" in $file\n";
   } else {
     print STDERR "ERROR: can't find $lastinclude in $file\n";
     return 0;
