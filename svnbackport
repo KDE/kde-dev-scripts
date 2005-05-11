@@ -11,6 +11,8 @@
 #
 # It is a straight port and not very sophisticated. It might break. I hope
 # that someone else with more knowledge about Subversion will pick it up.
+# It needs to be used from within the repository so that it can guess
+# the remote URL correctly.
 #
 
 #REPOSITORY=https://svn.kde.org/home/kde
