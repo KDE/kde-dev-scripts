@@ -48,7 +48,7 @@ done
 
 kdialog --yesno "Do you want to commit all changes?"
 if [ $? = 0 ]; then
-  svn ci
+  svn ci $files
 fi
 
 echo "switching back to trunk..."
