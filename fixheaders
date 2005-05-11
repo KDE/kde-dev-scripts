@@ -92,7 +92,16 @@ $lastdir = '.';
  'no method `QApplication::' => "qapplication",
  'no method `QFile::' => "qfile",
  'error: \'Q3CString\' is used as a type' => "q3cstring",
- 'error: ISO C\+\+ forbids declaration of \`Q3CString\' with' => "q3cstring"
+ 'error: ISO C\+\+ forbids declaration of \`Q3CString\' with' => "q3cstring",
+ 'error: incomplete type \'QPixmap\' cannot be used' => 'qpixmap',
+ 'error: invalid use of undefined type `struct QVector' => 'qvector',
+ 'error: incomplete type `Q3ValueList' => 'q3valuelist',
+ 'error: variable `Q3ValueList<' => 'q3valuelist',
+ 'error: `Q3PointArray\' undeclared' => 'q3pointarray',
+ 'error: invalid use of undefined type \`struct QColor' => 'qcolor',
+ 'error: `QX11Info::' => 'qx11info_x11',
+ 'error: incomplete type \'QX11Info' => 'qx11info_x11',
+ 'error: \'Q3AsciiDi' => 'q3asciidict'
 );
 
 # Initial values are simply to get into the while
@@ -133,7 +142,7 @@ while ( $exitcode != 0 && $addedone != 0 )
     }
   }
   
-  print STDERR "Already having changes for $file\n" if defined($changes{$file});
+  #print STDERR "Already having changes for $file\n" if defined($changes{$file});
   next if defined($changes{$file});
 
   print STDOUT $_;

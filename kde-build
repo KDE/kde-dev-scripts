@@ -223,7 +223,7 @@ prepare_update() {
     cmd_update="$cmd_update co"
   fi
   if [ -z "$ACCOUNT" ]; then
-    cmd_update="$cmd_update $ANONCVSROOT$SUBDIR"
+    cmd_update="$cmd_update $ANONSVNROOT$SUBDIR"
   else
     cmd_update="$cmd_update"
     if [ "$SSHACCOUNT" = "yes" ]; then

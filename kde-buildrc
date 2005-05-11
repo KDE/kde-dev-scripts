@@ -99,7 +99,7 @@ SSHACCOUNT="no"
 # access), you can specify an anonsvn mirror here. Check
 # http://developer.kde.org/source/anonsvn.html for a list of mirror servers.
 #
-ANONSVNROOT="https://svn.kde.org/home/kde"
+ANONSVNROOT="svn://anonsvn.kde.org/home/kde"
 
 # Do you want any special path from subversion? If so, specify its path here e.g.
 # /branches/KDE/3.3 or /tags/KDE/3.3.0. If you want the checked out branch, 
