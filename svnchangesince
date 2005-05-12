@@ -55,7 +55,7 @@ EOF
 done
 
 if $showlog; then
-  svn log -r BASE:HEAD "$@"
+  svn log -v -r HEAD:BASE "$@"
 fi
 
 if $showdiff; then
