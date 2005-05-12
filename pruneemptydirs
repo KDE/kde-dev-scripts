@@ -1,6 +1,6 @@
 #!/bin/sh
-# Cleans up a local CVS tree, by removing directories containing
-# remanants of old stuff which has been removed from CVS
+# Cleans up a local CVS/SVN tree, by removing directories containing
+# remanants of old stuff which has been removed from CVS/SVN
 # Those stale dirs often break compilation...
 
 # Works better with srcdir!=builddir (since it will not remove directories
@@ -16,11 +16,11 @@ force=0;
 if [ "$1" = "-f" ]; then force=1; fi
 
 # Look for toplevel dirs
-files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$`
+files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$ | fgrep -v .svn`
 toremove="rm -rf";
 for i in $files; do if test -d $i; then
   # List their contents and filter out generated files
-  realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
+  realfiles=`find $i -type f | egrep -v  '.svn|CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
   if [ -z "$realfiles" ]; then
     toremove="$toremove $i"
   fi
