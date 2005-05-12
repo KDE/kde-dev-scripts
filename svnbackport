@@ -2,7 +2,6 @@
 # Backport the last change in HEAD, to a branch.
 # Usage: svnbackport <files>
 # WARNING: the branch tag is hardcoded into the script, make sure to check it!
-# WARNING: You HAVE to change your base directory in order for this to work!
 #
 # This is a port of the "cvsbackport" script:
 # Initial author: Dirk Mueller
