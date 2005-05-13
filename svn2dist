@@ -40,7 +40,7 @@ test -e ~/.svn2distrc && extraoptions=`cat ~/.svn2distrc`
 # --log has optional argument
 TEMP=`getopt \
 -o v:n:r:e:a:B:dhmbgol \
---long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,no-i18n-lang:,svn-root:,debug,replace-files: \
+--long log::,version:,name:,required-header:,required-header-error-message:,make-unpackaged,help,no-bz2,no-bzip2,no-gzip,only-directory,remove-hidden,admin-dir:,branch:,no-i18n,no-i18n-lang:,svn-root:,i18n-module:,debug,replace-files: \
 -n svn2dist -- $extraoptions "$@"`
 
 if [ $? != 0 ]; then
@@ -70,6 +70,7 @@ while true; do
 			shift 2 ;;
 		--debug) debug="non-empty"; shift 1 ;;
 		--svn-root) svnroot="$2"; shift 2 ;;
+		--i18n-module) i18nmodule="$2"; shift 2 ;;
 		-r|--required-header) requiredheader=$2; shift 2 ;;
 		--no-i18n) doi18n="no"; shift 1 ;;
 		--no-i18n-lang) noi18nlang="$2"; shift 2 ;;
@@ -137,6 +138,8 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "  --no-i18n-lang <languages> exclude all languages in the given comma"
 	echo "                             seperated list. example:"
 	echo "                             --no-i18n-lang uk,de,en_GB"
+	echo "  --i18n-module <name> i18n subdir"
+	echo "                             e.g for kdetv: multimedia-kdetv (module: extragear)"
 	echo "  --log=<logfile> If logfile unspecified, default file is used."
 	echo "                  (The '=' is essential and may not be ommited"
 	echo "                  when specifying the logfile.)"
@@ -345,7 +348,7 @@ if [ -d $module/doc/$name ]; then
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
-		docdirname="kde-i18n/$lang/docs/$modulename/$name"
+		docdirname="kde-i18n/$lang/docs/$i18nmodule/$name"
 		echo "svn co $docdirname" >> $log
 		svn co "$svnroot/$docdirname" >> $log 2>&1
 		if [ ! -d "$docdirname" ]; then
@@ -387,7 +390,7 @@ if [ $doi18n = "yes" ]; then
 
 	pushd $temp_dir/
 	for lang in $i18nlangs; do
-		pofilename="KDE/kde-i18n/$lang/messages/$modulename/$name.po";
+		pofilename="KDE/kde-i18n/$lang/messages/$i18nmodule/$name.po";
 		echo "Getting $pofilename" >> $log
 		svn cat "$svnroot/$pofilename" >$name.po 2>&1 || rm $name.po
 		if [ ! -f "$name.po" ]; then
