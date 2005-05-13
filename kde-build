@@ -290,17 +290,25 @@ make_makefile_cvs() {
 CDPATH=
 
 # Get current configuration, bail out if it couldn't be found.
-#
-if [ ! -e ./kde-buildrc ]; then
-  cd `dirname $0`
-  if [ ! -e ./kde-buildrc ]; then
-    echo "ERROR: Cannot load configuration file ./kde-buildrc!"; exit $err_no_config
+# Search order is $PWD:$HOME:`dirname $0`
+# The name in $HOME is .kde-buildrc  (note the leading '.')
+if [ -e "$PWD/kde-buildrc" ]; then
+  rc_file="$PWD/kde-buildrc"
+else
+  if [ -e "$HOME/.kde-buildrc" ]; then
+    rc_file="$HOME/.kde-buildrc"
+  else
+    if [ -e "`dirname $0`/kde-buildrc" ]; then
+      rc_file="`dirname $0`/kde-buildrc"
+    else
+      echo "ERROR: Cannot locate configuration file kde-buildrc!"; exit $err_no_config
+    fi
   fi
 fi
 
 INCREMENTAL_BUILD="no"
 
-. ./kde-buildrc
+. $rc_file
 
 if [ "${INCREMENTAL_BUILD}" = "yes" -a "${CVS_CLEAN}" = "yes" ]; then
     echo "ERROR: Cannot use CVS_CLEAN=\"yes\" and INCREMENTAL_BUILD=\"yes\" together!"; exit $err_cvsclean_incremental
