@@ -47,6 +47,8 @@ handledir() {
 		fgrep -q .skel Makefile.am && addignore "*_skel.c*"
 		fgrep -q .stub Makefile.am && addignore "*_stub.cpp"
 		
+		grep -q "^include.*/Doxyfile.am$" Makefile.am && addignore "Doxyfile"
+
 		if test "$addedsomething" = 1; then
 		    svn propset svn:ignore -F svnignore.tmp .
 		fi
