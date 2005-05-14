@@ -55,6 +55,7 @@ calclog=0
 doi18n="yes"
 noi18nlang=""
 replace_files=""
+i18nmodule=""
 svnroot=""
 debug=""
 branch="trunk"
@@ -139,7 +140,8 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "                             seperated list. example:"
 	echo "                             --no-i18n-lang uk,de,en_GB"
 	echo "  --i18n-module <name> i18n subdir"
-	echo "                             e.g for kdetv: multimedia-kdetv (module: extragear)"
+	echo "                       if not specified it is guessed"
+	echo "                       from module name by replacing \"/\" by \"-\""
 	echo "  --log=<logfile> If logfile unspecified, default file is used."
 	echo "                  (The '=' is essential and may not be ommited"
 	echo "                  when specifying the logfile.)"
@@ -193,6 +195,10 @@ if [ ! -z $showhelp ] || [ -z $module ] || [ -z $directory ]; then
 	echo "         Sebastian Stein <seb.stein@hpfsc.de>,"
 	echo "         Dominique Devriese <devriese@kde.org>"
 	exit 1
+fi
+
+if [ -z $i18nmodule ]; then
+    i18nmodule=`echo $module | sed -e 's#/#-##'`
 fi
 
 # expand module
@@ -259,9 +265,9 @@ if [ $doi18n = "yes" ]; then
 	echo "If this doesn't work, use --no-i18n."
 
     if [ -z "$svnroot" ]; then
-	echo "No svn root specified, and --no-i18n option is not given.." >> $log
-	echo "Using anonymous svn.." >> $log
-	svnroot="svn://anonsvn.kde.org/home/kde/trunk"
+        echo "No svn root specified, and --no-i18n option is not given.." >> $log
+        echo "Using anonymous svn.." >> $log
+        svnroot="svn://anonsvn.kde.org/home/kde/trunk"
     fi
 fi
 
@@ -318,8 +324,7 @@ remove="$remove $modulename.lsm"
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "Getting i18n subdirs" >> $log
-    svn cat "$svnroot/KDE/kde-i18n/subdirs" >subdirs 2>&1 || rm subdirs
-    i18nlangs_tmp="$(cat subdirs)"
+    i18nlangs_tmp=`svn cat "$svnroot/KDE/kde-i18n/subdirs"`
     skiplist="`echo $noi18nlang | sed -e 's/,/ /g'`"
     skiplist="$skiplist $always_skip_languages"
     for lang in $i18nlangs_tmp; do
@@ -348,21 +353,18 @@ if [ -d $module/doc/$name ]; then
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
-		docdirname="kde-i18n/$lang/docs/$i18nmodule/$name"
-		echo "svn co $docdirname" >> $log
+		docdirname="KDE/kde-i18n/$lang/docs/$i18nmodule/$name"
+		echo "svn co $svnroot/$docdirname" >> $log
 		svn co "$svnroot/$docdirname" >> $log 2>&1
-		if [ ! -d "$docdirname" ]; then
+		if [ ! -d "$name" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
 		    continue
 		fi
 		echo -n "Copying $lang's $name documentation over... "
-		cp -R $docdirname $temp_dist/doc/$lang
-		# we don't want KDE_DOCS = AUTO, cause that makes the
-		# build system assume that the name of the app is the
-		# same as the name of the dir the Makefile.am is in.
-		# Instead, we explicitly pass the name..
-		cat $temp_dist/doc/$lang/Makefile.am | sed -e "s/AUTO/$name/" > $temp_dist/doc/$lang/Makefile.am.nw
-		mv $temp_dist/doc/$lang/Makefile.am.nw $temp_dist/doc/$lang/Makefile.am
+		mv $name $temp_dist/doc/$lang
+		echo "KDE_LANG = $lang
+KDE_DOCS = $name" > $temp_dist/doc/$lang/Makefile.am
+
 		echo "done."
 		echo "$lang documentation included." >> $log
 	    done
