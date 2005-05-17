@@ -103,6 +103,10 @@ sub fix_version($)
       }
       push @fixedcontents, $line;
   }
+  if (!$foundversion) {
+      # TODO improve so that the script adds the necessary line
+      print "$srcfile has no UI version, please fix it\n";
+  }
   if ($needfix) {
       open(SRC, "> $srcfile") || die "fix_version: couldn't open '$srcfile' for writing\n";
       print SRC @fixedcontents;
