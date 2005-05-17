@@ -18,7 +18,6 @@
 
 BRANCH=3.4
 
-SRC_LOCAL=`pwd`
 SRC_REMOTE=`svn info | grep URL: | cut -c6-`
 TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|trunk/KDE|branches/KDE/$BRANCH|"`
 
@@ -33,7 +32,7 @@ until test $# -eq 0; do
   echo "browsing last change to $1..."
   less $TMPFILE
 
-  FILE_PATH=$SRC_LOCAL/$1
+  FILE_PATH=$1
   FROM_URL=$SRC_REMOTE/$1
   TO_URL=$TARGET_REMOTE/$1
 
