@@ -25,12 +25,12 @@ CLEANFILES = $(man_MANS)
 # sorted alphabetically
 noinst_SCRIPTS = \
   add_trace.pl alldcop.rb authors2xml.pl check_licenses colorcvs \
-  cvsaddcurrentdir fixheaders kDebug2kdDebug.sh kdecompile
+  cvsaddcurrentdir fixheaders kDebug2kdDebug.sh
 
 EXTRA_DIST = completions kde-emacs \
   colorcvsrc-sample gettext.patch kde-buildrc \
   kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
-  kde.supp kdecompile.README 
+  kde.supp
 
 # it'd be too good if this worked everywhere ...
 #%.1: %
