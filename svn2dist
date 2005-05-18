@@ -324,7 +324,7 @@ remove="$remove $modulename.lsm"
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "Getting i18n subdirs" >> $log
-    i18nlangs_tmp=`svn cat "$svnroot/KDE/kde-i18n/subdirs"`
+    i18nlangs_tmp=`svn cat "$svnroot/l10n/subdirs"`
     skiplist="`echo $noi18nlang | sed -e 's/,/ /g'`"
     skiplist="$skiplist $always_skip_languages"
     for lang in $i18nlangs_tmp; do
@@ -353,7 +353,7 @@ if [ -d $module/doc/$name ]; then
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
-		docdirname="KDE/kde-i18n/$lang/docs/$i18nmodule/$name"
+		docdirname="l10n/$lang/docs/$i18nmodule/$name"
 		echo "svn co $svnroot/$docdirname" >> $log
 		svn co "$svnroot/$docdirname" >> $log 2>&1
 		if [ ! -d "$name" ]; then
@@ -392,7 +392,7 @@ if [ $doi18n = "yes" ]; then
 
 	pushd $temp_dir/
 	for lang in $i18nlangs; do
-		pofilename="KDE/kde-i18n/$lang/messages/$i18nmodule/$name.po";
+		pofilename="l10n/$lang/messages/$i18nmodule/$name.po";
 		echo "Getting $pofilename" >> $log
 		svn cat "$svnroot/$pofilename" >$name.po 2>&1 || rm $name.po
 		if [ ! -f "$name.po" ]; then
