@@ -40,6 +40,7 @@ endif
 " Insert tab character in whitespace-only lines, complete otherwise
 inoremap <Tab> <C-R>=SmartTab()<CR>
 
+if !exists("DisableSmartParens")
 " Insert a space after ( or [ and before ] or ) unless preceded by a matching
 " paren/bracket or space or inside a string or comment. Comments are only
 " recognized as such if they start on the current line :-(
@@ -47,6 +48,7 @@ inoremap ( <C-R>=SmartParens( '(' )<CR>
 inoremap [ <C-R>=SmartParens( '[' )<CR>
 inoremap ] <C-R>=SmartParens( ']', '[' )<CR>
 inoremap ) <C-R>=SmartParens( ')', '(' )<CR>
+endif
 
 " Insert an #include statement for the current/last symbol
 inoremap <F5> <C-O>:call AddHeader()<CR>
