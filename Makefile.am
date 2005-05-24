@@ -6,7 +6,7 @@ bin_SCRIPTS = \
   noncvslist cvs-clean cvs2dist cvsblame cvsforwardport create_cvsignore \
   colorsvn create_svnignore nonsvnlist svn2dist svnaddcurrentdir svnbackport \
   svn-clean svngettags svnlastchange svnlastlog svnrevertlast svnversions \
-  findmissingcrystal \
+  findmissingcrystal kdesvn-build \
   kdedoc qtdoc extractrc extractattr zonetab2pot.py \
   licensecheck fixkdeincludes fixuifiles includemocs \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
