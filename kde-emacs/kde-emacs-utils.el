@@ -113,7 +113,7 @@ This function does not do any hidden buffer changes."
       (search-backward ")" nil t) ; look back for the end of the argument list
       (forward-char)
       (backward-sexp)             ; brings us back to the '('
-      (backward-word)
+      (backward-word 1)
       (when (looking-at "throw[ \t]") ; exception specification, look for () again
              (search-backward ")" nil t)
              (forward-char)
