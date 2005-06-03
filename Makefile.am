@@ -15,6 +15,7 @@ bin_SCRIPTS = \
 # sorted by bin_SCRIPTS reference
 man_MANS = \
   kde-build.1 \
+  kdesvn-build.1 \
   cvsversion.1 cvscheck.1 \
   noncvslist.1 \
   cvsblame.1 \
@@ -30,7 +31,7 @@ noinst_SCRIPTS = \
 EXTRA_DIST = completions kde-emacs \
   colorcvsrc-sample gettext.patch kde-buildrc \
   kde-devel-emacs.el kde-devel-gdb kde-devel-vim.vim \
-  kde.supp
+  kde.supp kdesvn-buildrc-sample
 
 # it'd be too good if this worked everywhere ...
 #%.1: %
@@ -38,6 +39,8 @@ EXTRA_DIST = completions kde-emacs \
 
 kde-build.1: kde-build
 	pod2man $(srcdir)/kde-build > $@
+kdesvn-build.1: kdesvn-build
+	pod2man $(srcdir)/kdesvn-build > $@
 cvsversion.1: cvsversion
 	pod2man $(srcdir)/cvsversion > $@
 cvscheck.1: cvscheck
