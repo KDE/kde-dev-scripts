@@ -194,6 +194,7 @@ This function does not do any hidden buffer changes."
 
 ;; Switch between the declaration of a class member in .cc/.cpp/.C, and its definition in the .h file
 ;; Written by David and Reggie after much hair tearing
+;; Found since, might be worth looking at: http://www.hendawi.com/emacs/sourcepair.el
 (defun switch-to-function-def ()
   (interactive)
   (let ((n (buffer-file-name))

@@ -48,11 +48,13 @@ return (\"test.cpp\" t)."
 	 (nname (file-name-sans-extension name))
 	 (ext (file-name-extension name))
 	 (path nil)
-	 (ret nil))
+	 (ret nil)
+	 (listit nil))
     (cond
      ((member ext kde-header-files)
-      (dolist (elt kde-source-files nil)
-	(setq path (concat nname "." elt))
+      (setq listit kde-source-files)
+      (while (and listit (not ret)) ; loop over the list but stop once ret is set
+	(setq path (concat nname "." (car listit)))
 	(if (file-readable-p path)
 	    (setq ret (cons path t))
 	); else
@@ -61,6 +63,7 @@ return (\"test.cpp\" t)."
 	(if path
 	    (setq ret (cons path t))
 	  )
+	(setq listit (cdr listit)) ; ++listit
 	)
       ; not found, will create one
       (if (not ret)
@@ -68,8 +71,9 @@ return (\"test.cpp\" t)."
 	))
 
      ((member ext kde-source-files)
-      (dolist (elt kde-header-files nil)
-	(setq path (concat nname "." elt))
+      (setq listit kde-header-files)
+      (while (and listit (not ret)) ; loop over the list but stop once ret is set
+	(setq path (concat nname "." (car listit)))
         ; look in current dir
 	(if (file-readable-p path)
 	    (setq ret (cons path t))
@@ -79,6 +83,7 @@ return (\"test.cpp\" t)."
 	(if path
 	    (setq ret (cons path t))
 	  )
+	(setq listit (cdr listit)) ; ++listit
 	)
       ; not found, will create one
       (if (not ret)
