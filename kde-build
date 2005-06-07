@@ -465,7 +465,7 @@ fi
 
 # Clean the installation directory if selected.
 #
-if [ "$INSTALLFROMSCRATCH" = yes ]; then
+if test "$INSTALLFROMSCRATCH" = yes && test -z "$specifiedModules" ; then
   mkdir -p $KDEDIRS 2> /dev/null
   if [ ! -w $KDEDIRS ]; then
     echo "Enter the root password to clean the installation directory."
