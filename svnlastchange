@@ -148,3 +148,25 @@ foreach my $file (@files)
     close(LOG);
     exit $? if $?;
   }
+
+sub usage
+{
+    print "svnlastchange [-hlR] [-r rev] [filename...]\n";
+    print "\n";
+    print "Where:\n";
+    print "  -h       shows this help screen\n";
+    print "  -l       shows the commit log only\n";
+    print "  -R       prints the revision number only (to be used with -r)\n";
+    print "  -r rev   shows the commit log for revision 'rev'\n";
+    print "           if rev is negative, the 'rev'nth revision before the current\n";
+    print "           one is shown\n";
+    print "\n";
+    print "Examples:\n";
+    print "  svnlastchange .               shows the last change to the current directory\n";
+    print "  svnlastchange -r -2           shows the change before the last\n";
+    print "  svnlastchange -R -r -1        shows the last change's revision\n";
+
+    exit 0;
+}
+
+	
