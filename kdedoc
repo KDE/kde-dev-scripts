@@ -3,8 +3,10 @@
 # Argument : The classname (case sensitive !).
 # Both doxygen and kdoc docs are supported.
 
-# You need to edit this line, I can't guess where your KDE docs are installed
-KDEDOCS="$KDEDIR/share/kdedoc"
+# You can edit this line to set the directory holding your KDE docs, or you
+# can use the environment variable KDEDOCS to avoid future conflicts with this
+# file if the default changes.
+KDEDOCS=${KDEDOCS:-"$KDEDIR/share/doc/HTML/en/kdelibs-apidocs"}
 
 if [ $# = 1 ]; then
   if [ -e "$KDEDOCS/doxygen.css" ]; then
