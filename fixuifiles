@@ -90,7 +90,7 @@ sub fix_version($)
   my $needfix = 0;
   my $foundversion = 0;
   foreach my $line (@contents) {
-      if (!$foundversion && $line =~ m/version=\"([0-9]+)\.([0-9]+)\"/) {
+      if (!$foundversion && $line =~ m/version=\"([0-9]+)\.([0-9]+)(\.[0-9]+)?\"/) {
 	  my $version_maj = $1;
 	  my $version_min = $2;
 	  if ( $version_maj > $minversion_maj ||
