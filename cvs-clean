@@ -12,26 +12,9 @@
 # the above copyright notice. There is NO WARRANTY of any kind.
 #
 
-my $dry_run = 0;
+use File::Path;
 
-sub rmrf()
-{
-  if (!$dry_run) {
-    my $fn = shift;
-    lstat ($fn);
-    if (-d _) {
-      if (opendir (DIR, $fn)) {
-        for my $efn (grep (!/^\.\.?$/, readdir (DIR))) {
-          &rmrf ($fn."/".$efn);
-        }
-        closedir (DIR);
-        rmdir ($fn);
-      }
-    } else {
-      unlink ($fn);
-    }
-  }
-}
+my $dry_run = 0;
 
 sub newfiles()
 {
@@ -77,11 +60,11 @@ sub cvsclean()
   }
   for my $fn (&newfiles (\%filesdir, \%filescvs)) {
     print ("F ".$dir.$fn."\n");
-    &rmrf ($dir.$fn);
+    unlink($dir.$fn) unless $dry_run;
   }
   for my $fn (&newfiles (\%dirsdir, \%dirscvs)) {
     print ("D ".$dir.$fn."\n");
-    &rmrf ($dir.$fn);
+    rmtree($dir.$fn, 0, 0) unless $dry_run;
   }
   for my $fn (sort (keys (%dirscvs))) {
     &cvsclean ($dir.$fn."/");
