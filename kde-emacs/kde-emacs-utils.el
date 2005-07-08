@@ -222,7 +222,7 @@ This function does not do any hidden buffer changes."
 		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
 			  class "[^;]+{") nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "[ \t]+" function "[ \t]*(") nil t)))))
+                 (re-search-forward (concat "[ \t]+" (regexp-quote function) "[ \t]*(") nil t)))))
     (if (string-match "\\.h$" n)
         (progn
 	  (let ((mup (method-under-point))
@@ -237,8 +237,8 @@ This function does not do any hidden buffer changes."
 	    (goto-char 0)
 	    (setq sig (kde-remove-newline (kde-function-impl-sig namespace class function)))
 	    (if (string-match "(.*" sig) ; remove args
-            (setq sig (replace-match "" nil t sig)))
-	    (setq found (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) )
+		(setq sig (replace-match "" nil t sig)))
+	    (setq found (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) )
 
         (if (not found)
             (progn
@@ -249,7 +249,7 @@ This function does not do any hidden buffer changes."
               
               (if (string-match "(.*" sig) ; remove args
                   (setq sig (replace-match "" nil t sig)))
-              (re-search-forward (concat "^[^()]*" sig "[ \t]*(") nil t) ) )
+              (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) ) )
 	    )))))
 
 (defun kde-remove-newline (str) 
@@ -716,7 +716,7 @@ This function does not do any hidden buffer changes."
   (let ((wascomment ""))
     (save-excursion
       (beginning-of-buffer)
-      (if (re-search-forward (concat "Copyright ([Cc]) \\([0-9 ,-]*\\) " kde-full-name) nil t)
+      (if (re-search-forward (concat "Copyright ([Cc]) \\([0-9 ,-]*\\) " (regexp-quote kde-full-name)) nil t)
 	  (progn
 	    (beginning-of-line)
 	    (let ((years (kde-year-range-cleanup (kde-year-range-parse-years-string (match-string 1))))
