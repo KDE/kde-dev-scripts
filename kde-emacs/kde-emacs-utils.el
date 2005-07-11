@@ -574,9 +574,14 @@ This function does not do any hidden buffer changes."
 (defun makethisfile ()
   "Try to compile the currently opened file"
   (interactive)
-  (let ((f (file-name-nondirectory (buffer-file-name))))
-    (if (string-match "\.cpp$" f) (setq f (replace-match "\.lo" t t f)))
-    (if (string-match "\.cc$" f) (setq f (replace-match "\.lo" t t f)))
+  (let ((f (file-name-nondirectory (buffer-file-name)))
+	(objext nil))
+
+    (if (file-readable-p "Makefile.am")
+	(setq objext "\.lo")
+      (setq objext "\.o"))
+    (if (string-match "\.cpp$" f) (setq f (replace-match objext t t f)))
+    (if (string-match "\.cc$" f) (setq f (replace-match objext t t f)))
     (compile (concat kde-emacs-make " " f)))
   )
 
