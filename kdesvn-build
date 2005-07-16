@@ -247,6 +247,7 @@ use strict;
 use warnings;
 use Fcntl;    # For sysopen constants
 use POSIX 'strftime';
+use Errno qw(:POSIX);
 
 # Some global variables
 # Remember kids, global variables are evil!  I only get to do this
@@ -283,11 +284,13 @@ my %package_opts = (
     "no-svn"              => "",
     "no-rebuild-on-fail"  => "",
     "override-url"        => "",
+    "prefix"              => "", # Override installation prefix.
     "pretend"             => "",
     "qtdir"               => "$ENV{HOME}/kdesvn/build/qt-copy",
     "reconfigure"         => "",
     "recreate-configure"  => "",
     "refresh-build"       => "",
+    "remove-after-install"=> "none", # { none, builddir, all }
     "revision"            => 0,
     "set-env"             => { }, # Hash of environment vars to set
     "source-dir"          => "$ENV{HOME}/kdesvn",
@@ -686,7 +689,7 @@ sub get_option
                         pretend disable-agent-check);
 
     # These options can't override globals
-    if (list_has(@lockedOpts, $option) || $module eq 'global')
+    if (list_has(@lockedOpts, $option) or $module eq 'global')
     {
         return ${$global_opts}{"#$option"} if exists ${$global_opts}{"#$option"};
         return ${$global_opts}{$option};
@@ -1435,6 +1438,24 @@ EOM
     setup_default_modules() if $using_default;
 }
 
+# Subroutine to check if the given module needs special treatment to support
+# srcdir != builddir.  If this function returns true kdesvn-build will use a
+# few hacks to simulate it, and will update e.g. configure paths appropriately
+# as well.
+sub module_needs_builddir_help
+{
+    my $module = shift;
+    my @module_help_list = qw/qt-copy kdebindings valgrind/;
+
+    # qt-copy special case to support use-qt-builddir-hack.
+    if ($module eq 'qt-copy' and not get_option('qt-copy', 'use-qt-builddir-hack'))
+    {
+        return 0;
+    }
+
+    return list_has(@module_help_list, $module);
+}
+
 # This subroutine reads the set-env option for a given module and initializes
 # the environment based on that setting.
 sub setup_module_environment
@@ -1974,10 +1995,8 @@ DONE
 sub get_lock
 {
     my $lockfile = "$ENV{HOME}/.kdesvn-lock";
-    my $result = sysopen LOCKFILE, $lockfile, O_WRONLY | O_CREAT | O_EXCL;
-
-    # Very wordy way of saying to return if result == 0
-    return $result unless $result;
+    sysopen LOCKFILE, $lockfile, O_WRONLY | O_CREAT | O_EXCL;
+    my $errorCode = $!; # Save for later testing.
 
     # Install signal handlers to ensure that the lockfile gets closed.
     # There is a race condition here, but at worst we have a stale lock
@@ -1988,6 +2007,75 @@ sub get_lock
     $SIG{'ABRT'} = \&quit_handler;
     $SIG{'TERM'} = \&quit_handler;
     $SIG{'PIPE'} = \&quit_handler;
+
+    # Note that we can use color codes at this point since get_lock is called
+    # after read_options (which sets up the color).
+    if($errorCode == EEXIST)
+    {
+        # Path already exists, read the PID and see if it belongs to a
+        # running process.
+        open PIDFILE, "<$lockfile" or do
+        {
+            # Lockfile is there but we can't open it?!?  Maybe a race
+            # condition but I have to give up somewhere.
+            print clr " WARNING: Can't open or create lockfile r[$lockfile]\n";
+            return 1;
+        };
+        
+        my $pid = <PIDFILE>;
+        close PIDFILE;
+
+        if($pid)
+        {
+            # Recent kdesvn-build; we wrote a PID in there.
+            chomp $pid;
+
+            # See if something's running with this PID.
+            if (kill(0, $pid) == 1)
+            {
+                # Something *is* running, likely kdesvn-build.
+                print clr " r[*y[*r[*] kdesvn-build appears to be running.  Do you want to:\n";
+                print clr "  (b[Q])uit, (b[P])roceed anyways?: ";
+
+                my $choice = <STDIN>;
+                chomp $choice;
+
+                if(lc $choice ne 'p')
+                {
+                    print clr " y[*] kdesvn-build run canceled.\n";
+                    exit 1;
+                }
+
+                # We still can't grab the lockfile, let's just hope things
+                # work out.
+                print clr " y[*] kdesvn-build run in progress by user request.\n";
+                return 1;
+            }
+
+            # If we get here, then the program isn't running (or at least not
+            # as the current user), so allow the flow of execution to fall
+            # through below and unlink the lockfile.
+        } # pid
+
+        # No pid found, optimistically assume the user isn't running
+        # twice.
+        print clr " y[WARNING]: stale kdesvn-build lockfile found, deleting.\n";
+        unlink $lockfile;
+        sysopen LOCKFILE, $lockfile, O_WRONLY | O_CREAT | O_EXCL and do
+        {
+            print LOCKFILE "$$\n";
+            close LOCKFILE;
+        };
+        return 1; # Hope the sysopen worked.
+    }
+
+    print LOCKFILE "$$\n";
+    close LOCKFILE;
+
+    # Even if we fail it's generally better to allow the script to proceed
+    # without being a jerk about things, especially as more non-CLI-skilled
+    # users start using kdesvn-build to build KDE.
+    return 1;
 }
 
 # Subroutine to free the lock allocated by get_lock()
@@ -2477,15 +2565,18 @@ sub safe_configure
     if ($module ne 'qt-copy')
     {
         my $kdedir = get_option ('global', 'kdedir');
+        my $prefix = get_option ($module, 'prefix');
+
+        $prefix = $kdedir unless $prefix;
+
         push @commands, "CXXFLAGS=$cxxflags" if $cxxflags;
-        push @commands, "--prefix=$kdedir";
+        push @commands, "--prefix=$prefix";
 
         # We're special casing these modules because we're using the lndir
         # hack for them.
-        if ($module eq 'kdebindings' or $module eq 'valgrind')
+        if (module_needs_builddir_help($module))
         {
-            my %pathinfo = get_module_path_dir($module, 'build');
-            $script = "$pathinfo{fullpath}/configure";
+            $script = get_fullpath($module, 'build') . "/configure";
         }
     }
     else
@@ -2509,7 +2600,7 @@ sub safe_configure
 
         $script = "$qtdir/configure.new";
 
-        print clr "\tb[r[GPL license selected for Qt.  See] $fullpath/qt-copy/LICENSE.GPL\n";
+        print clr "\tb[r[GPL license selected for Qt].  See $fullpath/LICENSE.GPL\n";
     }
 
     print clr "\tRunning g[configure]...\n";
@@ -2598,6 +2689,62 @@ sub create_admin_dir
     return (safe_system("ln -s $admindir admin") == 0);
 }
 
+# Subroutine to link a source directory into an alternate directory in order
+# to fake srcdir != builddir for modules that don't natively support it.
+# The first parameter is the module to prepare.
+# 
+# The return value is true (non-zero) if it succeeded, and 0 (false) if it
+# failed.
+# 
+# On return from the subroutine the current directory will be in the build
+# directory, since that's the only directory you should touch from then on.
+#
+# You may safely call this subroutine for modules that don't need it, they
+# will automatically be ignored.
+sub prepare_fake_builddir
+{
+    my $module = shift;
+    my $builddir = get_fullpath($module, 'build');
+    my $srcdir = get_fullpath($module, 'source');
+    my $args = [ 'lndir', $srcdir ]; # List reference, not a real list.
+
+    # Skip modules that don't need special treatment.
+    return 1 unless module_needs_builddir_help($module);
+
+    # Backwards compatibility hack.
+    # kdesvn-build 0.97 and earlier would physically copy the Qt source
+    # directory to the build directory.  kdesvn-build versions after that use
+    # the lndir program that is used for kdebindings and valgrind for
+    # portability reasons.  This will break for users who have a real copy of
+    # Qt, so check here if the qt-copy configure script file is a real file
+    # (not a symlink), and if so, use the old method (since presumably it
+    # worked earlier).
+    if ($module eq 'qt-copy' and -e "$builddir/configure" and not -l "$builddir/configure")
+    {
+        # Use old method of copying.
+        $args = [ 'cp', '-af', $srcdir, $builddir ];
+    }
+
+    if (not -e $builddir)
+    {
+        super_mkdir($builddir);
+    }
+
+    # Use a slightly less effective method of builddir != srcdir for the
+    # module, as it fails otherwise.
+    chdir($builddir);
+
+    # lndir is included with XFree86 and X.org.  I'm not sure about it's
+    # portability but it seems to be relatively common.
+    if (log_command ($module, 'create-builddir', $args))
+    {
+        print clr "\tUnable to setup special build system for r[$module].\n";
+        return 0;
+    }
+
+    return 1; # Success
+}
+
 # Subroutine to create the build system for a module.  This involves making
 # sure the directory exists and then running make -f Makefile.cvs.  This
 # subroutine assumes that the module is already downloaded.
@@ -2614,8 +2761,14 @@ sub safe_create_build_system
         return 0;
     }
 
-    chdir ($fullpath);
-    chdir ($builddir) if $module eq 'qt-copy' and get_option('qt-copy', 'use-qt-builddir-hack');
+    chdir ($fullpath); # Run make -f Makefile.cvs in srcdir.
+
+    # These modules will run make -f Makefile.cvs in (fake) builddir to keep
+    # srcdir clean. Except for qt-copy when not using qt-builddir-hack.
+    if(module_needs_builddir_help($module))
+    {
+        chdir ($builddir);
+    }
 
     # Check for admin dir, if it doesn't exist, create a softlink
     if (not create_admin_dir($module))
@@ -2624,20 +2777,6 @@ sub safe_create_build_system
         print "won't build.\n";
         # But continue anyways, because in this case I'm just not sure that it
         # won't work in the future. ;)
-    }
-
-    if ($module eq 'kdebindings' || $module eq 'valgrind')
-    {
-        # Use a slightly less effective method of builddir != srcdir for the
-        # module, as it fails otherwise.
-        chdir($builddir);
-
-        # lndir is included with XFree86 and X.org
-        if (log_command ($module, "lndir", [ "lndir", "$fullpath" ]))
-        {
-            print clr "\tUnable to setup special build system for r[$module].\n";
-            return 1;
-        }
     }
 
     if ($instapps)
@@ -2876,28 +3015,25 @@ sub setup_build_system
         $do_makeconf = 1;
     }
 
-    if ($module eq 'qt-copy' && get_option($module, 'use-qt-builddir-hack'))
+    # Symlink source directory to build directory if module doesn't support
+    # srcdir != builddir.  If it's qt-copy only do so if use-qt-builddir-hack
+    # is on (true by default).  Note that module_needs_builddir_help() already
+    # takes care of that test.
+    if (module_needs_builddir_help($module))
     {
-        # Copy qt-copy wholesale to the builddir, to simulate srcdir !=
-        # builddir.  This could probably be converted to the lndir method
-        # used for kdebindings and valgrind.
-        if (log_command ('qt-copy', 'create-builddir', ['cp', '-af',
-                         $fullpath, $builddir ]))
+        print clr "\tFaking builddir for g[$module]\n";
+        if (not prepare_fake_builddir($module))
         {
-            print clr "Error creating r[qt-copy] build system!\n";
+            print clr "Error creating r[$module] build system!\n";
             return 0;
         }
     }
 
-    my $confpath = $module =~ /(valgrind|kdebindings)$/ ? $builddir : $fullpath;
+    my $confpath = module_needs_builddir_help($module) ? $builddir : $fullpath;
 
     if ($do_makeconf or not -e "$confpath/configure")
     {
         print clr "\ty[Recreating configure script].\n";
-
-        # Note this is the checkout directory, not the build directory
-        # This will equal $builddir for qt-copy without qt-builddir-hack
-        chdir ($fullpath);
 
         # Update the PATH and other important environment variables.
         update_module_environment ($module);
@@ -2910,7 +3046,7 @@ sub setup_build_system
 
         $do_configure = 1;
 
-        if (($module eq "qt-copy") && get_option($module, 'apply-qt-patches'))
+        if ($module eq "qt-copy" and get_option($module, 'apply-qt-patches'))
         {
             # Run apply-patches script
             return 0 if safe_apply_patches ();
@@ -2920,8 +3056,11 @@ sub setup_build_system
         return 1 if get_option ($module, 'build-system-only');
     }
 
-    $do_configure = 1 if $module eq 'qt-copy' and not -e "$builddir/src/tools/qconfig.cpp";
-    if ($do_configure || not -e "$builddir/Makefile")
+    # File which exists after configure has been run.
+    my $conf_key_file = "$builddir/Makefile";
+    $conf_key_file = "$builddir/src/tools/qconfig.cpp" if $module eq 'qt-copy';
+
+    if ($do_configure or not -e $conf_key_file)
     {
         if (not -e "$builddir" and not super_mkdir("$builddir"))
         {
@@ -3346,11 +3485,12 @@ sub get_repo_url
 sub handle_install
 {
     my $apidox = pop; # Take parameter off end of list (@_).
+    my @no_install_modules = qw/qt-copy kde-common/;
     my $result = 0;
 
     for my $module (@_)
     {
-        if ($module =~ /^(qt-copy|kde-common)$/)
+        if (list_has(@no_install_modules, $module))
         {
             print clr "\tg[$module] doesn't need to be installed.\n";
             next;
@@ -3394,6 +3534,27 @@ sub handle_install
                 print "Stopping here.\n";
                 return 1; # Error
             }
+        }
+
+        next if $result != 0; # Don't delete anything if the build failed.
+
+        my $remove_setting = get_option($module, 'remove-after-install');
+
+        # Possibly remove the srcdir and builddir after install for users with
+        # a little bit of HD space.
+        if($remove_setting eq 'all')
+        {
+            # Remove srcdir
+            my $srcdir = get_fullpath($module, 'source');
+            print clr "\tRemoving b[r[$module source].\n";
+            system ('rm', '-rf', $srcdir);
+        }
+
+        if($remove_setting eq 'builddir' or $remove_setting eq 'all')
+        {
+            # Remove builddir
+            print clr "\tRemoving b[r[$module build directory].\n";
+            system ('rm', '-rf', $builddir);
         }
     }
 
