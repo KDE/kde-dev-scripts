@@ -17,16 +17,7 @@
 
 #REPOSITORY=https://svn.kde.org/home/kde
 
-# typing it 3 times since I don't know if the "test -o" is portable...
-if test -z "$1"; then
-    echo "Usage: svnbackport recentlyCommittedFile";
-    exit;
-fi
-if test "$1" = "-h"; then
-    echo "Usage: svnbackport recentlyCommittedFile";
-    exit;
-fi
-if test "$1" = "--help"; then
+if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
     echo "Usage: svnbackport recentlyCommittedFile";
     exit;
 fi
