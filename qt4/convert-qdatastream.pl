@@ -12,7 +12,9 @@ foreach my $file (@ARGV) {
 	    if ( my ($firstelement, $secondelement) = m!.*\(\s*(.*),\s*(.*)\);\s*$!) {
 		if ( $prefix !~ /operator/ && substr($firstelement, 0, 1) ne "&") 
 		{
-		    $_ = $blank . $prefix . "( &" . $firstelement . "," . $secondelement . ");\n" ;
+		    my $argument = $prefix;
+		    $argument =~ s/QDataStream\s*//;
+		    $_ = $blank . $prefix . "( &" . $firstelement . "," . $secondelement . ");\n" . $blank . $argument . ".setVersion(QDataStream::Qt_3_1);\n";
 		}
 	    }
 	}
