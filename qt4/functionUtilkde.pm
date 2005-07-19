@@ -6,11 +6,11 @@ use strict;
 sub diffFile
 {
 		my $listFileDiff = join (" ", @_);
-		#print "la liste qui est join : $listFileDiff \n";
 		system("svn diff $listFileDiff");
 }
 
 # code from MDK::common package
+# Code from Drakx Mandriva code (GPL code)
 sub substInFile(&@) {
     my ($f, $file) = @_;
     my $linkdest;
