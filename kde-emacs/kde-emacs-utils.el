@@ -1,6 +1,6 @@
 ;; kde-emacs-utils.el
 ;;
-;; Copyright (C)  2002  KDE Development Team <www.kde.org>
+;; Copyright (C)  2002-2005  KDE Development Team <www.kde.org>
 ;;
 ;; This library is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU Lesser General Public
@@ -798,5 +798,49 @@ This function does not do any hidden buffer changes."
 	  (comment-region (point-at-bol) (point-at-eol))
 	  (newline)))))
 
+; Helper for qt-open-header, for Qt 4. Opens a file if it says #include "../foo/bar.h",
+; close it and open that file instead; recursively until finding a real file.
+(defun qt-follow-includes (file)
+  (let ((line "")
+	(begin nil)
+	(buffer nil))
+    (find-file file)
+    (goto-char 0)
+    (if (looking-at "#include \"")
+	(progn
+	  (forward-char 10)
+	  (setq begin (point))
+	  (re-search-forward "\"" nil t)
+	  (backward-char 1)
+	  (setq file (buffer-substring begin (point)))
+	  (setq buffer (current-buffer))
+	  (qt-follow-includes file)
+	  (kill-buffer buffer)
+	  )
+      ; else: this is the right file, skip the comments and go to the class
+      (progn
+	(re-search-forward "^class" nil t)
+	(beginning-of-line))
+    ))
+
+(defun qt-open-header ()
+  "Open the Qt header file for the class under point"
+  (interactive)
+  (let* ((file (getenv "QTDIR"))
+	(class "")
+	(f nil)
+	(files (directory-files (concat file "/include") t nil "dirsonly"))
+	)
+    (save-excursion
+      (backward-word 1)
+      ; get word under cursor. If this fails, copy the longer code from manual-entry in edit-utils/man.el
+      (if (re-search-forward "[a-zA-Z0-9_]+" nil t)
+	  (setq class (buffer-substring (match-beginning 0) (match-end 0))))
+      (dolist (f files nil)
+	(if (file-readable-p (concat f "/" class) )
+	    (setq file (concat f "/" class))))
+      (qt-follow-includes file)
+      )
+  ))
 
 (provide 'kde-emacs-utils)
