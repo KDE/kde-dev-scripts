@@ -10,7 +10,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
 	if (my ($blank, $prefix, $contenu) = m!^(\s*)(.*QDataStream.*)\((.*)\s*\);$!) {
 	    if ( my ($firstelement, $secondelement) = m!.*\(\s*(.*),\s*(.*)\);\s*$!) {
-		if ( substr($firstelement, 0, 1) ne "&") 
+		if ( $prefix !~ /operator/ && substr($firstelement, 0, 1) ne "&") 
 		{
 		    $_ = $blank . $prefix . "( &" . $firstelement . "," . $secondelement . ");\n" ;
 		}
