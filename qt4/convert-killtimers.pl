@@ -12,14 +12,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
 	s!killTimers\s*\(\s*\);!QAbstractEventDispatcher::instance()->unregisterTimers(this);!;
     } $file;
-   local *F;
-   open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
-   my $str = join '', <F>;
-   $str =~ s!(#include <.*#include <[^
-]*)!\1\n#include <QAbstractEventDispatcher>!smig;
-    seek F, 0, 0;
-    print F $str;
-    truncate F, tell(F);
+	functionUtilkde::addIncludeInFile( $file, "QAbstractEventDispatcher");
 }
 functionUtilkde::diffFile( "@ARGV" );
 

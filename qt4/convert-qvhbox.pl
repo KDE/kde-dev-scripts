@@ -8,19 +8,14 @@ use functionUtilkde;
 foreach my $file (@ARGV) {
     my $nbLoop = 1;
     functionUtilkde::substInFile {
-		s!Q3VBox!KVBox!g;
-		s!Q3HBox!KHBox!g;
 	s!#include <q3vbox.h>!!;
 	s!#include <q3hbox.h>!!;
+	s!#include <Q3VBox>!!;
+	s!#include <Q3HBox>!!;
+		s!Q3VBox!KVBox!g;
+		s!Q3HBox!KHBox!g;
     } $file;
-   local *F;
-   open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
-   my $str = join '', <F>;
-   $str =~ s!(#include <.*#include <[^
-]*)!\1\n#include <kvbox.h>!smig;
-    seek F, 0, 0;
-    print F $str;
-    truncate F, tell(F);
-	close F;
+
+    functionUtilkde::addIncludeInFile( $file, "kvbox.h");
 }
 functionUtilkde::diffFile( "@ARGV" );

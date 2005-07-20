@@ -9,6 +9,21 @@ sub diffFile
 		system("svn diff $listFileDiff");
 }
 
+sub addIncludeInFile
+{
+   local *F;
+   my ($file, $includefile) = @_;
+   open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
+   my $str = join '', <F>;
+   $str =~ s!(#include <.*#include <[^
+]*)!\1\n#include <$includefile>!smig;
+    seek F, 0, 0;
+    print F $str;
+    truncate F, tell(F);
+close F;
+}
+
+
 # code from MDK::common package
 # Code from Drakx Mandriva code (GPL code)
 sub substInFile(&@) {
