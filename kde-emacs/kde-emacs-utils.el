@@ -821,7 +821,7 @@ This function does not do any hidden buffer changes."
       (progn
 	(re-search-forward "^class" nil t)
 	(beginning-of-line))
-    ))
+    )))
 
 (defun qt-open-header ()
   "Open the Qt header file for the class under point"

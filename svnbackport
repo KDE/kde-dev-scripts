@@ -7,6 +7,7 @@
 # Initial author: Dirk Mueller
 # Support for multiple command-line arguments: David Faure
 # Ported to SVN: Till Gerken
+# Help message: Thomas Zander
 #
 # It is a straight port and not very sophisticated. It might break. I hope
 # that someone else with more knowledge about Subversion will pick it up.
@@ -15,6 +16,11 @@
 #
 
 #REPOSITORY=https://svn.kde.org/home/kde
+
+if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
+    echo "Usage: svnbackport recentlyCommittedFile";
+    exit;
+fi
 
 BRANCH=3.4
 
