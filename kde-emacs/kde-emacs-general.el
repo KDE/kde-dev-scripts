@@ -57,11 +57,21 @@ return (\"test.cpp\" t)."
 	(setq path (concat nname "." (car listit)))
 	(if (file-readable-p path)
 	    (setq ret (cons path t))
-	); else
-        ; look in kde-source-directory
-	(setq path (kde-find-file (file-name-nondirectory path) kde-source-directory))
-	(if path
-	    (setq ret (cons path t))
+	  )
+	(if (not ret)
+	    (if (string-match "_p$" nname)
+		(progn 
+		  (setq path (concat (substring nname 0 (string-match "_p$" nname)) "." (car listit)))
+		  (if (file-readable-p path)
+		      (setq ret (cons path t))
+		    )))
+	  )
+	(if (not ret)
+	    (progn ; look in kde-source-directory
+	      (setq path (kde-find-file (file-name-nondirectory path) kde-source-directory))
+	      (if (file-readable-p path)
+		  (setq ret (cons path t))
+		))
 	  )
 	(setq listit (cdr listit)) ; ++listit
 	)
@@ -76,12 +86,16 @@ return (\"test.cpp\" t)."
 	(setq path (concat nname "." (car listit)))
         ; look in current dir
 	(if (file-readable-p path)
-	    (setq ret (cons path t))
-	  ); else
-        ; look in kde-include-directory
-	(setq path (kde-find-file (file-name-nondirectory path) kde-include-directory))
-	(if path
-	    (setq ret (cons path t))
+	    (setq ret (cons path t)))
+	(if (not ret) ;check for header_p.h files
+	    (progn (setq path (concat nname "_p." (car listit)))
+		   (setq ret (cons path t))))
+	(if (not (file-readable-p path))
+	    (progn ;  look in kde-include-directory
+	      (setq path (kde-find-file (file-name-nondirectory path) kde-include-directory))
+	      (if path
+		  (setq ret (cons path t))
+		))
 	  )
 	(setq listit (cdr listit)) ; ++listit
 	)
