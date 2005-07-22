@@ -823,32 +823,11 @@ This function does not do any hidden buffer changes."
 	(beginning-of-line))
     )))
 
-(defun kde-word-under-point ()
-  "Return the word under the cursor"
-  ;; code taken from manual-entry in xemacs' edit-utils/man.el
-  (save-excursion
-    (buffer-substring
-     (progn
-       (if (not (eobp))
-	   (forward-char))
-       (if (re-search-backward "\\sw\\|\\s_" nil t)
-	   (forward-char))
-       (re-search-backward
-	"\\(\\sw\\|\\s_\\)([0-9]+[A-Za-z]*\\="
-	(point-at-bol) t)
-       (skip-syntax-backward "w_")
-       (point))
-     (progn
-     (skip-syntax-forward "w_")
-     (re-search-forward "\\=([0-9]+[A-Za-z]*)" nil t)
-     (point) )
-     )))
-
 (defun qt-open-header ()
   "Open the Qt header file for the class under point"
   (interactive)
   (let* ((file (getenv "QTDIR"))
-	(class (kde-word-under-point))
+	(class (thing-at-point 'word))
 	(f nil)
 	(files (directory-files (concat file "/include") t nil "dirsonly"))
 	)
