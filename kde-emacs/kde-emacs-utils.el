@@ -827,15 +827,11 @@ This function does not do any hidden buffer changes."
   "Open the Qt header file for the class under point"
   (interactive)
   (let* ((file (getenv "QTDIR"))
-	(class "")
+	(class (thing-at-point 'word))
 	(f nil)
 	(files (directory-files (concat file "/include") t nil "dirsonly"))
 	)
     (save-excursion
-      (backward-word 1)
-      ; get word under cursor. If this fails, copy the longer code from manual-entry in edit-utils/man.el
-      (if (re-search-forward "[a-zA-Z0-9_]+" nil t)
-	  (setq class (buffer-substring (match-beginning 0) (match-end 0))))
       (dolist (f files nil)
 	(if (file-readable-p (concat f "/" class) )
 	    (setq file (concat f "/" class))))

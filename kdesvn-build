@@ -270,6 +270,8 @@ my %package_opts = (
     "dest-dir"            => '${MODULE}', # single quotes used on purpose!
     "disable-agent-check" => 0,   # If true we don't check on ssh-agent
     "do-not-compile"      => "",
+    "email-address"       => "",
+    "email-on-compile-error" => "",
     "install-after-build" => "1", # Default to true
     "inst-apps"           => "",
     "kdedir"              => "$ENV{HOME}/kde",
@@ -312,8 +314,18 @@ my %ignore_list;  # List of packages to refuse to include in the build list.
 my @update_list;  # List of modules to update/checkout.
 my @build_list;   # List of modules to build.
 
-my @failed_list;  # List of modules that failed to update.
-my @install_fail; # List of modules that failed to install.
+# Dictionary of lists of failed modules, keyed by the name of the operation
+# that caused the failure (e.g. build).  Note that output_failed_module_lists
+# uses the key name to display text to the user so it should describe the
+# actual category of failure.  You should also add the key name to
+# output_failed_module_lists since it uses its own sorted list.
+my @fail_display_order = qw/build update install/;
+my %fail_lists = (
+    'build'   => [ ],
+    'install' => [ ],
+    'update'  => [ ],
+);
+
 my $install_flag; # True if we're in install mode.
 my $BUILD_ID;     # Used by logging subsystem to create a unique log dir.
 my $LOG_DATE;     # Used by logging subsystem to create logs in same dir.
@@ -918,9 +930,10 @@ sub log_command
 
         # If the module fails building, set an internal flag in the module
         # options with the name of the log file containing the error message.
-        $package_opts{$module}{'#error-log-file'} = "$logdir/$filename.log" if $?;
+        my $result = $?;
+        set_error_logfile($module, "$filename.log") if $result;
 
-        return $?;
+        return $result;
     }
     else
     {
@@ -963,6 +976,33 @@ sub log_command
             exit 1;
         };
     }
+}
+
+# Subroutine to mark a file as being the error log for a module.  This also
+# creates a symlink in the module log directory for easy viewing.
+# First parameter is the module in question.
+# Second parameter is the filename in the log directory of the error log.
+sub set_error_logfile
+{
+    my ($module, $logfile) = @_;
+    my $logdir = get_log_dir($module);
+
+    return unless $logfile;
+
+    set_option($module, '#error-log-file', "$logdir/$logfile");
+
+    # Setup symlink in the module log directory pointing to the appropriate
+    # file.  Make sure to remove it first if it already exists.
+    unlink("$logdir/error.log") if -l "$logdir/error.log";
+
+    if(-e "$logdir/error.log")
+    {
+        # Maybe it was a regular file?
+        print clr "rb[ * Unable to create symlink to error log file, error.log already exists].\n";
+        return 0;
+    }
+
+    system('ln', '-s', "$logdir/$logfile", "$logdir/error.log");
 }
 
 # Subroutine to run make/unsermake with redirected STDOUT and STDERR,
@@ -1020,9 +1060,10 @@ sub run_make_command
 
         # If the module fails building, set an internal flag in the module
         # options with the name of the log file containing the error message.
-        $package_opts{$module}{'#error-log-file'} = "$logdir/$filename.log" if $?;
+        my $result = $?;
+        set_error_logfile($module, "$filename.log") if $result;
 
-        return $?;
+        return $result;
     }
     else
     {
@@ -1562,12 +1603,24 @@ sub output_failed_module_list($@)
 
         for (@fail_list)
         {
-            $logfile = $package_opts{$_}{'#error-log-file'};
+            $logfile = get_option($_, '#error-log-file');
             $logfile = "No log file" unless $logfile;
             $logfile =~ s|$homedir|~|;
 
             print clr "r[$_] - g[$logfile]\n";
         }
+    }
+}
+
+# This subroutine reads the fail_lists dictionary to automatically call
+# output_failed_module_list for all the module failures in one function
+# call.
+sub output_failed_module_lists()
+{
+    for my $type (@fail_display_order)
+    {
+        my @failures = @{$fail_lists{$type}};
+        output_failed_module_list("failed to $type", @failures);
     }
 }
 
@@ -1847,6 +1900,11 @@ DONE
                 set_option('global', '#kdedir', $prefix);
                 set_option('global', '#reconfigure', 1);
 
+                last SWITCH;
+            };
+
+            /^--no-rebuild-on-fail$/ && do {
+                set_option('global', '#no-rebuild-on-fail', 1);
                 last SWITCH;
             };
 
@@ -2375,7 +2433,7 @@ sub dont_build
     # Weed out matches of the module name
     @build_list = grep (!/^$module$/, @build_list);
 
-    push @failed_list, $module;
+    push @{$fail_lists{'update'}}, $module;
 }
 
 # Subroutine to split a url into a protocol and host
@@ -2608,7 +2666,7 @@ sub safe_configure
 
     if(pretending)
     {
-        print clr "\tWould have run g[", join("' '", @commands), clr "]\n";
+        print clr "\tWould have run g['", join("' '", @commands), clr "']\n";
         return 0;
     }
 
@@ -3295,7 +3353,7 @@ EOF
             # Don't remove the old modules, but re-run make -f
             # Makefile.cvs and configure.
             print "\n\tStill couldn't build, recreating build system (builddir is safe).\n";
-            print "\tTook $elapsed of time.\n";
+            print clr "\tTook g[$elapsed] of time.\n";
             $package_opts{$module}->{'#cancel-clean'} = 1;
             $package_opts{$module}->{'refresh-build'} = 1;
 
@@ -3348,7 +3406,6 @@ EOF
 # Returns 0 for success, non-zero for failure.
 sub handle_build
 {
-    my @fail_list;
     my @build_done;
     my $build_ref = shift;
     my $kdesvn = get_kdesvn_dir();
@@ -3404,7 +3461,7 @@ sub handle_build
             print STATUS_FILE "$module: Failed after $elapsed.\n" if $outfile;
 
             print clr "\tOverall time for r[$module] was g[$elapsed].\n";
-            push @fail_list, $module;
+            push @{$fail_lists{'build'}}, $module;
 
             if (get_option($module, 'stop-on-failure'))
             {
@@ -3422,7 +3479,7 @@ sub handle_build
     # in the build-status file as well.
     if ($outfile)
     {
-        for my $failure (@failed_list)
+        for my $failure (@{$fail_lists{'update'}})
         {
             print STATUS_FILE "$failure: Failed on update.\n";
         }
@@ -3450,8 +3507,7 @@ sub handle_build
         print (clr 'g[', join (clr "]\ng[", @build_done), clr "]\n");
     }
 
-    output_failed_module_list ('failed building', @fail_list);
-    return ((scalar @fail_list) > 0) ? 1 : 0;
+    return scalar @{$fail_lists{'build'}};
 }
 
 # Subroutine to exit the script cleanly, including removing any
@@ -3527,7 +3583,7 @@ sub handle_install
         {
             print clr "\tUnable to install r[$module]!\n";
             $result = 1;
-            push @install_fail, $module;
+            push @{$fail_lists{'install'}}, $module;
 
             if (get_option($module, 'stop-on-failure'))
             {
@@ -3627,6 +3683,166 @@ sub munge_lists
     }
 }
 
+# Subroutine to try an intelligently determine what caused the module to fail
+# to build/update/whatever.  The first parameter is the name of the module,
+# and the return value is the best guess at the error.  If no error is detected
+# the last 30 lines of the file are returned instead.
+sub whats_the_module_error
+{
+    my $module = shift;
+    my $file = get_option($module, '#error-log-file');
+
+    open ERRORFILE, "<$file" or return "Can't open logfile $file.\n";
+
+    my @lastlines;      # Used to buffer last lines read.
+    my @errors;         # Tracks errors and the file they were found in.
+    my $lastfile = '';  # Tracks last filename read in error log.
+    my $errorCount = 0;
+    my $output;
+
+    # TODO: This code is tested for gcc and GNU ld, as, etc, I'm not sure how
+    # effective it is at parsing the error output of other build toolchains.
+    while (<ERRORFILE>)
+    {
+        # Keep last 30 lines.
+        push @lastlines, $_;
+        shift @lastlines if scalar @lastlines > 30;
+
+        my ($file, $line, $msg) = /^([^:]*):(\d+):\s*(.*)$/;
+
+        next unless ($file and $line and $msg);
+        next if $msg =~ /warn/i;
+        next if $msg =~ /^in file included from/i;
+        next if $msg =~ /^\s*$/ or $file =~ /^\s*$/;
+        $msg =~ s/^error: ?//i;
+
+        if ($file eq $lastfile)
+        {
+            $errorCount++;
+            push @errors, $msg if $errorCount < 5;
+        }
+        else
+        {
+            # Check is because we print info on the last file read, so there
+            # should be a last file. ;)
+            if ($lastfile)
+            {
+                my $error = $errorCount == 1 ? "error" : "errors";
+                $output .= "$errorCount $error in $lastfile\n";
+                $output .= "Error: $_\n" foreach (@errors);
+                $output .= "\t<clipped>\n" if $errorCount > 5;
+                $output .= "\n";
+            }
+
+            $errorCount = 1;
+            @errors = ($msg);
+        }
+
+        $lastfile = $file;
+    }
+
+    close ERRORFILE;
+
+    if (not $lastfile)
+    {
+        # Print out last lines read, hopefully a more descriptive error
+        # message is in there.
+        $output .= "Can't find errors, last " . scalar @lastlines . " line(s) of the output are:\n";
+        $output .= $_ foreach (@lastlines);
+        return $output;
+    }
+
+    # Don't forget to display info on last file read since it won't be done in
+    # the loop.
+    my $error = $errorCount == 1 ? "error" : "errors";
+    $output .= "$errorCount $error in $lastfile\n";
+    $output .= "Error: $_\n" foreach (@errors);
+    $output .= "\t<clipped>\n" if $errorCount > 5;
+
+    return $output;
+}
+
+# Subroutine to get the e-mail address to send e-mail from.
+# It is pulled from the global email-address option by default.
+# The first parameter is a default e-mail address to use (may be left off, in
+# which case this function will create a default of its own if necessary.)
+sub get_email_address
+{
+    my $email = get_option('global', 'email-address');
+    my $default = shift;
+
+    # Use user's value if set.
+    return $email if $email;
+
+    # Let's use the provided default if set.
+    return $default if $default;
+
+    # Let's make a default of our own.  It's likely to suck, so oh well.
+    use Sys::Hostname;
+    my $username = getpwuid($>);
+    my $hostname = hostname; # From Sys::Hostname
+
+    print "User has no email address, using $username\@$hostname\n" if debugging;
+
+    return "$username\@$hostname";
+}
+
+# Subroutine to look through the various failed lists, and send an email to the
+# given email address with a description of the failures.  If the user has
+# selected no email address the subroutine does nothing.
+sub email_error_report
+{
+    my $email_addy = get_option('global', 'email-on-compile-error');
+    my $from_addy = get_email_address($email_addy);
+
+    return unless $email_addy;
+
+    # Initial e-mail header.
+    my $email_body = <<EOF;
+The following errors were detected in the kdesvn-build run just completed.
+
+EOF
+
+    # Loop through modules trying to find out what caused the errors.
+    my $had_error = 0;
+    for my $type (@fail_display_order)
+    {
+        for my $module (@{$fail_lists{$type}})
+        {
+            $email_body .= "$module failed to $type:\n";
+            $email_body .= "-------------------------------\n\n";
+            $email_body .= whats_the_module_error($module);
+            $email_body .= "-------------------------------\n\n";
+
+            $had_error = 1;
+        }
+    }
+
+    return unless $had_error;
+
+    # Detect Mail::Mailer.
+    my $mailer;
+    eval {
+        require Mail::Mailer;
+
+        $mailer = new Mail::Mailer;
+    } or do {
+        print clr " y[*] Can't open y[b[Mail::Mailer] module, so e-mailing is disabled.\n";
+        print clr " Why? $!\n" if debugging;
+        return;
+    };
+
+    # Sendeth the email.
+    $mailer->open({
+        'From'    => $from_addy,
+        'To'      => $email_addy,
+        'Subject' => 'KDE Subversion build compile error',
+    });
+
+    print $mailer $email_body;
+    $mailer->close;
+}
+
 # Script starts.
 
 # Use some exception handling to avoid ucky error messages
@@ -3686,17 +3902,15 @@ eval
         # No packages to install, we're in build mode
         $result = handle_updates (\@update_list);
         $result = handle_build (\@build_list) || $result;
-
-        output_failed_module_list ("failed to update", @failed_list);
-        output_failed_module_list ("failed to install", @install_fail);
     }
     else
     {
         # Installation mode (no apidox)
         $result = handle_install (get_install_list(), 0);
-
-        output_failed_module_list ("failed to install", @install_fail);
     }
+
+    output_failed_module_lists();
+    email_error_report();
 
     $time = localtime;
     my $color = '';
