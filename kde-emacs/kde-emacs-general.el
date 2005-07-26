@@ -69,7 +69,9 @@ return (\"test.cpp\" t)."
 	(if (not ret)
 	    (progn ; look in kde-source-directory
 	      (setq path (kde-find-file (file-name-nondirectory path) kde-source-directory))
-	      (if (file-readable-p path)
+	      (if (and
+		   path
+		   (file-readable-p path))
 		  (setq ret (cons path t))
 		))
 	  )
@@ -89,11 +91,14 @@ return (\"test.cpp\" t)."
 	    (setq ret (cons path t)))
 	(if (not ret) ;check for header_p.h files
 	    (progn (setq path (concat nname "_p." (car listit)))
-		   (setq ret (cons path t))))
+		   (if (file-readable-p path)
+		       (setq ret (cons path t)))))
 	(if (not (file-readable-p path))
 	    (progn ;  look in kde-include-directory
 	      (setq path (kde-find-file (file-name-nondirectory path) kde-include-directory))
-	      (if path
+	      (if (and 
+		   path
+		   (file-readable-p path))
 		  (setq ret (cons path t))
 		))
 	  )
