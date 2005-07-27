@@ -80,7 +80,7 @@ else
      else
        # Suck in AUTOCONF/AUTOMAKE detection code
 	UNSERMAKE=no
-       . admin/detect-autoconf.sh
+       eval `admin/detect-autoconf.pl`
        /bin/sh admin/missing --run $AUTOMAKE $relpath || exit
        if test -f admin/am_edit; then perl admin/am_edit $relpath.in ;\
        else 
