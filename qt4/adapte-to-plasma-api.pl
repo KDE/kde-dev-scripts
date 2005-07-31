@@ -15,6 +15,10 @@ foreach my $file (@ARGV) {
 			s!KPanelApplet::Preferences!Plasma::Preferences!;
 			s!KPanelApplet::Stretch!Plasma::Stretch!;
 			s!include <kpanelapplet.h>!include <plasma/kpanelapplet.h>!;
+            s!KPanelApplet::pLeft!Plasma::Left!;
+            s!KPanelApplet::pRight!Plasma::Right!;
+            s!KPanelApplet::pTop!Plasma::Top!;
+            s!KPanelApplet::pBottom!Plasma::Bottom!;
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
