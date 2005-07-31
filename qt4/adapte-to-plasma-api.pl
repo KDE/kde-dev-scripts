@@ -19,6 +19,7 @@ foreach my $file (@ARGV) {
             s!KPanelApplet::pRight!Plasma::Right!;
             s!KPanelApplet::pTop!Plasma::Top!;
             s!KPanelApplet::pBottom!Plasma::Bottom!;
+			s!KPanelApplet::ReportBug!Plasma::ReportBug!;
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
