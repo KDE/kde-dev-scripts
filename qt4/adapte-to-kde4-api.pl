@@ -21,6 +21,11 @@ foreach my $file (@ARGV) {
             $changes =~ s!Q3Frame!QFrame!;
             $_ = $changes . $suite . $end . "\n";
     }
+    if (my ($prefix, $suite, $end) = /(.*)(plainPage.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!Q3Frame!QFrame!;
+            $_ = $changes . $suite . $end . "\n";
+    }
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
