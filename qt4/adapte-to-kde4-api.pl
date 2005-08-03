@@ -26,6 +26,11 @@ foreach my $file (@ARGV) {
             $changes =~ s!Q3Frame!QFrame!;
             $_ = $changes . $suite . $end . "\n";
     }
+    if (my ($prefix, $suite, $end) = /(.*)(KWin::info.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!KWin::info!KWin::windowInfo!;
+            $_ = $changes . $suite . $end . "\n";
+    }
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
