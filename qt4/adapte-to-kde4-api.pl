@@ -31,6 +31,8 @@ foreach my $file (@ARGV) {
             $changes =~ s!KWin::info!KWin::windowInfo!;
             $_ = $changes . $suite . $end . "\n";
     }
+	s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
+	s!KWin::appStarted!KStartupInfo::appStarted!;
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );

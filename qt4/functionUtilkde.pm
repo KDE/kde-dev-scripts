@@ -7,6 +7,7 @@ sub diffFile
 {
 		my $listFileDiff = join (" ", @_);
 		system("svn diff $listFileDiff");
+		warn "file(s) to commit : $listFileDiff\n";
 }
 
 sub addIncludeInFile
