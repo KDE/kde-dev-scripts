@@ -826,16 +826,29 @@ This function does not do any hidden buffer changes."
 (defun qt-open-header ()
   "Open the Qt header file for the class under point"
   (interactive)
-  (let* ((file (getenv "QTDIR"))
+  (let* ((qtinc (concat (getenv "QTDIR") "/include/"))
 	(class (thing-at-point 'word))
 	(f nil)
-	(files (directory-files (concat file "/include") t nil "dirsonly"))
+	(file nil)
+	(files nil)
 	)
     (save-excursion
-      (dolist (f files nil)
-	(if (file-readable-p (concat f "/" class) )
-	    (setq file (concat f "/" class))))
-      (qt-follow-includes file)
+      ; The Qt3 case: the includes are directly in $QTDIR/include/, lowercased
+      (setq f (concat qtinc (downcase class) ".h" ))
+      (if (file-readable-p f)
+	  (setq file f)
+        ; For some Qt3/e classes: add _qws
+	(setq f (concat qtinc (downcase class) "_qws.h" ))
+	(if (file-readable-p f)
+	    (setq file f)
+        ; The Qt4 case: the includes are in $QTDIR/include/QSomething/, in original case
+	  (setq files (directory-files qtinc t nil "dirsonly"))
+	  (dolist (f files nil)
+	    (if (file-readable-p (concat f "/" class) )
+		(setq file (concat f "/" class))))
+	  ))
+      (and file
+	   (qt-follow-includes file))
       )
   ))
 
