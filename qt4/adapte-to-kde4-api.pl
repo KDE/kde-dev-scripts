@@ -32,6 +32,7 @@ foreach my $file (@ARGV) {
             $_ = $changes . $suite . $end . "\n";
     }
 	s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
+	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
 	s!KWin::appStarted!KStartupInfo::appStarted!;
     } $file;
 }
