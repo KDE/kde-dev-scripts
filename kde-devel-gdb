@@ -254,13 +254,27 @@ document printqstringlist
   Usage: printqstringlist mylist
 end
 
+define printqregion
+    printqmemarray $arg0.rects() QRect
+end
+document printqregion
+  Prints the rectangles that make up a QRegion. Needs a running process.
+  Usage: printqregion myregion
+end
+
 # Bad implementation, requires a running process.
 # Needs to be refined, i.e. figuring out the right void* pointers casts.
 # Simon says: each Node contains the d pointer of the QString.
 define printq4stringlist
-    set $list = $arg0
-    set $stringdata = QtPrivate::QStringList_join( &paths, "\n" ).d
-    printq4stringdata $stringdata
+    # This is ugly, but we need to avoid conflicts with printq4string's own vars...
+    set $q4sl_i = 0
+    set $q4sl_d = & $arg0
+    set $q4sl_sz = $q4sl_d->size()
+    while $q4sl_i < $q4sl_sz
+        output $q4sl_i
+        printf " "
+        printq4string $q4sl_d->at($q4sl_i++)
+    end
 end
 document printq4stringlist
   Prints the contents of a Qt4 QStringList.
