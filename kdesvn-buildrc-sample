@@ -91,6 +91,9 @@ module qt-copy
 	configure-flags -system-zlib -qt-gif -system-libjpeg -system-libpng -plugin-imgfmt-mng -thread -no-exceptions -debug -fast -dlopen-opengl
 	apply-qt-patches true
 	use-qt-builddir-hack true
+
+	# trunk's qt-copy is 4.x now.
+	module-base-path branches/qt/3.3
 end module
 
 # arts is the KDE sound library.
