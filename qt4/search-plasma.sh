@@ -1,2 +1,2 @@
 #!/bin/sh
-egrep -rl '(KPanelApplet::ReportBug|KPanelApplet::pLeft|KPanelApplet::pRight!KPanelApplet::pTop!KPanelApplet::pBottom!KPanelApplet::Normal|KPanelApplet::Preferences|PanelApplet::About|KPanelApplet::Help|#include <kpanelapplet.h>|KPanelApplet::Stretch)'  * |grep -v "\.svn" |grep -v "\.libs" | grep -v "\.o" | grep -v Makefile | grep -v Makefile.in  | grep -v "\.moc" | grep -v "\.lo" | grep -v "\.la" | grep -v "kopete"
+egrep -rl '(KPanelApplet::ReportBug|KPanelApplet::pLeft|KPanelApplet::pRight!KPanelApplet::pTop!KPanelApplet::pBottom!KPanelApplet::Normal|KPanelApplet::Preferences|PanelApplet::About|KPanelApplet::Help|#include <kpanelapplet.h>|KPanelApplet::Stretch)'  * | egrep -v '\.(svn|libs|o|moc|l[ao])|Makefile(.in)?|kopete' 

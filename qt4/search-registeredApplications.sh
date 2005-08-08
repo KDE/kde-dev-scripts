@@ -1,2 +1,2 @@
 #!/bin/sh
-grep -rl "registeredApplications" * |grep -v "\.svn" |grep -v "\.libs" | grep -v "\.o" | grep -v Makefile | grep -v Makefile.in  | grep -v "\.moc" | grep -v "\.lo" | grep -v "\.la" | grep -v "kopete"
+grep -rl "registeredApplications" * | egrep -v '\.(svn|libs|o|moc|l[ao])|Makefile(.in)?|kopete'
