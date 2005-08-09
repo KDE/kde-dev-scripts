@@ -34,6 +34,7 @@ foreach my $file (@ARGV) {
 	s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
 	s!KWin::appStarted!KStartupInfo::appStarted!;
+	s!KInputDialog::text|KInputDialog::getText!;
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
