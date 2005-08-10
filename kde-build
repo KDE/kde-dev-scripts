@@ -218,6 +218,7 @@ prepare_update() {
   #
   cmd_update="svn"
   if test -d $KDESRCDIR/$module; then
+    test -z "$SUBDIR" && { cmd_update="$cmd_update update" ; return; }
     cmd_update="$cmd_update switch -r HEAD"
   else
     cmd_update="$cmd_update co"
@@ -318,6 +319,7 @@ if [ "${INCREMENTAL_BUILD}" = "yes" -a "${BUILD_CLEAN}" = "yes" ]; then
     echo "ERROR: Cannot use BUILD_CLEAN=\"yes\" and INCREMENTAL_BUILD=\"yes\" together!"; exit $err_buildclean_incremental
 fi
 
+domakecvs=1
 dosvnupdate=1
 dousage=0
 specifiedModules=""
@@ -337,6 +339,8 @@ do
         exit $err_no_error ;;
     --no-update)
         dosvnupdate=0 ;;
+    --no-check)
+	domakecvs=0 ;;
     --incremental)
         INCREMENTAL_BUILD="yes"
         ;;
@@ -356,7 +360,8 @@ done
 # Show help info
 if [ "$dousage" -eq 1 ]; then
   echo "usage: $0 [--options] [modules]"
-  echo "--no-update    Do not update from cvs."
+  echo "--no-update    Do not update from SVN."
+  echo "--no-check     Do not re-run Makefile.cvs."
   echo "--incremental  Start make right after update - risky. This also"
   echo "               disables the BUILD_CLEAN and CVS_CLEAN options."
   echo "--full         Do full setup even when INCREMENTAL_BUILD is set."
@@ -604,12 +609,17 @@ for module in $modules; do
     continue
   fi
 
-  make_makefile_cvs
+  if [ $domakecvs = 1 ] ; then
+    make_makefile_cvs
+  else
+    echo "$src_okay"
+    continue
+  fi
 
   log_endsection "Updating"
 done
 
-# Now disconnect from the internet as we've vinished updating
+# Now disconnect from the internet as we've finished updating
 #
 kppp_disconnect
 
