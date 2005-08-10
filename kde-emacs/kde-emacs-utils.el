@@ -316,20 +316,31 @@ This function does not do any hidden buffer changes."
       (fume-rescan-buffer))
     ))
 
-
-; Adds the current file to Makefile.am.
-; Written by David.
-(defun add-file-to-makefile-am ()
-  "add the current file to the _SOURCES tag in the Makefile.am"
+(defun add-file-to-buildsystem ()
+  "Add the current (C++) file to either Makefile.am or a .pro file, whichever exists."
+  ; Author: David
   (interactive)
-  (let ((file (buffer-name))
-        (makefile "Makefile.am"))
+  (if (file-readable-p "Makefile.am")
+      (add-file-to-makefile-am)
+    ; else: find a .pro file and add it there
+    (let* ((files (directory-files "." nil ".pro$" nil t))
+	   (projfile (car files)))
+      (if projfile
+	  (add-file-to-project projfile "^SOURCES[ \t]*") ; could be SOURCES= or SOURCES+=
+	; else: error
+	(error "No build system file found")
+	)))
+  )
+
+; internal helper for add-file-to-*
+(defun add-file-to-project (makefile searchString)
+  (let ((file (buffer-name)))
     (if (not (file-readable-p makefile))
-	(error "Makefile.am not found!")
+	(error (concat makefile " not found!"))
       )
     (find-file makefile)
     (goto-char (point-min))
-    (if (re-search-forward "_SOURCES" nil t)
+    (if (re-search-forward searchString nil t)
 	(progn
 	  (end-of-line)
           ; check if line ends with '\' [had to read make-mode.el to find this one!]
@@ -338,9 +349,15 @@ This function does not do any hidden buffer changes."
 	  (insert " ")
 	  (insert file)
 	  )
-      (error "_SOURCES not found")
-      )
-    )
+      (error (concat searchString " not found"))
+      ))
+  )
+
+(defun add-file-to-makefile-am ()
+  "Add the current file to the first _SOURCES line in the Makefile.am"
+  ; Author: David
+  (interactive)
+  (add-file-to-project "Makefile.am" "_SOURCES")
   )
 
 
