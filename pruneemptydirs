@@ -22,7 +22,7 @@ for i in $files; do if test -d $i; then
   # List their contents and filter out generated files
   realfiles=`find $i -type f | egrep -v  '.svn|CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
   if [ -z "$realfiles" ]; then
-    toremove="$toremove $i"
+    toremove="$toremove '$i'"
   fi
 fi; done
 
