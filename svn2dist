@@ -219,6 +219,17 @@ fi
 cd $module
 
 directory=`echo $directory | sed -e 's#^/##'`
+pofiles=""
+
+for makefile in `find $directory -name Makefile.am`; do
+    cat $makefile | while read line; do echo $line; done | perl -e '$mes=0; while (<STDIN>) { if (/^messages:/) { $mes=1; next; } if ($_ !~ m/^[^\t ]/) { $mes=0; } if ($mes && /\$\(XGETTEXT\)/ && / -o/) { s,.*-o \$\(podir\)/([a-z.-]+).*$,$1, ; print "potfile=$_" }  }' > _tmppot
+    potfile=
+    . _tmppot
+    rm -f _tmppot
+ 
+    pofile=${potfile/.pot/.po}
+    pofiles="$pofiles $pofile"
+done
 
 if [ -z $name ]; then
 	name=$directory
@@ -280,7 +291,8 @@ echo "Temporary directory is $temp_dir." >> $log
 # make a temporary directory
 test -d $temp_dir && rm -Rf $temp_dir
 
-mkdir -p $temp_dist
+mkdir $temp_dir
+mkdir $temp_dist || (echo "failed to create $temp_dist"; exit 1; )
 
 # check if we were able to create temp_dir
 test -d $temp_dist
@@ -338,7 +350,7 @@ if [ $doi18n = "yes" ]; then
             i18nlangs="$i18nlangs $lang"
         fi
     done
-    echo "available languages: $i18nlangs" >> $log
+    echo "available languages: $i18nlangs (Pofiles to fetch: $pofiles)" >> $log
     popd
 fi
 
@@ -346,22 +358,22 @@ fi
 if [ -d $module/doc/$name ]; then
 	mkdir -p $temp_dist/doc/$name
 	cp -Rf $module/doc/$name $temp_dist/doc
-	find $module/doc/ ! -xtype d -maxdepth 1 | xargs --replace={} cp {} $temp_dist/doc
+	find $module/doc/ -maxdepth 1 ! -xtype d | xargs --replace={} cp {} $temp_dist/doc
 
 	if [ $doi18n = "yes" ]; then
-	    echo "Getting documentation from i18n..."
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
+		echo -n "Checking for $lang/$name... "
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
 		docdirname="l10n/$lang/docs/$i18nmodule/$name"
-		echo "svn co $svnroot/$docdirname" >> $log
-		svn co "$svnroot/$docdirname" >> $log 2>&1
-		if [ ! -d "$name" ]; then
+		echo "svn export $svnroot/$docdirname $temp_dist/doc/$lang" >> $log
+                mkdir -p $temp_dist/doc
+		svn export "$svnroot/$docdirname" $temp_dist/doc/$lang >> $log 2>&1
+		if [ ! -d "$temp_dist/doc/$lang" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
+		    echo "does not exist"
 		    continue
 		fi
-		echo -n "Copying $lang's $name documentation over... "
-		mv $name $temp_dist/doc/$lang
 		echo "KDE_LANG = $lang
 KDE_DOCS = $name" > $temp_dist/doc/$lang/Makefile.am
 
@@ -387,24 +399,25 @@ fi
 if [ $doi18n = "yes" ]; then
 	test -d $temp_dist/po && rm -Rf $temp_dist/po
 	mkdir $temp_dist/po
+        pushd $temp_dir
 
-	echo "Getting translations from i18n..."
+        for pofile in $pofiles; do
+	  echo "Getting translations for $pofile from i18n..."
 
-	pushd $temp_dir/
-	for lang in $i18nlangs; do
-		pofilename="l10n/$lang/messages/$i18nmodule/$name.po";
+	  for lang in $i18nlangs; do
+		pofilename="l10n/$lang/messages/$i18nmodule/$pofile";
 		echo "Getting $pofilename" >> $log
-		svn cat "$svnroot/$pofilename" >$name.po 2>&1 || rm $name.po
-		if [ ! -f "$name.po" ]; then
-			echo "$lang's $name.po does not exist." >> $log
+		svn cat "$svnroot/$pofilename" >$pofile 2>&1 || rm -f $pofile
+		if [ ! -f "$pofile" ]; then
+			echo "$lang's $pofile does not exist." >> $log
 			continue
 		fi
 
 		dest=$temp_dist/po/$lang
-		mkdir $dest
-		echo -n "Copying $lang's $name.po over... "
-		echo "$lang's $name.po file included." >> $log
-		cp $name.po $dest
+		mkdir -p $dest
+		echo -n "Copying $lang's $pofile over... "
+		echo "$lang's $pofile file included." >> $log
+		mv $pofile $dest
 		echo "done."
 		
 		echo "KDE_LANG = $lang
@@ -412,8 +425,10 @@ SUBDIRS = \$(AUTODIRS)
 POFILES = AUTO" > $dest/Makefile.am
 
 		subdirs="non_empty"
-	done
+	  done
+        done
 
+        popd
 	if [ -z "$subdirs" ]; then
 		rm -Rf $temp_dist/po
 	else
