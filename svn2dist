@@ -533,10 +533,10 @@ cd $temp_dist
 
 # create the configure script
 # working directory is $temp_dist
-echo "make -f Makefile.cvs in $temp_dist/:" >> $log
+echo "UNSERMAKE=no make -f Makefile.cvs in $temp_dist/:" >> $log
 echo "" >> $log
-echo -n "make -f Makefile.cvs in $temp_dist/... "
-make -f Makefile.cvs >> $log 2>> $log
+echo -n "UNSERMAKE=no make -f Makefile.cvs in $temp_dist/... "
+UNSERMAKE=no make -f Makefile.cvs >> $log 2>> $log
 echo "rm Makefile.cvs" >> $log
 rm -f Makefile.cvs
 echo "rm autom4te.cache" >> $log
