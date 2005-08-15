@@ -6,7 +6,7 @@
 # change KDialogBase::makeMainWidget return a QFrame and not a Q3Frame
 
 use lib qw( . );
-use functionUtilkde; #utilisation des fonctions kde qui me sont utiles
+use functionUtilkde; 
 
 
 foreach my $file (@ARGV) {
@@ -36,7 +36,16 @@ foreach my $file (@ARGV) {
 	s!KWin::appStarted!KStartupInfo::appStarted!;
 	s!KInputDialog::text!KInputDialog::getText!;
 	s!#include <klargefile.h>!#include <kde_file.h>!;
-    } $file;
+    s!b0Pressed!cancelPressed!;
+	s!b8Pressed!suggestNewNamePressed!;
+	s!b1Pressed!renamePressed!;
+	s!b2Pressed!skipPressed!;
+	s!b3Pressed!autoSkipPressed!;
+	s!b4Pressed!overwritePressed!;
+	s!b5Pressed!overwriteAllPressed!;
+	s!b6Pressed!resumePressed!;
+	s!b7Pressed!resumeAllPressed!;
+	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
 
