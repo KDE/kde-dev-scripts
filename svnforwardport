@@ -18,7 +18,7 @@
 #REPOSITORY=https://svn.kde.org/home/kde
 
 if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
-    echo "Usage: svnbackport recentlyCommittedFile";
+    echo "Usage: svnforwardport recentlyCommittedFile";
     exit;
 fi
 
@@ -33,20 +33,20 @@ TMPFILE=`mktemp svnforport.XXXXXX` || exit 1
 files=$*
 until test $# -eq 0; do
 
-  echo "looking for last change to $1..."
+  echo "Looking for last change to $1..."
   svnlastchange $1 > $TMPFILE
-  echo "browsing last change to $1..."
+  echo "Browsing last change to $1..."
   less $TMPFILE
 
   FILE_PATH=$1
   FROM_URL=$SRC_REMOTE/$1
   TO_URL=$TARGET_REMOTE/$1
 
-  echo "switching to trunk..."
+  echo "Switching to trunk..."
   svn switch $TO_URL $FILE_PATH
   patch $FILE_PATH $TMPFILE
   rm -f $TMPFILE
-  echo "showing diff for $1..."
+  echo "Showing diff for $1..."
   svn diff $FILE_PATH | less
 
   shift
@@ -57,7 +57,7 @@ if [ $? = 0 ]; then
   svn ci $files
 fi
 
-echo "switching back to branch..."
+echo "Switching back to branch..."
 for file in $files
 do
   svn switch $SRC_REMOTE/$file $file
