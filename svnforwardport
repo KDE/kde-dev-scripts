@@ -42,7 +42,7 @@ until test $# -eq 0; do
   FROM_URL=$SRC_REMOTE/$1
   TO_URL=$TARGET_REMOTE/$1
 
-  echo "switching to branch..."
+  echo "switching to trunk..."
   svn switch $TO_URL $FILE_PATH
   patch $FILE_PATH $TMPFILE
   rm -f $TMPFILE
@@ -57,7 +57,7 @@ if [ $? = 0 ]; then
   svn ci $files
 fi
 
-echo "switching back to trunk..."
+echo "switching back to branch..."
 for file in $files
 do
   svn switch $SRC_REMOTE/$file $file
