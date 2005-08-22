@@ -26,6 +26,7 @@ handledir() {
 	(
 	cd $1
 	trap "rm svnignore.tmp" 1 2 15
+	addedsomething=0
 	if test -f Makefile.am; then
 		if test $recurse -eq 1; then
 			echo "Entering $1"
@@ -48,19 +49,32 @@ handledir() {
 		fgrep -q .stub Makefile.am && addignore "*_stub.cpp"
 		
 		grep -q "^include.*/Doxyfile.am$" Makefile.am && addignore "Doxyfile"
-
-		if test "$addedsomething" = 1; then
-		    svn propset svn:ignore -F svnignore.tmp .
+	elif test -f *.pro; then
+		if test $recurse -eq 1; then
+			echo "Entering $1"
 		fi
-		rm svnignore.tmp
+		addignore Makefile
+		addignore .obj
+		for f in `ls -1 *.pro`; do
+		   template=`grep ^TEMPLATE $f | sed -e 's/.*=[ \t]*//'`
+		   if test -z "$template" -o "$template" = "app"; then
+		        # TODO grep TARGET
+			target=`echo $f | sed -e 's/\.pro$//'`
+			addignore $target
+		   fi
+		done
 	else
 		echo "Skipping $1"
 	fi
+	if test "$addedsomething" = 1; then
+	    svn propset svn:ignore -F svnignore.tmp .
+	fi
+	rm -f svnignore.tmp
 	)
 }
 
 
-if test -f Makefile.am; then
+if test -f Makefile.am -o -f *.pro; then
 	if test $recurse -eq 1; then
 		find . -type d | egrep -v 'CVS|.svn' | sed -e 's,/$,,' | \
 		while read dir; do
