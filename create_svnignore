@@ -62,6 +62,14 @@ handledir() {
 			target=`echo $f | sed -e 's/\.pro$//'`
 			addignore $target
 		   fi
+		   # RESOURCES = foo.qrc -> addignore qrc_foo.cpp
+		   for resource in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^RESOURCES | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
+		      addignore qrc_`echo $resource | sed -e 's/\.qrc$/\.cpp/'`
+		   done
+		   # FORMS = foo.ui -> addignore ui_foo.h
+		   for form in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^FORMS | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
+		      addignore ui_`echo $form | sed -e 's/\.ui$/\.h/'`
+		   done
 		done
 	else
 		echo "Skipping $1"
