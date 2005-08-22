@@ -2,7 +2,7 @@
 # Extract author information from C++ files
 # and print it out in DocBook format as a list
 # Daniel Naber <daniel.naber@t-online.de>
-# $Id: $
+# $Id$
 
 my $file = $ARGV[0];
 if( ! $file ) {
