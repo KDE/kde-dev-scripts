@@ -56,6 +56,10 @@ handledir() {
 		addignore Makefile
 		addignore .obj
 		for f in `ls -1 *.pro`; do
+		   if fgrep -q debug_and_release $f; then
+		    addignore "Makefile.Debug"
+		    addignore "Makefile.Release"
+		   fi
 		   template=`grep ^TEMPLATE $f | sed -e 's/.*=[ \t]*//'`
 		   if test -z "$template" -o "$template" = "app"; then
 		        # TODO grep TARGET
