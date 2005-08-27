@@ -1,0 +1,64 @@
+#!/bin/sh
+# Backport the last change in HEAD, to a branch.
+# Usage: svnforwardport <files>
+# WARNING: the branch tag is hardcoded into the script, make sure to check it!
+#
+# This is a port of the "cvsbackport" script:
+# Initial author: Dirk Mueller
+# Support for multiple command-line arguments: David Faure
+# Ported to SVN: Till Gerken
+# Help message: Thomas Zander
+#
+# It is a straight port and not very sophisticated. It might break. I hope
+# that someone else with more knowledge about Subversion will pick it up.
+# It needs to be used from within the repository so that it can guess
+# the remote URL correctly.
+#
+
+#REPOSITORY=https://svn.kde.org/home/kde
+
+if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
+    echo "Usage: svnforwardport recentlyCommittedFile";
+    exit;
+fi
+
+BRANCH=3.5
+
+SRC_REMOTE=`svn info | grep URL: | cut -c6-`
+TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|branches/KDE/$BRANCH|trunk/KDE|"`
+
+
+echo "Forward porting from $BRANCH to trunk"
+TMPFILE=`mktemp svnforport.XXXXXX` || exit 1
+files=$*
+until test $# -eq 0; do
+
+  echo "Looking for last change to $1..."
+  svnlastchange $1 > $TMPFILE
+  echo "Browsing last change to $1..."
+  less $TMPFILE
+
+  FILE_PATH=$1
+  FROM_URL=$SRC_REMOTE/$1
+  TO_URL=$TARGET_REMOTE/$1
+
+  echo "Switching to trunk..."
+  svn switch $TO_URL $FILE_PATH
+  patch $FILE_PATH $TMPFILE
+  rm -f $TMPFILE
+  echo "Showing diff for $1..."
+  svn diff $FILE_PATH | less
+
+  shift
+done
+
+kdialog --yesno "Do you want to commit all changes?"
+if [ $? = 0 ]; then
+  svn ci $files
+fi
+
+echo "Switching back to branch..."
+for file in $files
+do
+  svn switch $SRC_REMOTE/$file $file
+done
