@@ -45,6 +45,10 @@ foreach my $file (@ARGV) {
 	s!b5Pressed!overwriteAllPressed!;
 	s!b6Pressed!resumePressed!;
 	s!b7Pressed!resumeAllPressed!;
+	#KMainWindow
+	#TODO fix me to test if we alreadly apply it (see in my other script)
+        s!KMainWindow::memberList!KMainWindow::memberList()!;	
+	s!KMainWindow::getMemberList!KMainWindow::memberList!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
