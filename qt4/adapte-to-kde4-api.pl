@@ -46,7 +46,7 @@ foreach my $file (@ARGV) {
 	s!b6Pressed!resumePressed!;
 	s!b7Pressed!resumeAllPressed!;
 	#KMainWindow
-        s!(?<!KMainWindow::memberList\(\))KMainWindow::memberList!KMainWindow::memberList()!;	
+        s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	s!KMainWindow::getMemberList!KMainWindow::memberList!;
 	} $file;
 }
