@@ -46,8 +46,7 @@ foreach my $file (@ARGV) {
 	s!b6Pressed!resumePressed!;
 	s!b7Pressed!resumeAllPressed!;
 	#KMainWindow
-	#TODO fix me to test if we alreadly apply it (see in my other script)
-        s!KMainWindow::memberList!KMainWindow::memberList()!;	
+        s!(?<!KMainWindow::memberList\(\))KMainWindow::memberList!KMainWindow::memberList()!;	
 	s!KMainWindow::getMemberList!KMainWindow::memberList!;
 	} $file;
 }
