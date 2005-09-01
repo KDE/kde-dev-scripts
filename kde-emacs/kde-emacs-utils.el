@@ -80,7 +80,7 @@ This function does not do any hidden buffer changes."
 	(let ((pos (c-safe-scan-lists (point) -1 1)))
 	; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
-	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
+	(while (re-search-backward "^[ ]*\\(class\\|namespace\\|struct\\)[ \t][^};]*{" nil t)
 	  (save-excursion
 	    (forward-word 1)
 	   (when (looking-at "[ \t]*[A-Z_]*_EXPORT[A-Z_]*[ \t]")
@@ -135,6 +135,8 @@ This function does not do any hidden buffer changes."
   (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
        (setq function (replace-match " " t t function)))
   (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
+       (setq function (replace-match "" t t function)))
+  (and (string-match "^\\(explicit\\>\\)?[ \t]*" function)
        (setq function (replace-match "" t t function)))
   (and (string-match "^\\(static\\>\\)?[ \t]*" function)
        (setq function (replace-match "" t t function)))
@@ -272,6 +274,7 @@ This function does not do any hidden buffer changes."
 	 (insertion-string (kde-function-impl-sig namespace class function))
 	 (msubstr nil)
 	 (start nil)
+	 (newcppfile nil)
 	 )
     (setq insertion-string 
 	  (concat insertion-string "\n{\n"
@@ -285,10 +288,11 @@ This function does not do any hidden buffer changes."
     (re-search-forward ";" nil t)  ; end of this method decl
     (re-search-forward ";" nil t)  ; end of next method decl
 
+    (setq newcppfile (not (cdr (kde-file-get-cpp-h))))
     (if (string-match "\\.h$" file)
 	(kde-switch-cpp-h)
       )
-    (goto-char (point-max))
+    (goto-char (point-max))    
     (kde-comments-begin)
     (kde-skip-blank-lines)
     (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
@@ -303,6 +307,8 @@ This function does not do any hidden buffer changes."
 	  (insert "\n")
 	  (forward-line 1)
 	  ))
+    (when newcppfile
+      (insert "\n"))
     (insert insertion-string)
     (forward-char -3)
     (c-indent-defun)   

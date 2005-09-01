@@ -99,7 +99,7 @@
     (qmemorymanager_qws.h QMemoryManagerPixmap QMemoryManager)
     (qsoundqss_qws.h QWSSoundServer QWSSoundClient QWSSoundServerClient QWSSoundServerSocket)
     (qwindowsystem_qws.h QWSInternalWindowInfo QWSScreenSaver QWSWindow QWSSoundServer 
-                         QWSServer QWSServer KeyboardFilter QWSClient)
+                         QWSServer QWSServer KeyboardFilter QWSClient qwsServer)
     (qwsbeosdecoration_qws.h QWSBeOSDecoration)
     (qwscursor_qws.h QWSCursor)
     (qwsdecoration_qws.h QWSDecoration)
@@ -326,6 +326,7 @@
                         (concat "#include <" header ">"))))
 
     (beginning-of-buffer)
+    ; first look for //#include "foo.h" being already there
     (if (re-search-forward (concat "^ *// *\\(#include *[<\"][ \t]*" header "[ \t]*[>\"]\\)") nil t)
         (progn
           (replace-match "\\1")
@@ -334,9 +335,13 @@
       
       (if (not (re-search-forward (concat "#include *[\"<][ \t]*" header "[ \t]*[\">]") nil t))
           (progn
-                                        ; No include existed
+            ; No include existed
             (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-            (if (not (re-search-backward "^#include *[\"<][^\">]+\.h *[\">]" nil t))
+	    (while (and (re-search-backward "^#include *[\"<]\\([^\">]+\\)[\">]" nil t)
+			(string-match ".*\.moc$" (match-string 1))) 
+	      ; each iteration moves up until finding a #include which isn't a moc
+	      )
+            (if (not (looking-at "^#include *[\"<][^\">]+ *[\">]"))
                 (beginning-of-buffer)
               (progn (end-of-line) (forward-char 1)))
             
