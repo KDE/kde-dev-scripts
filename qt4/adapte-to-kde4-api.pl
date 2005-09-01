@@ -31,23 +31,24 @@ foreach my $file (@ARGV) {
             $changes =~ s!KWin::info!KWin::windowInfo!;
             $_ = $changes . $suite . $end . "\n";
     }
-	s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
-	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
-	s!KWin::appStarted!KStartupInfo::appStarted!;
-	s!KInputDialog::text!KInputDialog::getText!;
-	s!#include <klargefile.h>!#include <kde_file.h>!;
-    s!b0Pressed!cancelPressed!;
-	s!b8Pressed!suggestNewNamePressed!;
-	s!b1Pressed!renamePressed!;
-	s!b2Pressed!skipPressed!;
-	s!b3Pressed!autoSkipPressed!;
-	s!b4Pressed!overwritePressed!;
-	s!b5Pressed!overwriteAllPressed!;
-	s!b6Pressed!resumePressed!;
-	s!b7Pressed!resumeAllPressed!;
+	s!#include <kuniqueapplication.h>!#include <kuniqueapplication.h>!;
+	s!#include <kcodecs.h>!#include <kcodecs.h>!;
+	s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
+	s!KInputDialog::getText!KInputDialog::getText!;
+	s!#include <kde_file.h>!#include <kde_file.h>!;
+    s!cancelPressed!cancelPressed!;
+	s!suggestNewNamePressed!suggestNewNamePressed!;
+	s!renamePressed!renamePressed!;
+	s!skipPressed!skipPressed!;
+	s!autoSkipPressed!autoSkipPressed!;
+	s!overwritePressed!overwritePressed!;
+	s!overwriteAllPressed!overwriteAllPressed!;
+	s!resumePressed!resumePressed!;
+	s!resumeAllPressed!resumeAllPressed!;
 	#KMainWindow
-        s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
-	s!KMainWindow::getMemberList!KMainWindow::memberList!;
+        s/(?<!KMainWindow::memberList()\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
+	s!KMainWindow::memberList!KMainWindow::memberList()!;
+	s!getPid!pid!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
