@@ -12,6 +12,10 @@ bin_SCRIPTS = \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
   package_crystalsvg png2mng.pl kdemangen.pl
 
+# Install syntax highlighting file for KWrite/Kate.
+kdesvn_build_syntaxdir = $(kde_datadir)/katepart/syntax
+kdesvn_build_syntax_DATA = kdesvn-buildrc.xml
+
 # sorted by bin_SCRIPTS reference
 man_MANS = \
   kde-build.1 \
