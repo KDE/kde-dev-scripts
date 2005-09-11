@@ -31,7 +31,9 @@ foreach my $file (@ARGV) {
             $changes =~ s!KWin::info!KWin::windowInfo!;
             $_ = $changes . $suite . $end . "\n";
     }
-	s!#include <kuniqueapplication.h>!#include <kuniqueapplication.h>!;
+	s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
+	s!#include <kapp.h>!#include <kapplication.h>!;
+	s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
 	s!#include <kcodecs.h>!#include <kcodecs.h>!;
 	s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	s!KInputDialog::getText!KInputDialog::getText!;
