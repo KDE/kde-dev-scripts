@@ -12,7 +12,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
 			if( my ($prefix, $suite, $end) = /(.*)(QString::fromLatin1.*?\))(.*$)/) {
 			#warn "SUITE contains «$suite»\nEND contains «$end»";
-			s!QString::fromLatin1!QLatin1String! if $end !~ /(\.arg|\.mid|\.prepend|\.append)/;
+			s!QString::fromLatin1!QLatin1String! if $end !~ /(\.arg|\.mid|\.prepend|\.append|\.toLower|\.upper)/;
 			#warn "element : $prefix : suite : $suite : end : $end ::::\n";
 					
 			}
