@@ -16,13 +16,18 @@ force=0;
 if [ "$1" = "-f" ]; then force=1; fi
 
 # Look for toplevel dirs
-files=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$ | fgrep -v .svn`
+dirs=`find . -type d | grep -v CVS\$ | grep -v admin\$ | grep -v .libs\$ | fgrep -v .svn`
 toremove="rm -rf";
-for i in $files; do if test -d $i; then
-  # List their contents and filter out generated files
-  realfiles=`find $i -type f | egrep -v  '.svn|CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
-  if [ -z "$realfiles" ]; then
-    toremove="$toremove $i"
+for i in $dirs; do if test -d $i; then
+  # Short way out, to avoid a full recursive listing from a toplevel module
+  if [ -f $i/configure.in.in -o -f $i/Makefile.am ]; then
+     :
+  else 
+    # List their contents and filter out generated files
+    realfiles=`find $i -type f | egrep -v  'CVS/|Makefile$|Makefile.in$|Makefile.rules.in$|Makefile.calls.in$|\.o$|\.lo$|\.rpo$|\.la$|\.moc|/\.#' `
+    if [ -z "$realfiles" ]; then
+      toremove="$toremove $i"
+    fi
   fi
 fi; done
 
