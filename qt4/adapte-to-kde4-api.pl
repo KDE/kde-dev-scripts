@@ -48,7 +48,7 @@ foreach my $file (@ARGV) {
 	s!resumePressed!resumePressed!;
 	s!resumeAllPressed!resumeAllPressed!;
 	#KMainWindow
-    s/(?<!KMainWindow::memberList()\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
+    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	s!KMainWindow::memberList!KMainWindow::memberList()!;
     if ( /kapp->getDisplay/ ) {
             s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
