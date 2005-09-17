@@ -48,9 +48,12 @@ foreach my $file (@ARGV) {
 	s!resumePressed!resumePressed!;
 	s!resumeAllPressed!resumeAllPressed!;
 	#KMainWindow
-        s/(?<!KMainWindow::memberList()\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
+    s/(?<!KMainWindow::memberList()\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	s!KMainWindow::memberList!KMainWindow::memberList()!;
-	s!getPid!pid!;
+    if ( /kapp->getDisplay/ ) {
+            s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
+			functionUtilkde::addIncludeInFile( $file, "QX11Info");
+    }
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );

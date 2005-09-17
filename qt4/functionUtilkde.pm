@@ -7,7 +7,7 @@ sub diffFile
 {
 		my $listFileDiff = join (" ", @_);
 		system("svn diff $listFileDiff");
-		warn "file(s) to commit : $listFileDiff\n";
+		warn "file to commit : $listFileDiff\n";
 }
 
 sub addIncludeInFile
@@ -16,11 +16,13 @@ sub addIncludeInFile
    my ($file, $includefile) = @_;
    open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
    my $str = join '', <F>;
+   if( $str !~ /#include <$includefile>/ ) {
    $str =~ s!(#include <.*#include <[^
 ]*)!\1\n#include <$includefile>!smig;
     seek F, 0, 0;
     print F $str;
     truncate F, tell(F);
+   }
 close F;
 }
 
