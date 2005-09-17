@@ -11,6 +11,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
     }
 	s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
+	s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
