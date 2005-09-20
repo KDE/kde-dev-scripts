@@ -12,7 +12,10 @@ foreach my $file (@ARGV) {
     }
 	s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
 	s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
-	s!KApplication::random!KRandom::random!;
+	if ( $_ ~ = /KApplication::random/ ) {
+			s!KApplication::random!KRandom::random!;
+			functionUtilkde::addIncludeInFile( $file, "krandom.h");
+		}
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
