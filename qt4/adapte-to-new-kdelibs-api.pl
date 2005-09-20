@@ -12,6 +12,7 @@ foreach my $file (@ARGV) {
     }
 	s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
 	s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
+	s!KApplication::random!KRandom::random!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
