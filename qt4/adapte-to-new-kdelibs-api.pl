@@ -24,6 +24,7 @@ foreach my $file (@ARGV) {
 	s!KFindDialog::RegularExpression!KFind::RegularExpression!;
 	s!KFindDialog::FindIncremental!KFind::FindIncremental!;
 	s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
+	s!kdatetbl.h!kdatetable.h!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
