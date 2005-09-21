@@ -16,6 +16,14 @@ foreach my $file (@ARGV) {
 			s!KApplication::random!KRandom::random!;
 			functionUtilkde::addIncludeInFile( $file, "krandom.h");
 		}
+	s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
+	s!KFindDialog::FromCursor!KFind::FromCursor!;
+	s!KFindDialog::SelectedText!KFind::SelectedText!;
+	s!KFindDialog::CaseSensitive!KFind::CaseSensitive!;
+	s!KFindDialog::FindBackwards!KFind::FindBackwards!;
+	s!KFindDialog::RegularExpression!KFind::RegularExpression!;
+	s!KFindDialog::FindIncremental!KFind::FindIncremental!;
+	s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
