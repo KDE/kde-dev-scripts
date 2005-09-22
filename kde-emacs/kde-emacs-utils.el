@@ -286,7 +286,19 @@ This function does not do any hidden buffer changes."
     ; move to next method, to be ready for next call
     (backward-char)                ; in case we're after the ';'
     (re-search-forward ";" nil t)  ; end of this method decl
-    (re-search-forward ";" nil t)  ; end of next method decl
+    (let ((moveToNext t))
+      (while moveToNext
+	(re-search-forward ";" nil t)  ; end of next method decl
+	(save-excursion
+	  (forward-char -2) ; -1 goes to ';' itself, so go before that
+	  (while (looking-at "[ \t0=]")
+	    (forward-char -1))
+	  (forward-char 1)
+          ; move to next method again if we're at a pure virtual method
+	  (setq moveToNext (looking-at "[ \t]*=[ \t]*0;"))
+	  )
+	)
+      )
 
     (setq newcppfile (not (cdr (kde-file-get-cpp-h))))
     (if (string-match "\\.h$" file)
