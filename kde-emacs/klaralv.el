@@ -1,5 +1,5 @@
 ;; ------------------------------ COPYRIGHT NOTICE ------------------------------
-;; klaralv.el version 1.3
+;; klaralv.el version 1.4
 ;; Copyright Klaralvdalens Datakonsult AB.
 ;;
 ;; This program is free software; you can redistribute it and/or modify it
@@ -18,24 +18,32 @@
 
 
 ;; ------------------------------ INSTALLATION ------------------------------
-;; To use this file, add the current directory to your load path.
-;; you do this by inserting something like the following to your .emacs:
-;; (setq load-path (cons "/home/blackie/Emacs/" load-path))
+;; To use this file, put this file in your emacs config directory.
+;; If you do not have such a directory, create one and add the inserting
+;; something like the following to your .emacs: 
+;; (setq load-path (cons "/home/joe/Emacs/" load-path))
 ;;
 ;; Next insert the following line into your .emacs
 ;; (require 'klaralv)
 ;; (global-set-key [(f5)] 'kdab-insert-header)
 ;; (global-set-key [(shift f5)] 'kdab-insert-forward-decl)
-;; (setq kdab-qt-documentation "file://usr/local/qt/html/doc/XXX.html")
+;; (setq kdab-qt-documentation "file:/usr/local/qt/html/doc/XXX.html")
 ;; (global-set-key [(control f5)] 'kdab-lookup-qt-documentation)
 ;; 
-;; If you use QTopia, and do not want include files to be prefixed with qpe/,
-;; as in qpe/qpeapplication, then insert the following code in your setup
+;; If you use Qtopia, insert the following line to activate Qtopia headers
+;; (setq kdab-include-qpe 't)
+;; If you do not want include files to be prefixed with qtopia/,
+;; as in qtopia/qpeapplication, then insert the following code in your setup
 ;; (setq kdab-prefix-qpe nil)
+;;
+;; Finally, if you are using Qt 4 rather than Qt 3, insert the following line into you setup:
+;; (setq kdab-qt-version 4)
+;; or in a .emacs-dirvars file:
+;; kdab-qt-version: 4
 
 ;; ------------------------------ CONFIGURATION ------------------------------
 (defvar kdab-qt-documentation
-  "http://doc.trolltech.com/3.0/XXX.html"
+  "http://doc.trolltech.com/XXX.html"
   "URL for Qt documentation. XXX must be in the string. 
   Example: file://packages/kde-src/qt-copy/doc/html/XXX.html")
 
@@ -44,85 +52,24 @@
   "URL for QTopia documentatin. XXX must be in the string. 
   Example: file:/opt/qtopia/doc/XXX.html")
 
+(defvar kdab-qt-version 3
+  "Specify which header files to use")
+
+(defvar kdab-include-qpe nil
+  "Specifies whether Qtopia headers should be included")
 
 (defvar kdab-prefix-qpe 't
-  "set this to nil if you do not want QPE header files prefixed with qpe/")
+  "set this to nil if you do not want QTopia header files prefixed with qtopia/")
 
+
+;; ------------------------------ Include Specifications ------------------------------ 
 ;; special case for include files
 ;; Please notify blackie@klaralvdalens-datakonsult.se with any modification to this variable!
 (defvar kdab-special-includes
   '( 
-    (qlayout.h QHBoxLayout QVBoxLayout QGridLayout QBoxLayout)
-    (qlistview.h QListViewItem QCheckListItem QListViewItemIterator)
-    (qiconview.h QIconViewItem QIconDragItem QIconDrag)
-    (qdragobject.h QTextDrag QStoredDrag QUriDag QColorDrag QImageDrag QDragManager)
-    (qmime.h QMimeSource QMimeSourceFactory QWindowsMime)
-    (qptrlist.h QPtrListIterator)
-    (qevent.h QTimerEvent QMouseEvent QWheelEvent QTabletEvent QKeyEvent 
-              QFocusEvent QPaintEvent QMoveEvent QResizeEvent QCloseEvent 
-              QShowEvent QHideEvent QContextMenuEvent QIMEvent QDropEvent
-              QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
-              QChildEvent QCustomEvent)
-    (qdatetime.h QTime QDateTime QDate)
-    (qdatetimeedit.h QTimeEdit QDateTimeEditBase QDateEdit QDateTimeEdit)
-    (qcstring.h QByteArray)
-    (qobjectlist.h QObjectListIt QObjectListIterator)
-    (qwidgetlist.h QWidgetListIt)
-    (qtabbar.h QTab)
-    (qpalette.h QColorGroup)
-    (qaction.h QActionGroup)
-    (qvalidator.h QIntValidator QDoubleValidator QRegExpValidator)
-    (qlistbox.h QListBoxItem QListBoxText QListBoxPixmap)
-    (qstring.h QChar QCharRef QConstString)
-    (qcanvas.h QCanvasSprite QCanvasPolygonalItem QCanvasRectangle
-               QCanvasPolygon QCanvasEllipse QCanvasText QCanvasLine
-               QCanvasChunk QCanvas QCanvasItem QCanvasView QCanvasPixmap)
-    (qgl.h QGLFormat QGL QGLContext QGLWidget QGLColormap)
-    (qtable.h QTableSelection QTableItem QComboTableItem QCheckTableItem) 
-    (qsqlfield.h QSqlField QSqlFieldInfo)
-    (qsqlrecord.h QSqlRecord QSqlRecordInfo)
-    
-    ; Qt/Embedded
-    (qcopchannel_qws.h QCopChannel)
-    (qdirectpainter_qws.h QDirectPainter)
-    (qfontfactorybdf_qws.h QFontFactoryBDF)
-    (qfontfactoryttf_qws.h QFontFactoryFT)
-    (qfontmanager_qws.h QGlyphMetrics QGlyph QRenderedFont QDiskFont QFontManager QFontFactory)
-    (qgfx_qws.h QScreenCursor QPoolEntry QScreen QGfx)
-    (qgfxlinuxfb_qws.h QLinuxFbScreen)
-    (qgfxmatroxdefs_qws.h QQnxFbGfx QQnxScreen)
-    (qgfxraster_qws.h QGfxRasterBase QGfxRaster)
-    (qgfxvnc_qws.h QRfbRect QRfbPixelFormat QRfbServerInit QRfbSetEncodings 
-                   QRfbFrameBufferUpdateRequest QRfbKeyEvent QRfbPointerEvent QRfbClientCutText QVNCServer)
-    (qkeyboard_qws.h QWSKeyboardHandler)
-    (qlock_qws.h QLock QLockHolder)
-    (qmemorymanager_qws.h QMemoryManagerPixmap QMemoryManager)
-    (qsoundqss_qws.h QWSSoundServer QWSSoundClient QWSSoundServerClient QWSSoundServerSocket)
-    (qwindowsystem_qws.h QWSInternalWindowInfo QWSScreenSaver QWSWindow QWSSoundServer 
-                         QWSServer QWSServer KeyboardFilter QWSClient qwsServer)
-    (qwsbeosdecoration_qws.h QWSBeOSDecoration)
-    (qwscursor_qws.h QWSCursor)
-    (qwsdecoration_qws.h QWSDecoration)
-    (qwsdefaultdecoration_qws.h QWSDefaultDecoration)
-    (qwsdisplay_qws.h QWSWindowInfo QWSDisplay)
-    (qwshydrodecoration_qws.h QWSHydroDecoration)
-    (qwskde2decoration_qws.h QWSKDE2Decoration)
-    (qwskdedecoration_qws.h QWSKDEDecoration)
-    (qwsmanager_qws.h QWSManager QWSButton)
-    (qwsmouse_qws.h QWSPointerCalibrationData QWSMouseHandler QCalibratedMouseHandler 
-                    QAutoMouseHandlerPrivate QWSMouseHandlerPrivate QVrTPanelHandlerPrivate 
-                    QTPanelHandlerPrivate QYopyTPanelHandlerPrivate QCustomTPanelHandlerPrivate 
-                    QVFbMouseHandlerPrivate)
-    (qwsproperty_qws.h QWSPropertyManager)
-    (qwsregionmanager_qws.h QWSRegionManager)
-    (qwssocket_qws.h QWSSocket QWSServerSocket)
-    (qwswindowsdecoration_qws.h QWSWindowsDecoration)
-    (qstatusbar.h statusBar())
-
     ; KDE
     (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
     (kconfig.h KConfigGroup)
-    (kiconloader.h BarIcon SmallIcon DesktopIcon KIcon)
     (kicondialog.h KIconCanvas KIconButton)
     (knuminput.h KDoubleNumInput KIntNumInput)
 
@@ -170,9 +117,7 @@
     (KDFrame.h KDFrame KDFrameCorner)
     (KDFrameProfileSection.h KDFrameProfileSection)
 
-
     ; Useful fake entries
-    (qapplication.h qApp)
     (kapplication.h kapp)
     (klocale.h i18n I18N_NOOP)
     (kstandarddirs.h locate locateLocal)
@@ -180,11 +125,91 @@
     (unistd.h unlink sleep usleep)
     (iostream cout cerr)
     (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
-    (qeventloop.h eventloop)
-
     )
     "List of special include files which do not follow the normal scheme")
 
+(defvar kdab-qt3-special-includes
+  '((qlayout.h QHBoxLayout QVBoxLayout QGridLayout QBoxLayout)
+    (qlistview.h QListViewItem QCheckListItem QListViewItemIterator)
+    (qiconview.h QIconViewItem QIconDragItem QIconDrag)
+    (qdragobject.h QTextDrag QStoredDrag QUriDag QColorDrag QImageDrag QDragManager)
+    (qmime.h QMimeSource QMimeSourceFactory QWindowsMime)
+    (qptrlist.h QPtrListIterator)
+    (qevent.h QTimerEvent QMouseEvent QWheelEvent QTabletEvent QKeyEvent 
+              QFocusEvent QPaintEvent QMoveEvent QResizeEvent QCloseEvent 
+              QShowEvent QHideEvent QContextMenuEvent QIMEvent QDropEvent
+              QDragMoveEvent QDragEnterEvent QDragResponseEvent QDragLeaveEvent
+              QChildEvent QCustomEvent)
+    (qdatetime.h QTime QDateTime QDate)
+    (qdatetimeedit.h QTimeEdit QDateTimeEditBase QDateEdit QDateTimeEdit)
+    (qcstring.h QByteArray)
+    (qobjectlist.h QObjectListIt QObjectListIterator)
+    (qwidgetlist.h QWidgetListIt)
+    (qtabbar.h QTab)
+    (qpalette.h QColorGroup)
+    (qaction.h QActionGroup)
+    (qvalidator.h QIntValidator QDoubleValidator QRegExpValidator)
+    (qlistbox.h QListBoxItem QListBoxText QListBoxPixmap)
+    (qstring.h QChar QCharRef QConstString)
+    (qcanvas.h QCanvasSprite QCanvasPolygonalItem QCanvasRectangle
+               QCanvasPolygon QCanvasEllipse QCanvasText QCanvasLine
+               QCanvasChunk QCanvas QCanvasItem QCanvasView QCanvasPixmap)
+    (qgl.h QGLFormat QGL QGLContext QGLWidget QGLColormap)
+    (qtable.h QTableSelection QTableItem QComboTableItem QCheckTableItem) 
+    (qsqlfield.h QSqlField QSqlFieldInfo)
+    (qsqlrecord.h QSqlRecord QSqlRecordInfo)
+    
+    ; Qt/Embedded
+    (qcopchannel_qws.h QCopChannel)
+    (qdirectpainter_qws.h QDirectPainter)
+    (qfontfactorybdf_qws.h QFontFactoryBDF)
+    (qfontfactoryttf_qws.h QFontFactoryFT)
+    (qfontmanager_qws.h QGlyphMetrics QGlyph QRenderedFont QDiskFont QFontManager QFontFactory)
+    (qgfx_qws.h QScreenCursor QPoolEntry QScreen QGfx)
+    (qgfxlinuxfb_qws.h QLinuxFbScreen)
+    (qgfxmatroxdefs_qws.h QQnxFbGfx QQnxScreen)
+    (qgfxraster_qws.h QGfxRasterBase QGfxRaster)
+    (qgfxvnc_qws.h QRfbRect QRfbPixelFormat QRfbServerInit QRfbSetEncodings 
+                   QRfbFrameBufferUpdateRequest QRfbKeyEvent QRfbPointerEvent QRfbClientCutText QVNCServer)
+    (qkeyboard_qws.h QWSKeyboardHandler)
+    (qlock_qws.h QLock QLockHolder)
+    (qmemorymanager_qws.h QMemoryManagerPixmap QMemoryManager)
+    (qsoundqss_qws.h QWSSoundServer QWSSoundClient QWSSoundServerClient QWSSoundServerSocket)
+    (qwindowsystem_qws.h QWSInternalWindowInfo QWSScreenSaver QWSWindow QWSSoundServer 
+                         QWSServer qwsServer KeyboardFilter QWSClient)
+    (qwsbeosdecoration_qws.h QWSBeOSDecoration)
+    (qwscursor_qws.h QWSCursor)
+    (qwsdecoration_qws.h QWSDecoration)
+    (qwsdefaultdecoration_qws.h QWSDefaultDecoration)
+    (qwsdisplay_qws.h QWSWindowInfo QWSDisplay)
+    (qwshydrodecoration_qws.h QWSHydroDecoration)
+    (qwskde2decoration_qws.h QWSKDE2Decoration)
+    (qwskdedecoration_qws.h QWSKDEDecoration)
+    (qwsmanager_qws.h QWSManager QWSButton)
+    (qwsmouse_qws.h QWSPointerCalibrationData QWSMouseHandler QCalibratedMouseHandler 
+                    QAutoMouseHandlerPrivate QWSMouseHandlerPrivate QVrTPanelHandlerPrivate 
+                    QTPanelHandlerPrivate QYopyTPanelHandlerPrivate QCustomTPanelHandlerPrivate 
+                    QVFbMouseHandlerPrivate)
+    (qwsproperty_qws.h QWSPropertyManager)
+    (qwsregionmanager_qws.h QWSRegionManager)
+    (qwssocket_qws.h QWSSocket QWSServerSocket)
+    (qwswindowsdecoration_qws.h QWSWindowsDecoration)
+    (qstatusbar.h statusBar())
+
+    ; Useful fake entries
+    (qapplication.h qApp)
+    (qglobal.h qDebug qWarning)
+    (qeventloop.h eventloop)    
+  ))
+
+(defvar kdab-qt4-special-includes
+  '(
+    ; Useful fake entries
+    (QApplication qApp)
+    (qglobal.h qDebug qWarning)
+    (QEventLoop eventloop)
+    ))
+  
 (defvar kdab-qpe-includes 
   '(
     (alarmserver.h AlarmServer)
@@ -239,17 +264,165 @@
     (tzselect.h TZCombo TimeZoneSelector)
     ))
 
+(defvar kdab-qt4-classes
+  '(QtNsPlugin QClipboard QPixmap QPen QRgb QMessageBox
+               QRegion QImageReader QItemEditorCreator QTimeEdit QCloseEvent QPushButton
+               QAbstractScrollArea QTabBar QSlider QPicture QRadialGradient QStandardItemModel
+               QListWidget QPageSetupDialog QAccessibleApplication QHelpEvent QTextDocumentFragment QDragMoveEvent
+               QImageIOHandlerFactoryInterface QDropEvent QInputContextFactoryInterface QStyleHintReturnMask QWidget QTextTableCell
+               QPrintDialog QKeyEvent QDial QDrag QFont QIcon
+               QItemSelection QMenu QImageWriter QAbstractSlider QtGui QStyleOptionToolBox
+               QTableView QWidgetData QPrintEngine QWidgetItem QWidgetList QStyleOptionProgressBar
+               QScrollBar QPolygon QAccessibleFactoryInterface QProgressDialog QStyleOptionButton QClipboardEvent
+               QHideEvent QDragLeaveEvent QWhatsThisClickedEvent QColor QLineEdit QStyleOptionFocusRect
+               QFrame QImage QPrinter QLabel QMovie QStyleOptionTabWidgetFrame
+               QSound QStyle QMoveEvent QAccessibleBridge QStyleOptionHeader QFileOpenEvent
+               QGradientStop QMenuItem QAbstractPageSetupDialog QVBoxLayout QItemEditorFactory QTextObjectInterface
+               QIconEngineFactoryInterface QTreeView QStyleOptionTabBarBase QWhatsThisAction QListView QGradientStops
+               QRegExpValidator QAbstractSpinBox QTextFragment QStackedLayout QAccessibleInterface QCommonStyle
+               QIconEngine QDateEdit QLayoutIterator QPictureFormatInterface QTextTableFormat QResizeEvent
+               QFontMetrics QGradient QImageIOHandler QShortcut QAccessibleObject QTextBlockGroup
+               QStyleOptionSlider QApplication QTableWidgetItem QInputDialog QPainterPathStroker QVBoxWidget
+               QAccessiblePlugin QTextBrowser QStyleFactoryInterface QImageTextKeyLang QErrorMessage QTextFrameLayoutData
+               QHoverEvent QX11Info QScrollArea QDirModel QAbstractTextDocumentLayout QWindowsStyle
+               QStackedWidget QStyleOptionTitleBar QAbstractItemView QStylePainter QSplitter QStyleOptionViewItem
+               QAccessibleWidget QVFbHeader QAccessible QTextFrameFormat QGridLayout QButtonGroup
+               QFontInfo QMotifPlusStyle QProgressBar QLinearGradient QMacMime QContextMenuEvent
+               QStyleHintReturn QStyleOptionQ3ListViewItem QActionEvent QActionGroup QDockWidget QWidgetContainerPlugin
+               QWSUpdateEvent QStyleOptionMenuItem QVFbKeyData QAbstractItemDelegate QPolygonF QCheckBox
+               QIntValidator QColorGroup QTreeWidgetItem QGroupBox QCursorShape QTableWidgetSelectionRange
+               QCompactStyle QSplitterHandle QMenuBar QStyleOptionDockWidget QWindowsXPStyle QPixmapCache
+               QSpinBox QDoubleSpinBox QTextCursor QFontMetricsF QInputMethodEvent QShortcutEvent
+               QSizeGrip QInputContextFactory QLCDNumber QTextEdit QTextItem QTextLine
+               QTextList QToolButton QGridWidget QFontDatabase QTextFormat QListWidgetItem
+               QPlatinumStyle QAccessibleBridgeFactoryInterface QKeySequence QStyleOptionComplex QTableWidget QFontDialog
+               QTextInlineObject QStyleOptionFrame QComboBox QTextListFormat QHBoxLayout QColormap
+               QDragEnterEvent QStyleOptionQ3ListView QDragResponseEvent QValidator QStyleOptionToolButton QItemDelegate
+               QStyleOptionQ3DockWindow QTextDocument QWMatrix QTextLayout QTreeWidget QRadioButton
+               QSplashScreen QToolBarChangeEvent QTextCharFormat QToolBar QToolBox QToolTip
+               QDesktopWidget QDoubleValidator QShowEvent QTextObject QConicalGradient QTextOption
+               QDateTimeEdit QWidgetMapper QWindowsMime QStyleOption QLayoutItem QTextBlock
+               QTextImageFormat QTextFrame QPaintDevice QSizePolicy QTextTable QFocusEvent
+               QAction QFocusFrame QTextBlockFormat QHBoxWidget QHeaderView QPaintEngine
+               QWidgetPlugin QMainWindow QBitmap QAbstractUndoItem QSpacerItem QFileIconProvider
+               QColorDialog QDialog QCDEStyle QCursor QTabWidget QItemSelectionModel
+               QFileDialog QInputEvent QItemSelectionRange QProxyModel QRubberBand QItemEditorCreatorBase
+               QMotifStyle QPainterPathPrivate QStatusTipEvent QAbstractButton QPictureIO QWheelEvent
+               QAbstractPrintDialog QBrushData QInputContext QMouseEvent QBoxLayout QLayout
+               QPainter QPalette QMatrix QIconSet QWidgetFactoryInterface QStyleOptionComboBox
+               QSessionManager QStyleOptionSpinBox QTabletEvent QStyleOptionTab QStatusBar QWhatsThis
+               QPaintEvent QStyleFactory QSGIStyle QIconDragEvent QSqlRelationalDelegate QTDSResult
+               QOCIResult QtSql QPSQLResult QSqlDriver QSqlDriverFactoryInterface QSqlTableModel
+               QIBaseDriver QSqlRelation QSqlRecord QSqlResult QSqlDatabase QIBaseResult
+               QSQLiteDriver QSqlDriverCreatorBase QSQLite2Driver QSqlError QSqlField QSqlIndex
+               QSqlQuery QODBCDriver QSQLiteResult QDB2Driver QSQLite2Result QSqlRelationalTableModel
+               QMYSQLDriver QODBCResult QSqlDriverCreator QDB2Result QSqlQueryModel QTDSDriver
+               QOCIDriver QPSQLDriver QMYSQLResult QDomProcessingInstruction QXmlContentHandler QXmlParseException
+               QXmlLexicalHandler QtXml QDomNodeList QDomElement QDomDocument QDomDocumentType
+               QDomAttr QDomNode QDomText QDomEntity QDomNotation QXmlDefaultHandler
+               QDomDocumentFragment QXmlDeclHandler QXmlAttributes QXmlEntityResolver QDomImplementation QXmlInputSource
+               QXmlLocator QXmlReader QDomNamedNodeMap QXmlDTDHandler QXmlErrorHandler QDomCharacterData
+               QDomEntityReference QXmlNamespaceSupport QXmlSimpleReader QDomCDATASection QDomComment QTS
+               QDir QMap QSet QUrl QPointF QSharedDataPointer
+               QStringMatcher QVariantMap QRegExp QVectorData QIODevice QReadLocker
+               QVariantComparisonHelper QSignal QThread QString QLatin1String QVector
+               QSingleCleanupHandler QtPluginInstanceFunction QBool QChar QDate QFile
+               QFlag QLine QList QPair QRect QSize
+               QTime QUuid Q_PID QPointer QAbstractEventDispatcher QCharRef
+               QStringListIterator QAbstractListModel QChildEvent QMutableSetIterator QFactoryInterface QGlobalStatic
+               Q_INT16 Q_INT32 Q_INT64 Q_LLONG QCache QDebug
+               QEvent QFlags Q_UINT8 Q_ULONG QMutableStringListIterator QLineF
+               QMutex QProcess QPoint QSignalEmitter QRectF QQueue
+               QSizeF QStack QTimer QTextCodecFactoryInterface Q_INT8 Q_LONG
+               QCleanupHandler QBasicAtomicPointer QtCore QByteRef QBitArray QVariantList
+               QSharedCleanupHandler QListData QMetaEnum QMetaType QModelIndexList QSocketNotifier
+               QDateTime QDataStream QStringList QObjectData QObjectList QForeachContainer
+               QtAlgorithms QLibraryInfo QSharedData QResource QByteArrayMatcher QMutableVectorIterator
+               QTypeInfo QVectorTypedData QSemaphore QThreadStorage QMetaProperty QVectorIterator
+               QTranslatorMessage QPersistentModelIndex QMutexLocker QLibrary QSignalMapper QTextDecoder
+               QMetaClassInfo QSetIterator QtMsgHandler QMapData QHashIterator QFixedPoint
+               QMultiMap QFileEngineHandler QHashDummyValue QBasicTimer QCoreApplication QFileInfo
+               QExplicitlySharedDataPointer QTimerEvent QNoImplicitBoolCast QMutableHashIterator QMutableMapIterator QEventLoop
+               QCustomEvent QGenericReturnArgument QHashData QHashNode QSysInfo QFileInfoListIterator
+               QByteArray QModelIndex QWaitCondition QVarLengthArray QMetaMember QTextEncoder
+               QLatin1Char QMimeData QMetaObject QForeachMemory QThreadStorageData QMetaResource
+               QTemporaryFile QTextCodec QListIterator QLinkedListData QFileInfoList QLinkedListNode
+               QNoDebug QReadWriteLock QTextStream QObjectCleanupHandler QFixedPointLong QtCleanUpFunction
+               QAtomic QBitRef QTextStreamFunction QGenericArgument QObjectUserData QVariant
+               QBuffer QLinkedList QArgument QMetaTypeId QtGlobal QTextOStream
+               QMutableListIterator QFileEngine QWriteLocker QBasicAtomic QTextStreamManipulator QStdWString
+               QLinkedListIterator Q_UINT16 Q_UINT32 Q_UINT64 Q_ULLONG QAbstractTableModel
+               QMapIterator QAtomicPointer QLocale QMutableLinkedListIterator QConstString QAbstractItemModel
+               QSettings QObject QTextIStream QReturnArgument QTranslator QPluginLoader
+               ActiveQt QFtp QTcpServer QTcpSocket QHttp QAbstractSocket
+               QIPv6Address QUdpSocket QHttpHeader QtNetwork QHttpResponseHeader QHttpRequestHeader
+               QHostInfo Q_IPV6ADDR QUrlInfo QHostAddress QMotif QtMotif
+               QMotifDialog QXtWidget QMotifWidget Q3DragObject Q3TabDialog Q3CanvasItemList
+               Q3DeepCopy Q3StrIVec Q3StrList Q3IntBucket Q3DropSite Q3PtrListStdIterator
+               Q3AsciiDictIterator Q3CanvasPixmapArray Q3ListBoxItem Q3ListBoxText Q3DockWindow Q3Dns
+               Q3Ftp Q3Url Q3SqlPropertyMap Q3ToolBar Q3HttpRequestHeader Q3SqlRecordInfo
+               Q3StringBucket Q3ImageDrag Q3Http Q3FileIconProvider Q3DockAreaLayout Q3CanvasRectangle
+               Q3ServerSocket Q3TableSelection Q3CanvasItem Q3CanvasLine Q3CanvasText Q3CanvasView
+               Q3StoredDrag Q3TextEditOptimPrivate Q3MultiLineEdit Q3ValueList Q3NetworkProtocolFactory Q3NetworkProtocol
+               Q3DnsSocket Q3CString Q3UriDrag Q3Action Q3ListViewItemIterator Q3Canvas
+               Q3IntCacheIterator Q3ValueListConstIterator Q3Button Q3GCache Q3Painter Q3TimeEdit
+               Q3DataBrowser Q3StyleSheet Q3Header Q3StrIList Q3MainWindow Q3WhatsThis
+               Q3NetworkOperation Q3SqlFieldInfoList Q3CanvasPolygon Q3FileDialog Q3DockArea Q3Picture
+               Q3SqlSelectCursor Q3MemArray Q3PtrListIterator Q3ComboTableItem Q3SortedList Q3CanvasPolygonalItem
+               Q3SocketDevice Q3HButtonGroup Q3PtrDictIterator Q3VButtonGroup Q3PolygonScanner Q3IconViewItem
+               Q3AsciiCacheIterator Q3PtrBucket Q3PointArray Q3ObjectDictionary Q3Shared Q3Signal
+               Q3SqlFieldInfo Q3TableItem Q3CheckTableItem Q3Socket Q3StrVec Q3SqlCursor
+               Q3DateTimeEdit Q3CheckListItem Q3ListView Q3Accel Q3Process Q3Cache
+               Q3GDict Q3GList Q3CanvasPixmap Q3Frame Q3LNode Q3SpinWidget
+               Q3FilePreview Q3Wizard Q3Table Q3ValueVector Q3SyntaxHighlighter Q3DataView
+               Q3DictIterator Q3DateEdit Q3CanvasSpline Q3CanvasSprite Q3ColorDrag Q3SimpleRichText
+               Q3ValueListIterator Qt3Support Q3ValueStack Q3WidgetStack Q3NetworkProtocolDict Q3HttpResponseHeader
+               Q3TextBrowser Q3ListBoxPixmap Q3GridView Q3SqlEditorFactory Q3CacheIterator Q3AsciiBucket
+               Q3EditorFactory Q3CanvasEllipse Q3MimeSourceFactory Q3PopupMenu Q3PaintDeviceMetrics Q3DateTimeEditBase
+               Q3HttpHeader Q3DataTable Q3ButtonGroup Q3ProgressDialog Q3Semaphore Q3ProgressBar
+               Q3NetworkProtocolFactoryBase Q3IconDrag Q3IconView Q3GroupBox Q3ListViewItem Q3IntDictIterator
+               Q3ActionGroup Q3ListBox Q3GVector Q3IconDragItem Q3RangeControl Q3StyleSheetItem
+               Q3StrListIterator Q3TextEdit Q3TextDrag Q3LocalFs Q3TextView Q3Workspace
+               Q3GListStdIterator Q3SqlForm Q3UrlOperator Q3ScrollView QGLContext QGLFormat
+               QGLWidget QGLColormap QtOpenGL ) )
+
 ;; ------------------------------ SOURCE CODE ------------------------------
 
-;; Merge in qpe classes
-(defun kdab-get-special-include-list ()
-  (let (elm header classes (list kdab-qpe-includes) filename (result kdab-special-includes))
+;; build Qt4 special include list
+(defun kdab-build-qt4-special-includes ()
+  (let ( elm (res kdab-qt4-special-includes) (list kdab-qt4-classes))
+    (while list
+      (progn
+        (setq elm (car list))
+        (setq list (cdr list))
+        (setq res (cons (list elm elm ) res ))))
+    res))
+
+(defun kdab-build-qpe-special-incldues ()
+  (let (elm header classes (list kdab-qpe-includes) filename (result '()))
     (while list
       (setq elm (car list))
       (setq list (cdr list))
-      (setq filename (concat (if kdab-prefix-qpe "qpe/" "") (symbol-name (car elm))))
+      (setq filename (concat (if kdab-prefix-qpe "qtopia/" "") (symbol-name (car elm))))
       (setq result (cons (cons (intern filename) (cdr elm)) result)))
     result))
+
+(defun kdab-join-lists (list1 list2)
+  (let ((res list1)
+        (list list2)
+        elm)
+    (while list
+      (progn
+        (setq elm (car list))
+        (setq list (cdr list))
+        (setq res (cons elm res))))
+    res))
+
+(defun kdab-get-special-include-list ()
+  (kdab-join-lists kdab-special-includes
+                   (kdab-join-lists (if (eq kdab-qt-version 3) kdab-qt3-special-includes 
+                                      (if (eq kdab-qt-version 4) (kdab-build-qt4-special-includes) '()))
+                                    (if kdab-include-qpe (kdab-build-qpe-special-incldues) '()))))
 
 ;; Lookup class `cls' in kdab-special-includes and return the associate include file name
 (defun kdab-map-special (cls)
@@ -295,8 +468,8 @@
     (let* ((word (downcase word-with-case))
            (special-header (cond
                     ((kdab-map-special word) (kdab-map-special word))
-                    ((string-match "^qdom" word) "qdom.h")
-                    ((string-match "^qxml" word) "qxml.h")
+                    ((and (string-match "^qdom" word) (eq kdab-qt-version 3)) "qdom.h")
+                    ((and (string-match "^qxml" word) (eq kdab-qt-version 3)) "qxml.h")
                     (t (concat word ".h"))))
            header is-local)
 
@@ -310,9 +483,17 @@
             (progn
               (setq header (concat word ".h"))
               (setq is-local 't))
-          (progn ; header in <..> path
-            (setq header special-header)
-            (setq is-local nil))))
+          (if (file-exists-p word-with-case)
+              (progn
+              (setq header word-with-case)
+              (setq is-local 't))
+            (if (file-exists-p word)
+                (progn
+                  (setq header word)
+                  (setq is-local 't))
+              (progn ; header in <..> path
+                (setq header special-header)
+                (setq is-local nil))))))
 
       (kdab-insert-include-file header is-local t))))
 
