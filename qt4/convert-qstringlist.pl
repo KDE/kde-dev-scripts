@@ -4,7 +4,7 @@
 # this function changes QStringList::split (QT3_SUPPORT) to QString::split (QT4)
 
 
-use lib qw( /home/lmontel/script-kde/ );
+use lib qw( . );
 use functionUtilkde; 
 
 foreach my $file (@ARGV) {
@@ -12,10 +12,16 @@ foreach my $file (@ARGV) {
     if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(QStringList::split.*)\((.*)\s*\);$!) {
 			#warn "blank : $blank, prefix : $prefix, contenu : $contenu \n";
         	if ( my ($firstelement, $secondelement) = m!.*\(\s*(.*),\s*(.*)\);\s*$!) {
-            	my $argument = $prefix;
-				# Remove space before argument
-				$secondelement =~ s/ //g;
-            	$_ = $blank . $secondelement . ".split( " . $firstelement . ");\n" ;
+					my $argument = $prefix;
+					# Remove space before argument
+					$secondelement =~ s/ //g;
+					if ( $blank =~ /insertStringList/ ) {
+							$secondelement =~ s/\)//g;
+							$_ = $blank . $secondelement . ".split( " . $firstelement . "));\n" ;
+					}
+					else {
+            			$_ = $blank . $secondelement . ".split( " . $firstelement . ");\n" ;
+				}
         	}
     	}
     } $file;
