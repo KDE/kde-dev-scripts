@@ -9,6 +9,27 @@ use functionUtilkde;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
+	if (my ($prefix, $suite, $end) = /(.*)(addVBoxPage.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!Q3Frame!KVBox!;
+            $_ = $changes . $suite . $end . "\n";
+	}	
+	if (my ($prefix, $suite, $end) = /(.*)(addHBoxPage.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!Q3Frame!KHBox!;
+            $_ = $changes . $suite . $end . "\n";
+	}	
+	if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!Q3Frame!KVBox!;
+            $_ = $changes . $suite . $end . "\n";
+	}	
+	if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
+            my $changes = $prefix;
+            $changes =~ s!Q3Frame!KHBox!;
+            $_ = $changes . $suite . $end . "\n";
+	}	
+	
     }
 	s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
 	s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
