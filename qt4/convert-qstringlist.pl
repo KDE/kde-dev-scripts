@@ -17,6 +17,9 @@ foreach my $file (@ARGV) {
                     # Remove space before argument
                     $secondelement =~ s/ //g;	
 					$thirdelement =~ s/ //g;
+					if ( $secondelement =~ /^\"/ ) {
+							$secondelement = "QString( " . $secondelement . ")";
+					}
 					if ( $blank =~ /insertStringList/ ) {
 							$thirdelement =~ s/\)//g;
                         if ( $thirdelement =~ /true/ ) {
@@ -52,6 +55,9 @@ foreach my $file (@ARGV) {
 					my $argument = $prefix;
 					# Remove space before argument
 					$secondelement =~ s/ //g;
+					if ( $secondelement =~ /^\"/ ) {
+							$secondelement = "QString( " . $secondelement . ")";
+                    }
 					if ( $blank =~ /insertStringList/ ) {
 							$secondelement =~ s/\)//g;
 							$_ = $blank . $secondelement . ".split( " . $firstelement . "));\n" ;
