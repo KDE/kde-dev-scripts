@@ -37,6 +37,14 @@ foreach my $file (@ARGV) {
 			if( $_ =~ /absPath\s*\(\s*\)/ ) {
 					s!absPath!absolutePath!;
 			}
+			s!convertToAbs!makeAbsolute!;
+			s!currentDirPath!currentPath!;
+			s!homeDirPath!homePath!;
+			s!rootDirPath!rootPath!;
+			s!cleanDirPath!cleanPath!;
+			s!QDir::All!QDir::TypeMask!;
+			s!QDir::DefaultFilter!QDir::NoFilter!;
+			s!QDir::DefaultSort!QDir::NoSort!;
 			s!simplifyWhiteSpace!simplified!g;
 			s!stripWhiteSpace!trimmed!g;
 			s!ucs2!utf16!g;
