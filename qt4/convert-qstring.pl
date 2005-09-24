@@ -33,6 +33,13 @@ foreach my $file (@ARGV) {
 			}	
 			s!local8Bit!toLocal8Bit!;
 			s!utf8!toUtf8!;
+			s!simplifyWhiteSpace!simplified!;
+			s!stripWhiteSpace!trimmed!;
+			s!ucs2!utf16!;
+			s!leftJustify!leftJustified!;
+			s!rightJustify!rightJustified!;
+			s!fromUcs2!fromUtf16!;
+			s!constref!at!;
     } $file;
 
 }
