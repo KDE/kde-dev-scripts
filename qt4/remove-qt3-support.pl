@@ -37,11 +37,31 @@ foreach my $file (@ARGV) {
 			if( $_ =~ /absPath\s*\(\s*\)/ ) {
 					s!absPath!absolutePath!;
 			}
+			if( $_ =~ /dirPath/ ) {
+					if( my ($before, $prefix, $contenu, $after ) = m!^(\s*.*)(dirPath.*?\()(.*?\))(.*)$!) {
+							$contenu =~ s/ //g;
+							$contenu =~ s/\)//;
+							if( $contenu =~ /true|TRUE/ ) {
+									$_ = $before . "absolutePath()" . $after . "\n";
+							}
+							elsif ( $contenu =~ /false|FALSE/ ) {
+									$_ = $before . "path()" . $after . "\n";
+							}
+							elsif ($contenu eq "" ) {
+									$_ = $before . "path()" . $after . "\n";
+							}
+							else {
+									warn "Verify if we can port or not : <$contenu> \n";
+							}
+					}	
+			}
+			
 			s!convertToAbs!makeAbsolute!;
 			s!currentDirPath!currentPath!;
 			s!homeDirPath!homePath!;
 			s!rootDirPath!rootPath!;
 			s!cleanDirPath!cleanPath!;
+			s!absFilePath!absoluteFilePath!;
 			s!QDir::All!QDir::TypeMask!;
 			s!QDir::DefaultFilter!QDir::NoFilter!;
 			s!QDir::DefaultSort!QDir::NoSort!;
