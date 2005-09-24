@@ -31,20 +31,20 @@ foreach my $file (@ARGV) {
 					s/findRev/lastIndexOf/;	
 				}
 			}	
-			s!local8Bit!toLocal8Bit!;
+			s!local8Bit!toLocal8Bit!g;
 			if( $_ =~ /\.utf8/ ) {
-				s!utf8!toUtf8!;
+				s!utf8!toUtf8!g;
 			}	
 			if( $_ =~ /\.mirrored/ ) {
-				s!mirrored!hasMirrored!;
+				s!mirrored!hasMirrored!g;
 			}
-			s!simplifyWhiteSpace!simplified!;
-			s!stripWhiteSpace!trimmed!;
-			s!ucs2!utf16!;
-			s!leftJustify!leftJustified!;
-			s!rightJustify!rightJustified!;
-			s!fromUcs2!fromUtf16!;
-			s!constref!at!;
+			s!simplifyWhiteSpace!simplified!g;
+			s!stripWhiteSpace!trimmed!g;
+			s!ucs2!utf16!g;
+			s!leftJustify!leftJustified!g;
+			s!rightJustify!rightJustified!g;
+			s!fromUcs2!fromUtf16!g;
+			s!constref!at!g;
     } $file;
 
 }
