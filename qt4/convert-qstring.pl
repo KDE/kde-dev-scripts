@@ -32,7 +32,9 @@ foreach my $file (@ARGV) {
 				}
 			}	
 			s!local8Bit!toLocal8Bit!;
-			s!utf8!toUtf8!;
+			if( $_ =~ /\.utf8/ ) {
+				s!utf8!toUtf8!;
+			}	
 			s!simplifyWhiteSpace!simplified!;
 			s!stripWhiteSpace!trimmed!;
 			s!ucs2!utf16!;
