@@ -14,13 +14,14 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
 			if ( $_ =~ /findRev/ ) {
 				# three argument
+				my ($before, $prefix, $contenu) = m!^(\s*.*)(findRev.*)\((.*)\s*\);$!;
 				if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
 						$thirdelement =~ s/ //g;
 						if ( $thirdelement =~ /true/ ) {
-								$_ = $blank . ".lastIndexOf( $firstelement, $secondelement, Qt::CaseSensitive );\n";
+								$_ = $before . "lastIndexOf( $firstelement, $secondelement, Qt::CaseSensitive );\n";
 						}
 						elsif ( $thirdelement =~ /false/ ) {
-								$_ = $blank . ".lastIndexOf( $firstelement, $secondelement, Qt::CaseInsensitive );\n";
+								$_ = $before . "lastIndexOf( $firstelement, $secondelement, Qt::CaseInsensitive );\n";
 						}
 						else {
 								s/findRev/lastIndexOf/;
