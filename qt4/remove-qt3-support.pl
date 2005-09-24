@@ -1,11 +1,7 @@
 #!/usr/bin/perl
 
 # laurent Montel <montel@kde.org> 2005
-# This script will remove some QT3_SUPPORT into qstring
-# findRev->lastIndexOf
-# utf8->toUtf8
-# local8bit->toLocal8bit
-
+# This script will remove some QT3_SUPPORT into qstring/qdir/qtimer
 
 use lib qw( . );
 use functionUtilkde; 
@@ -33,10 +29,13 @@ foreach my $file (@ARGV) {
 			}	
 			s!local8Bit!toLocal8Bit!g;
 			if( $_ =~ /\.utf8/ ) {
-				s!utf8!toUtf8!g;
+				s!\.utf8!\.toUtf8!g;
 			}	
 			if( $_ =~ /\.mirrored/ ) {
 				s!mirrored!hasMirrored!g;
+			}
+			if( $_ =~ /absPath\s*\(\s*\)/ ) {
+					s!absPath!absolutePath!;
 			}
 			s!simplifyWhiteSpace!simplified!g;
 			s!stripWhiteSpace!trimmed!g;
@@ -45,6 +44,7 @@ foreach my $file (@ARGV) {
 			s!rightJustify!rightJustified!g;
 			s!fromUcs2!fromUtf16!g;
 			s!constref!at!g;
+			s!changeInterval!start!g;
     } $file;
 
 }
