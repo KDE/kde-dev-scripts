@@ -35,6 +35,9 @@ foreach my $file (@ARGV) {
 			if( $_ =~ /\.utf8/ ) {
 				s!utf8!toUtf8!;
 			}	
+			if $_ =~ /\.mirrored/ ) {
+				s!mirrored!hasMirrored!;
+			}
 			s!simplifyWhiteSpace!simplified!;
 			s!stripWhiteSpace!trimmed!;
 			s!ucs2!utf16!;
