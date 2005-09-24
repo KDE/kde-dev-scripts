@@ -55,7 +55,12 @@ foreach my $file (@ARGV) {
 							}
 					}	
 			}
-			
+			s!Qt::ShiftButton!Qt::ShiftModifier!;
+			s!Qt::ControlButton!Qt::ControlModifier!;
+			s!Qt::AltButton!Qt::AltModifier!;
+			s!Qt::MetaButton!Qt::MetaModifier!;
+			s!Qt::Keypad!Qt::KeypadModifier!;
+			s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
 			s!convertToAbs!makeAbsolute!;
 			s!currentDirPath!currentPath!;
 			s!homeDirPath!homePath!;
