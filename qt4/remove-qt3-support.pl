@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # laurent Montel <montel@kde.org> 2005
-# This script will remove some QT3_SUPPORT into qstring/qdir/qtimer
+# This script will remove some QT3_SUPPORT into qstring/qdir/qtimer/qglobal
 
 use lib qw( . );
 use functionUtilkde; 
@@ -37,6 +37,12 @@ foreach my $file (@ARGV) {
 			if( $_ =~ /absPath\s*\(\s*\)/ ) {
 					s!absPath!absolutePath!;
 			}
+			if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
+					s!\.lower!\.toLower!g;
+			}
+            if ( $_ =~ /\.upper\s*\(\s*\)/ ) {
+                    s!\.upper!\.toUpper!g;
+            }			
 			if( $_ =~ /dirPath/ ) {
 					if( my ($before, $prefix, $contenu, $after ) = m!^(\s*.*)(dirPath.*?\()(.*?\))(.*)$!) {
 							$contenu =~ s/ //g;
