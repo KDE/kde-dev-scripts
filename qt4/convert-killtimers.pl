@@ -4,15 +4,35 @@
 # This function convert killTimers to qt4 function
 
 use lib qw( . );
-use functionUtilkde; #utilisation des fonctions kde qui me sont utiles
+use functionUtilkde; 
+open(my $F, q(find -name "*" |));
+my $file;
+while ($file = <$F>) {
+ 	chomp $file;
+	next if functionUtilkde::excludeFile( $file);
 
-
-foreach my $file (@ARGV) {
-    #TODO fix for killTimers with arguments
-    functionUtilkde::substInFile {
-	s!killTimers\s*\(\s*\);!QAbstractEventDispatcher::instance()->unregisterTimers(this);!;
-    } $file;
-	functionUtilkde::addIncludeInFile( $file, "QAbstractEventDispatcher");
+	my $modified;
+		
+	open(my $FILE, $file) or warn "We can't open file $$!\n";
+	my @l = map {
+	    my $orig = $_;
+    
+		#TODO fix for killTimers with arguments
+		s!killTimers\s*\(\s*\);!QAbstractEventDispatcher::instance()->unregisterTimers(this);!;
+		$modified ||= $orig ne $_;
+	    $_;
+	} <$FILE>;
+	
+	if ($modified) {
+		my $OUT;
+	    open ($OUT, ">$file");
+	    print $OUT @l;
+		close ($OUT);
+		# necessary to gave complete url
+		my $newUrl = $ENV{PWD} . "/" . $file;
+		$newUrl =~ s!\./!!;
+		functionUtilkde::addIncludeInFile( $newUrl, "QAbstractEventDispatcher");
+	}
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( <$F> );
 
