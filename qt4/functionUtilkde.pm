@@ -10,6 +10,12 @@ sub diffFile
 		warn "file to commit : $listFileDiff\n";
 }
 
+sub excludeFile
+{
+    my ($newFile) = @_;
+    return $newFile =~ /\.(svn|kidl|libs|o|moc|l[ao])|Makefile(.(in|am))?$/;
+}
+
 sub addIncludeInFile
 {
    local *F;
