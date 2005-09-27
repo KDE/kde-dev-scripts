@@ -46,6 +46,8 @@ foreach my $file (@ARGV) {
 	s!KFindDialog::FindIncremental!KFind::FindIncremental!;
 	s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
 	s!kdatetbl.h!kdatetable.h!;
+	#TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
+	s!kapp->isRestored!QApplication::isSessionRestored!;
 	} $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
