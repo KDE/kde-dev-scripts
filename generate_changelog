@@ -1,0 +1,65 @@
+#!/bin/sh
+# Collects the SVN logs for all changes between two releases of a SVN module
+# SVNURL must be set
+
+if test $# -ne 4; then
+
+  echo "Usage: $0 <basename> <src> <tag_old_version> <tag_new_version>"
+  echo "where src is the relative repository path to the sources,"
+  echo "and tag_version and tag_last_version are the tag names in tags/."
+  echo
+  echo "Example: $0 kdepim branches/kdepim/proko2/kdepim kdepim/proko2_0_3 kdepim/proko2_0_4"
+  exit 1
+fi
+
+test -n "$SVNURL" || { echo "Please set SVNURL first"; exit 1; }
+
+# Abort at first error
+set -e
+
+APP=$1
+SRCREP="$SVNURL/$2"
+LASTVER=$3
+VER=$4
+TAGSREP="$SVNURL/tags"
+
+changelog=$APP.changelog
+
+# Grep the version number of the move
+rev=`svn info $TAGSREP/$VER/ | grep "Last Changed Rev" | sed s/Last\ Changed\ Rev:\ //g`
+# Grep the log for the copyfrom revision (which is the real revision that this is taged from)
+tag=`svn log -r $rev $TAGSREP/$VER -v --xml | grep copyfrom-rev | sed s/.*copyfrom-rev=\"//g | sed s/\"//g | head -n 1`
+
+rev=`svn info $TAGSREP/$LASTVER/ | grep "Last Changed Rev" | sed s/Last\ Changed\ Rev:\ //g`
+lasttag=`svn log -r $rev $TAGSREP/$LASTVER -v --xml | grep copyfrom-rev | sed s/.*copyfrom-rev=\"//g | sed s/\"//g | head -n 1`
+
+cat > changelog.xslt <<EOF
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+<xsl:output method="text"/>
+<xsl:template match="/"><xsl:for-each select="//logentry">
+* <xsl:value-of select="msg" />
+</xsl:for-each>
+</xsl:template>
+</xsl:stylesheet>
+EOF
+
+# Get the log between the two versions
+# We do it for each subdirectory, to separate the logs a bit.
+cp -f /dev/null $changelog
+for subdir in `svn ls $SRCREP`; do
+  subdir=`echo $subdir | sed -e 's,/$,,'`
+  svn log -r $tag:$lasttag $SRCREP/$subdir --xml > xml
+  xsltproc -o xmlout changelog.xslt xml
+  if test -s xmlout; then
+    echo $subdir >> $changelog
+    echo '------' >> $changelog
+    cat xmlout >> $changelog
+    echo >> $changelog
+  fi
+  rm -f xml xmlout
+done
+
+rm -f changelog.xslt
+
+echo "Changelog written to $changelog"
