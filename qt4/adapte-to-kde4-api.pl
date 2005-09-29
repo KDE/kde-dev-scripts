@@ -2,8 +2,6 @@
 
 # laurent Montel <montel@kde.org> 2005 GPL
 # This function allows to adapt file to new KDE4 API
-# change KDialogBase::addPage return a QFrame now and not Q3Frame
-# change KDialogBase::makeMainWidget return a QFrame and not a Q3Frame
 
 use lib qw( . );
 use functionUtilkde;
@@ -70,7 +68,6 @@ while ($file = <$F>) {
 
 	if ($modified) {
 	    open (my $OUT, ">$file");
-		#warn "modify file : $file\n";
 	    print $OUT @l;
 	}
     }

@@ -6,9 +6,19 @@
 use lib qw( . );
 use functionUtilkde; 
 
+use strict; 
 
-foreach my $file (@ARGV) {
-    functionUtilkde::substInFile {
+open(my $F, q(find -name "*" |));
+my $file;
+while ($file = <$F>) {
+ 	chomp;
+	next if functionUtilkde::excludeFile( $file);
+
+	my $modified;
+		
+	open(my $FILE, $file) or warn "We can't open file $$!\n";
+	my @l = map {
+	    my $orig = $_;
 			s!KPanelApplet::Normal!Plasma::Normal!;
 			s!KPanelApplet::About!Plasma::About!;
 			s!KPanelApplet::Help!Plasma::Help!;
@@ -20,7 +30,14 @@ foreach my $file (@ARGV) {
             s!KPanelApplet::pTop!Plasma::Top!;
             s!KPanelApplet::pBottom!Plasma::Bottom!;
 			s!KPanelApplet::ReportBug!Plasma::ReportBug!;
-    } $file;
+	    $modified ||= $orig ne $_;
+	    $_;
+	} <$FILE>;
+
+	if ($modified) {
+	    open (my $OUT, ">$file");
+	    print $OUT @l;
+	}
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( <$F> );
 

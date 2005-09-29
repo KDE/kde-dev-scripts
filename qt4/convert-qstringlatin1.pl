@@ -9,7 +9,7 @@ use lib qw( . );
 use functionUtilkde; 
 
 foreach my $file (@ARGV) {
-    functionUtilkde::substInFile 
+    functionUtilkde::substInFile { 
 			if( my ($prefix, $suite, $end) = /(.*)(QString::fromLatin1.*?\))(.*$)/) {
 				s!QString::fromLatin1!QLatin1String! if $end !~ /(\.arg|\.mid|\.prepend|\.append|\.toLower|\.upper)/;
 			}
