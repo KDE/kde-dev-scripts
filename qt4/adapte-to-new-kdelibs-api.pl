@@ -9,11 +9,11 @@ use functionUtilkde;
 open(my $F, q(find -name "*" |));
 my $file;
 while ($file = <$F>) {
- 	chomp;
+    chomp $file;
 	next if functionUtilkde::excludeFile( $file);
 
 	my $modified;
-		
+	my $necessaryToAddInclude;	
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
@@ -40,9 +40,9 @@ while ($file = <$F>) {
 		s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
 		s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
 		if ( $_ =~ /KApplication::random/ ) {
-				s!KApplication::random!KRandom::random!;
-				functionUtilkde::addIncludeInFile( $file, "krandom.h");
-			}
+		    s!KApplication::random!KRandom::random!;
+		    $necessaryToAddInclude = 1;
+		}
 		s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
 		s!KFindDialog::FromCursor!KFind::FromCursor!;
 		s!KFindDialog::SelectedText!KFind::SelectedText!;
@@ -56,11 +56,15 @@ while ($file = <$F>) {
 		s!kapp->isRestored!QApplication::isSessionRestored!;
 	    	$modified ||= $orig ne $_;
 		    $_;
-		} <$FILE>;
+	    } <$FILE>;
 
 	if ($modified) {
 	    open (my $OUT, ">$file");
 	    print $OUT @l;
+	}
+	if($necessaryToAddInclude)
+	{
+	    functionUtilkde::addIncludeInFile( $file, "krandom.h");
 	}
 }
 functionUtilkde::diffFile( <$F> );
