@@ -11,11 +11,11 @@ use strict;
 open(my $F, q(find -name "*" |));
 my $file;
 while ($file = <$F>) {
- 	chomp;
+ 	chomp file;
 	next if functionUtilkde::excludeFile( $file);
 
 	my $modified;
-		
+	my $necessaryToAddInclude;	
 	open(my $FILE, $file) or warn "We can't open file $file:$!\n";
 	my @l = map {
 	    my $orig = $_;
@@ -59,8 +59,8 @@ while ($file = <$F>) {
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
 	    if ( /kapp->getDisplay/ ) {
-		s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
-		functionUtilkde::addIncludeInFile( $file, "QX11Info");
+			s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
+			$necessaryToAddInclude = 1;
 	    }
 	    $modified ||= $orig ne $_;
 	    $_;
@@ -69,6 +69,9 @@ while ($file = <$F>) {
 	if ($modified) {
 	    open (my $OUT, ">$file");
 	    print $OUT @l;
+	}
+	if ($necessaryToAddInclude) {
+			functionUtilkde::addIncludeInFile( $file, "QX11Info");
 	}
     }
 functionUtilkde::diffFile( <$F> );
