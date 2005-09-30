@@ -66,12 +66,10 @@ foreach my $file (@ARGV) {
 					if ($firstelement ~= /QRegExp/ ) {
                         if ( $blank =~ /insertStringList/ ) {
                                 $secondelement =~ s/\)//g;
-                                $_ = $blank . $secondelement . ".split( " . $fir
-stelement . " QString::SkipEmptyParts));\n" ;
+                                $_ = $blank . $secondelement . ".split( " . $firstelement . " QString::SkipEmptyParts));\n" ;
                         }
                         else {
-                            $_ = $blank . $secondelement . ".split( " . $firstel
-ement . "QString::SkipEmptyParts);\n" ;
+                            $_ = $blank . $secondelement . ".split( " . $firstelement . "QString::SkipEmptyParts);\n" ;
 					}
 					else {
 						if ( $blank =~ /insertStringList/ ) {
