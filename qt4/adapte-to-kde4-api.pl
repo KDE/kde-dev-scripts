@@ -75,6 +75,7 @@ while ($file = <$F>) {
 	    s!KFindDialog::FindIncremental!KFind::FindIncremental!;
 	    s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
 	    s!kdatetbl.h!kdatetable.h!;
+		s!KPopupMenu!KMenu!g;
 	    #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
 	    s!kapp->isRestored!QApplication::isSessionRestored!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
@@ -112,12 +113,15 @@ while ($file = <$F>) {
 	    s!overwriteAllPressed!overwriteAllPressed!;
 	    s!resumePressed!resumePressed!;
 	    s!resumeAllPressed!resumeAllPressed!;
-
 		s!KLocale::setMainCatalogue!KLocale::setMainCatalog!;
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
 	}
+		if ( /kapp->authorize/ ) {
+			s!kapp->authorize!KAuthorized::authorizeKAction!;
+			$necessaryToAddIncludeAuthorize = 1;
+		}
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
