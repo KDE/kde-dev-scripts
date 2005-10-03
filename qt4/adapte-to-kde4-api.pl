@@ -3,7 +3,8 @@
 # laurent Montel <montel@kde.org> 2005 GPL
 # This function allows to adapt file to new KDE4 API
 
-use lib qw( . );
+use File::Basename;
+use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
