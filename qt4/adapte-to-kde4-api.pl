@@ -79,7 +79,7 @@ while ($file = <$F>) {
 	    s!kdatetbl.h!kdatetable.h!;
 		s!KPopupMenu!KMenu!g;
 	    #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
-	    s!kapp->isRestored!QApplication::isSessionRestored!;
+	    s!kapp->isRestored!kapp->isSessionRestored!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
