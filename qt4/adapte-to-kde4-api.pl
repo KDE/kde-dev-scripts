@@ -5,8 +5,7 @@
 
 use lib qw( . );
 use functionUtilkde;
-use strict; 
-
+use strict;
 
 open(my $F, q(find -name "*" |));
 my $file;
@@ -16,6 +15,7 @@ while ($file = <$F>) {
 
 	my $modified;
 	my $necessaryToAddInclude;	
+	my $necessaryToAddIncludeRandom;
 	open(my $FILE, $file) or warn "We can't open file $file:$!\n";
 	my @l = map {
 	    my $orig = $_;
@@ -63,7 +63,7 @@ while ($file = <$F>) {
 	    s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
 	    if ( $_ =~ /KApplication::random/ ) {
 		s!KApplication::random!KRandom::random!;
-		$necessaryToAddInclude = 1;
+		$necessaryToAddIncludeRandom = 1;
 	    }
 	    s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
 	    s!KFindDialog::FromCursor!KFind::FromCursor!;
@@ -83,6 +83,7 @@ while ($file = <$F>) {
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
+		s!#include <kpopupmenu.h>!#include <kmenu.h>!;
 	    s!cancelPressed!cancelPressed!;
 	    s!suggestNewNamePressed!suggestNewNamePressed!;
 	    s!renamePressed!renamePressed!;
@@ -109,6 +110,9 @@ while ($file = <$F>) {
 	}
 	if ($necessaryToAddInclude) {
 			functionUtilkde::addIncludeInFile( $file, "QX11Info");
+	}
+	if( $necessaryToAddIncludeRandom ) {
+		functionUtilkde::addIncludeInFile( $file, "krandom.h");
 	}
     }
 functionUtilkde::diffFile( <$F> );
