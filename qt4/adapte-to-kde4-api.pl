@@ -116,6 +116,12 @@ while ($file = <$F>) {
 	    s!resumeAllPressed!resumeAllPressed!;
 		s!KLocale::setMainCatalogue!KLocale::setMainCatalog!;
 		s!KGlobal::locale\(\)->insertCatalogue!KGlobal::locale\(\)->insertCatalog!;
+		s!KGlobal::locale\(\)->setMainCatalogue!KGlobal::locale\(\)->setMainCatalog!;
+		
+		s!KLocale::removeCatalogue!KLocale::removeCatalog!;
+		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
+		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
+		
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
