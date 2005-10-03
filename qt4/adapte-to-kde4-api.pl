@@ -144,6 +144,10 @@ while ($file = <$F>) {
 		        s!kapp->startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
 				$necessaryToAddIncludektoolinvocation = 1;
 		}
+		if ( /kapp->kdeinitExec/ ) {
+				s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
