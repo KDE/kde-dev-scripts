@@ -10,6 +10,7 @@ use strict;
 
 open(my $F, q(find -name "*" |));
 my $file;
+my $warning;
 while ($file = <$F>) {
  	chomp $file;
 	next if functionUtilkde::excludeFile( $file);
@@ -103,6 +104,10 @@ while ($file = <$F>) {
 		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
+        if( /K3ColorDrag/ ) {
+			s!K3ColorDrag!K3ColorDrag!g;
+			$warning = $warning . "Necessary to add \$\(LIB_KDE3SUPPORT\) into Makefile.am when $file is \n";
+		}
 	
 		s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 		s!KColorDrag!K3ColorDrag!g;
@@ -195,4 +200,4 @@ while ($file = <$F>) {
 	}
     }
 functionUtilkde::diffFile( <$F> );
-
+warn "Warning: $warning\n";
