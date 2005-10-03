@@ -60,6 +60,7 @@ while ($file = <$F>) {
 	    if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
 		my $changes = $prefix;
 		$changes =~ s!Q3Frame!KHBox!;
+		$changes =~ s!Q3HBox!KHBox!;
 		$_ = $changes . $suite . $end . "\n";
 	    }
 	    s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
