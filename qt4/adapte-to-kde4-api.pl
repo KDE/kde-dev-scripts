@@ -81,7 +81,24 @@ while ($file = <$F>) {
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
 	    s!#include <kcodecs.h>!#include <kcodecs.h>!;
+		#kde3support
 		s!#include <kdockwidget.h>!#include <k3dockwidget.h>!;
+		s!#include <kmdichildarea.h>!#include <k3mdichildarea.h>!;
+		s!#include <kmdichildfrmcaption.h>!#include <k3mdichildfrmcaption.h>!;
+		s!#include <kmdichildfrm.h>!#include <k3mdichildfrm.h>!;
+		s!#include <kmdichildview.h>!#include <k3mdichildview.h>!;
+		s!#include <kmdidefines.h>!#include <k3mdidefines.h>!;
+		s!#include <kmdidockcontainer.h>!#include <k3mdidockcontainer.h>!;
+		s!#include <kmdidocumentviewtabwidget.h>!#include <k3mdidocumentviewtabwidget.h>!;
+		s!#include <kmdifocuslist.h>!#include <k3mdifocuslist.h>!;
+		s!#include <kmdiguiclient.h>!#include <k3mdiguiclient.h>!;
+		s!#include <kmdiiterator.h>!#include <k3mdiiterator.h>!;
+		s!#include <kmdilistiterator.h>!#include <k3mdilistiterator.h>!;		
+		s!#include <kmdimainfrm.h>!#include <k3mdimainfrm.h>!;
+		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
+		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
+		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
+		
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
