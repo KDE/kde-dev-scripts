@@ -115,6 +115,7 @@ while ($file = <$F>) {
 	    s!resumePressed!resumePressed!;
 	    s!resumeAllPressed!resumeAllPressed!;
 		s!KLocale::setMainCatalogue!KLocale::setMainCatalog!;
+		s!KGlobal::locale\(\)->insertCatalogue!KGlobal::locale\(\)->insertCatalog!;
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
