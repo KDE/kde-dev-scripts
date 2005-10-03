@@ -39,6 +39,43 @@ while ($file = <$F>) {
 		$changes =~ s!KWin::info!KWin::windowInfo!;
 		$_ = $changes . $suite . $end . "\n";
 	    }
+	    if (my ($prefix, $suite, $end) = /(.*)(addVBoxPage.*)\s*$/) {
+		my $changes = $prefix;
+		$changes =~ s!Q3Frame!KVBox!;
+		$_ = $changes . $suite . $end . "\n";
+	    }	
+	    if (my ($prefix, $suite, $end) = /(.*)(addHBoxPage.*)\s*$/) {
+		my $changes = $prefix;
+		$changes =~ s!Q3Frame!KHBox!;
+		$_ = $changes . $suite . $end . "\n";
+	    }	
+	    if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
+		my $changes = $prefix;
+		$changes =~ s!Q3Frame!KVBox!;
+		$_ = $changes . $suite . $end . "\n";
+	    }	
+	    if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
+		my $changes = $prefix;
+		$changes =~ s!Q3Frame!KHBox!;
+		$_ = $changes . $suite . $end . "\n";
+	    }
+	    s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
+	    s!KStringHandler::matchFilename!KStringHandler::matchFileName!;
+	    if ( $_ =~ /KApplication::random/ ) {
+		s!KApplication::random!KRandom::random!;
+		$necessaryToAddInclude = 1;
+	    }
+	    s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
+	    s!KFindDialog::FromCursor!KFind::FromCursor!;
+	    s!KFindDialog::SelectedText!KFind::SelectedText!;
+	    s!KFindDialog::CaseSensitive!KFind::CaseSensitive!;
+	    s!KFindDialog::FindBackwards!KFind::FindBackwards!;
+	    s!KFindDialog::RegularExpression!KFind::RegularExpression!;
+	    s!KFindDialog::FindIncremental!KFind::FindIncremental!;
+	    s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
+	    s!kdatetbl.h!kdatetable.h!;
+	    #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
+	    s!kapp->isRestored!QApplication::isSessionRestored!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
