@@ -80,6 +80,7 @@ while ($file = <$F>) {
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
 	    s!#include <kcodecs.h>!#include <kcodecs.h>!;
+		s!#include <kdockwidget.h>!#include <k3dockwidget.h>!;
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
