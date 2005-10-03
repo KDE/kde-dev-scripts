@@ -11,7 +11,7 @@ use strict;
 open(my $F, q(find -name "*" |));
 my $file;
 while ($file = <$F>) {
- 	chomp file;
+ 	chomp $file;
 	next if functionUtilkde::excludeFile( $file);
 
 	my $modified;
