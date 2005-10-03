@@ -55,6 +55,7 @@ while ($file = <$F>) {
 	    if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
 		my $changes = $prefix;
 		$changes =~ s!Q3Frame!KVBox!;
+		$changes =~ s!Q3VBox!KVBox!;
 		$_ = $changes . $suite . $end . "\n";
 	    }	
 	    if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
