@@ -13,7 +13,7 @@ sub diffFile
 sub excludeFile
 {
     my ($newFile) = @_;
-    return $newFile =~ /\.(svn|kidl|desktop|libs|o|moc|l[ao])|Makefile(.(in|am))?$/;
+    return $newFile =~ /\.(svn|kidl|desktop|libs|o|moc|l[ao])|Changelog|README|Readme|Makefile(.(in|am))?$/;
 }
 
 sub addIncludeInFile
