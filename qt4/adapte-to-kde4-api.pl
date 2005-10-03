@@ -147,6 +147,10 @@ while ($file = <$F>) {
 			s!kapp->authorize!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
 		}
+		if ( /KApplication::startServiceByDesktopName/ ) {
+			s!KApplication::startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
+			$necessaryToAddIncludektoolinvocation = 1;
+		}
 		if ( /kapp->startServiceByDesktopName/ ) {
 		        s!kapp->startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
 				$necessaryToAddIncludektoolinvocation = 1;
