@@ -100,7 +100,10 @@ while ($file = <$F>) {
 		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-		
+	
+		s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
+		s!KColorDrag!K3ColorDrag!g;
+
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
