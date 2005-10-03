@@ -121,6 +121,12 @@ while ($file = <$F>) {
 		s!KLocale::removeCatalogue!KLocale::removeCatalog!;
 		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
 		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
+
+        s!KLocale::setActiveCatalog!KLocale::setActiveCatalog!;
+        s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
+        s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
+		
+		s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
 		
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
