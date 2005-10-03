@@ -18,6 +18,7 @@ while ($file = <$F>) {
 	my $necessaryToAddInclude;	
 	my $necessaryToAddIncludeRandom;
 	my $necessaryToAddIncludeAuthorize;
+	my $necessaryToAddIncludektoolinvocation;
 	open(my $FILE, $file) or warn "We can't open file $file:$!\n";
 	my @l = map {
 	    my $orig = $_;
@@ -139,6 +140,10 @@ while ($file = <$F>) {
 			s!kapp->authorize!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
 		}
+		if ( /kapp->startServiceByDesktopName/ ) {
+		        s!kapp->startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
@@ -156,6 +161,9 @@ while ($file = <$F>) {
 	}
 	if ($necessaryToAddInclude) {
 			functionUtilkde::addIncludeInFile( $file, "QX11Info");
+	}
+	if ( $necessaryToAddIncludektoolinvocation ) {
+			functionUtilkde::addIncludeInFile( $file, "ktoolinvocation.h");
 	}
 	if( $necessaryToAddIncludeRandom ) {
 		functionUtilkde::addIncludeInFile( $file, "krandom.h");
