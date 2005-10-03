@@ -148,6 +148,22 @@ while ($file = <$F>) {
 				s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
 				$necessaryToAddIncludektoolinvocation = 1;
 		}
+		if ( /kapp->invokeHelp/ ) {
+				s!kapp->invokeHelp!KToolInvocation::invokeHelp!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
+		if ( /kapp->invokeMailer/ ) {
+				s!kapp->invokeMailer!KToolInvocation::invokeMailer!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
+        if ( /kapp->invokeBrowser/ ) {
+                s!kapp->invokeBrowser!KToolInvocation::invokeBrowser!;
+                $necessaryToAddIncludektoolinvocation = 1;
+        }
+        if ( /kapp->kdeinitExecWait/ ) {
+                s!kapp->kdeinitExecWait!KToolInvocation::kdeinitExecWait!;
+                $necessaryToAddIncludektoolinvocation = 1;
+        }
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
