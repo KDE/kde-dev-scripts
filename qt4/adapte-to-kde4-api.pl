@@ -16,6 +16,7 @@ while ($file = <$F>) {
 	my $modified;
 	my $necessaryToAddInclude;	
 	my $necessaryToAddIncludeRandom;
+	my $necessaryToAddIncludeAuthorize;
 	open(my $FILE, $file) or warn "We can't open file $file:$!\n";
 	my @l = map {
 	    my $orig = $_;
@@ -94,6 +95,11 @@ while ($file = <$F>) {
 	    s!overwriteAllPressed!overwriteAllPressed!;
 	    s!resumePressed!resumePressed!;
 	    s!resumeAllPressed!resumeAllPressed!;
+
+		if ( /kapp->authorizeKAction/ ) {
+			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
+			$necessaryToAddIncludeAuthorize = 1;
+	}
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
@@ -114,6 +120,9 @@ while ($file = <$F>) {
 	}
 	if( $necessaryToAddIncludeRandom ) {
 		functionUtilkde::addIncludeInFile( $file, "krandom.h");
+	}
+	if( $necessaryToAddIncludeAuthorize  ) {
+		functionUtilkde::addIncludeInFile( $file, "kauthorized.h");
 	}
     }
 functionUtilkde::diffFile( <$F> );
