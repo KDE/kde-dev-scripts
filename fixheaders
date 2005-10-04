@@ -101,7 +101,13 @@ $lastdir = '.';
  'error: invalid use of undefined type \`struct QColor' => 'qcolor',
  'error: `QX11Info::' => 'qx11info_x11',
  'error: incomplete type \'QX11Info' => 'qx11info_x11',
- 'error: \'Q3AsciiDi' => 'q3asciidict'
+ 'error: \'Q3AsciiDi' => 'q3asciidict',
+ 'invalid use of undefined type \'struct KXMLGUIFactory' => 'kxmlguifactory',
+ 'cannot convert \'KXMLGUIFactory*' => 'kxmlguifactory',
+ 'error: \'I18N_NOOP\' was not declared' => 'klocale',
+ 'error: \'i18n\' was not declared' => 'klocale',
+ 'error: incomplete type \'KGlobal' => 'kglobal',
+ 'error: \'KRandom\' has not been declared' => 'krandom'
 );
 
 # Initial values are simply to get into the while
@@ -174,13 +180,14 @@ sub fixFile
 
   while (<FILE>) {
     $flines .= $_;
+    #print "$cpplevel $_";
     if ($_ =~ m/^#if/ && $_ !~ m/^#ifn/) {
        $cpplevel = $cpplevel + 1;
     }
     if ($_ =~ m/^#endif/) {
        $cpplevel = $cpplevel - 1;
     }
-    if ($cpplevel == 0 && $_ =~ m/^(#include\s*[\"<]q\S*\.h[\">]\S*)/) {
+    if ($cpplevel == 0 && ($_ =~ m/^(#include\s*[\"<]q\S*\.h[\">]\S*)/ || $_ =~ m/^(#include\s*[\"<]Q\S*[\">]\S*)/)) {
        $lastinclude = $1;
     }
   }
