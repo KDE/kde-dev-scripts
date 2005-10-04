@@ -175,6 +175,13 @@ while ($file = <$F>) {
                 s!kapp->kdeinitExecWait!KToolInvocation::kdeinitExecWait!;
                 $necessaryToAddIncludektoolinvocation = 1;
         }
+		if ( /KApplication::startServiceByDesktopPath/ ) {
+				s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
+		if ( /new KRun/ ) {
+				$warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
+		}
 		s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
