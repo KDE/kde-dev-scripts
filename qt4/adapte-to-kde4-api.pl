@@ -46,11 +46,13 @@ while ($file = <$F>) {
 	    if (my ($prefix, $suite, $end) = /(.*)(addVBoxPage.*)\s*$/) {
 		my $changes = $prefix;
 		$changes =~ s!Q3Frame!KVBox!;
+		$changes =~ s!Q3VBox!KVBox!;
 		$_ = $changes . $suite . $end . "\n";
-	    }	
+	    }
 	    if (my ($prefix, $suite, $end) = /(.*)(addHBoxPage.*)\s*$/) {
 		my $changes = $prefix;
 		$changes =~ s!Q3Frame!KHBox!;
+		$changes =~ s!Q3HBox!KHBox!;
 		$_ = $changes . $suite . $end . "\n";
 	    }	
 	    if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
