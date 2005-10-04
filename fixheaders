@@ -171,6 +171,7 @@ sub fixFile
   my( $file, $adding ) = @_;
   
   my $lastinclude = "";
+  my $lastkinclude = "";
 
   # read file
   open ( FILE, "$file" ) || die "Can't read $file";
@@ -190,10 +191,16 @@ sub fixFile
     if ($cpplevel == 0 && ($_ =~ m/^(#include\s*[\"<]q\S*\.h[\">]\S*)/ || $_ =~ m/^(#include\s*[\"<]Q\S*[\">]\S*)/)) {
        $lastinclude = $1;
     }
+   if ($cpplevel == 0 && $_ =~ m/^(#include\s*<k\S*\.h>\S*)/) {
+       $lastkinclude = $1;
+    }
+
   }
   
   close FILE;
   
+ $lastinclude = $lastkinclude if (!$lastinclude);
+
   if (!$lastinclude) {
     print STDERR "ERROR: no include found in $file! (tried to add $adding.h)\n";
     return 0;
