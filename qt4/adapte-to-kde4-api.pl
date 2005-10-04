@@ -179,6 +179,14 @@ while ($file = <$F>) {
 				s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
 				$necessaryToAddIncludektoolinvocation = 1;
 		}
+		if ( /KApplication::startServiceByName/ ) {
+				s!KApplication::startServiceByName!KToolInvocation::startServiceByName!;
+				$necessaryToAddIncludektoolinvocation = 1;
+		}
+        if ( /kapp->startServiceByName/ ) {
+                s!kapp->startServiceByName!KToolInvocation::startServiceByName!;
+                $necessaryToAddIncludektoolinvocation = 1;
+        }	
 		if ( /new KRun/ ) {
 				$warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
 		}
