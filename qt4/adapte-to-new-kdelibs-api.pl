@@ -17,6 +17,12 @@ while ($file = <$F>) {
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
+			if( /enableSounds/ ) {
+				s!enableSounds\(\)!setEnableSounds\(true\)!;
+			}
+            if( /disableSounds/ ) {
+                s!disableSounds\(\)!setEnableSounds\(false\)!;
+            }
 	    	$modified ||= $orig ne $_;
 		    $_;
 	    } <$FILE>;
