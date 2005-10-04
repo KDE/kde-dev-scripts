@@ -185,7 +185,7 @@ while ($file = <$F>) {
 		s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
-	    s!KMainWindow::memberList!KMainWindow::memberList()!;
+		#s!KMainWindow::memberList!KMainWindow::memberList()!;
 	    if ( /kapp->getDisplay/ ) {
 			s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
 			$necessaryToAddInclude = 1;
