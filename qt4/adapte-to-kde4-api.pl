@@ -175,6 +175,7 @@ while ($file = <$F>) {
                 s!kapp->kdeinitExecWait!KToolInvocation::kdeinitExecWait!;
                 $necessaryToAddIncludektoolinvocation = 1;
         }
+		s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
 	    #KMainWindow
 	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 	    s!KMainWindow::memberList!KMainWindow::memberList()!;
