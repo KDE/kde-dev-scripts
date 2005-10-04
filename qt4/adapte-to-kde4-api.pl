@@ -106,7 +106,14 @@ while ($file = <$F>) {
 		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-        if( /K3ColorDrag/ ) {
+        
+		# remove deprecated header
+		s!#include <kcolordlg.h>!#include <kcolordialog.h>!;
+		s!#include <kcolorbtn.h>!#include <kcolorbutton.h>!;
+		s!#include <kdatepik.h>!#include <kdatepicker.h>!;
+		s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
+		s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;	
+		if( /K3ColorDrag/ ) {
 			s!K3ColorDrag!K3ColorDrag!g;
 			$warning = $warning . "Necessary to add \$\(LIB_KDE3SUPPORT\) into Makefile.am when $file is \n";
 		}
