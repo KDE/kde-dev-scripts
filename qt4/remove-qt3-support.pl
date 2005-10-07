@@ -93,6 +93,16 @@ while ($file = <$F>) {
 	    s!fromUtf16!fromUtf16!g;
 	    s!at!at!g;
 	    s!start!start!g;
+		s!Q_INT8!qint8!g;
+		s!Q_UINT8!quint8!g;
+		s!Q_INT16!qint16!g;
+		s!Q_UINT16!quint16!g;
+        s!Q_INT32!qint32!g;
+        s!Q_UINT32!quint32!g;	
+        s!Q_INT64!qint64!g;
+        s!Q_UINT64!quint64!g;
+		s!Q_LLONG!qint64!g;
+		s!Q_ULLONG!quint64!g;
 	    $modified ||= $orig ne $_;
 	    $_;
 	} <$FILE>;
