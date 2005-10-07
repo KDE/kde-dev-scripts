@@ -168,6 +168,10 @@ while ($file = <$F>) {
 				s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
 				$necessaryToAddIncludektoolinvocation = 1;
 		}
+		if( /KApplication::kdeinitExec/ ) {
+			s!KApplication::kdeinitExec!KToolInvocation::kdeinitExec!;
+			$necessaryToAddIncludektoolinvocation = 1;
+		}
 		if ( /kapp->invokeHelp/ ) {
 				s!kapp->invokeHelp!KToolInvocation::invokeHelp!;
 				$necessaryToAddIncludektoolinvocation = 1;
