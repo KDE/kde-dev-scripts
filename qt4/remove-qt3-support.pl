@@ -3,8 +3,10 @@
 # laurent Montel <montel@kde.org> 2005
 # This script will remove some QT3_SUPPORT into qstring/qdir/qtimer/qglobal
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
+use strict;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
