@@ -103,6 +103,8 @@ while ($file = <$F>) {
         s!Q_UINT64!quint64!g;
 		s!Q_LLONG!qint64!g;
 		s!Q_ULLONG!quint64!g;
+		s!QMAX!qMax!g;
+		s!QMIN!qMin!g;
 	    $modified ||= $orig ne $_;
 	    $_;
 	} <$FILE>;
