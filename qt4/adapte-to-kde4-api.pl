@@ -151,7 +151,11 @@ while ($file = <$F>) {
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
-	}
+		}
+		if ( /kapp->authorizeControlModule/ ) {
+			s!kapp->authorizeControlModule!KAuthorized::authorizeControlModule!;
+			$necessaryToAddIncludeAuthorize = 1;
+		}
 		if ( /kapp->authorize/ ) {
 			s!kapp->authorize!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
