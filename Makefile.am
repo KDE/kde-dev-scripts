@@ -23,6 +23,10 @@ man_MANS = \
 
 CLEANFILES = $(man_MANS)
 
+# Install KWrite/Kate syntax highlighting file.
+kdesvn_build_syntaxdir = $(kde_datadir)/katepart/syntax
+kdesvn_build_syntax_DATA = kdesvn-buildrc.xml
+
 # sorted alphabetically
 noinst_SCRIPTS = \
   add_trace.pl alldcop.rb authors2xml.pl check_licenses colorcvs \
