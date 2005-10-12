@@ -76,7 +76,8 @@ while ($file = <$F>) {
 	    s!Qt::MetaModifier!Qt::MetaModifier!;
 	    s!Qt::KeypadModifier!Qt::KeypadModifier!;
 	    s!Qt::KeyboardModifierMask!Qt::KeyboardModifierMask!;
-	    s!makeAbsolute!makeAbsolute!;
+	    s!Qt::AutoCompatConnection!Qt::AutoConnection!;
+		s!makeAbsolute!makeAbsolute!;
 	    s!currentPath!currentPath!;
 	    s!homePath!homePath!;
 	    s!rootPath!rootPath!;
@@ -105,6 +106,17 @@ while ($file = <$F>) {
 		s!Q_ULLONG!quint64!g;
 		s!QMAX!qMax!g;
 		s!QMIN!qMin!g;
+
+		#qcolor.h
+		s!setRgba!setRgb!;
+		s!getRgba!getRgb!;
+
+		#qscrollbar.h
+		s!draggingSlider!isSliderDown!;
+		#qtabwidget.h
+		s!setTabIconSet!setTabIcon!;
+		s!tabIconSet!tabIcon!;
+
 	    $modified ||= $orig ne $_;
 	    $_;
 	} <$FILE>;
