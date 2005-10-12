@@ -3,8 +3,11 @@
 # laurent Montel <montel@kde.org>
 # This function allows to adapt file to new kdelibs API
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
+use strict;
+
 
 open(my $F, q(find -name "*" |));
 my $file;
@@ -23,6 +26,9 @@ while ($file = <$F>) {
             if( /disableSounds/ ) {
                 s!disableSounds\(\)!setEnableSounds\(false\)!;
             }
+			if( /kapp->geometryArgument/ ) {
+				s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
+			}
 	    	$modified ||= $orig ne $_;
 		    $_;
 	    } <$FILE>;
