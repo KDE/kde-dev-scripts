@@ -29,6 +29,7 @@ while ($file = <$F>) {
 			if( /kapp->geometryArgument/ ) {
 				s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
 			}
+			s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
 	    	$modified ||= $orig ne $_;
 		    $_;
 	    } <$FILE>;
