@@ -13,8 +13,8 @@ sub collectthing()
   if (/\.([^.]+)$/) {
     my $ext=$1;
     if (" h H hh hxx h++ " =~ / $ext /) {
-      my $line=`grep -l '^[{\s]*Q_OBJECT' $_ 2> /dev/null`;
-      chomp($line);
+      my $line=`grep -l '^[{ \t]*Q_OBJECT' $_ 2> /dev/null`;
+	   chomp($line);
       if ($line) {
         $dir2files{$File::Find::dir}->{headers}->{$_} = 1;
       }
