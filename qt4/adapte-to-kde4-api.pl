@@ -151,11 +151,7 @@ while ($file = <$F>) {
 		if ( /kapp->authorizeKAction/ ) {
 			s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
-		}
-		if ( /kapp->authorizeControlModule/ ) {
-			s!kapp->authorizeControlModule!KAuthorized::authorizeControlModule!;
-			$necessaryToAddIncludeAuthorize = 1;
-		}
+	}
 		if ( /kapp->authorize/ ) {
 			s!kapp->authorize!KAuthorized::authorizeKAction!;
 			$necessaryToAddIncludeAuthorize = 1;
@@ -215,6 +211,16 @@ while ($file = <$F>) {
 			s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
 			$necessaryToAddInclude = 1;
 	    }
+	    if( /enableSounds/ ) {
+			s!enableSounds\(\)!setEnableSounds\(true\)!;
+        }
+        if( /disableSounds/ ) {
+        	s!disableSounds\(\)!setEnableSounds\(false\)!;
+        }
+        if( /kapp->geometryArgument/ ) {
+        	s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
+        }
+        s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;		
 	    $modified ||= $orig ne $_;
 	    $_;
 	} <$FILE>;
