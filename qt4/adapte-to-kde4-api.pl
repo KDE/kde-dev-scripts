@@ -217,6 +217,9 @@ while ($file = <$F>) {
         if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
         }
+		if( /setStatusText/ ) {
+			s!setStatusText!setToolTip!;
+		}
         if( /kapp->geometryArgument/ ) {
         	s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
         }
