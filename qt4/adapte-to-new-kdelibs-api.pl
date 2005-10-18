@@ -20,16 +20,6 @@ while ($file = <$F>) {
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
-			if( /enableSounds/ ) {
-				s!enableSounds\(\)!setEnableSounds\(true\)!;
-			}
-            if( /disableSounds/ ) {
-                s!disableSounds\(\)!setEnableSounds\(false\)!;
-            }
-			if( /kapp->geometryArgument/ ) {
-				s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
-			}
-			s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
 	    	$modified ||= $orig ne $_;
 		    $_;
 	    } <$FILE>;
