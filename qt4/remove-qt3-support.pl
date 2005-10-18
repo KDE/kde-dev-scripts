@@ -47,7 +47,7 @@ while ($file = <$F>) {
 		s!absPath!absolutePath!;
 	    }
 	    if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
-		s!\.lower!\.toLower!g;
+				s!\.lower!\.toLower!g;
 	    }
             if ( $_ =~ /\.upper\s*\(\s*\)/ ) {
 		s!\.upper!\.toUpper!g;
