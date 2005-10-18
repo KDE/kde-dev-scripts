@@ -2,19 +2,38 @@
 # laurent Montel <montel@kde.org>
 # convert q3hvbox->kh/vbox
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
+use strict;
 
-foreach my $file (@ARGV) {
+open(my $F, q(find -name "*" |));
+my $file;
+
+while ($file = <$F>) {
+    chomp $file;
+    next if functionUtilkde::excludeFile( $file);
+
     my $nbLoop = 1;
-    functionUtilkde::substInFile {
+    my $modified;
+    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
+    my @l = map {
+        my $orig = $_;
 	s!#include <q3vbox.h>!!;
 	s!#include <q3hbox.h>!!;
 	s!#include <Q3VBox>!!;
 	s!#include <Q3HBox>!!;
-		s!Q3VBox!KVBox!g;
-		s!Q3HBox!KHBox!g;
-    } $file;
+	s!Q3VBox!KVBox!g;
+	s!Q3HBox!KHBox!g;
+    
+        $modified ||= $orig ne $_;
+        $_;
+    } <$FILE>;
+
+    if ($modified) {
+        open (my $OUT, ">$file");
+        print $OUT @l;
+    }
 
     functionUtilkde::addIncludeInFile( $file, "kvbox.h");
 }
