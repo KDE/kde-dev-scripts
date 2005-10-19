@@ -210,7 +210,7 @@ while ($file = <$F>) {
 		}
 		s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
 	    #KMainWindow
-	    s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
+		#s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
 		#s!KMainWindow::memberList!KMainWindow::memberList()!;
 	    if ( /kapp->getDisplay/ ) {
 			s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
@@ -222,9 +222,9 @@ while ($file = <$F>) {
         if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
         }
-		if( /setStatusText/ ) {
-			s!setStatusText!setToolTip!;
-		}
+		#if( /setStatusText/ ) {
+		#	s!setStatusText!setToolTip!;
+		#}
         if( /kapp->geometryArgument/ ) {
         	s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
         }
