@@ -231,11 +231,11 @@ while ($file = <$F>) {
                 $_ = $valuereturn;
             }
 			
-	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KPushButton");
-            if( $valuereturn ) {
-                $_ = $valuereturn;
+			#my $valuereturn = functionUtilkde::removeObjectName( $_, "KPushButton");
+			#if( $valuereturn ) {
+			#    $_ = $valuereturn;
 		
-	    }
+			#}
 		#if( /setStatusText/ ) {
 		#	s!setStatusText!setToolTip!;
 		#}
