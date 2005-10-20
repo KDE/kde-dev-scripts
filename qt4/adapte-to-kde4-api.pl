@@ -222,6 +222,12 @@ while ($file = <$F>) {
         if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
         }
+		if( /KColorButton/ ) {
+			my $valuereturn = functionUtilkde::removeObjectName( $_, "KColorButton");
+			if( $valuereturn ) {
+				$_ = $valuereturn;
+			}
+		}
 		#if( /setStatusText/ ) {
 		#	s!setStatusText!setToolTip!;
 		#}

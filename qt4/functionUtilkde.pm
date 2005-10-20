@@ -16,6 +16,28 @@ sub excludeFile
     return $newFile =~ /\.(svn|ui|kidl|desktop|pl|libs|o|moc|l[ao])|Changelog|ChangeLog|README|Readme|Makefile(.(in|am))?$/;
 }
 
+sub removeObjectName
+{
+    my ($newLine, $className) = @_;
+    my $result;
+    if (my ($blank, $prefix, $contenu) = $newLine =~ m!^(\s*.*)(new $className.*)\((.*)\s*\);$!) {
+	if ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
+                my $split = $blank;
+                $split =~ s!$className!!;
+                $split =~ s!=!!;
+                $split =~ s! !!g;
+
+		# normalize white space around the arguments in caller:
+		$secondelement =~ s/\s*$//;
+		$secondelement =~ s/^\s*//;
+
+		# do the actual conversion:
+                $result = $blank . "$prefix\( $firstelement \);\n" . $split . "->setObjectName\( $secondelement \);\n";
+            }
+        }
+    return $result;
+}
+
 sub addIncludeInFile
 {
    local *F;
