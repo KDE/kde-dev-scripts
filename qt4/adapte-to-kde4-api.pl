@@ -217,17 +217,25 @@ while ($file = <$F>) {
 			$necessaryToAddInclude = 1;
 	    }
 	    if( /enableSounds/ ) {
-			s!enableSounds\(\)!setEnableSounds\(true\)!;
-        }
-        if( /disableSounds/ ) {
+		s!enableSounds\(\)!setEnableSounds\(true\)!;
+	    }
+	    if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
-        }
-		if( /KColorButton/ ) {
-			my $valuereturn = functionUtilkde::removeObjectName( $_, "KColorButton");
-			if( $valuereturn ) {
-				$_ = $valuereturn;
-			}
-		}
+	    }
+	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KColorButton");
+	    if( $valuereturn ) {
+		$_ = $valuereturn;
+	    }
+	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KListView");
+            if( $valuereturn ) {
+                $_ = $valuereturn;
+            }
+			
+	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KPushButton");
+            if( $valuereturn ) {
+                $_ = $valuereturn;
+		
+	    }
 		#if( /setStatusText/ ) {
 		#	s!setStatusText!setToolTip!;
 		#}
