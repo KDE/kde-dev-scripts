@@ -20,13 +20,14 @@ sub removeObjectName
 {
     my ($newLine, $className) = @_;
     my $result;
-    if ( $newLine =~ /$className/ ) {
+    if ( $newLine =~ /$className\s*\(/ ) {
 	if (my ($blank, $prefix, $contenu) = $newLine =~ m!^(\s*.*)(new $className.*?)\((.*)\s*\);$!) {
 	    if ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
                 my $split = $blank;
                 $split =~ s!$className!!;
                 $split =~ s!=!!;
                 $split =~ s! !!g;
+				$split =~ s!\*!!;
 		
 		# normalize white space around the arguments in caller:
 		$secondelement =~ s/\s*$//;
