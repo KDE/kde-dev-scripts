@@ -21,9 +21,9 @@ sub removeObjectName
     my ($newLine, $className) = @_;
     my $result;
     if ( $newLine =~ /$className\s*\(/ ) {
-	if (my ($blank, $prefix, $contenu) = $newLine =~ m!^(\s*.*)(new $className.*?)\((.*)\s*\);$!) {
+	if (my ($blank, $before, $prefix, $contenu) = $newLine =~ m!^(\s*)(\s*.*)(new $className.*?)\((.*)\s*\);$!) {
 	    if ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
-                my $split = $blank;
+                my $split = $before;
                 $split =~ s!$className!!;
                 $split =~ s!=!!;
                 $split =~ s! !!g;
@@ -34,7 +34,7 @@ sub removeObjectName
 		$secondelement =~ s/^\s*//;
 		
 		# do the actual conversion:
-                $result = $blank . "$prefix\( $firstelement \);\n" . $split . "->setObjectName\( $secondelement \);\n";
+                $result = $blank . $before . "$prefix\( $firstelement \);\n" . $blank . $split . "->setObjectName\( $secondelement \);\n";
             }
         }
     }
