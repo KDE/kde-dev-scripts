@@ -149,12 +149,12 @@ while ($file = <$F>) {
 		s!KGlobal::locale\(\)->setMainCatalogue!KGlobal::locale\(\)->setMainCatalog!;
 		
 		s!KLocale::removeCatalogue!KLocale::removeCatalog!;
-		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
-		s!KGlobal::locale\(\)->removeCatalog!KGlobal::locale\(\)->removeCatalog!;
+		s!KGlobal::locale\(\)->removeCatalogue!KGlobal::locale\(\)->removeCatalog!;
+		s!KGlobal::locale\(\)->removeCatalogue!KGlobal::locale\(\)->removeCatalog!;
 
-        s!KLocale::setActiveCatalog!KLocale::setActiveCatalog!;
-        s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
-        s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
+        s!KLocale::setActiveCatalogue!KLocale::setActiveCatalog!;
+        s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
+        s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
 		
         s!([, ])KMAX\(!\1qMax\(!;
         s!([, ])KMIN\(!\1qMin\(!;
