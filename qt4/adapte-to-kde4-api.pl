@@ -151,6 +151,13 @@ while ($file = <$F>) {
         s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
 		
+        s!KMAX!qMax!;
+        s!KMIN!qMin!;
+        s!kMin!qMin!;
+	s!kMax!qMax!;
+	s!kAbs!qAbs!;
+	# never add kClamp here! it's no easy search & replace there
+     	
 		s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
 		
 		if ( /kapp->authorizeKAction/ ) {
