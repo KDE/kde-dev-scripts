@@ -77,6 +77,10 @@ while ($file = <$F>) {
         s!KApplication::randomString!KRandom::randomString!;
         $necessaryToAddIncludeRandom = 1;
         }
+	if ( $_ =~ /kapp->randomString/ ) {
+        	s!kapp->randomString!KRandom::randomString!;
+        	$necessaryToAddIncludeRandom = 1;
+        }
 
 	    s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
 	    s!KFindDialog::FromCursor!KFind::FromCursor!;
