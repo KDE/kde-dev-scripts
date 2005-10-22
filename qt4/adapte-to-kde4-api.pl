@@ -151,11 +151,11 @@ while ($file = <$F>) {
         s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalog!KGlobal::locale\(\)->setActiveCatalog!;
 		
-        s!KMAX!qMax!;
-        s!KMIN!qMin!;
-        s!kMin!qMin!;
-	s!kMax!qMax!;
-	s!kAbs!qAbs!;
+        s!([, ])KMAX\(!\1qMax\(!;
+        s!([, ])KMIN\(!\1qMin\(!;
+        s!([, ])kMin\(!\1qMin\(!;
+	s!([, ])kMax\(!\1qMax\(!;
+	s!([, ])kAbs\(!\1qAbs\(!;
 	# never add kClamp here! it's no easy search & replace there
      	
 		s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
