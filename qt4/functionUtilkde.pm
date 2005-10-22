@@ -16,7 +16,7 @@ sub excludeFile
     return $newFile =~ /\.(svn|ui|kidl|desktop|pl|libs|o|moc|l[ao])|Changelog|ChangeLog|README|Readme|Makefile(.(in|am))?$/;
 }
 
-sub removeObjectName
+sub removeObjectNameTwoArgument
 {
     my ($newLine, $className) = @_;
     my $result;
@@ -35,6 +35,31 @@ sub removeObjectName
 		
 		# do the actual conversion:
                 $result = $blank . $before . "$prefix\( $firstelement \);\n" . $blank . $split . "->setObjectName\( $secondelement \);\n";
+            }
+        }
+    }
+    return $result;
+}
+
+sub removeObjectNameThreeArgument
+{
+    my ($newLine, $className) = @_;
+    my $result;
+    if ( $newLine =~ /$className\s*\(/ ) {
+	if (my ($blank, $before, $prefix, $contenu) = $newLine =~ m!^(\s*)(\s*.*)(new $className.*?)\((.*)\s*\);$!) {
+	    if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
+                my $split = $before;
+                $split =~ s!$className!!;
+                $split =~ s!=!!;
+                $split =~ s! !!g;
+				$split =~ s!\*!!;
+		
+		# normalize white space around the arguments in caller:
+		$thirdelement =~ s/\s*$//;
+		$thirdelement =~ s/^\s*//;
+		
+		# do the actual conversion:
+                $result = $blank . $before . "$prefix\( $firstelement, $secondelement \);\n" . $blank . $split . "->setObjectName\( $thirdelement \);\n";
             }
         }
     }

@@ -222,20 +222,20 @@ while ($file = <$F>) {
 	    if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
 	    }
-	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KColorButton");
+	    my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
 	    if( $valuereturn ) {
 		$_ = $valuereturn;
 	    }
-	    my $valuereturn = functionUtilkde::removeObjectName( $_, "KListView");
+	    my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KListView");
             if( $valuereturn ) {
                 $_ = $valuereturn;
             }
 			
-			#my $valuereturn = functionUtilkde::removeObjectName( $_, "KPushButton");
-			#if( $valuereturn ) {
-			#    $_ = $valuereturn;
+	    my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KPushButton");
+	    if( $valuereturn ) {
+		$_ = $valuereturn;
 		
-			#}
+	    }
 		#if( /setStatusText/ ) {
 		#	s!setStatusText!setToolTip!;
 		#}
