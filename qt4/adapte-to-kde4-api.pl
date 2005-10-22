@@ -157,13 +157,14 @@ while ($file = <$F>) {
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
 	
-	if( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
+	if( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
 		$necessaryToAddincludeKworkspace = 1;
 	}
 	s!KApplication::ShutdownTypeHalt!KWorkSpace::ShutdownTypeHalt!;
 	s!KApplication::ShutdownTypeReboot!KWorkSpace::ShutdownTypeReboot!;
 	s!KApplication::ShutdownTypeNone!KWorkSpace::ShutdownTypeNone!;	
 	s!KApplication::ShutdownType!KWorkSpace::ShutdownType!;
+	s!KApplication::ShutdownMode!KWorkSpace::ShutdownMode!;
         s!([, (])KMAX\(!\1qMax\(!g;
         s!([, (])KMIN\(!\1qMin\(!g;
         s!([, (])kMin\(!\1qMin\(!g;
