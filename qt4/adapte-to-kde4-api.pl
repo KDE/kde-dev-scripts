@@ -81,7 +81,7 @@ while ($file = <$F>) {
         	s!kapp->randomString!KRandom::randomString!;
         	$necessaryToAddIncludeRandom = 1;
         }
-
+	s!kapp->propagateSessionManager!KWorkSpace::propagateSessionManager!;
 	    s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
 	    s!KFindDialog::FromCursor!KFind::FromCursor!;
 	    s!KFindDialog::SelectedText!KFind::SelectedText!;
