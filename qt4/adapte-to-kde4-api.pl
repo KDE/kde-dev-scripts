@@ -20,6 +20,7 @@ while ($file = <$F>) {
 	my $necessaryToAddIncludeRandom;
 	my $necessaryToAddIncludeAuthorize;
 	my $necessaryToAddIncludektoolinvocation;
+	my $necessaryToAddincludeKworkspace;
 	open(my $FILE, $file) or warn "We can't open file $file:$!\n";
 	my @l = map {
 	    my $orig = $_;
@@ -155,7 +156,13 @@ while ($file = <$F>) {
         s!KLocale::setActiveCatalogue!KLocale::setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
-		
+	
+	if( /KApplication::ShutdownTypeHalt|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
+		$necessaryToAddincludeKworkspace = 1;
+	}
+	s!KApplication::ShutdownTypeHalt!KWorkSpace::ShutdownTypeHalt!;
+	s!KApplication::ShutdownTypeReboot!KWorkSpace::ShutdownTypeReboot!;
+	s!KApplication::ShutdownTypeNone!KWorkSpace::ShutdownTypeNone!;	
         s!([, (])KMAX\(!\1qMax\(!g;
         s!([, (])KMIN\(!\1qMin\(!g;
         s!([, (])kMin\(!\1qMin\(!g;
@@ -262,6 +269,9 @@ while ($file = <$F>) {
 	if ($modified) {
 	    open (my $OUT, ">$file");
 	    print $OUT @l;
+	}
+	if ($necessaryToAddincludeKworkspace) {
+		functionUtilkde::addIncludeInFile( $file, "kworkspace.h" );
 	}
 	if ($necessaryToAddInclude) {
 			functionUtilkde::addIncludeInFile( $file, "QX11Info");
