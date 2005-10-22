@@ -73,14 +73,14 @@ while ($file = <$F>) {
 		s!KApplication::random!KRandom::random!;
 		$necessaryToAddIncludeRandom = 1;
 	    }
-		if ( $_ =~ /KApplication::randomString/ ) {
-        s!KApplication::randomString!KRandom::randomString!;
-        $necessaryToAddIncludeRandom = 1;
-        }
-	if ( $_ =~ /kapp->randomString/ ) {
+	    if ( $_ =~ /KApplication::randomString/ ) {
+		s!KApplication::randomString!KRandom::randomString!;
+		$necessaryToAddIncludeRandom = 1;
+	    }
+	    if ( $_ =~ /kapp->randomString/ ) {
         	s!kapp->randomString!KRandom::randomString!;
         	$necessaryToAddIncludeRandom = 1;
-        }
+	    }
 	s!kapp->propagateSessionManager!KWorkSpace::propagateSessionManager!;
 	s!kapp->requestShutDown!KWorkSpace::requestShutDown!;
 	    s!KFindDialog::WholeWordsOnly!KFind::WholeWordsOnly!;
@@ -92,7 +92,7 @@ while ($file = <$F>) {
 	    s!KFindDialog::FindIncremental!KFind::FindIncremental!;
 	    s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
 	    s!kdatetbl.h!kdatetable.h!;
-		s!KPopupMenu!KMenu!g;
+	    s!KPopupMenu!KMenu!g;
 	    #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
 	    s!kapp->isRestored!kapp->isSessionRestored!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
@@ -156,11 +156,11 @@ while ($file = <$F>) {
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
 		
-        s!([, ])KMAX\(!\1qMax\(!;
-        s!([, ])KMIN\(!\1qMin\(!;
-        s!([, ])kMin\(!\1qMin\(!;
-	s!([, ])kMax\(!\1qMax\(!;
-	s!([, ])kAbs\(!\1qAbs\(!;
+        s!([, (])KMAX\(!\1qMax\(!g;
+        s!([, (])KMIN\(!\1qMin\(!g;
+        s!([, (])kMin\(!\1qMin\(!g;
+	s!([, (])kMax\(!\1qMax\(!g;
+	s!([, (])kAbs\(!\1qAbs\(!g;
 	# never add kClamp here! it's no easy search & replace there
      	
 		s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
