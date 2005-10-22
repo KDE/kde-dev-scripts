@@ -264,6 +264,7 @@ while ($file = <$F>) {
         }
         s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
 		s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
+		s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
 	    $modified ||= $orig ne $_;
 	    $_;
 	} <$FILE>;
