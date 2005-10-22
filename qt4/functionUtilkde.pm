@@ -48,7 +48,7 @@ sub removeObjectNameThreeArgument
     if ( $newLine =~ /$className\s*\(/ ) {
 	if (my ($blank, $before, $prefix, $contenu) = $newLine =~ m!^(\s*)(\s*.*)(new $className.*?)\((.*)\s*\);$!) {
 	    if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
-                my $split = $before;
+				my $split = $before;
                 $split =~ s!$className!!;
                 $split =~ s!=!!;
                 $split =~ s! !!g;
@@ -57,7 +57,9 @@ sub removeObjectNameThreeArgument
 		# normalize white space around the arguments in caller:
 		$thirdelement =~ s/\s*$//;
 		$thirdelement =~ s/^\s*//;
-		
+		if( $thirdelement =~ "this" ) {
+			return $result;
+		}
 		# do the actual conversion:
                 $result = $blank . $before . "$prefix\( $firstelement, $secondelement \);\n" . $blank . $split . "->setObjectName\( $thirdelement \);\n";
             }
