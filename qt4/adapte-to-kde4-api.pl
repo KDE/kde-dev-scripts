@@ -74,6 +74,11 @@ while ($file = <$F>) {
 		s!KApplication::random!KRandom::random!;
 		$necessaryToAddIncludeRandom = 1;
 	    }
+            if ( $_ =~ /kapp->random/ ) {
+                s!kapp->random!KRandom::random!;
+                $necessaryToAddIncludeRandom = 1;
+            }
+
 	    if ( $_ =~ /KApplication::randomString/ ) {
 		s!KApplication::randomString!KRandom::randomString!;
 		$necessaryToAddIncludeRandom = 1;
