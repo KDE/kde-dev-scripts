@@ -122,7 +122,10 @@ while ($file = <$F>) {
 		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-        
+       
+		s!setButtonOKText!setButtonOk!;
+		s!setButtonApplyText!setButtonApply!;
+		s!setButtonCancelText!setButtonCancel!;
 		# remove deprecated header
 		s!#include <kcolordlg.h>!#include <kcolordialog.h>!;
 		s!#include <kcolorbtn.h>!#include <kcolorbutton.h>!;
