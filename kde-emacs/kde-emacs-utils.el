@@ -224,7 +224,7 @@ This function does not do any hidden buffer changes."
 		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
 			  class "[^;]+{") nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "[ \t]+" (regexp-quote function) "[ \t]*(") nil t)))))
+                 (re-search-forward (concat "[ \t]+" (kde-function-regexp-quote function) "[ \t]*(") nil t)))))
     (if (string-match "\\.h$" n)
         (progn
 	  (let ((mup (method-under-point))
@@ -240,7 +240,7 @@ This function does not do any hidden buffer changes."
 	    (setq sig (kde-remove-newline (kde-function-impl-sig namespace class function)))
 	    (if (string-match "(.*" sig) ; remove args
 		(setq sig (replace-match "" nil t sig)))
-	    (setq found (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) )
+	    (setq found (re-search-forward (concat "^[^()]*" (kde-function-regexp-quote sig) "[ \t]*(") nil t) )
 
         (if (not found)
             (progn
@@ -251,14 +251,14 @@ This function does not do any hidden buffer changes."
               
               (if (string-match "(.*" sig) ; remove args
                   (setq sig (replace-match "" nil t sig)))
-              (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) ) )
+              (re-search-forward (concat "^[^()]*" (kde-function-regexp-quote sig) "[ \t]*(") nil t) ) )
 	    )))))
 
 (defun kde-remove-newline (str) 
-  (let ((res str))
-    (while (string-match "\n" res )
-    (setq res (replace-match " " nil t res)))
-  res))
+    (replace-in-string str "\n" " "))
+; quote for use as regexp, but replace spaces with "any whitespace"
+(defun kde-function-regexp-quote (str)
+  (replace-in-string (regexp-quote str) "[ \n\t]" "[ \n\t]"))
 
 ; Initial implementation by Arnt Gulbransen
 ; Current maintainer: David Faure

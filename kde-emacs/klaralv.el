@@ -206,7 +206,7 @@
   '(
     ; Useful fake entries
     (QApplication qApp)
-    (qglobal.h qDebug qWarning)
+    (QDebug qDebug qWarning)
     (QEventLoop eventloop)
     ))
   
