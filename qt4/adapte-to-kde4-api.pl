@@ -101,6 +101,10 @@ while ($file = <$F>) {
 	    s!KPopupMenu!KMenu!g;
 	    #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
 	    s!kapp->isRestored!kapp->isSessionRestored!;
+		#add some standard version :)
+		s!kapp.isRestored!kapp.isSessionRestored!;
+		s!app.isRestored!app.isSessionRestored!;
+
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
@@ -122,10 +126,12 @@ while ($file = <$F>) {
 		s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-       
+      
+		#If there is more than one argument add KGuiItem now I think that it will easy to fix it.
 		s!setButtonOKText!setButtonOK!;
 		s!setButtonApplyText!setButtonApply!;
 		s!setButtonCancelText!setButtonCancel!;
+		
 		# remove deprecated header
 		s!#include <kcolordlg.h>!#include <kcolordialog.h>!;
 		s!#include <kcolorbtn.h>!#include <kcolorbutton.h>!;
@@ -140,6 +146,13 @@ while ($file = <$F>) {
 		s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 		s!KColorDrag!K3ColorDrag!g;
 
+		# Script for David (finish tomorow or this night :) )
+		# Necessary to change to constant return of KMimeType::allMimeTypes
+		#if( /KMimeType::allMimeTypes/ ) {
+		#}
+		#if( /Q3ValueList\s*<\s*KMimeType::Ptr\s*>/ ) {
+		#	s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
+		#}
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
@@ -238,9 +251,6 @@ while ($file = <$F>) {
 				$warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
 		}
 		s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
-	    #KMainWindow
-		#s/(?<!KMainWindow::memberList\(\))KMainWindow::memberList/KMainWindow::memberList()/;	
-		#s!KMainWindow::memberList!KMainWindow::memberList()!;
 	    if ( /kapp->getDisplay/ ) {
 			s!kapp->getDisplay\s*\(\s*\)!QX11Info::display()!;
 			$necessaryToAddInclude = 1;
