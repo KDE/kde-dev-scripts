@@ -123,7 +123,7 @@ while ($file = <$F>) {
 		s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 		s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
        
-		s!setButtonOKText!setButtonOk!;
+		s!setButtonOKText!setButtonOK!;
 		s!setButtonApplyText!setButtonApply!;
 		s!setButtonCancelText!setButtonCancel!;
 		# remove deprecated header
@@ -265,6 +265,18 @@ while ($file = <$F>) {
 		$_ = $valuereturn;
 		
 	    }
+        my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KComboBox");
+        if( $valuereturn ) {
+        $_ = $valuereturn;
+
+		}
+        my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KLineEdit");
+        if( $valuereturn ) {
+        $_ = $valuereturn;
+
+        }
+		
+		
 		#if( /setStatusText/ ) {
 		#	s!setStatusText!setToolTip!;
 		#}
