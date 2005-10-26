@@ -105,6 +105,7 @@ while ($file = <$F>) {
 		s!kapp.isRestored!kapp.isSessionRestored!;
 		s!app.isRestored!app.isSessionRestored!;
 
+		s!Qt::WordBreak!Qt::TextWordWrap!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
@@ -207,6 +208,17 @@ while ($file = <$F>) {
 		        s!kapp->startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
 				$necessaryToAddIncludektoolinvocation = 1;
 		}
+        if ( /kapp->startServiceByDesktopPath/ ) {
+                s!kapp->startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
+                $necessaryToAddIncludektoolinvocation = 1;
+        }
+        if ( /KApplication::startServiceByDesktopPath/ ) {
+            s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
+            $necessaryToAddIncludektoolinvocation = 1;
+        }
+
+
+		
 		if ( /kapp->kdeinitExec/ ) {
 				s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
 				$necessaryToAddIncludektoolinvocation = 1;
@@ -218,6 +230,10 @@ while ($file = <$F>) {
 		if ( /kapp->invokeHelp/ ) {
 				s!kapp->invokeHelp!KToolInvocation::invokeHelp!;
 				$necessaryToAddIncludektoolinvocation = 1;
+		}
+		if ( /KApplication::kApplication\s*\(\s*\)->invokeMailer/ ){
+			s!KApplication::kApplication\s*\(\s*\)->invokeMailer!KToolInvocation::invokeMailer!;
+			$necessaryToAddIncludektoolinvocation = 1;
 		}
 		if ( /kapp->invokeMailer/ ) {
 				s!kapp->invokeMailer!KToolInvocation::invokeMailer!;
