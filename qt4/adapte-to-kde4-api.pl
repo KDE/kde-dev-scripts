@@ -146,13 +146,9 @@ while ($file = <$F>) {
 		s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 		s!KColorDrag!K3ColorDrag!g;
 
-		# Script for David (finish tomorow or this night :) )
-		# Necessary to change to constant return of KMimeType::allMimeTypes
-		#if( /KMimeType::allMimeTypes/ ) {
-		#}
-		#if( /Q3ValueList\s*<\s*KMimeType::Ptr\s*>/ ) {
-		#	s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
-		#}
+		if( /Q3ValueList\s*<\s*KMimeType::Ptr\s*>/ ) {
+			s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
+		}
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
