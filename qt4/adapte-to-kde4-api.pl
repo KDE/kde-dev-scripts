@@ -139,6 +139,17 @@ while ($file = <$F>) {
 		s!#include <kdatepik.h>!#include <kdatepicker.h>!;
 		s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
 		s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;	
+
+
+	        #KKeyNative
+	    s!KKeyNative::modX\(\s*KKey::SHIFT\s*\)!KKeyNative::modXShift\(\)!;
+	    s!KKeyNative::modX\(\s*KKey::CTRL\s*\)!KKeyNative::modXCtrl\(\)!;
+	    s!KKeyNative::modX\(\s*KKey::ALT\s*\)!KKeyNative::modXAlt\(\)!;
+	    s!KKeyNative::modX\(\s*KKey::ALT\s*\)!KKeyNative::modXAlt\(\)!;
+	    s!KKeyNative::modX\(\s*KKey::META\s*\)!KKeyNative::modXMeta\(\)!;
+	    s!KKeyNative::modX\(\s*KKey::WIN\s*\)!KKeyNative::modXWin\(\)!;
+
+
 		if( /K3ColorDrag/ ) {
 			s!K3ColorDrag!K3ColorDrag!g;
 			$warning = $warning . "Necessary to add \$\(LIB_KDE3SUPPORT\) into Makefile.am when $file is \n";
@@ -216,8 +227,6 @@ while ($file = <$F>) {
             s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
             $necessaryToAddIncludektoolinvocation = 1;
         }
-
-
 		
 		if ( /kapp->kdeinitExec/ ) {
 				s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
