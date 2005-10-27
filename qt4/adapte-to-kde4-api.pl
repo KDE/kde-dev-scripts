@@ -118,7 +118,7 @@ while ($file = <$F>) {
 	    s!Qt::Key_BackTab!Qt::Key_Backtab!;
 	    s!Qt::Key_Prior!Qt::Key_PageUp!;
 	    s!Qt::Key_Next!Qt::Key_PageDown!;
-	    s!Qt::Key_MediaPrev!Qt::Key_MediaPrevious!;
+	    s!Qt::Key_MediaPrev([\s*|,])!Qt::Key_MediaPrevious\1!;
 	    
 	    s!Qt::arrowCursor!Qt::ArrowCursor!;
 	    s!Qt::upArrowCursor!Qt::UpArrowCursor!;
@@ -186,7 +186,7 @@ while ($file = <$F>) {
             s!KPanelApplet::Help!Plasma::Help!;
             s!KPanelApplet::Preferences!Plasma::Preferences!;
             s!KPanelApplet::Stretch!Plasma::Stretch!;
-            s!include <kpanelapplet.h>!include <plasma/kpanelapplet.h>!;
+			#s!include <kpanelapplet.h>!include <plasma/kpanelapplet.h>!;
             s!KPanelApplet::pLeft!Plasma::Left!;
             s!KPanelApplet::pRight!Plasma::Right!;
             s!KPanelApplet::pTop!Plasma::Top!;
