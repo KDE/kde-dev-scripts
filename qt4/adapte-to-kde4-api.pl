@@ -106,6 +106,37 @@ while ($file = <$F>) {
 		s!app.isRestored!app.isSessionRestored!;
 
 		s!Qt::WordBreak!Qt::TextWordWrap!;
+	    s!Qt::SingleLine!Qt::TextSingleLine!;
+	    s!Qt::DontClip!Qt::TextDontClip!;
+	    s!Qt::ExpandTabs!Qt::TextExpandTabs!;
+	    s!Qt::ShowPrefix!Qt::TextShowMnemonic!;
+	    s!Qt::BreakAnywhere!Qt::TextWrapAnywhere!;
+	    s!Qt::DontPrint!Qt::TextDontPrint!;
+	    s!Qt::IncludeTrailingSpaces!Qt::TextIncludeTrailingSpaces!;
+	    s!Qt::NoAccel!Qt::TextHideMnemonic!;
+	    s!Qt::Key_BackSpace!Qt::Key_Backspace!;
+	    s!Qt::Key_BackTab!Qt::Key_Backtab!;
+	    s!Qt::Key_Prior!Qt::Key_PageUp!;
+	    s!Qt::Key_Next!Qt::Key_PageDown!;
+	    s!Qt::Key_MediaPrev!Qt::Key_MediaPrevious!;
+	    
+	    s!Qt::arrowCursor!Qt::ArrowCursor!;
+	    s!Qt::upArrowCursor!Qt::UpArrowCursor!;
+	    s!Qt::crossCursor!Qt::CrossCursor!;
+	    s!Qt::waitCursor!Qt::WaitCursor!;
+	    s!Qt::ibeamCursor!Qt::IBeamCursor!;
+	    s!Qt::sizeVerCursor!Qt::SizeHorCursor!;
+	    s!Qt::sizeHorCursor!Qt::SizeHorCursor!;
+	    s!Qt::sizeBDiagCursor!Qt::SizeBDiagCursor!;
+	    s!Qt::sizeFDiagCursor!Qt::SizeFDiagCursor!;
+	    s!Qt::sizeAllCursor!Qt::SizeAllCursor!;
+	    s!Qt::blankCursor!Qt::BlankCursor!;
+	    s!Qt::splitVCursor!Qt::SplitVCursor!;
+	    s!Qt::splitHCursor!Qt::SplitHCursor!;
+	    s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
+	    s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
+	    s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
+
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
