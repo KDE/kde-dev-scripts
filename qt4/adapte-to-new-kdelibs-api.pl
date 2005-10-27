@@ -30,7 +30,6 @@ while ($file = <$F>) {
 	}
 	if($necessaryToAddInclude)
 	{
-	    functionUtilkde::addIncludeInFile( $file, "krandom.h");
 	}
 }
 functionUtilkde::diffFile( <$F> );

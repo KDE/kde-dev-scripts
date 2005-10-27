@@ -137,6 +137,8 @@ while ($file = <$F>) {
 	    s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
 	    s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
 
+		s!QSlider::Below!QSlider::TicksBelow!;
+		s!QSlider::Above!QSlider::TicksAbove!;
 	    s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
 	    s!#include <kapp.h>!#include <kapplication.h>!;
 	    s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
