@@ -180,6 +180,18 @@ while ($file = <$F>) {
 	    s!KKeyNative::modX\(\s*KKey::META\s*\)!KKeyNative::modXMeta\(\)!;
 	    s!KKeyNative::modX\(\s*KKey::WIN\s*\)!KKeyNative::modXWin\(\)!;
 
+		# plasma changes:
+            s!KPanelApplet::Normal!Plasma::Normal!;
+            s!KPanelApplet::About!Plasma::About!;
+            s!KPanelApplet::Help!Plasma::Help!;
+            s!KPanelApplet::Preferences!Plasma::Preferences!;
+            s!KPanelApplet::Stretch!Plasma::Stretch!;
+            s!include <kpanelapplet.h>!include <plasma/kpanelapplet.h>!;
+            s!KPanelApplet::pLeft!Plasma::Left!;
+            s!KPanelApplet::pRight!Plasma::Right!;
+            s!KPanelApplet::pTop!Plasma::Top!;
+            s!KPanelApplet::pBottom!Plasma::Bottom!;
+            s!KPanelApplet::ReportBug!Plasma::ReportBug!;
 
 		if( /K3ColorDrag/ ) {
 			s!K3ColorDrag!K3ColorDrag!g;
