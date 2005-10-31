@@ -22,22 +22,23 @@ while ($file = <$F>) {
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
-		if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(KConfigGroupSaver.*)\((.*)\s*\);$!) {
+		if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(KConfigGroupSaver.*?\()(.*)\s*\);$!) {
 			my $variable = $prefix;
+			warn "avant variable:$variable==\n";
 			$variable =~ s!KConfigGroupSaver!!;
 			$variable =~ s! !!g;
+			$variable =~ s!\(!!;
 			$variable =~ s!saver!group!;
 
 			if( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
 				$_ =~ s!KConfigGroupSaver!KConfigGroup!g;
 				$_ =~ s!saver!group!;
-				
-				#create tab for function entry 
+				#create tab for function entry
 				$convertStruct[$value] = "$firstelement\->readEntry";
 				$value++; 
 				$convertStruct[$value] = "$variable\.readEntry";
 				$value++;
-                $convertStruct[$value] = "$firstelement\->writeEntry";
+                $convertStruct[$value] ="$firstelement->writeEntry";
                 $value++;
                 $convertStruct[$value] = "$variable\.writeEntry";
                 $value++;
@@ -128,10 +129,10 @@ while ($file = <$F>) {
 		my $compte=0;
 		while ($compte < $value) 
 		{
-			warn "compte: $compte \n";
 			my $search = $convertStruct[$compte];
 			my $replace = $convertStruct[$compte+1];
-			$str =~ s!$search!$replace!g;
+			warn "sear:$search========rep:$replace\n";	
+			$str =~ "s!$search!$replace!g";
 			
 			$compte = $compte+ 2;
 			
