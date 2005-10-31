@@ -31,6 +31,8 @@ while ($file = <$F>) {
 			if( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
 				$_ =~ s!KConfigGroupSaver!KConfigGroup!g;
 				$_ =~ s!saver!group!;
+				
+				#create tab for function entry 
 				$convertStruct[$value] = "$firstelement\->readEntry";
 				$value++; 
 				$convertStruct[$value] = "$variable\.readEntry";
@@ -87,7 +89,26 @@ while ($file = <$F>) {
                 $value++;
                 $convertStruct[$value] = "$variable\.readColorEntry";
                 $value++;
-
+                $convertStruct[$value] = "$firstelement\->readDoubleNumEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readDoubleNumEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readUnsignedNum64Entry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readUnsignedNum64Entry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readLongNumEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readLongNumEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readDateTimeEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readDateTimeEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readEntryUntranslated";
+                $value++;
+                $convertStruct[$value] = "$variable\.readEntryUntranslated";
+                $value++;
 			}
 			
 		}
