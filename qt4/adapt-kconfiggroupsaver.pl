@@ -22,11 +22,12 @@ while ($file = <$F>) {
 	my @l = map {
 		my $orig = $_;
 		if (my ($blank, $variable, $contenu) = m!^(\s*.*)(KConfigGroupSaver.*?\()(.*)\s*\);$!) {
-			warn "initial value for variable: '$variable'\n";
+			#warn "initial value for variable: '$variable'\n";
 			$variable =~ s!KConfigGroupSaver!!;
 			$variable =~ s! !!g;
 			$variable =~ s!\(!!;
 			my $saver = $variable;
+			$variable =~ s!groupSaver!configGroup!;
 			$variable =~ s!saver!group!;
 			$variable =~ s!Saver!Group!;
 			$variable =~ s!cgs!configGroup!;
@@ -86,7 +87,7 @@ while ($file = <$F>) {
 
 		while ( my ($search, $replace) = each(%convertHash) )
 		{
-			warn "$search -> $replace\n";	
+			#warn "$search -> $replace\n";	
 			$str =~ s!$search!$replace!g;
 		}
 		seek F, 0, 0;
