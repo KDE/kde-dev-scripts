@@ -205,6 +205,8 @@ while ($file = <$F>) {
 
 		s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
 		s!Q3ValueListIterator\s*<\s*KMimeType::Ptr\s*>!KMimeType::List::const_iterator!;
+		s!Q3ValueList\s*<\s*KService::Ptr\s*>!KService::List!;
+		s!Q3ValueListIterator\s*<\s*KService::Ptr\s*>!KService::List::const_iterator!;
 
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;

@@ -17,104 +17,61 @@ while ($file = <$F>) {
 
 	my $modified;
 	my $necessaryToAddInclude;
-	my @convertStruct;
-	my $value = 0;
+	my %convertHash = ();
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
-		if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(KConfigGroupSaver.*?\()(.*)\s*\);$!) {
-			my $variable = $prefix;
-			warn "avant variable:$variable==\n";
+		if (my ($blank, $variable, $contenu) = m!^(\s*.*)(KConfigGroupSaver.*?\()(.*)\s*\);$!) {
+			warn "initial value for variable: '$variable'\n";
 			$variable =~ s!KConfigGroupSaver!!;
 			$variable =~ s! !!g;
 			$variable =~ s!\(!!;
+			my $saver = $variable;
 			$variable =~ s!saver!group!;
+			$variable =~ s!Saver!Group!;
+			$variable =~ s!cgs!configGroup!;
 
-			if( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
+			if( my ($firstelement, $groupname) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
 				$_ =~ s!KConfigGroupSaver!KConfigGroup!g;
-				$_ =~ s!saver!group!;
+				$_ =~ s!$saver!$variable!;
+
+				# Two cases:
+				# Value-based: KConfigGroupSaver(&config) and config.readEntry
+				# Pointer-based: KConfigGroupSaver(config) and config->readEntry
+				my $valueBased = 0;
+				$valueBased = 1 if ( $firstelement =~ s!^\&!! );
+
+				my $config = ($valueBased) ? "$firstelement\." : "$firstelement\->";
+				my $group = "$variable\.";
+
+				print "variable='$variable firstelement=$firstelement groupname=$groupname valueBased=$valueBased group=$group'\n";
+
 				#create tab for function entry
-				$convertStruct[$value] = "$firstelement\->readEntry";
-				$value++; 
-				$convertStruct[$value] = "$variable\.readEntry";
-				$value++;
-                $convertStruct[$value] ="$firstelement->writeEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.writeEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->deleteEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.deleteEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->sync";
-                $value++;
-                $convertStruct[$value] = "$variable\.sync";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readBoolEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readBoolEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readFontEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readFontEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readRectEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readRectEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readPointEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readPointEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readListEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readListEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readPathEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readPathEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readPathListEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readPathListEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readNumEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readNumEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readSizeEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readSizeEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readColorEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readColorEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readDoubleNumEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readDoubleNumEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readUnsignedNum64Entry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readUnsignedNum64Entry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readLongNumEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readLongNumEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readDateTimeEntry";
-                $value++;
-                $convertStruct[$value] = "$variable\.readDateTimeEntry";
-                $value++;
-                $convertStruct[$value] = "$firstelement\->readEntryUntranslated";
-                $value++;
-                $convertStruct[$value] = "$variable\.readEntryUntranslated";
-                $value++;
-			}
+				$convertHash{$config.'readEntry'} = $group.'readEntry';
+				$convertHash{$config.'writeEntry'} = $group.'writeEntry';
+				$convertHash{$config.'writePathEntry'} = $group.'writePathEntry';
+				$convertHash{$config.'deleteEntry'} = $group.'deleteEntry';
+				$convertHash{$config.'readBoolEntry'} = $group.'readBoolEntry';
+				$convertHash{$config.'readFontEntry'} = $group.'readFontEntry';
+				$convertHash{$config.'readRectEntry'} = $group.'readRectEntry';
+				$convertHash{$config.'readPointEntry'} = $group.'readPointEntry';
+				$convertHash{$config.'readListEntry'} = $group.'readListEntry';
+				$convertHash{$config.'readPathEntry'} = $group.'readPathEntry';
+				$convertHash{$config.'readPathListEntry'} = $group.'readPathListEntry';
+				$convertHash{$config.'readNumEntry'} = $group.'readNumEntry';
+				$convertHash{$config.'readSizeEntry'} = $group.'readSizeEntry';
+				$convertHash{$config.'readColorEntry'} = $group.'readColorEntry';
+				$convertHash{$config.'readDoubleNumEntry'} = $group.'readDoubleNumEntry';
+				$convertHash{$config.'readUnsignedNum64Entry'} = $group.'readUnsignedNum64Entry';
+				$convertHash{$config.'readLongNumEntry'} = $group.'readLongNumEntry';
+				$convertHash{$config.'readDateTimeEntry'} = $group.'readDateTimeEntry';
+				$convertHash{$config.'readEntryUntranslated'} = $group.'readEntryUntranslated';
+				$convertHash{$config.'entryIsImmutable'} = $group.'entryIsImmutable';
+			    }
 			
-		}
+		    }
 	    	$modified ||= $orig ne $_;
-		    $_;
+		$_;
 	    } <$FILE>;
 
 	if ($modified) {
@@ -124,22 +81,17 @@ while ($file = <$F>) {
 	if ($modified )
 	{
    		local *F;
-   		open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
+   		open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
    		my $str = join '', <F>;
-		my $compte=0;
-		while ($compte < $value) 
+
+		while ( my ($search, $replace) = each(%convertHash) )
 		{
-			my $search = $convertStruct[$compte];
-			my $replace = $convertStruct[$compte+1];
-			warn "sear:$search========rep:$replace\n";	
-			$str =~ "s!$search!$replace!g";
-			
-			$compte = $compte+ 2;
-			
-			seek F, 0, 0;
-			print F $str;
-			truncate F, tell(F);
+			warn "$search -> $replace\n";	
+			$str =~ s!$search!$replace!g;
 		}
+		seek F, 0, 0;
+		print F $str;
+		truncate F, tell(F);
 		close F;
 	}
 }

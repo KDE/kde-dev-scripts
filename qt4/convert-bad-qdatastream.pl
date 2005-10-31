@@ -14,8 +14,8 @@ foreach my $file (@ARGV) {
     $str =~ s/(\s*)(QDataStream (\w*)\s*\(\s*\&\w*\s*,\s*[a-zA-Z0-9_:]+\s*\);\n)(?!\s*\3\.setVersion)/$1$2$1$3.setVersion(QDataStream::Qt_3_1);\n/sg;
     seek F, 0, 0;
     print F $str;
-	truncate F, tell(F);
-	close F;
+    truncate F, tell(F);
+    close F;
 }
 
 functionUtilkde::diffFile( "@ARGV" );
