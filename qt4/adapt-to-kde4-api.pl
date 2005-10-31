@@ -203,9 +203,9 @@ while ($file = <$F>) {
 		s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 		s!KColorDrag!K3ColorDrag!g;
 
-		if( /Q3ValueList\s*<\s*KMimeType::Ptr\s*>/ ) {
-			s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
-		}
+		s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
+		s!Q3ValueListIterator\s*<\s*KMimeType::Ptr\s*>!KMimeType::List::const_iterator!;
+
 	    s!KStartupInfo::appStarted!KStartupInfo::appStarted!;
 	    s!KInputDialog::getText!KInputDialog::getText!;
 	    s!#include <kde_file.h>!#include <kde_file.h>!;
