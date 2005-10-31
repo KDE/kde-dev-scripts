@@ -47,6 +47,47 @@ while ($file = <$F>) {
                 $value++;
                 $convertStruct[$value] = "$variable\.sync";
                 $value++;
+                $convertStruct[$value] = "$firstelement\->readBoolEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readBoolEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readFontEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readFontEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readRectEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readRectEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readPointEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readPointEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readListEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readListEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readPathEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readPathEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readPathListEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readPathListEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readNumEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readNumEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readSizeEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readSizeEntry";
+                $value++;
+                $convertStruct[$value] = "$firstelement\->readColorEntry";
+                $value++;
+                $convertStruct[$value] = "$variable\.readColorEntry";
+                $value++;
+
 			}
 			
 		}
