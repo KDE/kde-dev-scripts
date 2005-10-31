@@ -327,7 +327,11 @@ while ($file = <$F>) {
 	    if( /disableSounds/ ) {
         	s!disableSounds\(\)!setEnableSounds\(false\)!;
 	    }
-	    my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
+		if ( /KSeparator/ ) {
+			s!KSeparator::HLine!Qt::Horizontal!;
+			s!KSeparator::VLine!Qt::Vertical!;
+		}
+		my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
 	    if( $valuereturn ) {
 		$_ = $valuereturn;
 	    }
