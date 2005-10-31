@@ -1,4 +1,4 @@
-Scripts to convert kde3 to kde4 API
+Scripts to convert qt3/kde3 to qt4/kde4 API
 -----------------------------------
 Laurent Montel <montel@kde.org> 2005-07-12
 
@@ -7,6 +7,6 @@ There are not perfect but reduce time to convert application.
 
 I use a perl module to avoid duplicate code.
 
-All guy can improved them.
+Everyone can improve them.
 
 Regards.
