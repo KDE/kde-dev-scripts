@@ -100,6 +100,7 @@ while ($file = <$F>) {
 	#add some standard version :)
 	s!kapp.isRestored!kapp.isSessionRestored!;
 	s!app.isRestored!app.isSessionRestored!;
+	s!a.isRestored!a.isSessionRestored!;
 
 	s!Qt::WordBreak!Qt::TextWordWrap!;
 	s!Qt::SingleLine!Qt::TextSingleLine!;
