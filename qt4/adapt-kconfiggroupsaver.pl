@@ -68,7 +68,8 @@ while ($file = <$F>) {
 				$convertHash{$config.'readDateTimeEntry'} = $group.'readDateTimeEntry';
 				$convertHash{$config.'readEntryUntranslated'} = $group.'readEntryUntranslated';
 				$convertHash{$config.'entryIsImmutable'} = $group.'entryIsImmutable';
-			    }
+			    $convertHash{$config.'readUnsignedNumEntry'} = $group.'readUnsignedNumEntry';
+				}
 			
 		    }
 	    	$modified ||= $orig ne $_;
