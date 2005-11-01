@@ -315,6 +315,16 @@ while ($file = <$F>) {
 	    s!kapp->config!KGlobal::config!;
 	    push(@necessaryIncludes, "kglobal.h");
 	}
+	if ( /kapp->miniIcon/ ) {
+	    s!kapp->miniIcon()!qApp->windowIcon().pixmap(IconSize(KIcon::Small),IconSize(KIcon::Small))!;
+	    push(@necessaryIncludes, "kiconloader.h");
+	}
+
+        if ( /kapp->icon/ ) {
+            s!kapp->miniIcon()!qApp->windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
+            push(@necessaryIncludes, "kiconloader.h");
+        }
+
 	if ( /new KRun/ ) {
 	    $warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
 	}
@@ -333,6 +343,7 @@ while ($file = <$F>) {
 	    s!KSeparator::HLine!Qt::Horizontal!;
 	    s!KSeparator::VLine!Qt::Vertical!;
 	}
+	
 	my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
 	if ( $valuereturn ) {
 	    $_ = $valuereturn;
