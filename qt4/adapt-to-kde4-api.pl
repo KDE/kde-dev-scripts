@@ -316,12 +316,12 @@ while ($file = <$F>) {
 	    push(@necessaryIncludes, "kglobal.h");
 	}
 	if ( /kapp->miniIcon/ ) {
-	    s!kapp->miniIcon()!qApp->windowIcon().pixmap(IconSize(KIcon::Small),IconSize(KIcon::Small))!;
+	    s!kapp->miniIcon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIcon::Small),IconSize(KIcon::Small))!;
 	    push(@necessaryIncludes, "kiconloader.h");
 	}
 
         if ( /kapp->icon/ ) {
-            s!kapp->miniIcon()!qApp->windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
+            s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
             push(@necessaryIncludes, "kiconloader.h");
         }
 
