@@ -284,6 +284,10 @@ while ($file = <$F>) {
 	    s!kapp->invokeHelp!KToolInvocation::invokeHelp!;
 	    push(@necessaryIncludes, "ktoolinvocation.h");
 	}
+    if ( /KApplication::kApplication\s*\(\s*\)->invokeHelp/ ) {
+        s!KApplication::kApplication\s*\(\s*\)->invokeHelp!KToolInvocation::invokeHelp!;
+        push(@necessaryIncludes, "ktoolinvocation.h");
+    }
 	if ( /KApplication::kApplication\s*\(\s*\)->invokeMailer/ ) {
 	    s!KApplication::kApplication\s*\(\s*\)->invokeMailer!KToolInvocation::invokeMailer!;
 	    push(@necessaryIncludes, "ktoolinvocation.h");
