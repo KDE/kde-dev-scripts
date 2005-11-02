@@ -325,7 +325,12 @@ while ($file = <$F>) {
             s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
             push(@necessaryIncludes, "kiconloader.h");
         }
+        if ( /app.icon/ ) {
+            s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
+            push(@necessaryIncludes, "kiconloader.h");
+        }
 
+		
 	if ( /new KRun/ ) {
 	    $warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
 	}
