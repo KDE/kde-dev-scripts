@@ -348,6 +348,8 @@ while ($file = <$F>) {
 	if ( /KSeparator/ ) {
 	    s!KSeparator::HLine!Qt::Horizontal!;
 	    s!KSeparator::VLine!Qt::Vertical!;
+		s!Q3Frame::HLine!Qt::Horizontal!;
+		s!Q3Frame::VLine!Qt::Vertical!;
 	}
 	
 	my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
