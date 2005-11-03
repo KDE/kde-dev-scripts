@@ -50,18 +50,21 @@ while ($file = <$F>) {
 	    my $changes = $prefix;
 	    $changes =~ s!Q3Frame!KHBox!;
 	    $changes =~ s!Q3HBox!KHBox!;
+		$changes =~ s!QHBox!KHBox!;
 	    $_ = $changes . $suite . $end . "\n";
 	}	
 	if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
 	    my $changes = $prefix;
 	    $changes =~ s!Q3Frame!KVBox!;
 	    $changes =~ s!Q3VBox!KVBox!;
+		$changes =~ s!QVBox!KVBox!;
 	    $_ = $changes . $suite . $end . "\n";
 	}	
 	if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
 	    my $changes = $prefix;
 	    $changes =~ s!Q3Frame!KHBox!;
 	    $changes =~ s!Q3HBox!KHBox!;
+		$changes =~ s!QHBox!KHBox!;
 	    $_ = $changes . $suite . $end . "\n";
 	}
 	s!#include <kaccelmanager.h>!#include <kacceleratormanager.h>!;
