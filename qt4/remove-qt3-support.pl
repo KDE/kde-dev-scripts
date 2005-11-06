@@ -70,30 +70,31 @@ while ($file = <$F>) {
 		    }
 		}	
 	    }
-	    s!Qt::ShiftModifier!Qt::ShiftModifier!;
-	    s!Qt::ControlModifier!Qt::ControlModifier!;
-	    s!Qt::AltModifier!Qt::AltModifier!;
-	    s!Qt::MetaModifier!Qt::MetaModifier!;
-	    s!Qt::KeypadModifier!Qt::KeypadModifier!;
-	    s!Qt::KeyboardModifierMask!Qt::KeyboardModifierMask!;
-	    s!Qt::AutoCompatConnection!Qt::AutoConnection!;
-		s!makeAbsolute!makeAbsolute!;
-	    s!currentPath!currentPath!;
-	    s!homePath!homePath!;
-	    s!rootPath!rootPath!;
-	    s!cleanPath!cleanPath!;
-	    s!absoluteFilePath!absoluteFilePath!;
-	    s!QDir::TypeMask!QDir::TypeMask!;
-	    s!QDir::NoFilter!QDir::NoFilter!;
-	    s!QDir::NoSort!QDir::NoSort!;
-	    s!simplified!simplified!g;
-	    s!trimmed!trimmed!g;
-	    s!utf16!utf16!g;
-	    s!leftJustified!leftJustified!g;
-	    s!rightJustified!rightJustified!g;
-	    s!fromUtf16!fromUtf16!g;
-	    s!at!at!g;
-	    s!start!start!g;
+		s!Qt::ShiftButton!Qt::ShiftModifier!;
+        s!Qt::ControlButton!Qt::ControlModifier!;
+        s!Qt::AltButton!Qt::AltModifier!;
+        s!Qt::MetaButton!Qt::MetaModifier!;
+        s!Qt::Keypad!Qt::KeypadModifier!;
+        s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
+        s!convertToAbs!makeAbsolute!;
+        s!currentDirPath!currentPath!;
+        s!homeDirPath!homePath!;
+        s!rootDirPath!rootPath!;
+        s!cleanDirPath!cleanPath!;
+        s!absFilePath!absoluteFilePath!;
+        s!QDir::All!QDir::TypeMask!;
+        s!QDir::DefaultFilter!QDir::NoFilter!;
+        s!QDir::DefaultSort!QDir::NoSort!;
+        s!simplifyWhiteSpace!simplified!g;
+        s!stripWhiteSpace!trimmed!g;
+        s!ucs2!utf16!g;
+        s!leftJustify!leftJustified!g;
+        s!rightJustify!rightJustified!g;
+        s!fromUcs2!fromUtf16!g;
+        s!constref!at!g;
+        s!changeInterval!start!g;	    
+
+
 		s!Q_INT8!qint8!g;
 		s!Q_UINT8!quint8!g;
 		s!Q_INT16!qint16!g;
