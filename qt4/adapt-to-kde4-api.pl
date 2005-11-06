@@ -249,7 +249,30 @@ while ($file = <$F>) {
 	# never add kClamp here! it's no easy search & replace there
      	
 	s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
-		
+    s!Qt::ShiftButton!Qt::ShiftModifier!;
+    s!Qt::ControlButton!Qt::ControlModifier!;
+    s!Qt::AltButton!Qt::AltModifier!;
+    s!Qt::MetaButton!Qt::MetaModifier!;
+    s!Qt::Keypad!Qt::KeypadModifier!;
+    s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
+    s!convertToAbs!makeAbsolute!;
+    s!currentDirPath!currentPath!;
+    s!homeDirPath!homePath!;
+    s!rootDirPath!rootPath!;
+    s!cleanDirPath!cleanPath!;
+    s!absFilePath!absoluteFilePath!;
+    s!QDir::All!QDir::TypeMask!;
+    s!QDir::DefaultFilter!QDir::NoFilter!;
+    s!QDir::DefaultSort!QDir::NoSort!;
+    s!simplifyWhiteSpace!simplified!g;
+    s!stripWhiteSpace!trimmed!g;
+    s!ucs2!utf16!g;
+    s!leftJustify!leftJustified!g;
+    s!rightJustify!rightJustified!g;
+    s!fromUcs2!fromUtf16!g;
+    s!constref!at!g;
+    s!changeInterval!start!g;
+	
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 	    push(@necessaryIncludes, "kauthorized.h");
