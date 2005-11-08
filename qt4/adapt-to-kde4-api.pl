@@ -173,6 +173,10 @@ while ($file = <$F>) {
 	s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
 	s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;	
 
+	# Qt3 name class
+	s!QIconSet!QIcon!g;
+
+	s!IO_ReadOnly!QIODevice::ReadOnly!;
 
 	#KKeyNative
 	s!KKeyNative::modX\(\s*KKey::SHIFT\s*\)!KKeyNative::modXShift\(\)!;
