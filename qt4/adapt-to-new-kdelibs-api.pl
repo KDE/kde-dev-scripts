@@ -20,6 +20,7 @@ while ($file = <$F>) {
 	open(my $FILE, $file) or warn "We can't open file $$!\n";
 	my @l = map {
 		my $orig = $_;
+		s!aboutToChangePage!currentPageChanged!;
 	    	$modified ||= $orig ne $_;
 		    $_;
 	    } <$FILE>;
