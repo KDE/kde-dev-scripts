@@ -177,7 +177,13 @@ while ($file = <$F>) {
 	s!QIconSet!QIcon!g;
 
 	s!IO_ReadOnly!QIODevice::ReadOnly!;
+	s!IO_WriteOnly!QIODevice::WriteOnly!;
+	s!IO_ReadWrite!QIODevice::ReadWrite!;
+	s!IO_Append!QIODevice::Append!;
+	s!IO_Truncate!QIODevice::Truncate!;
+	s!IO_Translate!QIODevice::Text!;
 
+	
 	#KKeyNative
 	s!KKeyNative::modX\(\s*KKey::SHIFT\s*\)!KKeyNative::modXShift\(\)!;
 	s!KKeyNative::modX\(\s*KKey::CTRL\s*\)!KKeyNative::modXCtrl\(\)!;
