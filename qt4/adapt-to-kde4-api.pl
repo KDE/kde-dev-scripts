@@ -257,7 +257,20 @@ while ($file = <$F>) {
 	s!([, (])kMax\(!\1qMax\(!g;
 	s!([, (])kAbs\(!\1qAbs\(!g;
 	# never add kClamp here! it's no easy search & replace there
-     	
+    
+        s!Q_INT8!qint8!g;
+        s!Q_UINT8!quint8!g;
+        s!Q_INT16!qint16!g;
+        s!Q_UINT16!quint16!g;
+        s!Q_INT32!qint32!g;
+        s!Q_UINT32!quint32!g;
+        s!Q_INT64!qint64!g;
+        s!Q_UINT64!quint64!g;
+        s!Q_LLONG!qint64!g;
+        s!Q_ULLONG!quint64!g;
+        s!QMAX!qMax!g;
+        s!QMIN!qMin!g;
+ 	
 	s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
     s!Qt::ShiftButton!Qt::ShiftModifier!;
     s!Qt::ControlButton!Qt::ControlModifier!;
