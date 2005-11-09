@@ -175,7 +175,10 @@ while ($file = <$F>) {
 
 	# Qt3 name class
 	s!QIconSet!QIcon!g;
+	s!QWMatrix!QMatrix!g;
+	s!QGuardedPtr!QPointer!g;
 
+	
 	s!IO_ReadOnly!QIODevice::ReadOnly!;
 	s!IO_WriteOnly!QIODevice::WriteOnly!;
 	s!IO_ReadWrite!QIODevice::ReadWrite!;
