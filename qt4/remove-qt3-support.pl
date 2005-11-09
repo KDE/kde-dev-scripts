@@ -46,7 +46,11 @@ while ($file = <$F>) {
 	    if( $_ =~ /absPath\s*\(\s*\)/ ) {
 		s!absPath!absolutePath!;
 	    }
-	    if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
+        if ( $_ =~ /\.latin1\s*\(\s*\)/ ) {
+                s!\.latin1!\.toLatin1!g;
+        }
+	   	s!writeBlock!write!; 
+		if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
 				s!\.lower!\.toLower!g;
 	    }
             if ( $_ =~ /\.upper\s*\(\s*\)/ ) {
