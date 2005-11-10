@@ -298,7 +298,9 @@ while ($file = <$F>) {
     s!fromUcs2!fromUtf16!g;
     s!constref!at!g;
     s!changeInterval!start!g;
-	
+
+	s!flushX!flush!;
+
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 	    push(@necessaryIncludes, "kauthorized.h");
