@@ -52,6 +52,12 @@ while ($file = <$F>) {
 	   	s!writeBlock!write!;
 		s!readBlock!read!;
 		s!isSequentialAccess!isSequential!;
+
+		s!QComboBox::Policy!QComboBox::InsertPolicy!g;
+		s!insertionPolicy!insertPolicy!;
+		s!setInsertionPolicy!setInsertPolicy!;
+		s!NoInsertion!NoInsert!;
+		
 		if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
 				s!\.lower!\.toLower!g;
 	    }
