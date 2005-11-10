@@ -49,7 +49,9 @@ while ($file = <$F>) {
         if ( $_ =~ /\.latin1\s*\(\s*\)/ ) {
                 s!\.latin1!\.toLatin1!g;
         }
-	   	s!writeBlock!write!; 
+	   	s!writeBlock!write!;
+		s!readBlock!read!;
+		s!isSequentialAccess!isSequential!;
 		if ( $_ =~ /\.lower\s*\(\s*\)/ ) {
 				s!\.lower!\.toLower!g;
 	    }
