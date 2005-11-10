@@ -82,6 +82,9 @@ while ($file = <$F>) {
 		    }
 		}	
 	    }
+
+	s!QApplication::reverseLayout!QApplication::isRightToLeft!;
+		
 		s!Qt::ShiftButton!Qt::ShiftModifier!;
         s!Qt::ControlButton!Qt::ControlModifier!;
         s!Qt::AltButton!Qt::AltModifier!;
