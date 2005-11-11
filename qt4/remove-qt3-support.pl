@@ -131,7 +131,7 @@ while ($file = <$F>) {
 		s!Qt::ScaleMin!Qt::KeepAspectRatio!g;
 		s!Qt::ScaleMax!Qt::KeepAspectRatioByExpanding!g;
 		s!Qt::ScaleFree!Qt::IgnoreAspectRatio!g;
-
+		s!Qt::AlignAuto!Qt::AlignLeft!g;
         if( $_ =~ /Qt::TopLeft/ ) {
             s!Qt::TopLeft!Qt::TopLeftCorner!g if( $_ !~ /Qt::TopLeftCorner/ );
         }
