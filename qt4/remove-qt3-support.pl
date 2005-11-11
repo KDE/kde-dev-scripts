@@ -49,6 +49,12 @@ while ($file = <$F>) {
         if ( $_ =~ /\.latin1\s*\(\s*\)/ ) {
                 s!\.latin1!\.toLatin1!g;
         }
+		if ( $_ =~ /\.xForm\s*\(/ ) {
+			s!\.xForm!\.transformed!;
+		}
+        if ( $_ =~ /->xForm\s*\(/ ) {
+            s!\->xForm!\->transformed!;
+        }
 	   	s!writeBlock!write!;
 		s!readBlock!read!;
 		s!isSequentialAccess!isSequential!;
