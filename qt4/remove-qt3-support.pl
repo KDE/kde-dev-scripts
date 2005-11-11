@@ -128,7 +128,24 @@ while ($file = <$F>) {
 		s!Q_ULLONG!quint64!g;
 		s!QMAX!qMax!g;
 		s!QMIN!qMin!g;
+		s!Qt::ScaleMin!Qt::KeepAspectRatio!g;
+		s!Qt::ScaleMax!Qt::KeepAspectRatioByExpanding!g;
+		s!Qt::ScaleFree!Qt::IgnoreAspectRatio!g;
 
+        if( $_ =~ /Qt::TopLeft/ ) {
+            s!Qt::TopLeft!Qt::TopLeftCorner!g if( $_ !~ /Qt::TopLeftCorner/ );
+        }
+        if( $_ =~ /Qt::TopRight/ ) {
+            s/Qt::TopRight/Qt::TopRightCorner/g if( $_ !~ /Qt::TopRightCorner/ );
+        }
+        if( $_ =~ /Qt::BottomLeft/ ) {
+            s/Qt::BottomLeft/Qt::BottomLeftCorner/g if( $_ !~ /Qt::BottomLeftCorner/);
+        }
+        if( $_ =~ /Qt::BottomRight/ ) {
+            s/Qt::BottomRight/Qt::BottomRightCorner/g if( $_ !~ /Qt::BottomRightCorner/ );
+        }
+
+		
 		#qcolor.h
 		s!setRgba!setRgb!;
 		s!getRgba!getRgb!;
