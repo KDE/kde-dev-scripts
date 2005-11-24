@@ -132,6 +132,7 @@ while ($file = <$F>) {
 		s!Qt::ScaleMax!Qt::KeepAspectRatioByExpanding!g;
 		s!Qt::ScaleFree!Qt::IgnoreAspectRatio!g;
 		s!Qt::AlignAuto!Qt::AlignLeft!g;
+		s!Qt::CustomPattern!Qt::TexturePattern!g;
         if( $_ =~ /Qt::TopLeft/ ) {
             s!Qt::TopLeft!Qt::TopLeftCorner!g if( $_ !~ /Qt::TopLeftCorner/ );
         }
