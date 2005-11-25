@@ -11,6 +11,14 @@
 ##
 ## Written by David Faure <faure@kde.org>, licensed under pizzaware.
 ## 18/03/2000
+
+if (scalar (@ARGV) == 0)
+{
+  print "This program puts in debugging output into a program. At the beginning of every function, there is ";
+  print "a line inserted saying which function starts at the moment.";
+  exit(0);
+}
+
 $insignature=0;
 while (<>)
 {
