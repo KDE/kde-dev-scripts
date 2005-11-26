@@ -45,7 +45,7 @@ while (<>)
 	  $_ = $oneline;
 	  #print STDERR "Signature : $_\n";
 	  print $statement;
-	  $line = "  kdDebug(0)";
+	  $line = "kdDebug(0)";
 	  if ( m/([^\*\s]+::[^\s]+)\(/ )
 	    {
 	      $line = $line . " << \"$1\"";
@@ -88,9 +88,11 @@ while (<>)
     }
   else
     {
-        if ( $line )
+        $readline=$_;
+        if ( $line ) # there is something to insert
         {
-          if ($_=$line) 
+	  if (/( *).*/) { $line=$1.$line; } # indent
+          if ($readline eq $line) 
 	  {
 	    $line="";
           }
@@ -101,7 +103,7 @@ while (<>)
           }
 	}
         # Normal line
-        print;
+        print $readline;
     }
 }
 if ( $insignature )
