@@ -11,6 +11,8 @@
 ##
 ## Written by David Faure <faure@kde.org>, licensed under pizzaware.
 ## 18/03/2000
+##
+## parts (c) 2005 by Thorsten Staerk <kde@staerk.de>
 
 if (scalar (@ARGV) == 0)
 {
@@ -28,6 +30,19 @@ while (<>)
       $statement .= $_;
       chop;
       $oneline .= $_;
+    }
+  elsif ( /^\/\/.*/)
+    {
+      # comment
+      # do nothing
+      $insignature = 0;
+    }
+  # [^\s]+ means, one ore more characters that are no spaces
+  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+.*\}/ && !/typedef\s/ && !/^\s*class\s/ )
+    {
+      # declaration and implementation in one line
+      # do nothing
+      $insignature = 0;
     }
   elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/ && !/^\s*class\s/ )
     {
