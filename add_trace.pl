@@ -19,6 +19,7 @@ if (scalar (@ARGV) == 0)
   exit(0);
 }
 
+my $line="";
 $insignature=0;
 while (<>)
 {
@@ -82,12 +83,23 @@ while (<>)
 	      }
 	    }
 	  $line = $line . " << endl;\n";
-	  print $line;
 	  #print STDERR "Debug call added : $line\n";
 	}
     }
   else
     {
+        if ( $line )
+        {
+          if ($_=$line) 
+	  {
+	    $line="";
+          }
+	  else
+	  {
+	    print $line;
+	    $line="";
+          }
+	}
         # Normal line
         print;
     }
