@@ -1,0 +1,72 @@
+#! /usr/bin/env python
+#
+# Copyright David Faure <faure@kde.org>, License LGPL v2
+#
+# This script renames files (sources and headers), and take care of
+# - doing the svn command to rename the file
+# - updating Makefile.am
+# - updating #include lines (for headers and for .moc)
+#
+# The input is a file with a syntax like "kwframe KWFrame", one renaming on each line.
+# "oldName newName" will rename oldName.h to newName.h and oldName.{cc,cpp} to newName.cpp
+#
+import sys, os
+
+MakefileAmContents = file("Makefile.am", "r").read()
+
+def renameFile( oldFileName, newFileName ):
+	global MakefileAmContents
+	if oldFileName != newFileName and os.path.exists( oldFileName ):
+		print oldFileName + " -> " + newFileName
+		if os.path.exists( newFileName ):
+			print "Warning, erasing " + newFileName
+			os.unlink( newFileName )  # could be due to a former run
+		#os.rename( oldFileName, newFileName )
+		os.system( 'svn move --force ' + oldFileName + ' ' + newFileName )
+		MakefileAmContents = MakefileAmContents.replace( oldFileName, newFileName )
+	
+def renameHeader( oldFileName, newFileName ):
+	global MakefileAmContents
+	renameFile( oldFileName, newFileName )
+	MakefileAmContents = MakefileAmContents.replace( oldFileName.replace('.h','.skel'), newFileName.replace('.h','.skel') )
+	# And now rename includes
+	#  ... in source files
+	files = os.popen('grep -r -l '+oldFileName+' *[cph]').readlines()
+	for f in files:
+		data = file(f.strip(),"r").read()
+		data = data.replace( '#include <' + oldFileName + '>', '#include <' + newFileName + '>' )
+		data = data.replace( '#include "' + oldFileName + '"', '#include "' + newFileName + '"' )
+		data = data.replace( '#include "' + oldFileName.replace('.h','.moc') + '"', '#include "' + newFileName.replace('.h','.moc') + '"' )
+		file(f.strip(),"w").write( data )
+    #  ... and in ui files
+	uifiles = os.popen('grep -r -l '+oldFileName+' *.ui 2>/dev/null').readlines()
+	for f in uifiles:
+		data = file(f.strip(),"r").read()
+		data = data.replace( '>' + oldFileName + '</header', '>' + newFileName + '</header>' )
+		file(f.strip(),"w").write( data )
+
+def help():
+	print "Usage: %s filename"
+	print "where the file <filename> contains the definition of the files to rename."
+	sys.exit()
+
+# Main
+
+if len(sys.argv) < 2:
+	help()
+
+replaceFileName = sys.argv[1];
+
+for line in file(replaceFileName, "r").readlines():
+	words = line.split()
+	oldBaseName = words[0]
+	newBaseName = words[1]
+	renameHeader( oldBaseName + '.h', newBaseName + '.h' )
+	if os.path.exists( oldBaseName + '.cc' ):
+		renameFile( oldBaseName + '.cc', newBaseName + '.cpp' )
+	elif os.path.exists( oldBaseName + '.cpp' ):
+		 renameFile( oldBaseName + '.cpp', newBaseName + '.cpp' )
+	
+
+# Write Makefile.am back
+file("Makefile.am","w").write( MakefileAmContents )
