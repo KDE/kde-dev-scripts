@@ -58,7 +58,7 @@ sub optionstonroff
     my $ret = "";
     foreach( split /\n/, $options )
       {
-	if( /^  (--?[[:alpha:]]+, )?(--[[:alpha:]-]*)( <[[:alpha:] ]*>| [[:alpha:]]*)? *(.*)$/ )
+	if( /^  (--?[[:alpha:]]+, )?(--[[:alpha:]-]*|-[[:alpha:]])( <[[:alpha:] ]*>| [[:alpha:]]*)? *(.*)$/ )
 	  {
 	    my $short;
 	    my $long;
@@ -218,7 +218,7 @@ chomp $timespec;
 my $description = $shortdescription;
 if( -r "control" )
   {
-    $description = `cat control | sed -ne '/Package: $appname\$/,/^\$/p' | egrep -v '^\\w*:.*\$' | sed -e 's/^ //' | sed -e 's/^\\.//'`;
+    $description = `cat control | sed -ne '/^Description:/,/^\$/p' | egrep -v '^\\w*:.*\$' | sed -e 's/^ //' | sed -e 's/^\\.//'`;
 # leads to problems in some cases :(
 #    $description =~ s/KDE ?/\n.SM KDE\n/g;
   }
