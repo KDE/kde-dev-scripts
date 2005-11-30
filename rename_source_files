@@ -31,7 +31,7 @@ def renameHeader( oldFileName, newFileName ):
 	MakefileAmContents = MakefileAmContents.replace( oldFileName.replace('.h','.skel'), newFileName.replace('.h','.skel') )
 	# And now rename includes
 	#  ... in source files
-	files = os.popen('grep -l '+oldFileName+' *[cph]').readlines()
+	files = os.popen('find . -name \'*[cph]\' | xargs grep -l '+oldFileName).readlines()
 	for f in files:
 		data = file(f.strip(),"r").read()
 		data = data.replace( '#include <' + oldFileName + '>', '#include <' + newFileName + '>' )
@@ -39,7 +39,7 @@ def renameHeader( oldFileName, newFileName ):
 		data = data.replace( '#include "' + oldFileName.replace('.h','.moc') + '"', '#include "' + newFileName.replace('.h','.moc') + '"' )
 		file(f.strip(),"w").write( data )
     #  ... and in ui files
-	uifiles = os.popen('grep -l '+oldFileName+' *.ui 2>/dev/null').readlines()
+	uifiles = os.popen('find . -name \'*.ui\' | xargs grep -l '+oldFileName).readlines()
 	for f in uifiles:
 		data = file(f.strip(),"r").read()
 		data = data.replace( '>' + oldFileName + '</header', '>' + newFileName + '</header>' )
