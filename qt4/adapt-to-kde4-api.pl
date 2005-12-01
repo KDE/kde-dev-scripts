@@ -271,7 +271,7 @@ while ($file = <$F>) {
         s!Q_UINT64!quint64!g;
         s!Q_LLONG!qint64!g;
         s!Q_ULLONG!quint64!g;
-        s!QMAX!qMax!g;
+		s!QMAX!qMax!g;
         s!QMIN!qMin!g;
  	
 	s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
@@ -409,6 +409,7 @@ while ($file = <$F>) {
 		s!Q3Frame::HLine!Qt::Horizontal!;
 		s!Q3Frame::VLine!Qt::Vertical!;
 	}
+	s!QDir::SortSpec!QDir::SortFlags!;
 	
 	my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
 	if ( $valuereturn ) {
