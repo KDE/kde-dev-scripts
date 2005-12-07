@@ -35,4 +35,4 @@ if [ "$1" == "" ]; then
   usage
 fi
 
-cvs log $@|tr "\n" "å"|sed 's/^.*symbolic names:å\(.*\)keyword subst.*$/\1/'|tr "å" "\n"
+cvs log $@|tr "\n" "Ã¥"|sed 's/^.*symbolic names:Ã¥\(.*\)keyword subst.*$/\1/'|tr "Ã¥" "\n"
