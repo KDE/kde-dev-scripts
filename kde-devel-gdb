@@ -280,3 +280,14 @@ document printq4stringlist
   Prints the contents of a Qt4 QStringList.
   Usage: printq4stringlist mylist
 end
+
+define identifyq4object
+    set $obj=$arg0
+    set $objectName=((QObjectPrivate *)($obj->d_ptr))->objectName
+    printf " name:"
+    printq4string $objectName
+    printf " class:"
+    # this requires a process, though
+    print $obj->metaObject()->className()
+end
+
