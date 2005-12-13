@@ -220,9 +220,13 @@ This function does not do any hidden buffer changes."
                  (setq function (match-string 2 a))
                  (kde-switch-cpp-h)
                  (goto-char 0)
+		 ; Look for beginning of class ("\\s-+" means whitespace including newlines)
                  (re-search-forward
 		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
-			  class "[^;]+{") nil t)
+			  "\\([A-Z_]+EXPORT\\)?\\s-+"  ; allow for optional EXPORT macro
+			  class "\b"                   ; the classname - with word separator
+			  "[^;]+{"                     ; then the optional inheritance and the '{'
+			  ) nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
                  (re-search-forward (concat "[ \t]+" (kde-function-regexp-quote function) "[ \t]*(") nil t)))))
     (if (string-match "\\.h$" n)
