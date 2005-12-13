@@ -14,8 +14,8 @@
 ;;
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this library; if not, write to the Free Software
-;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-;; 02111-1307  USA
+;; Foundation, Inc., 51 Franklin Steet, Fifth Floor, Boston, MA
+;; 02110-1301  USA
 
 
 (require 'kde-emacs-vars)
@@ -80,7 +80,7 @@ This function does not do any hidden buffer changes."
 	(let ((pos (c-safe-scan-lists (point) -1 1)))
 	; +1 added here so that the regexp in the while matches the { too.
 	  (goto-char (if pos (+ pos 1) (point-min))))
-	(while (re-search-backward "^[ ]*\\(class\\|namespace\\)[ \t][^};]*{" nil t)
+	(while (re-search-backward "^[ ]*\\(class\\|namespace\\|struct\\)[ \t][^};]*{" nil t)
 	  (save-excursion
 	    (forward-word 1)
 	   (when (looking-at "[ \t]*[A-Z_]*_EXPORT[A-Z_]*[ \t]")
@@ -135,6 +135,8 @@ This function does not do any hidden buffer changes."
   (and (string-match "[ \t]*\\<virtual\\>[ \t]*" function)
        (setq function (replace-match " " t t function)))
   (and (string-match "^\\(virtual\\>\\)?[ \t]*" function)
+       (setq function (replace-match "" t t function)))
+  (and (string-match "^\\(explicit\\>\\)?[ \t]*" function)
        (setq function (replace-match "" t t function)))
   (and (string-match "^\\(static\\>\\)?[ \t]*" function)
        (setq function (replace-match "" t t function)))
@@ -218,11 +220,15 @@ This function does not do any hidden buffer changes."
                  (setq function (match-string 2 a))
                  (kde-switch-cpp-h)
                  (goto-char 0)
+		 ; Look for beginning of class ("\\s-+" means whitespace including newlines)
                  (re-search-forward
 		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
-			  class "[^;]+{") nil t)
+			  "\\([A-Z_]+EXPORT\\)?\\s-+"  ; allow for optional EXPORT macro
+			  class "\b"                   ; the classname - with word separator
+			  "[^;]+{"                     ; then the optional inheritance and the '{'
+			  ) nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "[ \t]+" (regexp-quote function) "[ \t]*(") nil t)))))
+                 (re-search-forward (concat "[ \t]+" (kde-function-regexp-quote function) "[ \t]*(") nil t)))))
     (if (string-match "\\.h$" n)
         (progn
 	  (let ((mup (method-under-point))
@@ -238,7 +244,7 @@ This function does not do any hidden buffer changes."
 	    (setq sig (kde-remove-newline (kde-function-impl-sig namespace class function)))
 	    (if (string-match "(.*" sig) ; remove args
 		(setq sig (replace-match "" nil t sig)))
-	    (setq found (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) )
+	    (setq found (re-search-forward (concat "^[^()]*" (kde-function-regexp-quote sig) "[ \t]*(") nil t) )
 
         (if (not found)
             (progn
@@ -249,14 +255,14 @@ This function does not do any hidden buffer changes."
               
               (if (string-match "(.*" sig) ; remove args
                   (setq sig (replace-match "" nil t sig)))
-              (re-search-forward (concat "^[^()]*" (regexp-quote sig) "[ \t]*(") nil t) ) )
+              (re-search-forward (concat "^[^()]*" (kde-function-regexp-quote sig) "[ \t]*(") nil t) ) )
 	    )))))
 
 (defun kde-remove-newline (str) 
-  (let ((res str))
-    (while (string-match "\n" res )
-    (setq res (replace-match " " nil t res)))
-  res))
+    (replace-in-string str "\n" " "))
+; quote for use as regexp, but replace spaces with "any whitespace"
+(defun kde-function-regexp-quote (str)
+  (replace-in-string (regexp-quote str) "[ \n\t]" "[ \n\t]"))
 
 ; Initial implementation by Arnt Gulbransen
 ; Current maintainer: David Faure
@@ -272,6 +278,7 @@ This function does not do any hidden buffer changes."
 	 (insertion-string (kde-function-impl-sig namespace class function))
 	 (msubstr nil)
 	 (start nil)
+	 (newcppfile nil)
 	 )
     (setq insertion-string 
 	  (concat insertion-string "\n{\n"
@@ -283,12 +290,25 @@ This function does not do any hidden buffer changes."
     ; move to next method, to be ready for next call
     (backward-char)                ; in case we're after the ';'
     (re-search-forward ";" nil t)  ; end of this method decl
-    (re-search-forward ";" nil t)  ; end of next method decl
+    (let ((moveToNext t))
+      (while moveToNext
+	(re-search-forward ";" nil t)  ; end of next method decl
+	(save-excursion
+	  (forward-char -2) ; -1 goes to ';' itself, so go before that
+	  (while (looking-at "[ \t0=]")
+	    (forward-char -1))
+	  (forward-char 1)
+          ; move to next method again if we're at a pure virtual method
+	  (setq moveToNext (looking-at "[ \t]*=[ \t]*0;"))
+	  )
+	)
+      )
 
+    (setq newcppfile (not (cdr (kde-file-get-cpp-h))))
     (if (string-match "\\.h$" file)
 	(kde-switch-cpp-h)
       )
-    (goto-char (point-max))
+    (goto-char (point-max))    
     (kde-comments-begin)
     (kde-skip-blank-lines)
     (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
@@ -303,6 +323,8 @@ This function does not do any hidden buffer changes."
 	  (insert "\n")
 	  (forward-line 1)
 	  ))
+    (when newcppfile
+      (insert "\n"))
     (insert insertion-string)
     (forward-char -3)
     (c-indent-defun)   
@@ -316,20 +338,31 @@ This function does not do any hidden buffer changes."
       (fume-rescan-buffer))
     ))
 
-
-; Adds the current file to Makefile.am.
-; Written by David.
-(defun add-file-to-makefile-am ()
-  "add the current file to the _SOURCES tag in the Makefile.am"
+(defun add-file-to-buildsystem ()
+  "Add the current (C++) file to either Makefile.am or a .pro file, whichever exists."
+  ; Author: David
   (interactive)
-  (let ((file (buffer-name))
-        (makefile "Makefile.am"))
+  (if (file-readable-p "Makefile.am")
+      (add-file-to-makefile-am)
+    ; else: find a .pro file and add it there
+    (let* ((files (directory-files "." nil ".pro$" nil t))
+	   (projfile (car files)))
+      (if projfile
+	  (add-file-to-project projfile "^SOURCES[ \t]*") ; could be SOURCES= or SOURCES+=
+	; else: error
+	(error "No build system file found")
+	)))
+  )
+
+; internal helper for add-file-to-*
+(defun add-file-to-project (makefile searchString)
+  (let ((file (buffer-name)))
     (if (not (file-readable-p makefile))
-	(error "Makefile.am not found!")
+	(error (concat makefile " not found!"))
       )
     (find-file makefile)
     (goto-char (point-min))
-    (if (re-search-forward "_SOURCES" nil t)
+    (if (re-search-forward searchString nil t)
 	(progn
 	  (end-of-line)
           ; check if line ends with '\' [had to read make-mode.el to find this one!]
@@ -338,9 +371,15 @@ This function does not do any hidden buffer changes."
 	  (insert " ")
 	  (insert file)
 	  )
-      (error "_SOURCES not found")
-      )
-    )
+      (error (concat searchString " not found"))
+      ))
+  )
+
+(defun add-file-to-makefile-am ()
+  "Add the current file to the first _SOURCES line in the Makefile.am"
+  ; Author: David
+  (interactive)
+  (add-file-to-project "Makefile.am" "_SOURCES")
   )
 
 
@@ -826,16 +865,29 @@ This function does not do any hidden buffer changes."
 (defun qt-open-header ()
   "Open the Qt header file for the class under point"
   (interactive)
-  (let* ((file (getenv "QTDIR"))
+  (let* ((qtinc (concat (getenv "QTDIR") "/include/"))
 	(class (thing-at-point 'word))
 	(f nil)
-	(files (directory-files (concat file "/include") t nil "dirsonly"))
+	(file nil)
+	(files nil)
 	)
     (save-excursion
-      (dolist (f files nil)
-	(if (file-readable-p (concat f "/" class) )
-	    (setq file (concat f "/" class))))
-      (qt-follow-includes file)
+      ; The Qt3 case: the includes are directly in $QTDIR/include/, lowercased
+      (setq f (concat qtinc (downcase class) ".h" ))
+      (if (file-readable-p f)
+	  (setq file f)
+        ; For some Qt3/e classes: add _qws
+	(setq f (concat qtinc (downcase class) "_qws.h" ))
+	(if (file-readable-p f)
+	    (setq file f)
+        ; The Qt4 case: the includes are in $QTDIR/include/QSomething/, in original case
+	  (setq files (directory-files qtinc t nil "dirsonly"))
+	  (dolist (f files nil)
+	    (if (file-readable-p (concat f "/" class) )
+		(setq file (concat f "/" class))))
+	  ))
+      (and file
+	   (qt-follow-includes file))
       )
   ))
 
