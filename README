@@ -1,13 +1,21 @@
 
 Stuff in this directory:
 
+=== DEBUGGING SUPPORT
+
 adddebug        Modifies the Makefile to add debug info (-g)
 
-add_trace	Modifies a source file to add a trace as the first line
+add_trace.pl	Modifies a source file to add a trace as the first line
 		of every method, using kdDebug, and showing args values.
 
-authors2xml	Extract author information from C++ files and print it out
-		in DocBook format as a list
+kDebug2kdDebug.sh Script to convert old KDE debugging statements to their
+		modern equivalents.
+
+extend_dmalloc	Script to run gdb on return-addresses
+
+kdekillall	Kills the process "kdeinit: <process> with signal <signal>
+
+=== PROGRAMMING SUPPORT
 
 cheatmake	Helper for saving time when recompiling, skipping files that
 		haven't changed in a meaningful way (e.g. if you only change
@@ -18,18 +26,95 @@ check_licenses	Old license checker for source files
 
 licensecheck	Simple license checker for source files
 
-makeobj		Script around make which basicly checks if it's in srcdir
-		or in builddir and changes to the right directory for
-		calling /usr/bin/make
-
-colorcvs
-
 create_makefile Create the Makefile in a directory containing a Makefile.am
                 Saves time compared to re-running configure completely 
 
 create_makefiles The recursive version of it - needs create_makefile.
 
+fixheaders      Adds header files as it recognices make error output
+
+fixkdeincludes	Tries to reduce the number of includes in KDE source files
+
+fixuifiles	Fixes up Qt Designer .ui files (version, accels, generated names)
+		To use before any commit of a .ui file.
+
+fixfsfaddr.sed  Script for sed to fix old FSF addresses
+
+includemocs	Adds missing "#include foobar.moc" lines
+
+kdedoc		Open a kde help page in kfm/konqueror
+
+qtdoc		Open a qt help page in kfm/konqueror
+
+kde-spellcheck.pl A script to check source code for misspelings and optionally
+		correct them.
+
+=== MODERNIZATION SCRIPTS
+
+rc2kcfgxt.pl	Reads an existing KConfig rc file and creates a best-guess
+		version of a KConfigXT XML file.
+
+kdelnk2desktop.py Converts old-style .kdelnk files to their modern .desktop
+		equivalents.
+
+=== USEFUL DATA FOR EXTERNAL PROGRAMS
+
+kde-devel-emacs.el An emacs file that contains many helpful functions and keybindings
+		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
+
+kde-devel-gdb	A gdb macro definition file, to e.g. print QStrings from gdb.
+
+kde-devel-vim.vim A vim script that contains many helpful functions and keybindings
+		for vim-using KDE developers.
+
+kde.supp	Some valgrind suppressions handy for ignoring stuff we don't
+		care about when valgrinding kde applications
+
+completions/	Contains useful scripts to enhance the auto-complete feature of some shells.
+
+=== INFORMATION EXTRACTION
+
+alldcop.rb	Shows an pseudo-XML representation of the DCOP interfaces for
+		currently-running KDE applications.  Does not require
+		Korundum.
+
+authors2xml.pl	Extract author information from C++ files and print it out
+		in DocBook format as a list
+
+makeobj		Script around make which basicly checks if it's in srcdir
+		or in builddir and changes to the right directory for
+		calling /usr/bin/make
+
+extractrc	Extract text tags from designer's UI files and XML GUI-RC files
+
+extractattr	Same as extractrc, but for use by Scripty.
+
+findmissingcrystal Looks at Crystal icons to find ones which are still
+		unchanged from kdeclassic.
+
+zonetab2pot.py  Reads timezone list as its first argument or from
+		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
+		template.
+
+kdemangen.pl	Script to use the output from a KDE application's --author and
+		--help-all output to automatically generate a man page for the
+		application.
+
+png2mng.pl	Script to convert a series of numbered .png files into a .mng
+		animation.
+
+package_crystalsvg Script to package all svg files recursively from the current
+		directory.
+
+=== SOURCE CONTROL UTILITIES (CVS and Subversion)
+=== All CVS utilities have a corresponding svn version.
+
+colorcvs        Colorizes cvs commands.
+
 create_cvsignore Create a .cvsignore file (using the contents of Makefile.am)
+
+cvs-clean	Recursively wipes out everything not registered in the CVS
+		server, starting from the current directory.
 
 cvs2dist	Create a standalone source distribution tarball for an app
 		in a KDE CVS module.
@@ -41,10 +126,11 @@ cvsaddcurrentdir Add all files in and below the current dir to cvs.
 
 cvsblame	Bonsai-like cvs annotate 
 
-cvschanged	Check for edited or merged files in a checked out CVS module,
-		without connecting to the CVS server.
+cvscheck	Offline check for status of files in a checked-out module.
 
-cvscheck	Offline check for status of files in a checked-out
+cvsgettags	List the available CVS tags for a given set of files, or
+		recursively for all files and directories.  No equivalent for
+		svn.
 
 noncvslist	List all files in a checked out CVS module that are unknown to
 		to the CVS server.
@@ -53,13 +139,6 @@ cvsversion      Display CVS version of a file without connecting to the server.
 
 cxxmetric	Counts lines of code, comments and blank space in C and C++
 		source files.
-
-fixheaders      Adds header files as it recognices make error output
-
-fixkdeincludes	Tries to reduce the number of includes in KDE source files
-
-fixuifiles	Fixes up Qt Designer .ui files (version, accels, generated names)
-		To use before any commit of a .ui file.
 
 cvslastchange   launches "cvs diff -u" to display the last applied changes for a
                 given file. HEAD branch only.
@@ -76,58 +155,27 @@ cvsbackport	Backport the last commit in HEAD, to a branch.
 
 cvsforwardport  Forwardport the last commit in a branch to HEAD
 
-gendebug        Generate C++/Qt code for printing debug output.
-
 pruneemptydirs	Detects stale source dirs in a CVS tree
-
-kde-build       Updates and recompiles a local CVS tree
-
-build-progress.sh Displays the progress of kde-build, times needed to complete each
-		step. And sets the titlebar of the terminal to the directory that
-		make is processing 
-
-extractrc	Extract text tags from designer's UI files and XML GUI-RC files
-
-gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
-		extract scoped messages
-
-includemocs	Adds missing "#include foobar.moc" lines
-
-kde-devel-emacs.el An emacs file that contains many helpful functions and keybindings
-		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
-
-kde-devel-gdb	A gdb macro definition file, to e.g. print QStrings from gdb.
-
-extend_dmalloc	Script to run gdb on return-addresses
-
-kde-devel-vim.vim 
-
-kde.supp	Some valgrind suppressions handy for ignoring stuff we don't
-		care about when valgrinding kde applications
-
-kdecompile	Python script for compiling and installing a KDE package
-
-kdedoc		Open a kde help page in kfm/konqueror
-
-qtdoc		Open a qt help page in kfm/konqueror
-
-kdekillall	Kills the process "kdeinit: <process> with signal <signal>
-
-kdelnk2desktop
-
-zone		Reads timezone list as its first argument or from
-		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
-		 template
-
-rc2kcfgxt.pl	Reads an existing KConfig rc file and creates a best-guess
-		version of a KConfigXT XML file.
 
 cvslastreferenced Goes through the whole history of a file to find all modifications
                 referencing a specific string.  It's useful if you want to know
                 when a function has been removed/modified/added to a file if a
                 recent cvs annotate doesn't reference it anymore. 
 
-fixfsfaddr.sed  Script for sed to fix old FSF addresses
+=== KDE BUILD SCRIPTS
+
+kde-build       Updates and recompiles a local CVS or Subversion tree
+
+build-progress.sh Displays the progress of kde-build, times needed to complete each
+		step. And sets the titlebar of the terminal to the directory that
+		make is processing 
+
+kdesvn-build	Updates and recompiles a local Subversion tree.
+
+=== OTHERS
+
+gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
+		extract scoped messages
 
 ----------------
 Looking to add a script?
