@@ -346,7 +346,7 @@ fi
 if [ -d $module/doc/$name ]; then
 	mkdir -p $temp_dist/doc/$name
 	cp -Rf $module/doc/$name $temp_dist/doc
-	find $module/doc/ ! -xtype d -maxdepth 1 | xargs --replace={} cp {} $temp_dist/doc
+	find $module/doc/ -maxdepth 1 ! -xtype d | xargs --replace={} cp {} $temp_dist/doc
 
 	if [ $doi18n = "yes" ]; then
 	    echo "Getting documentation from i18n..."
