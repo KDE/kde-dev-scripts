@@ -69,6 +69,7 @@ while ($file = <$F>) {
 				$convertHash{$config.'readEntryUntranslated'} = $group.'readEntryUntranslated';
 				$convertHash{$config.'entryIsImmutable'} = $group.'entryIsImmutable';
 			    $convertHash{$config.'readUnsignedNumEntry'} = $group.'readUnsignedNumEntry';
+				$convertHash{$config.'hasKey'} = $group.'hasKey';
 				}
 			
 		    }
