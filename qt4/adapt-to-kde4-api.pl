@@ -77,7 +77,10 @@ while ($file = <$F>) {
 	    s!kapp->random!KRandom::random!;
 	    push(@necessaryIncludes, "krandom.h");
 	}
-
+	if ( $_ =~ /Q3StyleSheet::escape/ ) {
+		s!Q3StyleSheet::escape!Qt::escape!;
+		push(@necessaryIncludes, "QTextDocument");
+	}
 	if ( $_ =~ /KApplication::randomString/ ) {
 	    s!KApplication::randomString!KRandom::randomString!;
 	    push(@necessaryIncludes, "krandom.h");
