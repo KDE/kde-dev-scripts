@@ -55,6 +55,14 @@ while ($file = <$F>) {
 	if( $newValue ) {
 	    $_ = $newValue;
 	}
+    $newValue = convertFunction("readDoubleNumEntry","toDouble()","0.0");
+    if( $newValue ) {
+        $_ = $newValue;
+    }
+    $newValue = convertFunction("readUnsignedNumEntry","toUInt()","0");
+    if( $newValue ) {
+        $_ = $newValue;
+    }
 	$modified ||= $orig ne $_;
 	$_;
     } <$FILE>;
