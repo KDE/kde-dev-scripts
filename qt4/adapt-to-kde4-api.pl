@@ -81,6 +81,14 @@ while ($file = <$F>) {
 		s!Q3StyleSheet::escape!Qt::escape!;
 		push(@necessaryIncludes, "QTextDocument");
 	}
+	#QString Q3StyleSheet::convertFromPlainText(const QString& plain, Q3StyleSheetItem::WhiteSpaceMode mode) -> Qt::convertFromPlainText(plain, Qt::WhiteSpaceMode(mode))
+
+	if ( $_ =~ /Q3StyleSheet::mightBeRichText/ ) {
+		s!Q3StyleSheet::mightBeRichText!Qt::mightBeRichText!;
+		push(@necessaryIncludes, "QTextDocument")
+	}
+				
+	
 	if ( $_ =~ /KApplication::randomString/ ) {
 	    s!KApplication::randomString!KRandom::randomString!;
 	    push(@necessaryIncludes, "krandom.h");
