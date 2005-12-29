@@ -63,6 +63,10 @@ while ($file = <$F>) {
     if( $newValue ) {
         $_ = $newValue;
     }
+    $newValue = convertFunction("readSizeEntry","toSize()","0");
+    if( $newValue ) {
+        $_ = $newValue;
+    }	
 	$modified ||= $orig ne $_;
 	$_;
     } <$FILE>;
