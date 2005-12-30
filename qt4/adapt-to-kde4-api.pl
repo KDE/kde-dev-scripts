@@ -83,6 +83,11 @@ while ($file = <$F>) {
 	}
 	#QString Q3StyleSheet::convertFromPlainText(const QString& plain, Q3StyleSheetItem::WhiteSpaceMode mode) -> Qt::convertFromPlainText(plain, Qt::WhiteSpaceMode(mode))
 
+	if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KURL::htmlURL() had to disappear
+		$var=$1;
+                s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
+	}
+
 	if ( $_ =~ /Q3StyleSheet::mightBeRichText/ ) {
 		s!Q3StyleSheet::mightBeRichText!Qt::mightBeRichText!;
 		push(@necessaryIncludes, "QTextDocument")
