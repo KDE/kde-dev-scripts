@@ -85,7 +85,8 @@ while ($file = <$F>) {
 
 	if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KURL::htmlURL() had to disappear
 		$var=$1;
-                s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
+		s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
+		push(@necessaryIncludes, "QTextDocument");
 	}
 
 	if ( $_ =~ /Q3StyleSheet::mightBeRichText/ ) {
