@@ -76,7 +76,7 @@
 </authorgroup>
 
 <copyright>
-<year>2005</year>
+<year>2006</year>
 <holder>Michael Pyne</holder>
 </copyright>
 
@@ -88,8 +88,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2005-10-21</date>
-<releaseinfo>0.98.2</releaseinfo>
+<date>2006-01-04</date>
+<releaseinfo>1.0.0</releaseinfo>
 
 <abstract>
 <para>&kdesvn-build; is a script which builds and installs &kde; directly from the sources found in the &kde; &svn; repository.</para>
