@@ -8,7 +8,7 @@
   <!ENTITY kdesvn-build "<application>kdesvn-build</application>">
   <!ENTITY rcfile '<link linkend="configure-data">configuration file</link>'>
   <!ENTITY cmd-line-option '<link linkend="cmdline">command line option</link>'>
-  <!ENTITY homepage '<ulink url="http://kdesvn-build.kde.org/">&kdesvn-build; homepage</ulink>'>
+  <!ENTITY homepage '<ulink url="http://kdesvn-build.kde.org/">&kdesvn-build; home page</ulink>'>
   <!ENTITY unsermake '<ulink url="http://www.kde.me.uk/index.php&amp;page=unsermake"><application>unsermake</application></ulink>'>
   <!ENTITY BSD '<acronym>BSD</acronym>'>
 
@@ -139,7 +139,7 @@ In this chapter, we show how to use the &kdesvn-build; to checkout modules from 
 All topics present in this chapter are covered with even more detail in the
 <ulink url="http://quality.kde.org/develop/cvsguide/buildstep.php">
 Building &kde; from Source Step by Step Guide</ulink>, at the
-<ulink url="http://quality.kde.org">&kde; Quality Team Website</ulink>.
+<ulink url="http://quality.kde.org">&kde; Quality Team Web site</ulink>.
 If you are compiling &kde; for the first time, it is a good idea to read
 it, or consult it as a reference source. You will find detailed information
 about packaging tools and requirements, common compilation pitfalls and
@@ -216,7 +216,7 @@ to have it.  If you don't want to use the &Qt; copy, you need to do these things
 
 <listitem>
   <para>If you don't already have &Qt; installed, install it, including any
-  relevent -dev or -devel packages.  You'll need at least &Qt; 3.3 if you're
+  relevant -dev or -devel packages.  You'll need at least &Qt; 3.3 if you're
   building &kde; 3.5, or &Qt; 4.0 if you're building &kde; 4.</para>
 </listitem>
 </itemizedlist>
@@ -259,12 +259,12 @@ located at: <ulink url="http://websvn.kde.org/trunk/KDE/kdesdk/scripts/">http://
 This is the &kde; Software Development Kit scripting directory, which is the
 home of &kdesvn-build;.  You can click on the <filename>kdesvn-build</filename> entry which will
 bring you to a page where you can download the latest revision.  Do so, and
-save it to a convienient spot on your hard disk.  Do the same for <filename>kdesvn-buildrc-sample</filename>
+save it to a convenient spot on your hard disk.  Do the same for <filename>kdesvn-buildrc-sample</filename>
 if you need to.</para></listitem>
 </orderedlist>
 
 <para>No matter which technique you use, you need to make sure that the
-<filename>kdesvn-build</filename> file is executable.  For convienience you
+<filename>kdesvn-build</filename> file is executable.  For convenience you
 should make sure it is in a directory contained in the <envar>PATH</envar>
 environment variable, otherwise you may get messages saying that the command
 was not found.</para>
@@ -274,7 +274,7 @@ was not found.</para>
 <title>Prepare the configuration file</title>
 
 <para>Although &kdesvn-build; doesn't require you to create a &rcfile;, it
-makes the workflow much easier.  Using a &rcfile;, you can control which
+makes the work flow much easier.  Using a &rcfile;, you can control which
 modules are installed, or remove modules you don't want to install.  &kdesvn-build;
 by default installs a useful &kde; installation using very generic installation
 flags, which may be different from your needs.  So it is best to use a
@@ -832,7 +832,7 @@ the run number.  For instance, the second time that &kdesvn-build; is run on
 May 26, 2004, it would create a directory called <filename>2004-05-26-02</filename>,
 where the 2004-05-26 is for the date, and the -02 is the run number.</para>
 
-<para>For your convienience, &kdesvn-build; will also create a link to the
+<para>For your convenience, &kdesvn-build; will also create a link to the
 logs for your latest run, called <filename>latest</filename>.  So the logs for
 the most recent &kdesvn-build; run should always be under <filename><symbol>${log-dir}</symbol>/latest</filename>.
 </para>
@@ -959,7 +959,6 @@ authors using the address you can find <link linkend="authors">above</link>.
 <listitem><para><link linkend="conf-source-dir">source-dir</link>, to change where to download the source code to.</para></listitem>
 <listitem><para><link linkend="conf-stop-on-failure">stop-on-failure</link>, to make kdesvn-build stop as soon as a failure is encountered.</para></listitem>
 <listitem><para><link linkend="conf-svn-server">svn-server</link>, to change the server the sources are downloaded from.</para></listitem>
-<listitem><para><link linkend="conf-use-qt-builddir-hack">use-qt-builddir-hack</link>, to give &Qt; a separate build directory from its source like &kde;.</para></listitem>
 <listitem><para><link linkend="conf-use-unsermake">use-unsermake</link>, to use the advanced unsermake build system.</para></listitem>
 </itemizedlist>
 
@@ -1124,7 +1123,7 @@ extragear-network using this option.
 <entry>Normally if you're using SSH to download the Subversion sources (such as
 if you're using the svn+ssh protocol), kdesvn-build will try and make sure that
 if you're using ssh-agent, it is actually managing some SSH identities.  This is
-to try and prevent SSH from asking for your passphrase for every module.  You can
+to try and prevent SSH from asking for your pass phrase for every module.  You can
 disable this check by setting disable-agent-check to true.
 </entry>
 </row>
@@ -1135,7 +1134,7 @@ disable this check by setting disable-agent-check to true.
 <entry><para>Use this option to set the <envar>DO_NOT_COMPILE</envar> environment variable prior to
 running the configure script.  According to the <ulink
 url="http://developer.kde.org/documentation/other/developer-faq.html">&kde;
-Developer FAQ</ulink>, this should cause any toplevel directory you pass to not be
+Developer FAQ</ulink>, this should cause any top-level directory you pass to not be
 built.  The directories should be space-separated.</para>
 
 <para>Note that the sources to the programs will still be downloaded.  You can use
@@ -1181,7 +1180,7 @@ is usually not what you want.
 <entry>Overrides global</entry>
 <entry><para>This is the opposite of the <link
 linkend="conf-do-not-compile">do-not-compile</link> option.  This option makes it
-so that only the given toplevel directories are built.  The directories should
+so that only the given top-level directories are built.  The directories should
 be space-separated.</para>
 
 <para>Any changes don't take effect until the next time
@@ -1312,7 +1311,7 @@ following template:
 <varname>$svn-server</varname>/home/kde/<varname>$module-base-path</varname>/<varname>$module-name</varname>.
 </para>
 <para>The default value is either <quote>trunk</quote> or
-<quote>trunk/KDE</quote>, depending on the modulename.</para>
+<quote>trunk/KDE</quote>, depending on the module name.</para>
 </entry>
 </row>
 
@@ -1449,6 +1448,29 @@ timestamps will be preserved after the copy.  If you use the
 <link linkend="conf-apply-qt-patches">apply-qt-patches</link> option, the patches
 will be applied in the build directory, not the source directory.
 This option defaults to <quote>true</quote>.
+</entry>
+</row>
+
+<row id="conf-use-stable-kde">
+<entry>use-stable-kde</entry>
+<entry>Can't be overridden</entry>
+<entry><para>Since &kdesvn-build; has support for building &kde; 3 and 4, there
+needs to be some way to tell which version to build.  By default, &kdesvn-build;
+will build the main line of &kde; development (called /trunk).  But, this is
+for &kde; 4, which isn't yet ready for wide release.
+</para>
+
+<para>You can use the &branch; option globally or for a module in order to
+download for &kde; 3.5 (or 3.4, etc.).  However, this isn't convenient as some
+modules (such as kdesupport) are shared by 3.5 and 4.  In addition, it is a
+lot of branch options that must be added to the configuration file.</para>
+
+<para>So, if you set this global option to <option>true</option>, &kdesvn-build;
+will automatically download the &kde; 3.5 version of modules such as kdelibs
+and qt-copy, instead of downloading the &kde; 4 version.  You can still use
+the &branch; or &tag; options for a module to override the setting that
+&kdesvn-build; picks.  This way you can easily choose to download &kde; 3.5
+instead of the pre-release &kde; 4.</para>
 </entry>
 </row>
 
@@ -2509,7 +2531,7 @@ documentation.  Modules that do include kdelibs, kdebase, and kdepim.
 also available online.  In Konqueror, you can use the shortcut <quote>kde:<replaceable>className</replaceable></quote>.
 </para>
 
-<para>You can also visit the &kde; documentation website at <ulink
+<para>You can also visit the &kde; documentation web site at <ulink
 url="http://www.englishbreakfastnetwork.org/apidocs/">English Breakfast Network</ulink>.
 </para>
 
@@ -2549,7 +2571,7 @@ passwords for the second possible protocol for KDE developers, https.
 </para></note>
 
 <para>You may wish to disable the &ssh; Agent check, in case of situations where
-&kdesvn-build; is mis-detecting the prescence of an agent.  To disable the
+&kdesvn-build; is mis-detecting the presence of an agent.  To disable the
 agent check, set the <option>disable-agent-check</option> option to
 <userinput>true</userinput>.</para>
 
