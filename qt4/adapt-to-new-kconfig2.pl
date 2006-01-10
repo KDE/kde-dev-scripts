@@ -20,6 +20,47 @@ while ($file = <$F>) {
     open(my $FILE, $file) or warn "We can't open file $file:$!\n";
     my @l = map {
 	my $orig = $_;
+	# deleteGroup Change API
+	if (my ($prefix, $parenthese, $end) = /(.*deleteGroup\s*\()(.*)(\).*)/) {
+	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
+	    my $changes = $end;
+	    $changes =~ s/\)//;
+	    if ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
+		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+		if ( $secondelement =~/(false|FALSE)/ && $thirdelement =~ /(true|TRUE)/ )
+		{
+		    $_ = $prefix . "$firstelement, KConfigBase::Recursive|KConfigBase::Global" .  $end . "\n";
+		}
+		elsif ( $secondelement =~/(true|TRUE)/ && $thirdelement =~ /(true|TRUE)/ )
+		{
+		    $_ = $prefix . "$firstelement, KConfigBase::Global" .  $end . "\n";
+		}
+	    }
+	}	
+	
+	# deleteEntry change API
+	if (my ($prefix, $parenthese, $end) = /(.*deleteEntry\s*\()(.*)(\).*)/) {
+	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
+	    my $changes = $end;
+	    $changes =~ s/\)//;
+	    if ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
+		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+		if ( $secondelement =~/(false|FALSE)/ && $thirdelement =~ /(true|TRUE)/ )
+		{
+		    $_ = $prefix . "$firstelement, KConfigBase::Global" .  $end . "\n";
+		}
+		elsif ( $secondelement =~/(true|TRUE)/ && $thirdelement =~ /(true|TRUE)/ )
+		{
+		    $_ = $prefix . "$firstelement, KConfigBase::NLS|KConfigBase::Global" .  $end . "\n";
+		}
+		elsif ( $secondelement =~/(true|TRUE)/ && $thirdelement =~ /(false|FALSE)/ )
+		{
+		    $_ = $prefix . "$firstelement, KConfigBase::NLS" .  $end . "\n";
+		}
+	    }
+	}	
+
+	# writeEntry change API
 	if (my ($prefix, $parenthese, $end) = /(.*writeEntry\s*\()(.*)(\).*)/) {
 	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
 	    my $changes = $end;
