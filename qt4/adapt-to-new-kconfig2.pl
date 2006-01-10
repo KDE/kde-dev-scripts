@@ -28,7 +28,7 @@ while ($file = <$F>) {
 		warn "4 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> \n";
 		if ( $thirdelement =~ /(true|TRUE)/ && $fouthelement =~ /(true|TRUE)/ )
 		{
-		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Persistent|KConfigBase::Global" .  $end . "\n";
+		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal|KConfigBase::Global" .  $end . "\n";
 	        }
 		elsif ( $thirdelement =~ /(false|FALSE)/ && $fouthelement =~ /(true|TRUE)/ )
 		{
@@ -36,7 +36,7 @@ while ($file = <$F>) {
 		}
 		elsif ( $thirdelement =~ /(true|TRUE)/ && $fouthelement =~ /(false|FALSE)/ )
 		{
-		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Persistent" .  $end . "\n";
+		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal" .  $end . "\n";
 		}
 		
 	    }
@@ -44,7 +44,7 @@ while ($file = <$F>) {
 		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
 		if ( $thirdelement =~ /(true|TRUE)/ )
 		{
-		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Persistent" .  $end . "\n";
+		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal" .  $end . "\n";
 		}
 	    }
 	}	
