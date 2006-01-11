@@ -2,7 +2,9 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # This function allows to adapt file to new kconfig  API
-
+# in KDE4 writePathEntry/deleteEntry/deleteGroup API changed
+# Now we used QFLAGS
+# 
 use File::Basename;
 use lib dirname( $0 );
 use functionUtilkde;
@@ -10,7 +12,6 @@ use strict;
 
 open(my $F, q(find -name "*" |));
 my $file;
-my $warning;
 while ($file = <$F>) {
     chomp $file;
     next if functionUtilkde::excludeFile( $file);
@@ -23,11 +24,11 @@ while ($file = <$F>) {
 
 	# writePathEntry change API
 	if (my ($prefix, $parenthese, $end) = /(.*writePathEntry\s*\()(.*)(\).*)/) {
-	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
+			#warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
 	    my $changes = $end;
 	    $changes =~ s/\)//;
 	    if ( my ($firstelement, $secondelement,$thirdelement,$fouthelement,$fifthelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*),\s*(.*),\*(.*)$!) {
-		warn "5 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> fifthelement <fifthelement> \n";
+				#warn "5 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> fifthelement <fifthelement> \n";
 		if ( $thirdelement =~ /(true|TRUE)/ && $fouthelement =~ /(true|TRUE)/ && $fifthelement =~ /(true|TRUE)/  )
 		{
 		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal|KConfigBase::Global|KConfigBase::NLS" .  $end . "\n";
@@ -43,7 +44,7 @@ while ($file = <$F>) {
 		
 	    }
 	    elsif ( my ($firstelement, $secondelement,$thirdelement,$fouthelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*),\s*(.*)$!) {
-		warn "4 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> \n";
+		#warn "4 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> \n";
 		if ( $thirdelement =~ /(true|TRUE)/ && $fouthelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal|KConfigBase::Global" .  $end . "\n";
@@ -59,7 +60,7 @@ while ($file = <$F>) {
 		
 	    }
 	    elsif ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
-		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+				#warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
 		if ( $thirdelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal" .  $end . "\n";
@@ -69,11 +70,11 @@ while ($file = <$F>) {
 
 	# deleteGroup Change API
 	if (my ($prefix, $parenthese, $end) = /(.*deleteGroup\s*\()(.*)(\).*)/) {
-	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
+	#warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
 	    my $changes = $end;
 	    $changes =~ s/\)//;
 	    if ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
-		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+		#warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
 		if ( $secondelement =~/(false|FALSE)/ && $thirdelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, KConfigBase::Recursive|KConfigBase::Global" .  $end . "\n";
@@ -91,7 +92,7 @@ while ($file = <$F>) {
 	    my $changes = $end;
 	    $changes =~ s/\)//;
 	    if ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
-		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+				#warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
 		if ( $secondelement =~/(false|FALSE)/ && $thirdelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, KConfigBase::Global" .  $end . "\n";
@@ -109,11 +110,11 @@ while ($file = <$F>) {
 
 	# writeEntry change API
 	if (my ($prefix, $parenthese, $end) = /(.*writeEntry\s*\()(.*)(\).*)/) {
-	    warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
+	#warn "prefix !!!! :<$prefix>  parenthese <$parenthese> end <$end>\n";	
 	    my $changes = $end;
 	    $changes =~ s/\)//;
 	    if ( my ($firstelement, $secondelement,$thirdelement,$fouthelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*),\s*(.*)$!) {
-		warn "4 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> \n";
+		#warn "4 elements : firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement> fouthelement <$fouthelement> \n";
 		if ( $thirdelement =~ /(true|TRUE)/ && $fouthelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal|KConfigBase::Global" .  $end . "\n";
@@ -129,7 +130,7 @@ while ($file = <$F>) {
 		
 	    }
 	    elsif ( my ($firstelement, $secondelement,$thirdelement) = $parenthese =~ m!(.*),\s*(.*),\s*(.*)$!) {
-		warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
+				#warn " 3 elements :  firstelement <$firstelement>  secondelement <$secondelement> thirdelement<$thirdelement>\n";
 		if ( $thirdelement =~ /(true|TRUE)/ )
 		{
 		    $_ = $prefix . "$firstelement, $secondelement, KConfigBase::Normal" .  $end . "\n";
@@ -147,4 +148,4 @@ while ($file = <$F>) {
 
 }
 functionUtilkde::diffFile( <$F> );
-warn "Warning: $warning\n";
+
