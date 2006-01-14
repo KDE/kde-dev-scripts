@@ -181,7 +181,10 @@ while ($file = <$F>) {
 	s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 	s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 	s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-      
+    
+	s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
+
+	
 	#If there is more than one argument add KGuiItem now I think that it will easy to fix it.
 	s!setButtonOKText!setButtonOK!;
 	s!setButtonApplyText!setButtonApply!;
