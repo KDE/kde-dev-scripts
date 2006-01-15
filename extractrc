@@ -9,7 +9,7 @@ sub usage
 
 extractrc [flags] filenames
 
-This script extracts messages from designer (.ui) and XMLGIU (.rc) files and
+This script extracts messages from designer (.ui) and XMLGUI (.rc) files and
 writes on standard output (usually redirected to rc.cpp) the equivalent
 i18n() calls so that xgettext can parse them.
 
@@ -92,7 +92,7 @@ for my $file_name ( @ARGV )
 
   while ( <$fh> )
   {
-     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml)/;
+     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml|<!--)/;
 
      chomp;
 
