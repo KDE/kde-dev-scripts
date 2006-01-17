@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! /usr/bin/env perl
 
 use POSIX qw(mktime ctime);
 use Time::Local qw( timegm );

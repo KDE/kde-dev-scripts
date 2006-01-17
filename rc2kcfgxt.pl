@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#! /usr/bin/env perl
 #
 # rc2kcfgxt.pl version 4 by Adriaan de Groot
 #

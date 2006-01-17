@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#! /usr/bin/env perl
 
 ### TODO: other copyrights, license?
 # Copyright (c) 2004 Richard Evans <rich@ridas.com>

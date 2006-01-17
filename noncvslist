@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! /usr/bin/env perl
 
 # Offline check for extra in a checked-out
 # CVS module. Sirtaj Singh Kang <taj@kde.org> May 2000.
