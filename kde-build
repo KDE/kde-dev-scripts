@@ -1,4 +1,4 @@
-#! /bin/usr/env bash
+#! /usr/bin/env bash
 ################################################################################
 # Updates and recompiles a local KDE tree from SVN                             #
 # (c) 2000, 2001, 2002, 2003 by Frerich Raabe <raabe@kde.org>                  #

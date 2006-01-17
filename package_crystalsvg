@@ -1,4 +1,4 @@
-#! /bin/usr/env bash
+#! /usr/bin/env bash
 echo -n "Starting up..."
 #
 # Copyright (C) 2004 Frans Englich <frans.englich@telia.com>
