@@ -1,4 +1,4 @@
-#! /bin/usr/env bash
+#! /usr/bin/env bash
 
 # this is a script around make which basicly checks
 # if it's in srcdir or in builddir and changes to 

@@ -1,4 +1,4 @@
-#! /bin/usr/env bash
+#! /usr/bin/env bash
 
 # This is svn2dist
 # Based on cvs2dist by <jason@katzbrown.com>.
