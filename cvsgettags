@@ -28,7 +28,7 @@ usage()
   echo "  $0 [file1] [file2] ..." 
 }
 
-if [ "$1" == "" ]; then
+if test -z "$1"; then
   echo "Will test tags for all files and subdirectories under `pwd`. Hope it's right"
   echo "but if it is not, please inform the files you want to fetch the tags from."
 
