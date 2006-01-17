@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! /usr/bin/env perl
 
 # CORRECTIONS GO IN THE __DATA__ SECTION AT THE END OF THIS SCRIPT
 

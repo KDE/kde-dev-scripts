@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/usr/env bash
 
 # This is cvs2dist
 # Webpage: http://www.katzbrown.com/shiritsu/programming/cvs2dist/
