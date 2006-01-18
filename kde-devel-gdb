@@ -77,6 +77,30 @@ document printqstring_utf8
   Nice if you run your debug session in a utf8 enabled terminal.
 end
 
+define printq4string_utf8
+   set $i=0
+   set $s = $arg0
+   while $i < $s.d->size
+     set $uc = (unsigned short) $s.d->data[$i++]
+     if ( $uc < 0x80 )
+       printf "%c", (unsigned char)($uc & 0x7f)
+     else
+       if ( $uc < 0x0800 )
+         printf "%c", (unsigned char)(0xc0 | ($uc >> 6))
+       else
+         printf "%c", (unsigned char)(0xe0 | ($uc >> 12)
+         printf "%c", (unsigned char)(0x80 | (($uc > 6) &0x3f)
+       end
+       printf "%c", (unsigned char)(0x80 | ((uchar) $uc & 0x3f))
+     end
+   end
+   printf "\n"
+end
+document printq4string_utf8
+  Prints the contents of a QString encoded in utf8. 
+  Nice if you run your debug session in a utf8 enabled terminal.
+end
+
 define printqcstring
     print $arg0.shd.data
     print $arg0.shd.len
