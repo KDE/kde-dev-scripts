@@ -11,6 +11,7 @@ foreach my $file (@ARGV) {
 	functionUtilkde::substInFile {
 	s!qt_xdisplay\s*\(\s*\)!QX11Info::display()!;
 	s!qt_xrootwin\s*\(\s*\)!QX11Info::appRootWindow()!;
+	s!qt_x_time!QX11Info::appTime()!;
     } $file;
 	functionUtilkde::addIncludeInFile( $file, "QX11Info");
 }
