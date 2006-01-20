@@ -202,6 +202,12 @@ while ($file = <$F>) {
 	s!QWMatrix!QMatrix!g;
 	s!QGuardedPtr!QPointer!g;
 
+        # KURL -> KUrl in all class names [but not in env vars, ifdefs, include guards etc.]
+        s!KURLCompletion!KUrlCompletion!g;
+        s!KURLCombo!KUrlCombo!g;
+        s!KURLRequester!KUrlRequester!g;
+        s!KURLPixmapProvider!KUrlPixmapProvider!g;
+
 	
 	s!IO_ReadOnly!QIODevice::ReadOnly!;
 	s!IO_WriteOnly!QIODevice::WriteOnly!;
