@@ -117,7 +117,7 @@ sub build_code
     }
 
     $code .= "    /<" . quotemeta($element)   . qq| [^>]*?| .
-                        quotemeta($attribute) . qq|="([^"]+)"/ and write_i18n('| . $context . qq|', \$1, $element, $attribute);\n|;
+                        quotemeta($attribute) . qq|="([^"]+)"/ and write_i18n('| . $context . qq|', \$1, "| . $element . "\",\"" . $attribute . qq|");\n|;
   }
 
   return "$code\n";
