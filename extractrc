@@ -147,6 +147,7 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
+       print "//i18n: tag $tag\n";
        print "//i18n: file $file_name line $.\n";
        print "// xgettext: no-c-format\n";
        print  q|i18n("|;

@@ -117,7 +117,7 @@ sub build_code
     }
 
     $code .= "    /<" . quotemeta($element)   . qq| [^>]*?| .
-                        quotemeta($attribute) . qq|="([^"]+)"/ and write_i18n('| . $context . qq|', \$1);\n|;
+                        quotemeta($attribute) . qq|="([^"]+)"/ and write_i18n('| . $context . qq|', \$1, $element, $attribute);\n|;
   }
 
   return "$code\n";
@@ -125,7 +125,7 @@ sub build_code
 
 sub write_i18n
 {
-  my ($context, $text) = @_;
+  my ($context, $text, $tag, $attr) = @_;
 
   our $file_name;
 
@@ -150,6 +150,7 @@ sub write_i18n
   
   $context ||= $opt_context;
 
+  print "//i18n: tag $tag attribute $attr\n";
   print "//i18n: file $file_name line $.\n";
   print qq|i18n("|;
   print qq|$context", "|            if $context;
