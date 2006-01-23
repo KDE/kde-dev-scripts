@@ -17,6 +17,7 @@
 s/59 Temple Place,/51 Franklin Street,/
 s/59 Temple Place -/51 Franklin Street,/
 s/Suite 330,/Fifth Floor,/
+s/Suite 330$/Fifth Floor/
 s/02111-1307/02110-1301/
 
 # Very old address: 675 Mass Ave, Cambridge, MA  02139
@@ -24,5 +25,6 @@ s/675 Mass Ave/51 Franklin Street, Fifth Floor/
 s/Cambridge/Boston/
 s/02139/02110-1301/
 # Warning: the last two replaces seem to match the address of the MIT too.
+
 # Typo in KDE: Franklin Steet
 s/Franklin Steet/Franklin Street/
