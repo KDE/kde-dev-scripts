@@ -207,8 +207,7 @@ while ($file = <$F>) {
         s!KURLCombo!KUrlCombo!g;
         s!KURLRequester!KUrlRequester!g;
         s!KURLPixmapProvider!KUrlPixmapProvider!g;
-		s!KURLlLabel!KUrlLabel!g;
-	
+		s!KURLLabel!KUrlLabel!g;
 	s!IO_ReadOnly!QIODevice::ReadOnly!;
 	s!IO_WriteOnly!QIODevice::WriteOnly!;
 	s!IO_ReadWrite!QIODevice::ReadWrite!;
