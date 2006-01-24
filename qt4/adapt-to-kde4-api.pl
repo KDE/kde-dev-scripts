@@ -330,6 +330,8 @@ while ($file = <$F>) {
 
 	s!flushX!flush!;
 
+	s!KImageIO::registerFormats\s*\(\s*\);!!;
+	
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 	    push(@necessaryIncludes, "kauthorized.h");
