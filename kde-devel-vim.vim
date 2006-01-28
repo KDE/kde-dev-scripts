@@ -58,6 +58,7 @@ inoremap <S-F5> <C-O>:call AddForward()<CR>
 
 " Switch between header and implementation files on ,h
 nmap <silent> ,h :call SwitchHeaderImpl()<CR>
+nmap <silent> ,p :call SwitchPrivateHeaderImpl()<CR>
 
 " Comment selected lines on ,c in visual mode
 vmap ,c :s,^,//X ,<CR>:noh<CR>
@@ -145,13 +146,70 @@ function! SwitchHeaderImpl()
             return
         endif
     endwhile
-    echohl ErrorMsg
-    echo "File switch failed!"
-    echohl None
+    if ( fn =~ headers )
+        if exists( "$implextension" )
+            let file = substitute( fn, headers, '.' . $implextension, '' )
+        else
+            let file = substitute( fn, headers, '.cpp', '' )
+        endif
+        " check for modified state of current buffer and if modified ask:
+        " save, discard, cancel
+        execute( 'edit '.file )
+        call append( 0, "#include \"".fn."\"" )
+        call append( 2, "// vim: sw=4 ts=4 noet" )
+        execute( "set sw=4" )
+        execute( "set ts=4" )
+    elseif fn =~ impl
+        let file = substitute( fn, impl, '.h', '' )
+        execute( "edit ".file )
+    endif
+endfunction
+
+function! SwitchPrivateHeaderImpl()
+    let privateheaders = '_p\.\([hH]\|hpp\|hxx\)$'
+    let headers = '\.\([hH]\|hpp\|hxx\)$'
+    let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
+    let fn = expand( '%' )
+    if fn =~ privateheaders
+        let list = glob( substitute( fn, privateheaders, '.*', '' ) )
+    elseif fn =~ headers
+        let list = glob( substitute( fn, headers, '.*', '' ) )
+    elseif fn =~ impl
+        let list = glob( substitute( fn, impl, '.*', '' ) )
+    endif
+    while strlen( list ) > 0
+        let file = substitute( list, "\n.*", '', '' )
+        let list = substitute( list, "[^\n]*", '', '' )
+        let list = substitute( list, "^\n", '', '' )
+        if ( fn =~ privateheaders && file =~ impl ) || ( fn =~ impl && file =~ privateheaders ) || ( fn =~ headers && file =~ privateheaders )
+            execute( "edit " . file )
+            return
+        endif
+    endwhile
+    if ( fn =~ privateheaders )
+        if exists( "$implextension" )
+            let file = substitute( fn, headers, '.' . $implextension, '' )
+        else
+            let file = substitute( fn, headers, '.cpp', '' )
+        endif
+        " check for modified state of current buffer and if modified ask:
+        " save, discard, cancel
+        execute( 'edit '.file )
+        call append( 0, "#include \"".fn."\"" )
+        call append( 2, "// vim: sw=4 ts=4 noet" )
+        execute( "set sw=4" )
+        execute( "set ts=4" )
+    elseif fn =~ impl
+        let file = substitute( fn, impl, '_p.h', '' )
+        execute( "edit ".file )
+    elseif fn =~ headers
+        let file = substitute( fn, headers, '_p.h', '' )
+        execute( "edit ".file )
+    endif
 endfunction
 
 function! IncludeGuard()
-    let guard = toupper( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ) )
+    let guard = toupper( substitute( substitute( expand( '%' ), '\([^.]*\)\.h', '\1_h', '' ), '/', '_', '' ) )
     call append( '^', '#define ' . guard )
     +
     call append( '^', '#ifndef ' . guard )
