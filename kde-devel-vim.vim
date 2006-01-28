@@ -54,8 +54,7 @@ endif
 inoremap <F5> <C-O>:call AddHeader()<CR>
 
 " Insert a forward declaration for the current/last symbol
-" FIXME: not implemented yet
-" inoremap <S-F5> <C-O>:call AddForward()<CR>
+inoremap <S-F5> <C-O>:call AddForward()<CR>
 
 " Switch between header and implementation files on ,h
 nmap <silent> ,h :call SwitchHeaderImpl()<CR>
@@ -173,63 +172,13 @@ endfunction
 
 function! MapIdentHeader( ident )
     " Qt stuff
-    if a:ident =~ 'Q.*Layout'
-        return '<qlayout.h>'
-    elseif a:ident == 'QListViewItem' ||
-          \a:ident == 'QCheckListItem' ||
-          \a:ident == 'QListViewItemIterator'
-        return '<qlistview.h>'
-    elseif a:ident == 'QIconViewItem' ||
-          \a:ident == 'QIconDragItem' ||
-          \a:ident == 'QIconDrag'
-        return '<qiconview.h>'
-    elseif a:ident =~ 'Q.*Drag' ||
-          \a:ident == 'QDragManager'
-        return '<qdragobject.h>'
-    elseif a:ident == 'QMimeSource' ||
-          \a:ident == 'QMimeSourceFactory' ||
-          \a:ident == 'QWindowsMime'
-        return '<qmime.h>'
-    elseif a:ident == 'QPtrListIterator'
-        return '<qptrlist.h>'
-    elseif a:ident =~ 'Q.*Event'
-        return '<qevent.h>'
-    elseif a:ident == 'QTime' ||
-          \a:ident == 'QDate'
-        return '<qdatetime.h>'
-    elseif a:ident == 'QTimeEdit' ||
-          \a:ident == 'QDateTimeEditBase' ||
-          \a:ident == 'QDateEdit'
-        return '<qdatetimeedit.h>'
-    elseif a:ident == 'QByteArray'
-        return '<qcstring.h>'
-    elseif a:ident == 'QWidgetListIt'
-        return '<qwidgetlist.h>'
-    elseif a:ident == 'QTab'
-        return '<qtabbar.h>'
-    elseif a:ident == 'QColorGroup'
-        return '<qpalette.h>'
-    elseif a:ident == 'QActionGroup'
-        return '<qaction.h>'
-    elseif a:ident =~ 'Q.*Validator'
-        return '<qvalidator.h>'
-    elseif a:ident =~ 'QListBox.*'
-        return '<qlistbox.h>'
-    elseif a:ident == 'QChar' ||
-          \a:ident == 'QCharRef' ||
-          \a:ident == 'QConstString'
-        return '<qstring.h>'
-    elseif a:ident =~ 'QCanvas.*'
-        return '<qcanvas.h>'
-    elseif a:ident =~ 'QGL.*'
-        return '<qgl.h>'
-    elseif a:ident == 'QTableSelection' ||
-          \a:ident == 'QTableItem' ||
-          \a:ident == 'QComboTableItem' ||
-          \a:ident == 'QCheckTableItem'
-        return '<qtable.h>'
-    elseif a:ident == 'qApp'
-        return '<qapplication.h>'
+    if a:ident =~ '^Q[A-Z]'
+        return '<' . a:ident . '>'
+    elseif a:ident == 'qDebug' ||
+          \a:ident == 'qWarning' ||
+          \a:ident == 'qCritical' ||
+          \a:ident == 'qFatal'
+        return '<QtDebug>'
 
     " KDE stuff
     elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
@@ -248,6 +197,9 @@ function! MapIdentHeader( ident )
     elseif a:ident == 'locate' ||
           \a:ident == 'locateLocal'
         return '<kstandarddirs.h>'
+    elseif a:ident =~ '\(Small\|Desktop\|Bar\|MainBar\|User\)Icon\(Set\)\?' ||
+          \a:ident == 'IconSize'
+        return '<kiconloader.h>'
 
     " aRts stuff
     elseif a:ident =~ '\arts_\(debug\|info\|warning\|fatal\)'
@@ -260,7 +212,11 @@ function! MapIdentHeader( ident )
         return '<cctype>'
     endif
 
+    " Private headers
     let header = tolower( substitute( a:ident, '::', '/', 'g' ) ) . '.h'
+    if a:ident =~ 'Private$'
+        let header = substitute( header, 'private', '_p', '' )
+    endif
     let check = header
     while 1 
         if filereadable( check )
@@ -331,6 +287,62 @@ function! AddHeader()
     endif
 endfunction
 
+function! AddForward()
+    let s = getline( '.' )
+    let i = col( '.' ) - 1
+    while i > 0 && strpart( s, i, 1 ) !~ '[A-Za-z0-9_:]'
+        let i = i - 1
+    endwhile
+    while i > 0 && strpart( s, i, 1 ) =~ '[A-Za-z0-9_:]'
+        let i = i - 1
+    endwhile
+    let start = match( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    let end = matchend( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    if end > col( '.' )
+        let end = matchend( s, '[A-Za-z0-9_]\+', i )
+    endif
+    let ident = strpart( s, start, end - start )
+    let forward = 'class ' . ident . ';'
+
+    let line = 1
+    let incomment = 0
+    let appendpos = 0
+    let codestart = 0
+    while line <= line( '$' )
+        let s = getline( line )
+        if incomment == 1
+            let end = matchend( s, '\*/' )
+            if end == -1
+                let line = line + 1
+                continue
+            else
+                let s = strpart( s, end )
+                let incomment = 0
+            endif
+        endif
+        let s = substitute( s, '//.*', '', '' )
+        let s = substitute( s, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+        if s =~ '/\*'
+            let incomment = 1
+        elseif s =~ '^' . forward
+            break
+        elseif s =~ '^\s*class [A-za-z0-9_]\+;' || (s =~ '^#include' && s !~ '\.moc"')
+            let appendpos = line
+        elseif codestart == 0 && s !~ '^$'
+            let codestart = line
+        endif
+        let line = line + 1
+    endwhile
+    if line == line( '$' ) + 1
+        if appendpos == 0
+            call append( codestart - 1, forward )
+            call append( codestart, '' )
+        else
+            call append( appendpos, forward )
+        endif
+    endif
+endfunction
+
 function! RunDiff()
     echo 'Diffing....'
     read! cvs diff -bB -I \\\#include | egrep -v '(^Index:|^=+$|^RCS file:|^retrieving revision|^diff -u|^[+-]{3})'
@@ -384,9 +396,10 @@ endfunction
 function! AddQtSyntax()
     if expand( "<amatch>" ) == "cpp"
         syn keyword qtKeywords     signals slots emit foreach
-        syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT
+
+        syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT Q_DECLARE_PUBLIC Q_DECLARE_PRIVATE Q_D Q_Q Q_DISABLE_COPY Q_DECLARE_METATYPE
         syn keyword qtCast         qt_cast qobject_cast qvariant_cast qstyleoption_cast
-        syn keyword qtTypedef      uchar uint ushort ulong Q_INT8 Q_UINT8 Q_INT16 Q_UINT16 Q_INT32 Q_UINT32 Q_LONG Q_ULONG Q_INT64 Q_UINT64 Q_LLONG Q_ULLONG pchar puchar pcchar qint8 quint8 qint16 quint16 qint32 quint32 qint64 quint64 qlonglong qulonglong
+        syn keyword qtTypedef      uchar uint ushort ulong Q_INT8 Q_UINT8 Q_INT16 Q_UINT16 Q_INT32 Q_UINT32 Q_LONG Q_ULONG Q_INT64 Q_UINT64 Q_LLONG Q_ULLONG pchar puchar pcchar qint8 quint8 qint16 quint16 qint32 quint32 qint64 quint64 qlonglong qulonglong qreal
         syn keyword kdeKeywords    k_dcop k_dcop_signals
         syn keyword kdeMacros      K_DCOP ASYNC
         syn keyword cRepeat        foreach
