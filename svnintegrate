@@ -224,7 +224,7 @@ sub rollback()
     run("svn", "switch", "-r", $revision, "$svnroot$dirname/$file", $file);
   }
   
-  run("rm", "svn-commit.tmp");
+  run("rm", "svn-commit.tmp") if (-e "svn-commit.tmp");
 }
 
 sub switchAllFiles()
@@ -389,13 +389,28 @@ sub createLogMessage()
 
 sub editLogMessage()
 {
-  print "Press Enter to accept default log or anything else to modify it\n";
-  
-  my $answer = <STDIN>;
-  $answer =~ s/\r?\n$//;
-  if (length($answer))
+  while (1)
   {
-    run($EDITOR, "svn-commit.tmp");
+    print "Press Enter to accept the log message and commit\n";
+    print "Press 'Q' to revert and quit\n";
+    print "Press any other key to edit the log message\n";
+    
+    my $answer = <STDIN>;
+    $answer =~ s/\r?\n$//;
+    $answer =~ tr/Q/q/;
+    if ($answer eq "q")
+    {
+      rollback();
+      exit(0);
+    }  
+    elsif (length($answer))
+    {
+      run($EDITOR, "svn-commit.tmp");
+    }
+    else
+    {
+      return;
+    }
   }
 }
 
