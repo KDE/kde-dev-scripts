@@ -432,7 +432,7 @@ $dryRun = 0;
 $quiet = 0;
 $verbose = 1;
 $branch = "";
-loop: while (@ARGV)
+while (@ARGV)
   {
     my $arg = shift @ARGV;
     if ($arg eq "-n")
@@ -459,7 +459,7 @@ loop: while (@ARGV)
     }
     else
     {
-      break loop;
+      last;
     }
   }
 
