@@ -437,7 +437,7 @@ sub createLogMessage()
     next if ($line =~ /^GUI:/);
     
     $line =~ s/^(BUG|FEATURE):/CCBUG:/;     # change bug closing to comment
-    print LOG $line;
+    print LOG "$line\n";
   }
   close(LOG);
 }
