@@ -87,7 +87,7 @@ while ($file = <$F>) {
         push(@necessaryIncludes, "QTextDocument");
     }
 
-	if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KURL::htmlURL() had to disappear
+	if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KUrl::htmlURL() had to disappear
 		$var=$1;
 		s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
 		push(@necessaryIncludes, "QTextDocument");
@@ -202,7 +202,7 @@ while ($file = <$F>) {
 	s!QWMatrix!QMatrix!g;
 	s!QGuardedPtr!QPointer!g;
 
-        # KURL -> KUrl in all class names [but not in env vars, ifdefs, include guards etc.]
+        # KUrl -> KUrl in all class names [but not in env vars, ifdefs, include guards etc.]
         s!KURLCompletion!KUrlCompletion!g;
         s!KURLCombo!KUrlCombo!g;
         s!KURLRequester!KUrlRequester!g;
@@ -328,6 +328,13 @@ while ($file = <$F>) {
     s!constref!at!g;
     s!changeInterval!start!g;
 
+	s!kdDebug!kDebug!g;
+	s!kdWarning!kWarning!g;
+	s!kdError!kError!g;
+	s!kdFatal!kFatal!g;
+	s!kdBacktrace!kBacktrace!g;
+	s!kdClearDebugConfig!kClearDebugConfig!g;
+	
 	s!flushX!flush!;
 
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
