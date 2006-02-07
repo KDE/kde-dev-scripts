@@ -58,7 +58,7 @@ will also remove optimisations (<option>-O[1-9]</option>).</para>
 </varlistentry>
 <varlistentry>
 <term><option>-n</option></term>
-<listitem><para>compile without NDEBUG and NO_DEBUG being defined (makes <function>kdDebug</function> calls work)</para></listitem>
+<listitem><para>compile without NDEBUG and NO_DEBUG being defined (makes <function>kDebug</function> calls work)</para></listitem>
 </varlistentry>
 </variablelist>
 </refsect1>
