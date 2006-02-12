@@ -47,7 +47,7 @@
 ;
 ; M-n: jump to the next error (after compiling) or grep matches
 ;
-; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
+; Ctrl+Meta+D : insert a kDebug statement with the name of the current method
 ; [the new hide-all-windows shortcut conflicts with that, you may have to
 ;  change it, or use Ctrl+Meta+Shift+D (!!)]
 ;
@@ -136,7 +136,7 @@
 (define-key c++-mode-map [(f10)] 'kdab-insert-header)
 (define-key c++-mode-map [(shift f10)] 'kdab-insert-forward-decl)
 (define-key c++-mode-map [(meta f10)] 'kdab-lookup-qt-documentation)
-(define-key c++-mode-map [(control meta d)] 'insert-kdDebug)
+(define-key c++-mode-map [(control meta d)] 'insert-kDebug)
 
 ; Standard Qt/KDE shortcuts: Ctrl+Backspace, Ctrl+Delete
 (define-key global-map [(control backspace)] 'backward-kill-word)
@@ -177,8 +177,8 @@
   '("make this file" . makethisfile))
 (define-key c++-mode-map [menu-bar KDE kdeswitchcpph]
   '("Switch to .h/.cpp file" . kde-switch-cpp-h))
-(define-key c++-mode-map [menu-bar KDE insert-kdDebug]
-  '("Insert kdDebug" . insert-kdDebug))
+(define-key c++-mode-map [menu-bar KDE insert-kDebug]
+  '("Insert kDebug" . insert-kDebug))
 
 
 (provide 'kde-emacs-bindings)

@@ -383,11 +383,11 @@ This function does not do any hidden buffer changes."
   )
 
 
-; Inserts a kdDebug statement showing the name of the current method.
+; Inserts a kDebug statement showing the name of the current method.
 ; You need to create the empty line first.
-(defun insert-kdDebug ()
+(defun insert-kDebug ()
   (interactive)
-  (insert "kdDebug() << ")
+  (insert "kDebug() << ")
   ;; no unnecessary fume-* functions which aren't available on GNU/Emacs
   (insert "k_funcinfo")
   (insert " << endl;")
@@ -441,9 +441,9 @@ This function does not do any hidden buffer changes."
                       (progn (forward-char -1) (looking-at "while"))
                       )
                 )
-          (setq except (or (progn (forward-char -2) (looking-at "kdDebug"))
-                           (looking-at "kdError")
-                           (progn (forward-char -2) (looking-at "kdWarning"))
+          (setq except (or (progn (forward-char -2) (looking-at "kDebug"))
+                           (looking-at "kError")
+                           (progn (forward-char -2) (looking-at "kWarning"))
 			   )
                 )
           )
@@ -469,13 +469,13 @@ This function does not do any hidden buffer changes."
         (setq nospac ; no space to be added
               (or (looking-at " ")
                   (looking-at "(")
-                  (save-excursion ; check for kdDebug(123
+                  (save-excursion ; check for kDebug(123
                     (while (looking-at "[0-9]")
                       (forward-char -1))
                     (forward-char -7)
-                    (or (looking-at "kdDebug(")
-			(looking-at "kdError(")
-                           (progn (forward-char -2) (looking-at "kdWarning("))
+                    (or (looking-at "kDebug(")
+			(looking-at "kError(")
+                           (progn (forward-char -2) (looking-at "kWarning("))
 			   )
 		    )
                   )

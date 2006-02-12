@@ -1,15 +1,15 @@
-## kDebug2kdDebug.sh
-## Script to port from qDebug, kdebug, kDebugInfo etc. to kdDebug/kdWarning/...
+## kDebug2kDebug.sh
+## Script to port from qDebug, kdebug, kDebugInfo etc. to kDebug/kWarning/...
 ## Example:
 ## kDebugInfo( [area,] "format %a - %b", arga, argb )
 ## becomes
-## kdDebug( [area] ) << "format " << arga << " - " << argb << endl;
+## kDebug( [area] ) << "format " << arga << " - " << argb << endl;
 ##
 ## Written by David Faure <faure@kde.org>, licensed under GPL.
 ## 17/03/2000
 
 find $1 -name '*[cCph]' -type f | xargs grep -H -i 'ebug(\|warning(' \
-| grep -v 'kdDebug\|kdWarning' \
+| grep -v 'kDebug\|kWarning' \
 | grep -v include \
 | sed -e "s#:.*##" \
 | sort -u \
@@ -55,13 +55,13 @@ while (<>)
               $line=$1;
             } else { die "parse error on kDebug/qDebug/qWarning..."; }
 	    $line=$1; # has the indentation, //, and the kDebug* name
-	    $line =~ s/kDebugInfo/kdDebug/;
-	    $line =~ s/kDebugArea/kdDebug/;
-	    $line =~ s/qDebug/kdDebug/;
-	    $line =~ s/qWarning/kdWarning/;
-	    $line =~ s/kDebugWarning/kdWarning/;
-	    $line =~ s/kDebugError/kdError/;
-	    $line =~ s/kDebugFatal/kdFatal/;
+	    $line =~ s/kDebugInfo/kDebug/;
+	    $line =~ s/kDebugArea/kDebug/;
+	    $line =~ s/qDebug/kDebug/;
+	    $line =~ s/qWarning/kWarning/;
+	    $line =~ s/kDebugWarning/kWarning/;
+	    $line =~ s/kDebugError/kError/;
+	    $line =~ s/kDebugFatal/kFatal/;
 	    $area = "";
 	    if ( s/^([0-9]+)\s*,\s*//) # There is an area
 	    {

@@ -1,13 +1,13 @@
 ## add_trace.pl
-## Script to add a kdDebug() call as the first line of each method
-## including as many parameters as possible (i.e. those supported by kdDebug)
+## Script to add a kDebug() call as the first line of each method
+## including as many parameters as possible (i.e. those supported by kDebug)
 ## Very useful for tracing.
 ##
 ## Usage: perl -i add_trace.pl myfile.cpp
 ##
-## Generates all statement with kdDebug(0) so that it is very easy
+## Generates all statement with kDebug(0) so that it is very easy
 ## to remove them afterwards :
-## perl -pi -e 'if (/kdDebug\(0\)/) { $_ = ""; }' myfile.cpp
+## perl -pi -e 'if (/kDebug\(0\)/) { $_ = ""; }' myfile.cpp
 ##
 ## Written by David Faure <faure@kde.org>, licensed under pizzaware.
 ## 18/03/2000
@@ -60,7 +60,7 @@ while (<>)
 	  $_ = $oneline;
 	  #print STDERR "Signature : $_\n";
 	  print $statement;
-	  $line = "kdDebug(0)";
+	  $line = "kDebug(0)";
 	  if ( m/([^\*\s]+::[^\s]+)\(/ )
 	    {
 	      $line = $line . " << \"$1\"";

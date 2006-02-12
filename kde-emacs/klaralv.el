@@ -68,7 +68,7 @@
 (defvar kdab-special-includes
   '( 
     ; KDE
-    (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
+    (kdebug.h kDebug kWarning kError kFatal kBacktrace)
     (kconfig.h KConfigGroup)
     (kicondialog.h KIconCanvas KIconButton)
     (knuminput.h KDoubleNumInput KIntNumInput)

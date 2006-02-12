@@ -550,7 +550,7 @@ sub fix_unnecessary($)
     # if it continues to compile
     next if( $include eq "kdatastream.h");
     # I also like to have kdebug.h still in
-    # so that it's easy to add kdDebug calls
+    # so that it's easy to add kDebug calls
     next if( $include eq "kdebug.h");
     # avoid this one as it might cause
     # certain code parts to be disabled from compilation

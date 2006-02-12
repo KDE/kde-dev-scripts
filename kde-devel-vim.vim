@@ -473,7 +473,7 @@ function! AddQtSyntax()
 endfunction
 
 function! InsertMethodTracer()
-    :normal [[kf(yBjokdDebug() << ""()" << endl;
+    :normal [[kf(yBjokDebug() << ""()" << endl;
 endfunction
 
 function! UpdateMocFiles()

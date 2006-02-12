@@ -1491,7 +1491,7 @@ With arg, to it arg times."
     (qwswindowsdecoration_qws.h QWSWindowsDecoration)
 
     ; KDE
-    (kdebug.h kdDebug kdWarning kdError kdFatal kdBacktrace)
+    (kdebug.h kDebug kWarning kError kFatal kBacktrace)
     
     ) "List of special include files which do not follow the normal scheme")
 
@@ -1656,11 +1656,11 @@ With arg, to it arg times."
     )
   )
 
-; Inserts a kdDebug statement showing the name of the current method.
+; Inserts a kDebug statement showing the name of the current method.
 ; You need to create the empty line first.
-(defun insert-kdDebug ()
+(defun insert-kDebug ()
   (interactive)
-  (insert "kdDebug() << \"")
+  (insert "kDebug() << \"")
   (insert (fume-function-before-point))
   (insert "\" << endl;")
   )
@@ -1839,7 +1839,7 @@ With arg, to it arg times."
 ;(define-key global-map [(f9)] 'agulbra-make-member) ;; uncomment this for a killer feature
 (define-key global-map [(f10)] 'kdab-insert-header)
 (define-key global-map [(shift f10)] 'kdab-lookup-qt-documentation)
-(define-key global-map [(control meta d)] 'insert-kdDebug)
+(define-key global-map [(control meta d)] 'insert-kDebug)
 
 ; Standard Qt/KDE shortcuts: Ctrl+Backspace, Ctrl+Delete
 (define-key global-map [(control backspace)] 'backward-kill-word)
@@ -1875,7 +1875,7 @@ With arg, to it arg times."
 ;            variable kdab-qt-documentation. XXX will be replace with the class name.
 ;            Example (setq kdab-qt-location "file:/packages/kde-src/qt-copy/doc/html/XXX.html")
 ;
-; Ctrl+Meta+D : insert a kdDebug statement with the name of the current method
+; Ctrl+Meta+D : insert a kDebug statement with the name of the current method
 ; [the new hide-all-windows shortcut conflicts with that, you may have to
 ;  change it, or use Ctrl+Meta+Shift+D (!!)]
 ;
