@@ -196,7 +196,7 @@ while ($file = <$F>) {
 	s!#include <kdatepik.h>!#include <kdatepicker.h>!;
 	s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
 	s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;	
-
+	
 	# Qt3 name class
 	s!QIconSet!QIcon!g;
 	s!QWMatrix!QMatrix!g;
@@ -244,6 +244,9 @@ while ($file = <$F>) {
 	
 	s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 	s!KColorDrag!K3ColorDrag!g;
+
+	s!#include <kselect.h>!#include <kselector.h>!;
+	s!#include "kselect.h"!#include "kselector.h"!;
 
 	s!Q3ValueList\s*<\s*KMimeType::Ptr\s*>!KMimeType::List!;
 	s!Q3ValueListIterator\s*<\s*KMimeType::Ptr\s*>!KMimeType::List::const_iterator!;
