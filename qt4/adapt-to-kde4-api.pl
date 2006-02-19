@@ -342,6 +342,9 @@ while ($file = <$F>) {
 	
 	s!flushX!flush!;
 
+
+	s!KTimezone!KTimeZone!;
+	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
 	if ( /kapp->authorizeKAction/ ) {
