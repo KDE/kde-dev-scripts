@@ -92,8 +92,8 @@ while (<>)
 	      elsif ( m/QString[\&\s]+([a-zA-Z0-9_]+)/ || m/QCString[\&\s]*([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1;
 	      }
-	      ## KURL
-	      elsif ( m/KURL[\&\s]+([a-zA-Z0-9_]+)/ ) {
+	      ## KUrl
+	      elsif ( m/KUrl[\&\s]+([a-zA-Z0-9_]+)/ ) {
 		$line = $line . " << \" $1=\" << " . $1 . ".url()";
 	      }
 	    }
