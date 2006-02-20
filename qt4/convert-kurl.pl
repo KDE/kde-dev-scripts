@@ -25,6 +25,7 @@ while ($file = <$F>) {
 	$_ =~ s/KURL::/KUrl::/g;
 	$_ =~ s/class KURL;/class KUrl;/;
 	$_ =~ s/KURL\(/KUrl\(/g;
+	$_ =~ s/KURL>/KUrl>/;
 	$modified ||= $orig ne $_;
 	$_;
     } <$FILE>;
