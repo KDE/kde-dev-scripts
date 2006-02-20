@@ -19,13 +19,7 @@ while ($file = <$F>) {
     open(my $FILE, $file) or warn "We can't open file $file:$!\n";
     my @l = map {
 	my $orig = $_;
-	$_ =~ s/KURL /KUrl /g;
-	$_ =~ s/KURL&/KUrl&/g;
-	$_ =~ s/KURL\*/KUrl\*/g;
-	$_ =~ s/KURL::/KUrl::/g;
-	$_ =~ s/class KURL;/class KUrl;/;
-	$_ =~ s/KURL\(/KUrl\(/g;
-	$_ =~ s/KURL>/KUrl>/;
+	$_ =~ s/\bKURL\b/KUrl/g;
 	$modified ||= $orig ne $_;
 	$_;
     } <$FILE>;

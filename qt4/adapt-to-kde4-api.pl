@@ -342,25 +342,13 @@ while ($file = <$F>) {
 	
 	s!flushX!flush!;
 
-    s!KTimezone !KTimeZone !g;
-    s!KTimezone&!KTimeZone&!g;
-    s!KTimezone\*!KTimeZone\*!g;
-	s!KTimezone\(!KTimeZone\(!g;
+    s!\bKTimezone\b!KTimeZone!g;
 	
-    s!KTimezones !KTimeZones !g;
-    s!KTimezones&!KTimeZones&!g;
-    s!KTimezones\*!KTimeZones\*!g;
-    s!KTimezones\(!KTimeZones\(!g;
+    s!\bKTimezones\b!KTimeZones!g;
 
-    s!KTimezoneData !KTimeZoneData !g;
-    s!KTimezoneData&!KTimeZoneData&!g;
-    s!KTimezoneData\*!KTimeZoneData\*!g;
-    s!KTimezoneData\(!KTimeZoneData\(!g;
+    s!\bKTimezoneData\b!KTimeZoneData!g;
 
-    s!KTimezoneSource !KTimeZoneSource !g;
-    s!KTimezoneSource&!KTimeZoneSource&!g;
-    s!KTimezoneSource\*!KTimeZoneSource\*!g;
-    s!KTimezoneSource\(!KTimeZoneSource\(!g;
+    s!\bKTimezoneSource\b!KTimeZoneSource!g;
 	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
