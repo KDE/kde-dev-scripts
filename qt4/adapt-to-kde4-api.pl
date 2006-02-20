@@ -347,6 +347,21 @@ while ($file = <$F>) {
     s!KTimezone\*!KTimeZone\*!g;
 	s!KTimezone\(!KTimeZone\(!g;
 	
+    s!KTimezones !KTimeZones !g;
+    s!KTimezones&!KTimeZones&!g;
+    s!KTimezones\*!KTimeZones\*!g;
+    s!KTimezones\(!KTimeZones\(!g;
+
+    s!KTimezoneData !KTimeZoneData !g;
+    s!KTimezoneData&!KTimeZoneData&!g;
+    s!KTimezoneData\*!KTimeZoneData\*!g;
+    s!KTimezoneData\(!KTimeZoneData\(!g;
+
+    s!KTimezoneSource !KTimeZoneSource !g;
+    s!KTimezoneSource&!KTimeZoneSource&!g;
+    s!KTimezoneSource\*!KTimeZoneSource\*!g;
+    s!KTimezoneSource\(!KTimeZoneSource\(!g;
+	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
 	if ( /kapp->authorizeKAction/ ) {
