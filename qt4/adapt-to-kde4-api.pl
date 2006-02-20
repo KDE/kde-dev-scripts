@@ -342,8 +342,10 @@ while ($file = <$F>) {
 	
 	s!flushX!flush!;
 
-
-	s!KTimezone!KTimeZone!;
+    s!KTimezone !KTimeZone !g;
+    s!KTimezone&!KTimeZone&!g;
+    s!KTimezone\*!KTimeZone\*!g;
+	s!KTimezone\(!KTimeZone\(!g;
 	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
