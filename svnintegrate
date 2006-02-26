@@ -70,6 +70,8 @@ my $dryRun;
 my $quiet;
 my $verbose;
 my $branch;
+my $from;
+my $to;
 my $EDITOR;
 my $PAGER;
 
@@ -140,51 +142,59 @@ sub getLastCommitInfo($)
 sub transformToBranch($)
 {
   my $path = @_[0];
-  if ($branch =~ /^trunk/)
+
+  if ($path =~ m,^$from(/.*)?,)
   {
-    # transform to trunk
-    $path =~ s,^/(branches|tags)/([^/]+)/[^/]+,/$branch/\2,o;
-    return $path;
-  }
-  elsif ($branch !~ m,/,)
-  {
-    # transform to branches/XXX/$branch
-    if ($path =~ m,^/trunk/,o)
-    {
-      $path =~ s,^/trunk/([^/]+),/branches/\1/$branch,o;
-    }
-    else
-    {
-      $path =~ s,^(/(branches|tags)/[^/]+/)[^/]+,\1$branch,o;
-    }
-    return $path;
-  }
-  elsif ($branch =~ m,^work,o)
-  {
-    $path =~ s,^$dirname,/branches/$branch,o;
-    return $path;
+    $path = $to . $1;
   }
   else
   {
-    # transform to branches/XXX/$branch
-    my ($root, $thebranch) = split(/\//, $branch, 2);
-    if ($path =~ m,^/trunk/,o)
-    {
-      $path =~ s,^/trunk/([^/]+),/$root/\1/$thebranch,o;
-    }
-    else
-    {
-      $path =~ s,^/(branches|tags)/([^/]+)/[^/]+,/$root/\2/$thebranch,o;
-    }
-    return $path;
+    print STDERR "Could not apply conversion \"$from\" -> \"$to\" in $dirname\n";
+    exit 1;
   }
 }
 
 sub checkBranches()
 {
+  if (!$from || !$to)
+  {
+    $branch = "trunk" unless ($branch);
+    if ($branch eq "trunk")
+    {
+      $to = "/trunk/KDE";
+      if ($dirname =~ m,^(/branches/KDE/[^/]+)/,)
+      {
+        $from = $1;
+      }
+      else
+      {
+        print STDERR "Cannot apply automatic conversion to trunk on $dirname\n";
+        print STDERR "Please use the -f and -t options\n";
+        exit 1;
+      }
+    }
+    else
+    {
+      if ($dirname =~ m,^/trunk,)
+      {
+        $from = "/trunk";
+      }
+      elsif ($dirname =~ m,^/branches/KDE/([^/]+)/,)
+      {
+        $from = "/branches/KDE/$1";
+      }
+      else
+      {
+        print STDERR "Cannot apply automatic conversion to branch $branch on $dirname\n";
+        print STDERR "Please use the -f and -t options\n";
+        exit 1;
+      }
+      $to = "/branches/KDE/$branch";
+    }
+  }
   my $target = transformToBranch($dirname);
   print "Porting from $dirname to $target\n";
-  
+
   if ($target eq $dirname)
   {
     print STDERR "Source and target branches are the same.\n";
@@ -489,7 +499,6 @@ $PAGER = "less" unless ($PAGER);
 $dryRun = 0;
 $quiet = 0;
 $verbose = 0;
-$branch = "trunk";
 while (@ARGV)
   {
     my $arg = shift @ARGV;
@@ -524,6 +533,26 @@ while (@ARGV)
       }
 
       $revision = shift @ARGV;
+    }
+    elsif ($arg eq "-f")
+    {
+      unless (@ARGV)
+      {
+        print STDERR "Option -f requires an argument\n";
+        exit 1;
+      }
+
+      $from = shift @ARGV;
+    }
+    elsif ($arg eq "-t")
+    {
+      unless (@ARGV)
+      {
+        print STDERR "Option -t requires an argument\n";
+        exit 1;
+      }
+
+      $to = shift @ARGV;
     }
     else
     {

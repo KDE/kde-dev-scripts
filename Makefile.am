@@ -10,7 +10,7 @@ bin_SCRIPTS = \
   kdedoc qtdoc extractrc extractattr zonetab2pot.py \
   licensecheck fixkdeincludes fixuifiles includemocs \
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py \
-  package_crystalsvg png2mng.pl kdemangen.pl
+  package_crystalsvg png2mng.pl kdemangen.pl svnintegrate
 
 # sorted by bin_SCRIPTS reference
 man_MANS = \
