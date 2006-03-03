@@ -387,7 +387,9 @@ This function does not do any hidden buffer changes."
 ; You need to create the empty line first.
 (defun insert-kDebug ()
   (interactive)
-  (insert "kDebug() << ")
+  (if (and (boundp 'kdab-qt-version) (eq kdab-qt-version 4))
+      (insert "kDebug() << ")
+    (insert "kdDebug() << "))
   ;; no unnecessary fume-* functions which aren't available on GNU/Emacs
   (insert "k_funcinfo")
   (insert " << endl;")
