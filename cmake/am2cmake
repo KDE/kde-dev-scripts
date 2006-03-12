@@ -68,7 +68,7 @@ class InstallTarget
       @location=""
    end
    def addFiles(files)
-      @files=@files+files
+      @files=@files+" "+files
    end
    def setLocation(location)
       @location=location
@@ -468,7 +468,10 @@ class CMakeFile
          addInstallFiles($1, $2)
          return
       end
-
+      if line =~ /^\s*(\S+)_SCRIPTS\s*=\s*(\S+.*)$/
+         addInstallFiles($1, $2)
+         return
+      end
       if line =~ /^\s*(\w*include)_HEADERS\s*=\s*(\S+.*)$/
          addInstallFiles($1, $2)
          return
