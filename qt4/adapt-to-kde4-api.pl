@@ -357,7 +357,7 @@ while ($file = <$F>) {
 	s!#include <klistviewsearchline.h>!#include <k3listviewsearchline.h>!;
 	s!\bKListView\b!K3ListView!g;
 	s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
-	
+	s!\bKListViewItem\b!K3ListViewItem!g;	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
 	if ( /kapp->authorizeKAction/ ) {
