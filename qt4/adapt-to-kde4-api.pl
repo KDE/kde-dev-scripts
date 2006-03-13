@@ -349,6 +349,11 @@ while ($file = <$F>) {
     s!\bKTimezoneData\b!KTimeZoneData!g;
 
     s!\bKTimezoneSource\b!KTimeZoneSource!g;
+
+    s!#include <kiconview.h>!#include <k3iconview.h>!;
+	s!\bKIconViewItem\b!K3IconViewItem!g;
+	s!\bKIconView\b!K3IconView!g;
+			 
 	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
