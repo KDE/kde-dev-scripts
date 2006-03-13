@@ -6,7 +6,19 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 ########### install files ###############
 
 install_files( ${DATA_INSTALL_DIR}/katepart/syntax FILES kdesvn-buildrc.xml )
-
+install_files( /bin FILES 
+  create_makefile create_makefiles adddebug 
+  cheatmake makeobj kde-build build-progress.sh pruneemptydirs 
+  cvsbackport cvsversion cvscheck cvslastchange cvslastlog cvsrevertlast 
+  noncvslist cvs-clean cvs2dist cvsblame cvsforwardport create_cvsignore 
+  colorsvn create_svnignore nonsvnlist svn2dist svnaddcurrentdir svnbackport 
+  svn-clean svngettags svnlastchange svnlastlog svnrevertlast svnversions 
+  svnchangesince findmissingcrystal kdesvn-build 
+  kdedoc qtdoc extractrc extractattr zonetab2pot.py 
+  licensecheck fixkdeincludes fixuifiles includemocs 
+  cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py 
+  package_crystalsvg png2mng.pl kdemangen.pl svnintegrate)
+ 
 kde4_footer()
 
 
