@@ -353,7 +353,10 @@ while ($file = <$F>) {
     s!#include <kiconview.h>!#include <k3iconview.h>!;
 	s!\bKIconViewItem\b!K3IconViewItem!g;
 	s!\bKIconView\b!K3IconView!g;
-			 
+	s!#include <klistview.h>!#include <k3listview.h>!;
+	s!#include <klistviewsearchline.h>!#include <k3listviewsearchline.h>!;
+	s!\bKListView\b!K3ListView!g;
+	s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
 	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 	
