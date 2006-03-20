@@ -18,6 +18,46 @@ $buildType=BuildKDE3
 
 $allTargets=Array.new
 
+LibMappingKDE3 = {
+   "$(LIB_QT3SUPPORT)"  => "${QT_QT3SUPPORT_LIBRARY}",
+   "$(DCOP_LIB)"        => "DCOP",
+   "$(LIB_KDEUI)"       => "kdeui",
+   "$(LIB_KIO)"         => "kio",
+   "$(LIB_KDEPRINT)"    => "kdeprint",
+   "$(LIB_KPARTS)"      => "kparts",
+   "$(LIB_KSPELL2)"     => "kspell2",
+   "$(LIB_KDE3SUPPORT)" => "kde3support",
+   "$(LIB_KJS)"         => "kjs",
+   "$(LIB_KHTML)"       => "khtml",
+   "$(LIB_KNEWSTUFF)"   => "knewstuff",
+   "$(LIB_KDEPIM)"      => "kdepim",
+   "$(LIB_KDNSSD)"      => "kdnssd",
+   "$(LIB_KIMPROXY)"    => "kimproxy",
+   "$(LIB_KUTILS)"      => "kutils",
+   "$(LIB_KSYCOCA)"     => "kio"
+}
+
+LibMappingKDE4 = {
+   "$(LIB_QT3SUPPORT)"  => "${QT_QT3SUPPORT_LIBRARY}",
+   "$(DCOP_LIB)"        => "${KDE4_DCOP_LIBS}",
+   "$(LIB_KDEUI)"       => "${KDE4_KDEUI_LIBS}",
+   "$(LIB_KIO)"         => "${KDE4_KIO_LIBS}",
+   "$(LIB_KDEPRINT)"    => "${KDE4_KDEPRINT_LIBS}",
+   "$(LIB_KPARTS)"      => "${KDE4_KPARTS_LIBS}",
+   "$(LIB_KSPELL2)"     => "${KDE4_KSPELL2_LIBS}",
+   "$(LIB_KDE3SUPPORT)" => "${KDE4_KDE3SUPPORT_LIBS}",
+   "$(LIB_KJS)"         => "${KDE4_KJS_LIBS}",
+   "$(LIB_KHTML)"       => "${KDE4_KHTML_LIBS}",
+   "$(LIB_KNEWSTUFF)"   => "${KDE4_KNEWSTUFF_LIBS}",
+   "$(LIB_KDNSSD)"      => "${KDE4_KDNSSD_LIBS}",
+   "$(LIB_KDEPIM)"      => "kdepim",
+   "$(LIB_KIMPROXY)"    => "kimproxy",
+   "$(LIB_KUTILS)"      => "${KDE4_KUTILS_LIBS}",
+   "$(LIB_KSYCOCA)"     => "${KDE4_KIO_LIBS}"
+}
+
+$libMapping=LibMappingKDE3
+
 InstallDirsKDE3 = {
    "kde_apps"     => "/share/applnk",
    "kde_conf"     => "/share/config",
@@ -96,7 +136,11 @@ class BuildTarget
       @versionNumberMinor=0
       @versionNumberPatch=0
 
-      @libs.push("${QT_AND_KDECORE_LIBS}")
+      if $buildType==BuildKDE4
+         @libs.push("${KDE4_KDECORE_LIBS}")
+      else
+         @libs.push("${QT_AND_KDECORE_LIBS}")
+      end
       $allTargets.push(self)
    end
 
@@ -126,31 +170,15 @@ class BuildTarget
       lib=""
       previousWasVersionInfo=false
       libs.split.each do |currentLib|
-         lib=case currentLib
-         when "$(LIB_QT3SUPPORT)" then "${QT_QT3SUPPORT_LIBRARY}"
-         when "$(DCOP_LIB)" then "DCOP"
-         when "$(LIB_KDEUI)" then "kdeui"
-#         when "${LIB_KDECORE}" then "${QT_AND_KDECORE_LIBS}"
-         when "$(LIB_KIO)" then "kio"
-         when "$(LIB_KDEPRINT)" then "kdeprint"
-         when "$(LIB_KPARTS)" then "kparts"
-		 when "$(LIB_KSPELL2)" then "kspell2"
-		 when "$(LIB_KDE3SUPPORT)" then "kde3support"
-		 when "$(LIB_KJS)" then "kjs"
-		 when "$(LIB_KHTML)" then "khtml"
-		 when "$(LIB_KNEWSTUFF)" then "knewstuff"
-		 when "$(LIB_KDEPIM)" then "kdepim"
-		 when "$(LIB_KDNSSD)" then "kdnssd"
-		 when "$(LIB_KIMPROXY)" then "kimproxy"
-		 when "$(LIB_KUTILS)" then "kutils"
-		 when "$(LIB_KSYCOCA)" then "kio"
+         if $libMapping.has_key?(currentLib)
+            lib=$libMapping[currentLib]
          else
             if currentLib =~ /^-l(\S+)$/
-               $1
+               lib=$1
             elsif currentLib =~ /^(.+\/)?lib(\w+)\.la$/
-               $2
+               lib=$2
             else
-               ""
+               lib=""
             end
          end
 
@@ -215,12 +243,12 @@ class CMakeFile
       if $buildType==BuildKDE3
           @includeDirs.push("${KDE3_INCLUDE_DIR}")
           @includeDirs.push("${QT_INCLUDE_DIR}")
+          @includeDirs.push("${CMAKE_CURRENT_SOURCE_DIR}")
+          @includeDirs.push("${CMAKE_CURRENT_BINARY_DIR}")
       elsif $buildType==BuildKDE4
           @includeDirs.push("${KDE4_INCLUDE_DIR}")
           @includeDirs.push("${QT_INCLUDES}")
       end
-      @includeDirs.push("${CMAKE_CURRENT_SOURCE_DIR}")
-      @includeDirs.push("${CMAKE_CURRENT_BINARY_DIR}")
    end
 
    def parseFile
@@ -984,6 +1012,7 @@ if (ARGV.length==1)
       $buildType=BuildKDE4
       $withConvLibs=true
       $installDirs=InstallDirsKDE4
+      $libMapping=LibMappingKDE4
    elsif ARGV[0]=="--help"
       printf("--help\t print this help text\n")
       printf("--version\t print version information\n")
