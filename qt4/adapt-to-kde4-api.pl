@@ -359,7 +359,12 @@ while ($file = <$F>) {
 	s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
 	s!\bKListViewItem\b!K3ListViewItem!g;	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
+
 	
+	s!kapp->makeStdCaption!KInstance::makeStdCaption!;
+	s!kapp->caption!KInstance::caption!;
+
+
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 	    push(@necessaryIncludes, "kauthorized.h");
