@@ -359,7 +359,10 @@ while ($file = <$F>) {
 	s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
 	s!\bKListViewItem\b!K3ListViewItem!g;	
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
-
+	
+	s!\bKIcon\b!K3Icon!g;
+	s!#include <ktoolbarbutton.h>!!g;
+	s!\baddURL\b!addUrl!g;
 	
 	s!kapp->makeStdCaption!KInstance::makeStdCaption!;
 	s!kapp->caption!KInstance::caption!;
@@ -439,16 +442,16 @@ while ($file = <$F>) {
 	    push(@necessaryIncludes, "kglobal.h");
 	}
 	if ( /kapp->miniIcon/ ) {
-	    s!kapp->miniIcon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIcon::Small),IconSize(KIcon::Small))!;
+	    s!kapp->miniIcon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Small),IconSize(K3Icon::Small))!;
 	    push(@necessaryIncludes, "kiconloader.h");
 	}
 
         if ( /kapp->icon/ ) {
-            s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
+            s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
             push(@necessaryIncludes, "kiconloader.h");
         }
         if ( /app.icon/ ) {
-            s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(KIcon::Desktop),IconSize(KIcon::Desktop))!;
+            s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
             push(@necessaryIncludes, "kiconloader.h");
         }
 
