@@ -242,10 +242,10 @@ class CMakeFile
       parseFile
 
       if $buildType==BuildKDE3
-          @includeDirs.push("${KDE3_INCLUDE_DIR}")
-          @includeDirs.push("${QT_INCLUDE_DIR}")
           @includeDirs.push("${CMAKE_CURRENT_SOURCE_DIR}")
           @includeDirs.push("${CMAKE_CURRENT_BINARY_DIR}")
+          @includeDirs.push("${KDE3_INCLUDE_DIR}")
+          @includeDirs.push("${QT_INCLUDE_DIR}")
       elsif $buildType==BuildKDE4
           @includeDirs.push("${KDE4_INCLUDE_DIR}")
           @includeDirs.push("${QT_INCLUDES}")
