@@ -727,7 +727,7 @@ class CMakeFile
       end
 
       if not @subDirs.empty?
-         @subDirs.each{ |dir| file.printf("add_subdirectory( %s ) \n", dir)}
+         @subDirs.each{ |dir| file.printf("add_subdirectory( %s )\n", dir)}
          file.printf("\n")
       end
       if not @skippedSubDirs.empty?
