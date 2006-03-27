@@ -618,7 +618,7 @@ This function does not do any hidden buffer changes."
   (let ((f (file-name-nondirectory (buffer-file-name)))
 	(objext nil))
 
-    (if (file-readable-p "Makefile.am")
+    (if (and (file-readable-p "Makefile.am") (not (file-readable-p "CMakeLists.txt")))
 	(setq objext "\.lo")
       (setq objext "\.o"))
     (if (string-match "\.cpp$" f) (setq f (replace-match objext t t f)))
