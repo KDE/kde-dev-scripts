@@ -54,7 +54,19 @@ LibMappingKDE4 = {
    "$(LIB_KDEPIM)"      => "kdepim",
    "$(LIB_KIMPROXY)"    => "kimproxy",
    "$(LIB_KUTILS)"      => "${KDE4_KUTILS_LIBS}",
-   "$(LIB_KSYCOCA)"     => "${KDE4_KIO_LIBS}"
+   "$(LIB_KSYCOCA)"     => "${KDE4_KIO_LIBS}",
+   "$(LIB_KOFFICEUI)"	=> "kofficeui",
+   "$(LIB_KOFFICECORE)"	=> "kofficecore",
+   "$(LIB_KSTORE)"		=> "kstore",
+   "$(LIB_KOTEXT)"		=> "kotext",
+   "$(LIB_KOPAINTER)"	=> "kopainter",
+   "$(LIB_KOPALETTE)"	=> "kopalette",
+   "$(LIB_KWMF)"		=> "kwmf",
+   "$(LIB_KOWMF)"		=> "kowmf",
+   "$(LIB_KFORMULA)"	=> "kformula",
+   "$(LIB_KOPROPERTY)"	=> "koproperty",
+   "$(LIB_KROSS_API)"	=> "krossapi",
+   "$(LIB_KROSS_MAIN)"	=> "krossmain"
 }
 
 $libMapping=LibMappingKDE3
