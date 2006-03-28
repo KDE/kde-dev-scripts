@@ -88,9 +88,9 @@ while ($file = <$F>) {
     }
 
 	if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KUrl::htmlURL() had to disappear
-		$var=$1;
-		s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
-		push(@necessaryIncludes, "QTextDocument");
+			#$var=$1;
+			#s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
+			#push(@necessaryIncludes, "QTextDocument");
 	}
 
 	if ( $_ =~ /Q3StyleSheet::mightBeRichText/ ) {
@@ -183,7 +183,9 @@ while ($file = <$F>) {
 	s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 	s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 	s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
-    
+	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
+
+	
 	s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
 	s!#include <kprogress.h>!#include <kprogressbar.h>!;
 	
