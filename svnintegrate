@@ -94,7 +94,7 @@ sub getSvnInfo()
   $lastDirCommitRevision = $doc->getElementsByTagName("commit")->item(0)->getAttribute("revision");
   
   # trim the root
-  $dirname =~ s#^$svnroot##;
+  $dirname = substr $dirname, length($svnroot);
   
   $doc->dispose();
 }
