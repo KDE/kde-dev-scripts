@@ -42,12 +42,13 @@ while ($file = <$F>) {
       # this code assumes the constructor is a call on its own line, i.e. ends with new QGridLayout(...);
       $parent = "";
       if (  # Either parent widget/layout or first param is rows (=starts with number)
-        ( ($spaces, $trailer, $object, $call, $ws, $parent, $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new QGridLayout[^(]*)\((\s*)([^0-9 ][^,]*),\s*(.*[^\s])\s*\);$! ) ||
+        ( ($spaces, $trailer, $object, $call, $ws, $parent, $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new QGridLayout[^(]*)\((\s*)([^0-9 ][^,]*|0),\s*(.*[^\s])\s*\);$! ) ||
         ( ($spaces, $trailer, $object, $call, $ws,          $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new QGridLayout[^(]*)\((\s*)([0-9][^,]*,\s*.*[^\s])\s*\);$! ) ) {
 # print "Spaces: '$spaces', Trailer: '$trailer', Object: '$object', Call: '$call'";
 # print "WS: '$ws', Parent: '$parent'\n";
 
 # print "Params '$params'\n";
+        if ( $parent eq "0" ) { $parent = ""; }
         if ( $parent ) {
           $_ = "$spaces$trailer$object$call($ws$parent$ws);\n";
         } else {

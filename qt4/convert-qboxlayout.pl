@@ -42,12 +42,20 @@ while ($file = <$F>) {
       # this code assumes the constructor is a call on its own line, i.e. ends with new QVBoxLayout(...);
       $parent = "";
       if (  # Either parent widget/layout or first param is rows (=starts with number)
-        ( ($spaces, $trailer, $object, $call, $ws, $parent, $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new Q[HV]BoxLayout[^(]*)\((\s*)([^0-9 ][^,]*),\s*(.*[^\s])\s*\);$! ) ||
+        ( ($spaces, $trailer, $object, $call, $ws, $parent, $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new Q[HV]BoxLayout[^(]*)\((\s*)([^0-9 ][^,]*|0),\s*(.*[^\s])\s*\);$! ) ||
         ( ($spaces, $trailer, $object, $call, $ws,          $params) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9]+)(\s*=\s*new Q[HV]BoxLayout[^(]*)\((\s*)([0-9][^,]*,\s*.*[^\s])\s*\);$! ) ) {
 # print "Spaces: '$spaces', Trailer: '$trailer', Object: '$object', Call: '$call'";
 # print "WS: '$ws', Parent: '$parent'\n";
 
 # print "Params '$params'\n";
+        if ( $parent eq "0" ) { $parent = ""; }
+#         if ( length($parent)>0 && $parent != 0) {
+# print "Parent: '$parent', \$parent:";
+# if ( length($parent) ) {
+#   print "In IF";
+# } else {
+#   print "NOT in IF";
+# }
         if ( $parent ) {
           $_ = "$spaces$trailer$object$call($ws$parent$ws);\n";
         } else {
@@ -55,7 +63,9 @@ while ($file = <$F>) {
         }
         my ( $margin, $space, $name );
         my @parms = split( /,\s*/, $params );
-
+# print "Params: ";
+# print join(" - ", @parms );
+# print "\n";
         if ( scalar( @parms ) >= 3 ) {
           # All params are given: margin, spacing, name
           ( $margin, $space, $name ) = @parms;
