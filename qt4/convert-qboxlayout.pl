@@ -48,7 +48,11 @@ while ($file = <$F>) {
 # print "WS: '$ws', Parent: '$parent'\n";
 
 # print "Params '$params'\n";
-        $_ = "$spaces$trailer$object$call($ws$parent$ws);\n";
+        if ( $parent ) {
+          $_ = "$spaces$trailer$object$call($ws$parent$ws);\n";
+        } else {
+          $_ = "$spaces$trailer$object$call();\n";
+        }
         my ( $margin, $space, $name );
         my @parms = split( /,\s*/, $params );
 
