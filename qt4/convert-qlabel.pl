@@ -30,8 +30,9 @@ while ($file = <$F>) {
       my $orig = $_;
       my ($spaces, $trailer, $object, $call, $ws, $params );
       if ( ($spaces, $trailer, $object, $call, $ws, $params ) = m!^(\s*)(.*[\s\*]|)([a-zA-Z0-9_]+)(\s*=\s*new QLabel\s*)\((\s*)(.*[^\s])\s*\);$! ) {
-# print "Spaces: '$spaces', Trailer: '$trailer', Object: '$object', Call: '$call', WS: '$ws', Params: '$params'\n";
+print "Spaces: '$spaces', Trailer: '$trailer', Object: '$object', Call: '$call', WS: '$ws', Params: '$params'\n";
         my @parms = split( /,\s*/, $params );
+        my $pws = $ws;
         
         my $buddy, my $text, my $parent, my $name, my $flags;
 
@@ -42,6 +43,7 @@ print "1";
           $parent=$parms[1];
           $name=$parms[2] if scalar(@parms)>2;
           $flags=$parms[3] if scalar(@parms)>3;
+	  $pws=' ';
         } elsif ( scalar(@parms) == 5 ) {
           ($buddy, $text, $parent, $name, $flags) = @parms;
 print "2";
@@ -82,7 +84,7 @@ print "\n";
         my $p="";
         $p.= "$text" if ( defined($text) );
         if ( defined($parent) ) {
-          $p.= ",$ws" if ( defined($text) );
+          $p.= ",$pws" if ( defined($text) );
           $p.= "$parent";
           if ( defined($flags) ) { 
             $p.=",$ws$flags";
