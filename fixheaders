@@ -107,7 +107,10 @@ $lastdir = '.';
  'error: \'I18N_NOOP\' was not declared' => 'klocale',
  'error: \'i18n\' was not declared' => 'klocale',
  'error: incomplete type \'KGlobal' => 'kglobal',
- 'error: \'KRandom\' has not been declared' => 'krandom'
+ 'error: \'KRandom\' has not been declared' => 'krandom',
+ 'error: \‘KStdAction\’ has not been declared' => 'kstdaction',
+ 'error: invalid use of undefined type \‘struct KSelectAction' => 'kselectaction',
+ 'error: invalid use of undefined type \‘struct KToggleAction' => 'ktoggleaction',
 );
 
 # Initial values are simply to get into the while
