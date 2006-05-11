@@ -13,7 +13,8 @@ sub diffFile
 sub excludeFile
 {
     my ($newFile) = @_;
-    return $newFile =~ /TODO|Changelog|ChangeLog|README|Readme|Makefile(.(in|am)|\.(html|HOWTO|README|svn|ui|kidl|desktop|pl|libs|o|moc|docbook|dox|l[ao]))?$/;
+    return 1 if $newFile =~ /\/\.svn\//;
+    return $newFile =~ /TODO|Changelog|ChangeLog|README|Readme|Makefile(|\.(in|am))|\.(html|HOWTO|README|svn|ui|kidl|desktop|pl|libs|o|moc|docbook|dox|l[ao])?$/;
 }
 
 sub removeObjectNameTwoArgument
