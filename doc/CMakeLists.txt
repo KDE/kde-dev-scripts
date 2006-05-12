@@ -1,4 +1,3 @@
-kde4_header()
 
 
 add_subdirectory(kdesvn-build)
@@ -6,7 +5,6 @@ add_subdirectory(kdesvn-build)
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

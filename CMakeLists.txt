@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -19,7 +18,6 @@ install_files( /bin FILES
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py 
   package_crystalsvg png2mng.pl kdemangen.pl svnintegrate)
  
-kde4_footer()
 
 
 

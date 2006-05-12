@@ -722,7 +722,7 @@ class CMakeFile
 
    def createKDE4ListsFile
       file=File.new(@listsFile, "w+");
-      file.printf("kde4_header()\n\n")
+      file.printf("\n")
 
       if @amFile=="Makefile.am"          # the toplevel Makefile.am
           file.printf("find_package(KDE4 REQUIRED)\n\n")
@@ -998,8 +998,6 @@ class CMakeFile
 
          file.printf(" )\n\n")
       end
-
-      file.printf("kde4_footer()\n\n")
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}
