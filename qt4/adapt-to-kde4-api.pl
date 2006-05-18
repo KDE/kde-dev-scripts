@@ -52,14 +52,14 @@ while ($file = <$F>) {
 	    $changes =~ s!Q3HBox!KHBox!;
 		$changes =~ s!QHBox!KHBox!;
 	    $_ = $changes . $suite . $end . "\n";
-	}	
+	}
 	if (my ($prefix, $suite, $end) = /(.*)(makeVBoxMainWidget.*)\s*$/) {
 	    my $changes = $prefix;
 	    $changes =~ s!Q3Frame!KVBox!;
 	    $changes =~ s!Q3VBox!KVBox!;
 		$changes =~ s!QVBox!KVBox!;
 	    $_ = $changes . $suite . $end . "\n";
-	}	
+	}
 	if (my ($prefix, $suite, $end) = /(.*)(makeHBoxMainWidget.*)\s*$/) {
 	    my $changes = $prefix;
 	    $changes =~ s!Q3Frame!KHBox!;
@@ -97,8 +97,8 @@ while ($file = <$F>) {
 		s!Q3StyleSheet::mightBeRichText!Qt::mightBeRichText!;
 		push(@necessaryIncludes, "QTextDocument")
 	}
-				
-	
+
+
 	if ( $_ =~ /KApplication::randomString/ ) {
 	    s!KApplication::randomString!KRandom::randomString!;
 	    push(@necessaryIncludes, "krandom.h");
@@ -142,7 +142,7 @@ while ($file = <$F>) {
 	s!Qt::Key_Prior!Qt::Key_PageUp!;
 	s!Qt::Key_Next!Qt::Key_PageDown!;
 	s!Qt::Key_MediaPrev([\s*|,])!Qt::Key_MediaPrevious\1!;
-	    
+
 	s!Qt::arrowCursor!Qt::ArrowCursor!;
 	s!Qt::upArrowCursor!Qt::UpArrowCursor!;
 	s!Qt::crossCursor!Qt::CrossCursor!;
@@ -178,29 +178,29 @@ while ($file = <$F>) {
 	s!#include <kmdifocuslist.h>!#include <k3mdifocuslist.h>!;
 	s!#include <kmdiguiclient.h>!#include <k3mdiguiclient.h>!;
 	s!#include <kmdiiterator.h>!#include <k3mdiiterator.h>!;
-	s!#include <kmdilistiterator.h>!#include <k3mdilistiterator.h>!;		
+	s!#include <kmdilistiterator.h>!#include <k3mdilistiterator.h>!;
 	s!#include <kmdimainfrm.h>!#include <k3mdimainfrm.h>!;
 	s!#include <kmdinulliterator.h>!#include <k3mdinulliterator.h>!;
 	s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 	s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
 	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
 
-	
+
 	s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
 	s!#include <kprogress.h>!#include <kprogressbar.h>!;
-	
+
 	#If there is more than one argument add KGuiItem now I think that it will easy to fix it.
 	s!setButtonOKText!setButtonOK!;
 	s!setButtonApplyText!setButtonApply!;
 	s!setButtonCancelText!setButtonCancel!;
-		
+
 	# remove deprecated header
 	s!#include <kcolordlg.h>!#include <kcolordialog.h>!;
 	s!#include <kcolorbtn.h>!#include <kcolorbutton.h>!;
 	s!#include <kdatepik.h>!#include <kdatepicker.h>!;
 	s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
-	s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;	
-	
+	s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;
+
 	# Qt3 name class
 	s!QIconSet!QIcon!g;
 	s!QWMatrix!QMatrix!g;
@@ -212,14 +212,25 @@ while ($file = <$F>) {
         s!KURLRequester!KUrlRequester!g;
         s!KURLPixmapProvider!KUrlPixmapProvider!g;
 		s!KURLLabel!KUrlLabel!g;
-	s!IO_ReadOnly!QIODevice::ReadOnly!;
+
+        #KUrl renames
+        s!\bKURL\b!KUrl!g;
+        s!\bhasSubURL\b!hasSubUrl!g;
+        s!\bprettyURL\b!prettyUrl!g;
+        s!\bpathOrURL\b!pathOrUrl!g;
+        s!\bupURL\b!upUrl!g;
+        s!\bfromPathOrURL\b!fromPathOrUrl!g;
+        s!\bisRelativeURL\b!isRelativeUrl!g;
+        s!\brelativeURL\b!relativeUrl!g;
+
+        s!IO_ReadOnly!QIODevice::ReadOnly!;
 	s!IO_WriteOnly!QIODevice::WriteOnly!;
 	s!IO_ReadWrite!QIODevice::ReadWrite!;
 	s!IO_Append!QIODevice::Append!;
 	s!IO_Truncate!QIODevice::Truncate!;
 	s!IO_Translate!QIODevice::Text!;
 
-	
+
 	#KKeyNative
 	s!KKeyNative::modX\(\s*KKey::SHIFT\s*\)!KKeyNative::modXShift\(\)!;
 	s!KKeyNative::modX\(\s*KKey::CTRL\s*\)!KKeyNative::modXCtrl\(\)!;
@@ -245,7 +256,7 @@ while ($file = <$F>) {
 	    s!K3ColorDrag!K3ColorDrag!g;
 	    $warning = $warning . "Necessary to add \$\(LIB_KDE3SUPPORT\) into Makefile.am when $file is \n";
 	}
-	
+
 	s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
 	s!KColorDrag!K3ColorDrag!g;
 
@@ -273,7 +284,7 @@ while ($file = <$F>) {
 	s!KLocale::setMainCatalogue!KLocale::setMainCatalog!;
 	s!KGlobal::locale\(\)->insertCatalogue!KGlobal::locale\(\)->insertCatalog!;
 	s!KGlobal::locale\(\)->setMainCatalogue!KGlobal::locale\(\)->setMainCatalog!;
-		
+
 	s!KLocale::removeCatalogue!KLocale::removeCatalog!;
 	s!KGlobal::locale\(\)->removeCatalogue!KGlobal::locale\(\)->removeCatalog!;
 	s!KGlobal::locale\(\)->removeCatalogue!KGlobal::locale\(\)->removeCatalog!;
@@ -281,13 +292,13 @@ while ($file = <$F>) {
         s!KLocale::setActiveCatalogue!KLocale::setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
-	
+
 	if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
 	    push(@necessaryIncludes, "kworkspace.h");
 	}
 	s!KApplication::ShutdownTypeHalt!KWorkSpace::ShutdownTypeHalt!;
 	s!KApplication::ShutdownTypeReboot!KWorkSpace::ShutdownTypeReboot!;
-	s!KApplication::ShutdownTypeNone!KWorkSpace::ShutdownTypeNone!;	
+	s!KApplication::ShutdownTypeNone!KWorkSpace::ShutdownTypeNone!;
 	s!KApplication::ShutdownType!KWorkSpace::ShutdownType!;
 	s!KApplication::ShutdownMode!KWorkSpace::ShutdownMode!;
         s!([, (])KMAX\(!\1qMax\(!g;
@@ -296,7 +307,7 @@ while ($file = <$F>) {
 	s!([, (])kMax\(!\1qMax\(!g;
 	s!([, (])kAbs\(!\1qAbs\(!g;
 	# never add kClamp here! it's no easy search & replace there
-    
+
         s!Q_INT8!qint8!g;
         s!Q_UINT8!quint8!g;
         s!Q_INT16!qint16!g;
@@ -309,7 +320,7 @@ while ($file = <$F>) {
         s!Q_ULLONG!quint64!g;
 		s!QMAX!qMax!g;
         s!QMIN!qMin!g;
- 	
+
 	s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
     s!Qt::ShiftButton!Qt::ShiftModifier!;
     s!Qt::ControlButton!Qt::ControlModifier!;
@@ -341,16 +352,18 @@ while ($file = <$F>) {
 	s!kdFatal!kFatal!g;
 	s!kdBacktrace!kBacktrace!g;
 	s!kdClearDebugConfig!kClearDebugConfig!g;
-	
+
 	s!flushX!flush!;
 
     s!\bKTimezone\b!KTimeZone!g;
-	
+
     s!\bKTimezones\b!KTimeZones!g;
 
     s!\bKTimezoneData\b!KTimeZoneData!g;
 
     s!\bKTimezoneSource\b!KTimeZoneSource!g;
+
+    s!\bKWidgetAction\b!K3WidgetAction!g;
 
     s!#include <kiconview.h>!#include <k3iconview.h>!;
 	s!\bKIconViewItem\b!K3IconViewItem!g;
@@ -359,13 +372,13 @@ while ($file = <$F>) {
 	s!#include <klistviewsearchline.h>!#include <k3listviewsearchline.h>!;
 	s!\bKListView\b!K3ListView!g;
 	s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
-	s!\bKListViewItem\b!K3ListViewItem!g;	
+	s!\bKListViewItem\b!K3ListViewItem!g;
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
-	
+
 	s!\bKIcon\b!K3Icon!g;
 	s!#include <ktoolbarbutton.h>!!g;
 	s!\baddURL\b!addUrl!g;
-	
+
 	s!kapp->makeStdCaption!KInstance::makeStdCaption!;
 	s!kapp->caption!KInstance::caption!;
 
@@ -394,7 +407,7 @@ while ($file = <$F>) {
             s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
 	    push(@necessaryIncludes, "ktoolinvocation.h");
         }
-		
+
 	if ( /kapp->kdeinitExec/ ) {
 	    s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
 	    push(@necessaryIncludes, "ktoolinvocation.h");
@@ -438,7 +451,7 @@ while ($file = <$F>) {
         if ( /kapp->startServiceByName/ ) {
 	    s!kapp->startServiceByName!KToolInvocation::startServiceByName!;
 	    push(@necessaryIncludes, "ktoolinvocation.h");
-        }	
+        }
 	if ( /kapp->config/ ) {
 	    s!kapp->config!KGlobal::config!;
 	    push(@necessaryIncludes, "kglobal.h");
@@ -457,7 +470,7 @@ while ($file = <$F>) {
             push(@necessaryIncludes, "kiconloader.h");
         }
 
-		
+
 	if ( /new KRun/ ) {
 	    $warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
 	}
@@ -479,7 +492,7 @@ while ($file = <$F>) {
 		s!Q3Frame::VLine!Qt::Vertical!;
 	}
 	s!QDir::SortSpec!QDir::SortFlags!;
-	
+
 	my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
 	if ( $valuereturn ) {
 	    $_ = $valuereturn;
@@ -488,11 +501,11 @@ while ($file = <$F>) {
 	if ( $valuereturn ) {
 	    $_ = $valuereturn;
 	}
-			
+
 	my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KPushButton");
 	if ( $valuereturn ) {
 	    $_ = $valuereturn;
-		
+
 	}
         my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KComboBox");
         if ( $valuereturn ) {
@@ -504,8 +517,8 @@ while ($file = <$F>) {
 	    $_ = $valuereturn;
 
         }
-		
-		
+
+
 	#if( /setStatusText/ ) {
 	#	s!setStatusText!setToolTip!;
 	#}
@@ -528,7 +541,7 @@ while ($file = <$F>) {
     foreach my $inc (@necessaryIncludes) {
 	next if (defined $alreadyadded{$inc});
 	$alreadyadded{$inc} = 1;
-	
+
 	functionUtilkde::addIncludeInFile( $file, $inc );
     }
 }
