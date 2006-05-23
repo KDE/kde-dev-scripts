@@ -19,7 +19,7 @@
 
 ;; ------------------------------ INSTALLATION ------------------------------
 ;; To use this file, put this file in your emacs config directory.
-;; If you do not have such a directory, create one and add the inserting
+;; If you do not have such a directory, create one and add 
 ;; something like the following to your .emacs: 
 ;; (setq load-path (cons "/home/joe/Emacs/" load-path))
 ;;
@@ -27,7 +27,6 @@
 ;; (require 'klaralv)
 ;; (global-set-key [(f5)] 'kdab-insert-header)
 ;; (global-set-key [(shift f5)] 'kdab-insert-forward-decl)
-;; (setq kdab-qt-documentation "file:/usr/local/qt/html/doc/XXX.html")
 ;; (global-set-key [(control f5)] 'kdab-lookup-qt-documentation)
 ;; 
 ;; If you use Qtopia, insert the following line to activate Qtopia headers
@@ -36,22 +35,15 @@
 ;; as in qtopia/qpeapplication, then insert the following code in your setup
 ;; (setq kdab-prefix-qpe nil)
 ;;
-;; Finally, if you are using Qt 4 rather than Qt 3, insert the following line into you setup:
+;; If you are using Qt 4 rather than Qt 3, insert the following line into you setup:
 ;; (setq kdab-qt-version 4)
 ;; or in a .emacs-dirvars file:
 ;; kdab-qt-version: 4
+;;
+;; Finally, if you do not want header files to be inserted lower-cased when
+;; not found locally, insert (kdab-lowercase-header-files nil)
 
 ;; ------------------------------ CONFIGURATION ------------------------------
-(defvar kdab-qt-documentation
-  "http://doc.trolltech.com/XXX.html"
-  "URL for Qt documentation. XXX must be in the string. 
-  Example: file://packages/kde-src/qt-copy/doc/html/XXX.html")
-
-(defvar kdab-qpe-documentation
-  "file://opt/qtopia/doc/XXX.html"
-  "URL for QTopia documentatin. XXX must be in the string. 
-  Example: file:/opt/qtopia/doc/XXX.html")
-
 (defvar kdab-qt-version 3
   "Specify which header files to use")
 
@@ -61,6 +53,8 @@
 (defvar kdab-prefix-qpe 't
   "set this to nil if you do not want QTopia header files prefixed with qtopia/")
 
+(defvar kdab-lowercase-header-files 't
+  "Should header files be all lowercase, or would you prefer to use same case as class?")
 
 ;; ------------------------------ Include Specifications ------------------------------ 
 ;; special case for include files
@@ -68,7 +62,7 @@
 (defvar kdab-special-includes
   '( 
     ; KDE
-    (kdebug.h kDebug kWarning kError kFatal kBacktrace)
+    (kdebug.h kDebug kWarning kError kFatal kBacktrace kdDebug kdWarning kdError kdFatal kdBacktrace)
     (kconfig.h KConfigGroup)
     (kicondialog.h KIconCanvas KIconButton)
     (knuminput.h KDoubleNumInput KIntNumInput)
@@ -267,7 +261,7 @@
 (defvar kdab-qt4-classes
   '(QtNsPlugin QClipboard QPixmap QPen QRgb QMessageBox
                QRegion QImageReader QItemEditorCreator QTimeEdit QCloseEvent QPushButton
-               QAbstractScrollArea QTabBar QSlider QPicture QRadialGradient QStandardItemModel
+               QAbstractScrollArea QTabBar QSlider QPicture QRadialGradient QStandardItemModel QStringListModel
                QListWidget QPageSetupDialog QAccessibleApplication QHelpEvent QTextDocumentFragment QDragMoveEvent
                QImageIOHandlerFactoryInterface QDropEvent QInputContextFactoryInterface QStyleHintReturnMask QWidget QTextTableCell
                QPrintDialog QKeyEvent QDial QDrag QFont QIcon
@@ -470,7 +464,9 @@
                     ((kdab-map-special word) (kdab-map-special word))
                     ((and (string-match "^qdom" word) (eq kdab-qt-version 3)) "qdom.h")
                     ((and (string-match "^qxml" word) (eq kdab-qt-version 3)) "qxml.h")
-                    (t (concat word ".h"))))
+                    ((and (string-match "^q" word) (eq kdab-qt-version 3)) (concat word ".h") )
+                    (kdab-lowercase-header-files (concat word ".h" ))
+                    (t (concat word-with-case ".h"))))
            header is-local)
 
       
@@ -519,7 +515,7 @@
             ; No include existed
             (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
 	    (while (and (re-search-backward "^#include *[\"<]\\([^\">]+\\)[\">]" nil t)
-			(string-match ".*\.moc$" (match-string 1))) 
+			(string-match ".*moc.*" (match-string 1))) 
 	      ; each iteration moves up until finding a #include which isn't a moc
 	      )
             (if (not (looking-at "^#include *[\"<][^\">]+ *[\">]"))
@@ -589,20 +585,5 @@
       (setq list (cdr list)))
     found))
         
-;--------------------------------------------------------------------------------
-; Start konqueror with documentation for the class under point.
-; set `kdab-qt-documentation' and `kdab-qpe-documentation'
-; to specify the replacement for the documentation
-;--------------------------------------------------------------------------------
-(defun kdab-lookup-qt-documentation ()
-  (interactive "")
-  (save-excursion
-    (let* ((word (downcase (current-word)))
-           (doc (if (is-qpe-class word) kdab-qpe-documentation kdab-qt-documentation))
-           (url (if (not (string-match "XXX" doc))
-                   (error "didn't find three X's in kdab-qt-documentation or kdab-qpe-documentation")
-                 (replace-match word t t doc))))
-      (start-process "qt documentation" nil "kfmclient" "openURL" url)
-      (message (concat "Loading " url)))))
 
 (provide 'klaralv)
