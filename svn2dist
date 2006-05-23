@@ -57,8 +57,9 @@ noi18nlang=""
 replace_files=""
 i18nmodule=""
 svnroot=""
-debug=""
+debug=
 branch="trunk"
+version=
 
 while true; do
 	case "$1" in
@@ -268,6 +269,8 @@ if [ -z $version ]; then
 	filename=$name
 else
 	filename="$name-$version"
+        VERSION=$version
+	export VERSION
 fi
 
 if [ $doi18n = "yes" ]; then
