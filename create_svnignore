@@ -64,34 +64,37 @@ handledir() {
 		fgrep -q .stub Makefile.am && addignore "*_stub.cpp"
 		
 		grep -q "^include.*/Doxyfile.am$" Makefile.am && addignore "Doxyfile"
-	elif test -f *.pro; then
-		if test $recurse -eq 1; then
-			echo "Entering $1"
-		fi
-		addignore Makefile
-		addignore .obj
-		for f in `ls -1 *.pro`; do
-		   if fgrep -q debug_and_release $f; then
-		    addignore "Makefile.Debug"
-		    addignore "Makefile.Release"
-		   fi
-		   template=`grep ^TEMPLATE $f | sed -e 's/.*=[ \t]*//'`
-		   if test -z "$template" -o "$template" = "app"; then
-		        # TODO grep TARGET
-			target=`echo $f | sed -e 's/\.pro$//'`
-			addignore $target
-		   fi
-		   # RESOURCES = foo.qrc -> addignore qrc_foo.cpp
-		   for resource in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^RESOURCES | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
-		      addignore qrc_`echo $resource | sed -e 's/\.qrc$/\.cpp/'`
-		   done
-		   # FORMS = foo.ui -> addignore ui_foo.h
-		   for form in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^FORMS | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
-		      addignore ui_`echo $form | sed -e 's/\.ui$/\.h/'`
-		   done
-		done
 	else
-		echo "Skipping $1"
+		qmakefiles=`ls -1 *.pro 2>/dev/null`
+		if test -n "$qmakefiles"; then
+			if test $recurse -eq 1; then
+        			echo "Entering $1"
+        		fi
+        		addignore Makefile
+        		addignore .obj
+        		for f in `ls -1 *.pro`; do
+        		   if fgrep -q debug_and_release $f; then
+        		    addignore "Makefile.Debug"
+        		    addignore "Makefile.Release"
+        		   fi
+        		   template=`grep ^TEMPLATE $f | sed -e 's/.*=[ \t]*//'`
+        		   if test -z "$template" -o "$template" = "app"; then
+        		        # TODO grep TARGET
+        			target=`echo $f | sed -e 's/\.pro$//'`
+        			addignore $target
+        		   fi
+        		   # RESOURCES = foo.qrc -> addignore qrc_foo.cpp
+        		   for resource in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^RESOURCES | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
+        		      addignore qrc_`echo $resource | sed -e 's/\.qrc$/\.cpp/'`
+        		   done
+        		   # FORMS = foo.ui -> addignore ui_foo.h
+        		   for form in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^FORMS | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
+        		      addignore ui_`echo $form | sed -e 's/\.ui$/\.h/'`
+        		   done
+        		done
+		else
+			echo "Skipping $1"
+		fi
 	fi
 	if test "$addedsomething" = 1; then
 	    svn propset svn:ignore -F svnignore.tmp .
@@ -100,8 +103,8 @@ handledir() {
 	)
 }
 
-
-if test -f Makefile.am -o -f *.pro -o -f CMakeLists.txt ; then
+qmakefiles=`ls -1 *.pro 2>/dev/null`
+if test -f Makefile.am -o -n "$qmakefiles" -o -f CMakeLists.txt; then
 	if test $recurse -eq 1; then
 		find . -type d | egrep -v 'CVS|.svn' | sed -e 's,/$,,' | \
 		while read dir; do
