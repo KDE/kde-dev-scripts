@@ -6,8 +6,8 @@ unless (scalar(@ARGV) == 1)
 }
 
 my $gpl = 'General\sPublic\sLicense';
-my $gp2 = 'This\sis\sfree\ssoftware;\sit\scomes\sunder\sthe\sGNU';
-my $gp3 = 'License:\sGPL\swith\sthe\sfollowing\sexplicit\sclarification';
+my $gp2 = 'This\sis\sfree\ssoftware;';
+my $gp3 = 'This\s(library|program)\sis\sfree\ssoftware;';
 my $x11 = 'TORT\sOR\sOTHERWISE';
 my $bsd = 'INCLUDING\sNEGLIGENCE\sOR\sOTHERWISE';
 my $gen = 'generated';
