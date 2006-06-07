@@ -38,7 +38,7 @@ file.printf("# Once done this will define\n")
 file.printf("#\n")
 file.printf("#  #{cmakeFoundName} - system has #{package}\n")
 file.printf("#  #{cmakeIncDirName} - the #{package} include directory\n")
-file.printf("#  #{cmakeLibName} - Link these to use OpenGL and GLU\n")
+file.printf("#  #{cmakeLibName} - Link these to use #{package}\n")
 file.printf("#  #{cmakeDefsName} - Compiler switches required for using #{package}\n")
 file.printf("#\n\n\n")
 
