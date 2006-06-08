@@ -16,9 +16,6 @@ header=gets.chomp
 
 print("Include subdir (e.g. \"libxml2\", empty to skip ): ")
 incSubDir=gets.chomp
-if not incSubDir.empty?
-   incSubDir="/"+incSubDir
-end
 
 print("Look for library (e.g. \"jpeg\" or \"xml2\"): ")
 lib=gets.chomp
@@ -51,12 +48,18 @@ if not pkgconfig.empty?
    file.printf("SET(#{cmakeDefsName} ${_#{package}Cflags})\n\n")
 end
 
-file.printf("FIND_PATH(#{cmakeIncDirName} #{header}\n")
+file.printf("FIND_PATH(#{cmakeIncDirName} NAMES #{header}\n")
+file.printf("  PATHS\n")
 if not pkgconfig.empty?
-   file.printf("  ${_#{package}IncDir}#{incSubDir}\n")
+   file.printf("  ${_#{package}IncDir}\n")
 end
-file.printf("  /usr/include#{incSubDir}\n")
-file.printf("  /usr/local/include#{incSubDir}\n")
+file.printf("  /usr/include\n")
+file.printf("  /usr/local/include\n")
+
+if not incSubDir.empty?
+   file.printf("  PATH_SUFFIXES #{incSubDir}\n")
+end
+
 file.printf(")\n\n")
 
 file.printf("FIND_LIBRARY(#{cmakeLibName} NAMES #{lib}\n")
