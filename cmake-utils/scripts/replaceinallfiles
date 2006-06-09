@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-Orig="kde4_header"
+Orig="original Makefile.am contents follow"
 Repl=""
 
 require 'ftools'
@@ -13,6 +13,7 @@ Dir["**/CMakeLists.txt"].each do |file|
    fileContents.each do |line|
       if line.include?(Orig)
          hits=hits+1
+         break
 #         next
          line[Orig]=Repl
       end
