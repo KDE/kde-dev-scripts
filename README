@@ -174,8 +174,6 @@ cvslastreferenced Goes through the whole history of a file to find all modificat
 
 === KDE BUILD SCRIPTS
 
-kde-build       Updates and recompiles a local CVS or Subversion tree
-
 build-progress.sh Displays the progress of kde-build, times needed to complete each
 		step. And sets the titlebar of the terminal to the directory that
 		make is processing 
