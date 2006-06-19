@@ -119,7 +119,7 @@ while ($file = <$F>) {
 	s!KFindDialog::MinimumUserOption!KFind::MinimumUserOption!;
 	s!kdatetbl.h!kdatetable.h!;
 	s!KPopupMenu!KMenu!g;
-
+	s!\benableButtonOK\b!enableButtonOk!g;
 	s!setWorldMatrix!setMatrix!;
 	#TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
 	s!kapp->isRestored!kapp->isSessionRestored!;
