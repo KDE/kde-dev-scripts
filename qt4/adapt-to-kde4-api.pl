@@ -382,6 +382,11 @@ while ($file = <$F>) {
 	s!kapp->makeStdCaption!KInstance::makeStdCaption!;
 	s!kapp->caption!KInstance::caption!;
 
+	s!\bsetEnableSounds\b!setSoundsEnabled!;
+	s!\bisSoundsEnabled\b!soundsEnabled!;
+	s!\bsetEnableSqueezedText\b!setSqueezedTextEnabled!;
+	s!\bisSqueezedTextEnabled\b!squeezedTextEnabled!;
+	s!\bsetEnableContextMenu\b!setContextMenuEnabled!;
 
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
