@@ -154,7 +154,7 @@ With arg, do it arg times."
   ;; fontify "public|protected|private slots" with one and the same face :)
   ;; NOTE: write face-at-point function to fontify those just like other
   ;; access specifiers
-  (font-lock-add-keywords nil '(("\\<\\(\\(public\\|protected\\|private\\) slots\\)\\>" 
+  (font-lock-add-keywords nil '(("\\<\\(\\(public\\|protected\\|private\\) \\(slots\\|Q_SLOTS\\)\\)\\>" 
 				 . font-lock-reference-face)))
   ;; Add (setq magic-keys-mode nil) to your .emacs (before loading this file)
   ;; to disable the magic keys in C++ mode.
@@ -866,7 +866,8 @@ This function does not do any hidden buffer changes."
 			  (not (bobp))
 			  (save-excursion
 			    (c-safe (progn (c-backward-sexp 1) t))
-			    (and (looking-at "slots:")
+			    (and (or (looking-at "slots:")
+				     (looking-at "Q_SLOTS:"))
 				 (c-backward-sexp 1))
 			    (looking-at c-opt-access-key)))
 		(c-backward-sexp 1)
@@ -2116,7 +2117,8 @@ This function does not do any hidden buffer changes."
 			      (not (bobp))
 			      (save-excursion
 				(c-safe (progn (c-backward-sexp 1) t))
-				(and (looking-at "slots:")
+				(and (or (looking-at "slots:")
+					 (looking-at "Q_SLOTS:"))
 				   (c-backward-sexp 1))
 				(looking-at c-opt-access-key)))
 		    (c-backward-sexp 1)
@@ -3172,7 +3174,8 @@ This function does not do any hidden buffer changes."
 			    (save-excursion
 			      (c-safe (progn (c-backward-sexp 1) t))
 			      ;; agulbrahack 2
-			      (and (looking-at "slots:")
+			      (and (or (looking-at "slots:")
+				       (looking-at "Q_SLOTS:"))
 				   (c-backward-sexp 1))
 			      (looking-at c-access-key)))
 		  (c-backward-sexp 1)

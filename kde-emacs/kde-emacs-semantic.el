@@ -148,6 +148,7 @@ token and TOKENS have to be a list of functions from buffer."
     ret
     ))
 
+;; TODO support Q_SIGNALS too
 (defmacro kde-label-signals (pt)
   "Returns none-nil if the current access label == \"signals\""
   `(save-excursion
@@ -177,7 +178,7 @@ token and TOKENS have to be a list of functions from buffer."
     (goto-char ,pt)
     (if (looking-at ":")
 	;; export this regex to a kde-emacs-vars defvar
-	(re-search-backward "\\(public\\|protected\\|private\\)[ \t]+slots" (point-at-bol) t))
+	(re-search-backward "\\(public\\|protected\\|private\\)[ \t]+\\(slots\\|Q_SLOTS\\)" (point-at-bol) t))
     ))
 
 (defmacro kde-is-constructor (function)

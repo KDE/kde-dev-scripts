@@ -39,7 +39,7 @@
 ;*---------------------------------------------------------------------*/
 
 (defconst kde-access-labels
-  "\\<\\(signals\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+slots\\)?\\)\\>:"
+  "\\<\\(signals\\|Q_SIGNALS\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+\\(slots\\|Q_SLOTS\\)\\)?\\)\\>:"
   "KDE specific access labels regexp.")
 
 (defconst kde-source-files '("cpp" "cc" "cxx" "CC" "C" "c")
