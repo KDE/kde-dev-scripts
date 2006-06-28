@@ -551,6 +551,7 @@ cd $temp_dist
 
 # create the configure script
 # working directory is $temp_dist
+export UNSERMAKE=no
 echo "make -f Makefile.cvs in $temp_dist/:" >> $log
 echo "" >> $log
 echo -n "make -f Makefile.cvs in $temp_dist/... "
