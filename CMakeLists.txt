@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/katepart/syntax FILES kdesvn-buildrc.xml )
+install( FILES kdesvn-buildrc.xml  DESTINATION  ${DATA_INSTALL_DIR}/katepart/syntax )
 install(PROGRAMS 
   create_makefile create_makefiles adddebug 
   cheatmake makeobj kde-build build-progress.sh pruneemptydirs 
