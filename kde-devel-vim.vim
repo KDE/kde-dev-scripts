@@ -101,6 +101,7 @@ function! SetCodingStyle()
             iunmap (
         endif
         call SmartParensOn()
+        inoremap <CR> <ESC>:call SmartLineBreak2()<CR>A<CR>
         set sw=4
         set ts=4
         set noet
@@ -108,7 +109,7 @@ function! SetCodingStyle()
         set foldmethod=indent
         set foldcolumn=3
         map <TAB> za
-    elseif pathfn =~ 'kdelibs'
+    elseif pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         inoremap <CR> <ESC>:call SmartLineBreak()<CR>A<CR>
@@ -116,6 +117,33 @@ function! SetCodingStyle()
         set sts=4
         set et
         set tw=80
+    endif
+endfunction
+
+function! SmartLineBreak2()
+    if ( &syntax =~ '^\(c\|cpp\|java\)$' )
+        let current_line = getline( '.' )
+        let space_at_end = '\s\+$'
+        if match( current_line, space_at_end ) >= 0
+            :execute ':s/\s*$//'
+        endif
+        let need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        if match( current_line, need_brace_on_next_line ) >= 0
+            let brace_at_end = '{$'
+            if match( current_line, brace_at_end ) > 0
+                :execute ':s/\s*{$//'
+            endif
+            :execute "normal o{"
+            if match( current_line, '\<namespace\>' ) >= 0
+                let namespace = substitute( current_line, '^.*namespace\s\+', '', '' )
+                let namespace = substitute( namespace, '\s.*$', '', '' )
+                :execute "normal o} // namespace " . namespace . "\<ESC>k"
+            elseif match( current_line, '\<enum\|class\|struct\>' )
+                :execute "normal o};\<ESC>k"
+            else
+                :execute "normal o}\<ESC>k"
+            endif
+        endif
     endif
 endfunction
 
