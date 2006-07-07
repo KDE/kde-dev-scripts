@@ -19,14 +19,26 @@ set suffixes+=.lo,.o,.moc,.la,.closure,.loT
 set path=.,/usr/include,/usr/local/include,
 if $QTDIR != ''
     let &path = &path . $QTDIR . '/include/,'
+    let &path = &path . $QTDIR . '/include/Qt/,'
+    let &path = &path . $QTDIR . '/include/QtCore/,'
+    let &path = &path . $QTDIR . '/include/Qt3Support/,'
+    let &path = &path . $QTDIR . '/include/QtAssistant/,'
+    let &path = &path . $QTDIR . '/include/QtDBus/,'
+    let &path = &path . $QTDIR . '/include/QtDesigner/,'
+    let &path = &path . $QTDIR . '/include/QtGui/,'
+    let &path = &path . $QTDIR . '/include/QtNetwork/,'
+    let &path = &path . $QTDIR . '/include/QtOpenGL/,'
+    let &path = &path . $QTDIR . '/include/QtSql/,'
+    let &path = &path . $QTDIR . '/include/QtSvg/,'
+    let &path = &path . $QTDIR . '/include/QtTest/,'
+    let &path = &path . $QTDIR . '/include/QtUiTools/,'
+    let &path = &path . $QTDIR . '/include/QtXml/,'
 endif
 if $KDEDIR != ''
     let &path = &path . $KDEDIR . '/include/,'
-    let &path = &path . $KDEDIR . '/include/arts/,'
 endif
 if $KDEDIRS != ''
     let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include,', 'g' )
-    let &path = &path . substitute( $KDEDIRS, '\(:\|$\)', '/include/arts,', 'g' )
 endif
 set path+=,
 
