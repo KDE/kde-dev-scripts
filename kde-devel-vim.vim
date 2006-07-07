@@ -139,7 +139,7 @@ function! SmartLineBreak2()
         if match( current_line, space_at_end ) >= 0
             :execute ':s/\s*$//'
         endif
-        let need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
         if match( current_line, need_brace_on_next_line ) >= 0
             let brace_at_end = '{$'
             if match( current_line, brace_at_end ) > 0
@@ -166,7 +166,7 @@ function! SmartLineBreak()
         if match( current_line, space_at_end ) >= 0
             :execute ':s/\s*$//'
         endif
-        let need_brace_on_same_line = '\<\(if\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
         if match( current_line, need_brace_on_same_line ) >= 0
             let brace_at_end = '{$'
             if match( current_line, brace_at_end ) > 0
@@ -249,12 +249,14 @@ function! SmartParens( char, ... )
         endif
         return ' ' . a:char
     endif
-    if a:char == '('
-        if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == 'if' ||
-          \strpart( getline( '.' ), col( '.' ) - 4, 3 ) == 'for' ||
-          \strpart( getline( '.' ), col( '.' ) - 6, 5 ) == 'while' ||
-          \strpart( getline( '.' ), col( '.' ) - 7, 6 ) == 'switch'
-            return ' ( '
+    if !exists(DisableSpaceBeforeParen)
+        if a:char == '('
+            if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == 'if' ||
+              \strpart( getline( '.' ), col( '.' ) - 4, 3 ) == 'for' ||
+              \strpart( getline( '.' ), col( '.' ) - 6, 5 ) == 'while' ||
+              \strpart( getline( '.' ), col( '.' ) - 7, 6 ) == 'switch'
+                return ' ( '
+            endif
         endif
     endif
     return a:char . ' '
