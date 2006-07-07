@@ -7,6 +7,10 @@
 " storage of global variables. Something along the line of
 " set   viminfo=%,!,'50,\"100,:100,n~/.viminfo
 " should do the trick.
+"
+" To make use of the ,ll and ,lg shortcuts you need to have the files
+" GPLHEADER and LGPLHEADER in your home directory. Their content will be
+" copied as license header then.
 
 " Don't include these in filename completions
 set suffixes+=.lo,.o,.moc,.la,.closure,.loT
@@ -66,7 +70,11 @@ vmap ,c :s,^,//X ,<CR>:noh<CR>
 vmap ,u :s,^//X ,,<CR>
 
 " Insert an include guard based on the file name on ,i
-nmap ,i :call IncludeGuard()<CR>o
+nmap ,i :call IncludeGuard()<CR>
+
+" Insert license headers at the top of the file
+nmap ,lg :call LicenseHeader( "GPL" )<CR>
+nmap ,ll :call LicenseHeader( "LGPL" )<CR>
 
 " Insert simple debug statements into each method
 nmap ,d :call InsertMethodTracer()<CR>
@@ -84,6 +92,90 @@ set listchars=tab:·\ ,trail:·
 set list
 
 set incsearch
+
+function! SetCodingStyle()
+    "the path for the file
+    let pathfn = expand( '%:p:h' )
+    if pathfn =~ 'phonon'
+        if strlen(mapcheck('(','i')) > 0
+            iunmap (
+        endif
+        call SmartParensOn()
+        set sw=4
+        set ts=4
+        set noet
+        set tw=80
+        set foldmethod=indent
+        set foldcolumn=3
+        map <TAB> za
+    elseif pathfn =~ 'kdelibs'
+        call SmartParensOff()
+        inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
+        inoremap <CR> <ESC>:call SmartLineBreak()<CR>A<CR>
+        set sw=4
+        set sts=4
+        set et
+        set tw=80
+    endif
+endfunction
+
+function! SmartLineBreak()
+    if ( &syntax =~ '^\(c\|cpp\|java\)$' )
+        let current_line = getline( '.' )
+        let space_at_end = '\s\+$'
+        if match( current_line, space_at_end ) >= 0
+            :execute ':s/\s*$//'
+        endif
+        let need_brace_on_same_line = '\<\(if\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        if match( current_line, need_brace_on_same_line ) >= 0
+            let brace_at_end = '{$'
+            if match( current_line, brace_at_end ) > 0
+                if match( current_line, '[^ ]{$' ) > 0
+                    :execute ':s/{$/ {/'
+                endif
+            else
+                :execute ':s/$/ {/'
+            endif
+            if match( current_line, '\<enum\>' ) >= 0
+                :execute "normal o};\<ESC>k"
+            else
+                :execute "normal o}\<ESC>k"
+            endif
+        else
+            let need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
+            if match( current_line, need_brace_on_next_line ) >= 0
+                let brace_at_end = '{$'
+                if match( current_line, brace_at_end ) > 0
+                    :execute ':s/\s*{$//'
+                endif
+                :execute "normal o{"
+                if match( current_line, '\<namespace\>' ) >= 0
+                    let namespace = substitute( current_line, '^.*namespace\s\+', '', '' )
+                    let namespace = substitute( namespace, '\s.*$', '', '' )
+                    :execute "normal o} // namespace " . namespace . "\<ESC>k"
+                else
+                    :execute "normal o};\<ESC>k"
+                endif
+            endif
+        endif
+    endif
+endfunction
+
+function! SmartParensOn()
+    inoremap ( <C-R>=SmartParens( '(' )<CR>
+    inoremap [ <C-R>=SmartParens( '[' )<CR>
+    inoremap ] <C-R>=SmartParens( ']', '[' )<CR>
+    inoremap ) <C-R>=SmartParens( ')', '(' )<CR>
+endfunction
+
+function! SmartParensOff()
+    if strlen(mapcheck('[','i')) > 0
+        iunmap (
+        iunmap [
+        iunmap ]
+        iunmap )
+    endif
+endfunction
 
 function! SmartTab()
     let col = col('.') - 1
@@ -128,44 +220,43 @@ function! SmartParens( char, ... )
     return a:char . ' '
 endfunction
 
-function! SwitchHeaderImpl()
-    let headers = '\.\([hH]\|hpp\|hxx\)$'
-    let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
-    let fn = expand( '%' )
-    if fn =~ headers
-        let list = glob( substitute( fn, headers, '.*', '' ) )
-    elseif fn =~ impl
-        let list = glob( substitute( fn, impl, '.*', '' ) )
+function! SpaceBetweenKeywordAndParens()
+    if ! ( &syntax =~ '^\(c\|cpp\|java\)$' )
+        return '('
     endif
-    while strlen( list ) > 0
-        let file = substitute( list, "\n.*", '', '' )
-        let list = substitute( list, "[^\n]*", '', '' )
-        let list = substitute( list, "^\n", '', '' )
-        if ( fn =~ headers && file =~ impl ) || ( fn =~ impl && file =~ headers )
-            execute( "edit " . file )
-            return
-        endif
-    endwhile
-    if ( fn =~ headers )
-        if exists( "$implextension" )
-            let file = substitute( fn, headers, '.' . $implextension, '' )
-        else
-            let file = substitute( fn, headers, '.cpp', '' )
-        endif
-        " check for modified state of current buffer and if modified ask:
-        " save, discard, cancel
-        execute( 'edit '.file )
-        call append( 0, "#include \"".fn."\"" )
-        call append( 2, "// vim: sw=4 ts=4 noet" )
-        execute( "set sw=4" )
-        execute( "set ts=4" )
-    elseif fn =~ impl
-        let file = substitute( fn, impl, '.h', '' )
-        execute( "edit ".file )
+    let s = strpart( getline( '.' ), 0, col( '.' ) - 1 )
+    if s =~ '//'
+        " text inside a comment
+        return '('
     endif
+    let s = substitute( s, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+    let s = substitute( s, "'[^']*'", '', 'g' )
+    let s = substitute( s, '"\(\\"\|[^"]\)*"', '', 'g' )
+    if s =~ "\\([\"']\\|/\\*\\)"
+        " text inside a string
+        return '('
+    endif
+    if a:0 > 0
+        if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == a:1 . ' '
+            return "\<BS>" . a:char
+        endif
+        if strpart( getline( '.' ), col( '.' ) - 2, 1 ) == ' '
+            return a:char
+        endif
+        return ' ' . a:char
+    endif
+    if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == 'if' ||
+        \strpart( getline( '.' ), col( '.' ) - 4, 3 ) == 'for' ||
+        \strpart( getline( '.' ), col( '.' ) - 6, 5 ) == 'while' ||
+        \strpart( getline( '.' ), col( '.' ) - 7, 6 ) == 'switch' ||
+        \strpart( getline( '.' ), col( '.' ) - 8, 7 ) == 'foreach' ||
+        \strpart( getline( '.' ), col( '.' ) - 8, 7 ) == 'forever'
+        return ' ('
+    endif
+    return '('
 endfunction
 
-function! SwitchPrivateHeaderImpl()
+function! SwitchHeaderImpl()
     let privateheaders = '_p\.\([hH]\|hpp\|hxx\)$'
     let headers = '\.\([hH]\|hpp\|hxx\)$'
     let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
@@ -181,12 +272,14 @@ function! SwitchPrivateHeaderImpl()
         let file = substitute( list, "\n.*", '', '' )
         let list = substitute( list, "[^\n]*", '', '' )
         let list = substitute( list, "^\n", '', '' )
-        if ( fn =~ privateheaders && file =~ impl ) || ( fn =~ impl && file =~ privateheaders ) || ( fn =~ headers && file =~ privateheaders )
+        if ( ( fn =~ headers || fn =~ privateheaders ) && file =~ impl ) || ( fn =~ impl && file =~ headers )
+            call AskToSave()
             execute( "edit " . file )
             return
         endif
     endwhile
-    if ( fn =~ privateheaders )
+    if ( fn =~ headers )
+        call AskToSave()
         if exists( "$implextension" )
             let file = substitute( fn, headers, '.' . $implextension, '' )
         else
@@ -200,12 +293,126 @@ function! SwitchPrivateHeaderImpl()
         execute( "set sw=4" )
         execute( "set ts=4" )
     elseif fn =~ impl
-        let file = substitute( fn, impl, '_p.h', '' )
-        execute( "edit ".file )
-    elseif fn =~ headers
-        let file = substitute( fn, headers, '_p.h', '' )
+        call AskToSave()
+        let file = substitute( fn, impl, '.h', '' )
         execute( "edit ".file )
     endif
+endfunction
+
+function! SwitchPrivateHeaderImpl()
+    let privateheaders = '_p\.\([hH]\|hpp\|hxx\)$'
+    let headers = '\.\([hH]\|hpp\|hxx\)$'
+    let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
+    let fn = expand( '%' )
+    if fn =~ privateheaders
+        let list = glob( substitute( fn, privateheaders, '.*', '' ) )
+    elseif fn =~ headers
+        let list = glob( substitute( fn, headers, '_p.*', '' ) )
+    elseif fn =~ impl
+        let list = glob( substitute( fn, impl, '_p.*', '' ) )
+    endif
+    while strlen( list ) > 0
+        let file = substitute( list, "\n.*", '', '' )
+        let list = substitute( list, "[^\n]*", '', '' )
+        let list = substitute( list, "^\n", '', '' )
+        if ( fn =~ privateheaders && file =~ impl ) || ( fn =~ impl && file =~ privateheaders ) || ( fn =~ headers && file =~ privateheaders )
+            call AskToSave()
+            execute( "edit " . file )
+            return
+        endif
+    endwhile
+    if ( fn =~ privateheaders )
+        call AskToSave()
+        if exists( "$implextension" )
+            let file = substitute( fn, privateheaders, '.' . $implextension, '' )
+        else
+            let file = substitute( fn, privateheaders, '.cpp', '' )
+        endif
+        " check for modified state of current buffer and if modified ask:
+        " save, discard, cancel
+        execute( 'edit '.file )
+        call append( 0, "#include \"".fn."\"" )
+        call append( 2, "// vim: sw=4 ts=4 noet" )
+        execute( "set sw=4" )
+        execute( "set ts=4" )
+    elseif fn =~ impl
+        let file = substitute( fn, impl, '_p.h', '' )
+        call CreatePrivateHeader( file )
+    elseif fn =~ headers
+        let file = substitute( fn, headers, '_p.h', '' )
+        call CreatePrivateHeader( file )
+    endif
+endfunction
+
+function! AskToSave()
+    if &modified
+        let yesorno = input("Save changes before switching file? [Y/n]")
+        if yesorno == 'y' || yesorno == '' || yesorno == 'Y'
+            :execute 'w'
+            return 1
+        else
+            return 0
+        endif
+    endif
+    return 1
+endfunction
+
+function! CreatePrivateHeader( privateHeader )
+    let privateheaders = '_p\.\([hH]\|hpp\|hxx\)$'
+    let headers = '\.\([hH]\|hpp\|hxx\)$'
+    let impl = '\.\([cC]\|cpp\|cc\|cxx\)$'
+    let fn = expand( '%' )
+    if fn =~ headers
+        let className = ClassNameFromHeader()
+    elseif fn =~ impl
+        let className = ClassNameFromImpl()
+    endif
+
+    if AskToSave() && fn =~ headers
+        :normal gg
+        " check whether a Q_DECLARE_PRIVATE is needed
+        let dp = search( '\(^\|\s\+\)Q_DECLARE_PRIVATE\s*(\s*'.className.'\s*)' )
+        if dp == 0 "nothing found
+            call search( '^\s*class\s\+\([A-Za-z0-9]\+_EXPORT\s\+\)[A-Za-z_]\+\s*\(:\s*[,\t A-Za-z_]\+\)\?\s*\n\?\s*{' )
+            call search( '{' )
+            let @c = className
+            if match(getline(line('.')+1), 'Q_OBJECT')
+                :normal joQ_DECLARE_PRIVATE(c)
+            else
+                :normal oQ_DECLARE_PRIVATE(c)
+            endif
+            :execute 'w'
+        endif
+    endif
+    execute( "edit ".a:privateHeader )
+    let privateClassName = className . 'Private'
+    let header = substitute( a:privateHeader, privateheaders, '.h', '' )
+
+    call IncludeGuard()
+    " FIXME: find out what license to use
+    call LicenseHeader( "LGPL" )
+    :set sw=4
+    :set ts=4
+    :set tw=80
+    :normal Go// vim: sw=4 ts=4 tw=80
+    let @h = header
+    let @p = privateClassName
+    let @c = className
+    :normal kkko#include "h"class p{Q_DECLARE_PUBLIC(c)protected:c* q_ptr;};
+endfunction
+
+function! ClassNameFromHeader()
+    :normal gg
+    call search( '^\s*class\s\+\([A-Za-z0-9]\+_EXPORT\s\+\)\?[A-Za-z_]\+\s*\(:\s*[,\t A-Za-z_]\+\)\?\s*\n\?\s*{' )
+    "\zs and \ze mark start and end of the matching
+    return matchstr( getline('.'), '\s\+\zs\w\+\ze\s*\(:\|{\|$\)' )
+endfunction
+
+function! ClassNameFromImpl()
+    :normal gg
+    call search( '\s*\([A-Za-z_]\+\)::\1\s*(' )
+    :normal "cye
+    return @c
 endfunction
 
 function! IncludeGuard()
@@ -215,6 +422,12 @@ function! IncludeGuard()
     call append( '^', '#ifndef ' . guard )
     call append( '$', '#endif // ' . guard )
     +
+endfunction
+
+function! LicenseHeader( license )
+    let filename = $HOME . "/" . a:license . "HEADER"
+    execute ":0r " . filename
+"   call append( 0, system( "cat " . filename ) )
 endfunction
 
 function! SmartInclude()
@@ -268,6 +481,8 @@ function! MapIdentHeader( ident )
         return '<iostream>'
     elseif a:ident =~ '\(std::\)\?is\(alnum\|alpha\|ascii\|blank\|graph\|lower\|print\|punct\|space\|upper\|xdigit\)'
         return '<cctype>'
+    elseif a:ident == 'printf'
+        return '<cstdio>'
     endif
 
     " Private headers
@@ -453,13 +668,12 @@ endfunction
 
 function! AddQtSyntax()
     if expand( "<amatch>" ) == "cpp"
-        syn keyword qtKeywords     signals slots emit foreach
-
-        syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT Q_DECLARE_PUBLIC Q_DECLARE_PRIVATE Q_D Q_Q Q_DISABLE_COPY Q_DECLARE_METATYPE
+        syn keyword qtKeywords     signals slots emit Q_SLOTS Q_SIGNALS
+        syn keyword qtMacros       Q_OBJECT Q_WIDGET Q_PROPERTY Q_ENUMS Q_OVERRIDE Q_CLASSINFO Q_SETS SIGNAL SLOT Q_DECLARE_PUBLIC Q_DECLARE_PRIVATE Q_D Q_Q Q_DISABLE_COPY Q_DECLARE_METATYPE Q_PRIVATE_SLOT Q_FLAGS Q_INTERFACES Q_DECLARE_INTERFACE Q_EXPORT_PLUGIN2
         syn keyword qtCast         qt_cast qobject_cast qvariant_cast qstyleoption_cast
         syn keyword qtTypedef      uchar uint ushort ulong Q_INT8 Q_UINT8 Q_INT16 Q_UINT16 Q_INT32 Q_UINT32 Q_LONG Q_ULONG Q_INT64 Q_UINT64 Q_LLONG Q_ULLONG pchar puchar pcchar qint8 quint8 qint16 quint16 qint32 quint32 qint64 quint64 qlonglong qulonglong qreal
         syn keyword kdeKeywords    k_dcop k_dcop_signals
-        syn keyword kdeMacros      K_DCOP ASYNC
+        syn keyword kdeMacros      K_DCOP ASYNC PHONON_ABSTRACTBASE PHONON_OBJECT PHONON_HEIR PHONON_ABSTRACTBASE_IMPL PHONON_OBJECT_IMPL PHONON_HEIR_IMPL PHONON_PRIVATECLASS PHONON_PRIVATEABSTRACTCLASS
         syn keyword cRepeat        foreach
         syn keyword cRepeat        forever
 
@@ -495,5 +709,6 @@ endfunction
 
 autocmd Syntax * call AddQtSyntax()
 autocmd CursorHold * call UpdateMocFiles()
+autocmd BufNewFile,BufRead * call SetCodingStyle()
 
 " vim: sw=4 sts=4 et
