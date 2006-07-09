@@ -112,15 +112,16 @@ function! SetCodingStyle()
         if strlen(mapcheck('(','i')) > 0
             iunmap (
         endif
+        let g:DisableSpaceBeforeParen = 'x'
         call SmartParensOn()
         inoremap <CR> <ESC>:call SmartLineBreak2()<CR>A<CR>
         set sw=4
         set ts=4
         set noet
         set tw=80
-        set foldmethod=indent
-        set foldcolumn=3
-        map <TAB> za
+        "set foldmethod=indent
+        "set foldcolumn=3
+        "map <TAB> za
     elseif pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
@@ -150,11 +151,13 @@ function! SmartLineBreak2()
                 let namespace = substitute( current_line, '^.*namespace\s\+', '', '' )
                 let namespace = substitute( namespace, '\s.*$', '', '' )
                 :execute "normal o} // namespace " . namespace . "\<ESC>k"
-            elseif match( current_line, '\<enum\|class\|struct\>' )
+            elseif match( current_line, '\<enum\|class\|struct\>' ) >= 0
                 :execute "normal o};\<ESC>k"
             else
                 :execute "normal o}\<ESC>k"
             endif
+        elseif match( current_line, '^\s*{$' ) == 0
+            :execute "normal o}\<ESC>k"
         endif
     endif
 endfunction
@@ -196,6 +199,8 @@ function! SmartLineBreak()
                 else
                     :execute "normal o};\<ESC>k"
                 endif
+            elseif match( current_line, '^\s*{$' ) == 0
+                :execute "normal o}\<ESC>k"
             endif
         endif
     endif
@@ -249,7 +254,7 @@ function! SmartParens( char, ... )
         endif
         return ' ' . a:char
     endif
-    if !exists(DisableSpaceBeforeParen)
+    if !exists("g:DisableSpaceBeforeParen")
         if a:char == '('
             if strpart( getline( '.' ), col( '.' ) - 3, 2 ) == 'if' ||
               \strpart( getline( '.' ), col( '.' ) - 4, 3 ) == 'for' ||
