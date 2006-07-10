@@ -122,7 +122,7 @@ function! SetCodingStyle()
         "set foldmethod=indent
         "set foldcolumn=3
         "map <TAB> za
-    elseif pathfn =~ '\(kdelibs\|qt-copy\)'
+    else "if pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         inoremap <CR> <ESC>:call SmartLineBreak()<CR>A<CR>
