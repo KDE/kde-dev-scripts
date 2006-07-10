@@ -12,7 +12,16 @@
 #
 import sys, os
 
-MakefileAmContents = file("Makefile.am", "r").read()
+buildFile = "Makefile.am"
+if not os.path.exists( buildFile ):
+	buildFile = "CMakeLists.txt"
+	if not os.path.exists( buildFile ):
+		buildFile = ""
+
+MakefileAmContents = ""
+if buildFile:
+	MakefileAmContents = file(buildFile, "r").read()
+origMakefileAmContents = MakefileAmContents
 
 def renameFile( oldFileName, newFileName ):
 	global MakefileAmContents
@@ -75,4 +84,5 @@ for line in file(replaceFileName, "r").readlines():
 	
 
 # Write Makefile.am back
-file("Makefile.am","w").write( MakefileAmContents )
+if buildFile and (origMakefileAmContents != MakefileAmContents):
+	file(buildFile,"w").write( MakefileAmContents )
