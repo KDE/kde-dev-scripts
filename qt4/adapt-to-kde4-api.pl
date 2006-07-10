@@ -149,7 +149,7 @@ while ($file = <$F>) {
 	s!Qt::crossCursor!Qt::CrossCursor!;
 	s!Qt::waitCursor!Qt::WaitCursor!;
 	s!Qt::ibeamCursor!Qt::IBeamCursor!;
-	s!Qt::sizeVerCursor!Qt::SizeHorCursor!;
+	s!Qt::sizeVerCursor!Qt::SizeVerCursor!;
 	s!Qt::sizeHorCursor!Qt::SizeHorCursor!;
 	s!Qt::sizeBDiagCursor!Qt::SizeBDiagCursor!;
 	s!Qt::sizeFDiagCursor!Qt::SizeFDiagCursor!;
