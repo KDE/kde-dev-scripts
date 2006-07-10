@@ -110,7 +110,18 @@ $lastdir = '.';
  'error: \'KRandom\' has not been declared' => 'krandom',
  'error: \‘KStdAction\’ has not been declared' => 'kstdaction',
  'error: invalid use of undefined type \‘struct KSelectAction' => 'kselectaction',
- 'error: invalid use of undefined type \‘struct KToggleAction' => 'ktoggleaction',
+ 'invalid use of undefined type \‘struct KToggleAction' => 'ktoggleaction',
+ 'error: invalid use of undefined type \'struct KJobUiDelegate' => 'kjobuidelegate',
+ 'error: invalid use of undefined type \‘struct QLabel' => 'qlabel',
+ 'error: \'KToggleAction\' was not declared in this scope' => 'ktoggleaction',
+ 'invalid use of undefined type ‘struct KActionCollection' => 'kactioncollection',
+ 'forbids declaration of \'KToggleAction\' with no type' => 'ktoggleaction',
+ 'type \'struct KActionMenu' => 'kactionmenu',
+ 'invalid use of undefined type \'struct KAction' => 'kaction',
+ 'invalid use of undefined type ‘struct KAction' => 'kaction',
+ 'invalid use of undefined type ‘struct KSelectAction' => 'kselectaction',
+ 'invalid use of undefined type .struct KFontSizeAction' => 'kfontsizeaction',
+ 'invalid use of undefined type .struct KFontAction' => 'kfontaction',
 );
 
 # Initial values are simply to get into the while
@@ -137,7 +148,7 @@ while ( $exitcode != 0 && $addedone != 0 )
     if ($file !~ m,^\/,) {
       $file = "$lastdir/$file";
     }
-    #print STDERR "file=$file\n";
+    #print STDERR "file=$file $line\n";
   } else {
     # This could be a continuation line
     if ( defined $line && $line ne "" ) {
@@ -154,10 +165,10 @@ while ( $exitcode != 0 && $addedone != 0 )
   #print STDERR "Already having changes for $file\n" if defined($changes{$file});
   next if defined($changes{$file});
 
-  print STDOUT $_;
+  #print STDOUT $_;
 
   foreach $message (keys %messages) {
-    if ($line =~ /$message/) {
+    if ($line =~ /.*$message.*/) {
       $changes{$file} = $messages{$message};
       $addedone = fixFile($file, $messages{$message});
     }
@@ -223,7 +234,6 @@ sub fixFile
 	    
   # write file
       
-  rename($file, "$file.old");
   open( FILE, ">$file" ) || die "Can't write to $file";
   print FILE $flines;    
   close FILE;
