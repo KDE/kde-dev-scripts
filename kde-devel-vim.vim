@@ -175,7 +175,7 @@ function! CreateMatchLine()
         let current_line = substitute( current_line, '\[[^\[\]]*\]', '', 'g' )
     endwhile
     " if <CR> was pressed inside ( ) or [ ] don't add braces
-    if match( current_line, '[(\[]' ) >= 0
+    if match( current_line, '[(\[]' ) >= 0 || match( current_line, '/\*' ) >= 0
         return ''
     endif
     return current_line
