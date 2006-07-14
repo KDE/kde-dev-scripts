@@ -148,34 +148,44 @@ function! CreateMatchLine()
     " remove whitespace at the end
     if match( current_line, '\s\+$' ) >= 0
         :execute ':s/\s*$//'
+        " the following is needed if return '' is called
+        :execute "normal $"
     endif
     let current_line = getline( linenum )
     " remove all /* */ comments
     let current_line = substitute( current_line, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
-    " prepend earlier lines until we find a ;
-    while linenum > 1 && match( current_line, ';' ) < 0
-        let linenum = linenum - 1
-        " remove all // comments
-        let prev_line = substitute( getline( linenum ), '//.*$', '', '' )
-        let current_line = prev_line . current_line
-        " remove all /* */ comments
-        let current_line = substitute( current_line, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
-    endwhile
-    " remove everything until the last ;
-    let current_line = substitute( current_line, '^.*;', '', 'g' )
     " remove all strings
     let current_line = substitute( current_line, "'[^']*'", '', 'g' )
     let current_line = substitute( current_line, '"\(\\"\|[^"]\)*"', '', 'g' )
     " remove all ( )
-    while match( current_line, '(.*)' ) >= 0
+    while current_line =~ '(.*)'
         let current_line = substitute( current_line, '([^()]*)', '', 'g' )
     endwhile
+    " prepend earlier lines until we find a ;
+    while linenum > 1 && current_line !~ ';'
+        let linenum = linenum - 1
+        " remove all // comments
+        let prev_line = substitute( getline( linenum ), '//.*$', '', '' )
+        " concatenate the lines with a space in between
+        let current_line = prev_line.' '.current_line
+        " remove all /* */ comments
+        let current_line = substitute( current_line, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+        " remove all strings
+        let current_line = substitute( current_line, "'[^']*'", '', 'g' )
+        let current_line = substitute( current_line, '"\(\\"\|[^"]\)*"', '', 'g' )
+        " remove all ( )
+        while current_line =~ '(.*)'
+            let current_line = substitute( current_line, '([^()]*)', '', 'g' )
+        endwhile
+    endwhile
+    " remove everything until the last ;
+    let current_line = substitute( current_line, '^.*;', '', 'g' )
     " remove all [ ]
-    while match( current_line, '\[.*\]' ) >= 0
+    while current_line =~ '\[.*\]'
         let current_line = substitute( current_line, '\[[^\[\]]*\]', '', 'g' )
     endwhile
     " if <CR> was pressed inside ( ) or [ ] don't add braces
-    if match( current_line, '[(\[]' ) >= 0 || match( current_line, '/\*' ) >= 0
+    if current_line =~ '[(\[]' || current_line =~ '/\*'
         return ''
     endif
     return current_line
