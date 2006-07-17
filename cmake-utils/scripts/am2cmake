@@ -532,7 +532,7 @@ class CMakeFile
    def createKDE3ListsFile
 
       file=File.new(@listsFile, "w+");
-      if @amFile=="Makefile.am" && $no_kde==false         # the toplevel Makefile.am
+      if @amFile=="Makefile.am" && $buildType != BuildKDE3   # the toplevel Makefile.am
           file.printf("FIND_PACKAGE(KDE3 REQUIRED)\n\n")
           file.printf("SET(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
           file.printf("ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE3_DEFINITIONS})\n\n")
@@ -667,7 +667,7 @@ class CMakeFile
             file.printf("INSTALL_TARGETS(/bin %s )\n", buildTarget.name)
 
          else  #executable
-            if $no_kde
+            if $buildType == BuildNoKDE
 
                file.printf("ADD_EXECUTABLE(%s ${%s})\n\n", buildTarget.name, srcsName)
 
