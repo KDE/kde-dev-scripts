@@ -161,8 +161,8 @@ function! CreateMatchLine()
     while current_line =~ '(.*)'
         let current_line = substitute( current_line, '([^()]*)', '', 'g' )
     endwhile
-    " prepend earlier lines until we find a ;
-    while linenum > 1 && current_line !~ ';'
+    " prepend earlier lines until we find a ; or {
+    while linenum > 1 && current_line !~ '[;{]'
         let linenum = linenum - 1
         " remove all // comments
         let prev_line = substitute( getline( linenum ), '//.*$', '', '' )
@@ -178,8 +178,8 @@ function! CreateMatchLine()
             let current_line = substitute( current_line, '([^()]*)', '', 'g' )
         endwhile
     endwhile
-    " remove everything until the last ;
-    let current_line = substitute( current_line, '^.*;', '', 'g' )
+    " remove everything until the last ; or {
+    let current_line = substitute( current_line, '^.*[;{]', '', 'g' )
     " remove all [ ]
     while current_line =~ '\[.*\]'
         let current_line = substitute( current_line, '\[[^\[\]]*\]', '', 'g' )
