@@ -638,7 +638,7 @@ class CMakeFile
             file.printf(" )\n\n")
 
             file.printf("SET_TARGET_PROPERTIES(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
-            file.printf("INSTALL_TARGETS(/lib %s )\n\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS %s DESTINATION ${LIB_INSTALL_DIR} )\n\n", buildTarget.name)
          elsif buildTarget.type==StaticLib
             file.printf("ADD_LIBRARY(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
          elsif buildTarget.type==Part
@@ -1033,7 +1033,7 @@ if (ARGV.length==1)
       printf("--kde4\t create cmake files from KDE 4 unsermake files\n")
    elsif ARGV[0]=="--version"
       printf("am2cmake (C) 2005, Alexander Neundorf\n")
-      printf("Version 0.2, January 13th, 2006\n");
+      printf("Version 0.3, July 18th, 2006\n");
    else
       printf("Invalid argument, try --help\n")
    end
