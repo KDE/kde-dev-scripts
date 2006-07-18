@@ -40,7 +40,6 @@ LibMappingKDE3 = {
 
 LibMappingKDE4 = {
    "$(LIB_QT3SUPPORT)"  => "${QT_QT3SUPPORT_LIBRARY}",
-   "$(DCOP_LIB)"        => "${KDE4_DCOP_LIBS}",
    "$(LIB_KDEUI)"       => "${KDE4_KDEUI_LIBS}",
    "$(LIB_KIO)"         => "${KDE4_KIO_LIBS}",
    "$(LIB_KDEPRINT)"    => "${KDE4_KDEPRINT_LIBS}",
@@ -875,6 +874,7 @@ class CMakeFile
 
          if not buildTarget.skels.empty?
             file.printf("kde4_add_dcop_skels(%s ", srcsName)
+            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please\")\n")
             buildTarget.skels.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.skels.size>3
@@ -885,6 +885,7 @@ class CMakeFile
 
          if not buildTarget.stubs.empty?
             file.printf("kde4_add_dcop_stubs(%s ", srcsName)
+            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please\")\n")
             buildTarget.stubs.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.stubs.size>3
