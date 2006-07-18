@@ -142,7 +142,7 @@ function! CreateMatchLine()
     let current_line = getline( linenum )
     " don't do magic if the cursor isn't at the end of the line or if it's
     " inside a // comment
-    if col( '.' ) != len( current_line ) || match( current_line, '//' ) >= 0
+    if col( '.' ) != strlen( current_line ) || match( current_line, '//' ) >= 0
         return ''
     endif
     " remove whitespace at the end
