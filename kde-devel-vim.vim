@@ -115,8 +115,6 @@ function! SetCodingStyle()
         let g:DisableSpaceBeforeParen = 'x'
         call SmartParensOn()
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            " automatic indenting is required for SmartLineBreak to work correctly
-            filetype indent on
             inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\\|if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>', '')<CR>a<CR>
         endif
         set sw=4
@@ -130,8 +128,6 @@ function! SetCodingStyle()
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            " automatic indenting is required for SmartLineBreak to work correctly
-            filetype indent on
             inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\)\>', '\<\(if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>')<CR>a<CR>
         endif
         set sw=4
@@ -140,6 +136,9 @@ function! SetCodingStyle()
         set tw=80
     endif
 endfunction
+
+" automatic indenting is required for SmartLineBreak to work correctly
+filetype indent on
 
 function! CreateMatchLine()
     let linenum = line( '.' )
