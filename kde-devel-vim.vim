@@ -114,8 +114,10 @@ function! SetCodingStyle()
         endif
         let g:DisableSpaceBeforeParen = 'x'
         call SmartParensOn()
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let g:need_brace_on_same_line = ''
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\\|if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>', '')<CR>a<CR>
+            call EnableSmartLineBreak()
         endif
         set sw=4
         set ts=4
@@ -127,14 +129,23 @@ function! SetCodingStyle()
     else "if pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
+        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\)\>', '\<\(if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>')<CR>a<CR>
+            call EnableSmartLineBreak()
         endif
         set sw=4
         set sts=4
         set et
         set tw=80
     endif
+endfunction
+
+function! DisableSmartLineBreak()
+    iunmap <CR>
+endfunction
+function! EnableSmartLineBreak()
+    inoremap <CR> <C-R>=pumvisible() ? "\<lt>CR>" : "\<lt>ESC>:call SmartLineBreak()\<lt>CR>a\<lt>CR>"<CR>
 endfunction
 
 " automatic indenting is required for SmartLineBreak to work correctly
@@ -208,12 +219,12 @@ function! AddClosingBrace(current_line)
     endif
 endfunction
 
-function! SmartLineBreak(need_brace_on_next_line, need_brace_on_same_line)
+function! SmartLineBreak()
     let current_line = CreateMatchLine()
     if current_line == ''
         return
     endif
-    if strlen(a:need_brace_on_same_line) > 0 && current_line =~ a:need_brace_on_same_line
+    if strlen(g:need_brace_on_same_line) > 0 && current_line =~ g:need_brace_on_same_line
         if current_line =~ '{$'
             if getline('.') =~ '[^ ]{$'
                 :execute ':s/{$/ {/'
@@ -222,7 +233,7 @@ function! SmartLineBreak(need_brace_on_next_line, need_brace_on_same_line)
             :execute ':s/$/ {/'
         endif
         call AddClosingBrace(current_line)
-    elseif strlen(a:need_brace_on_next_line) > 0 && current_line =~ a:need_brace_on_next_line
+    elseif strlen(g:need_brace_on_next_line) > 0 && current_line =~ g:need_brace_on_next_line
         if current_line =~ '{$'
             :execute ':s/\s*{$//'
         endif
