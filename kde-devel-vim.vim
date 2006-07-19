@@ -115,7 +115,7 @@ function! SetCodingStyle()
         let g:DisableSpaceBeforeParen = 'x'
         call SmartParensOn()
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            inoremap <CR> <ESC>:call SmartLineBreak2()<CR>a<CR>
+            inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\\|if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>', '')<CR>a<CR>
         endif
         set sw=4
         set ts=4
@@ -128,7 +128,7 @@ function! SetCodingStyle()
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            inoremap <CR> <ESC>:call SmartLineBreak()<CR>a<CR>
+            inoremap <CR> <ESC>:call SmartLineBreak('\<\(class\\|namespace\\|struct\)\>', '\<\(if\\|else\\|while\\|switch\\|do\\|foreach\\|forever\\|enum\\|for\)\>')<CR>a<CR>
         endif
         set sw=4
         set sts=4
@@ -162,7 +162,7 @@ function! CreateMatchLine()
         let current_line = substitute( current_line, '([^()]*)', '', 'g' )
     endwhile
     " prepend earlier lines until we find a ; or {
-    while linenum > 1 && current_line !~ '[;{]'
+    while linenum > 1 && current_line !~ ';' && current_line !~ '{.\+$'
         let linenum = linenum - 1
         " remove all // comments
         let prev_line = substitute( getline( linenum ), '//.*$', '', '' )
@@ -178,84 +178,55 @@ function! CreateMatchLine()
             let current_line = substitute( current_line, '([^()]*)', '', 'g' )
         endwhile
     endwhile
-    " remove everything until the last ; or {
-    let current_line = substitute( current_line, '^.*[;{]', '', 'g' )
+    " remove everything until the last ;
+    let current_line = substitute( current_line, '^.*;', '', '' )
+    " remove everything until the last { which is not at the end of the line
+    let current_line = substitute( current_line, '^.*{\(.\+\)$', '\1', '' )
     " remove all [ ]
     while current_line =~ '\[.*\]'
         let current_line = substitute( current_line, '\[[^\[\]]*\]', '', 'g' )
     endwhile
-    " if <CR> was pressed inside ( ) or [ ] don't add braces
+    " if <CR> was pressed inside ( ), [ ] or /* */ don't add braces
     if current_line =~ '[(\[]' || current_line =~ '/\*'
         return ''
     endif
     return current_line
 endfunction
 
-function! SmartLineBreak2()
-    let current_line = CreateMatchLine()
-    if current_line == ''
-        return
-    endif
-    let need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
-    if match( current_line, need_brace_on_next_line ) >= 0
-        let brace_at_end = '{$'
-        if match( current_line, brace_at_end ) > 0
-            :execute ':s/\s*{$//'
-        endif
-        :execute "normal o{"
-        if match( current_line, '\<namespace\>' ) >= 0
-            let namespace = substitute( current_line, '^.*namespace\s\+', '', '' )
-            let namespace = substitute( namespace, '\s.*$', '', '' )
-            :execute "normal o} // namespace " . namespace . "\<ESC>k"
-        elseif match( current_line, '\<enum\|class\|struct\>' ) >= 0
-            :execute "normal o};\<ESC>k"
-        else
-            :execute "normal o}\<ESC>k"
-        endif
-    elseif match( current_line, '^\s*{$' ) == 0
+function! AddClosingBrace(current_line)
+    if a:current_line =~ '\<enum\|class\|struct\>'
+        :execute "normal o};\<ESC>k"
+    elseif a:current_line =~ '\<namespace\>'
+        let namespace = substitute( a:current_line, '^.*namespace\s\+', '', '' )
+        let namespace = substitute( namespace, '\s.*$', '', '' )
+        :execute "normal o} // namespace " . namespace . "\<ESC>k"
+    else
         :execute "normal o}\<ESC>k"
     endif
-    :execute "normal $"
 endfunction
 
-function! SmartLineBreak()
+function! SmartLineBreak(need_brace_on_next_line, need_brace_on_same_line)
     let current_line = CreateMatchLine()
     if current_line == ''
         return
     endif
-    let need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
-    if match( current_line, need_brace_on_same_line ) >= 0
-        let brace_at_end = '{$'
-        if match( current_line, brace_at_end ) > 0
-            if match( current_line, '[^ ]{$' ) > 0
+    if strlen(a:need_brace_on_same_line) > 0 && current_line =~ a:need_brace_on_same_line
+        if current_line =~ '{$'
+            if getline('.') =~ '[^ ]{$'
                 :execute ':s/{$/ {/'
             endif
         else
             :execute ':s/$/ {/'
         endif
-        if match( current_line, '\<enum\>' ) >= 0
-            :execute "normal o};\<ESC>k"
-        else
-            :execute "normal o}\<ESC>k"
+        call AddClosingBrace(current_line)
+    elseif strlen(a:need_brace_on_next_line) > 0 && current_line =~ a:need_brace_on_next_line
+        if current_line =~ '{$'
+            :execute ':s/\s*{$//'
         endif
-    else
-        let need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
-        if match( current_line, need_brace_on_next_line ) >= 0
-            let brace_at_end = '{$'
-            if match( current_line, brace_at_end ) > 0
-                :execute ':s/\s*{$//'
-            endif
-            :execute "normal o{"
-            if match( current_line, '\<namespace\>' ) >= 0
-                let namespace = substitute( current_line, '^.*namespace\s\+', '', '' )
-                let namespace = substitute( namespace, '\s.*$', '', '' )
-                :execute "normal o} // namespace " . namespace . "\<ESC>k"
-            else
-                :execute "normal o};\<ESC>k"
-            endif
-        elseif match( current_line, '^\s*{$' ) == 0
-            :execute "normal o}\<ESC>k"
-        endif
+        :execute "normal o{"
+        call AddClosingBrace(current_line)
+    elseif getline('.') =~ '^\s*{$'
+        call AddClosingBrace('')
     endif
     :execute "normal $"
 endfunction
