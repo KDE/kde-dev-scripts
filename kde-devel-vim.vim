@@ -122,7 +122,7 @@ function! SetCodingStyle()
         set sw=4
         set ts=4
         set noet
-        set tw=80
+        set tw=100
         "set foldmethod=indent
         "set foldcolumn=3
         "map <TAB> za
@@ -137,7 +137,7 @@ function! SetCodingStyle()
         set sw=4
         set sts=4
         set et
-        set tw=80
+        set tw=100
     endif
 endfunction
 
@@ -478,9 +478,10 @@ function! CreatePrivateHeader( privateHeader )
     " FIXME: find out what license to use
     call LicenseHeader( "LGPL" )
     :set sw=4
-    :set ts=4
-    :set tw=80
-    :normal Go// vim: sw=4 ts=4 tw=80
+    :set sts=4
+    :set et
+    :set tw=100
+    :normal Go// vim: sw=4 sts=4 et tw=100
     let @h = header
     let @p = privateClassName
     let @c = className
@@ -540,6 +541,8 @@ function! MapIdentHeader( ident )
     " KDE stuff
     elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
         return '<knuminput.h>'
+    elseif a:ident == 'KSharedConfig'
+        return '<kconfig.h>'
     elseif a:ident == 'KConfigGroup'
         return '<kconfigbase.h>'
     elseif a:ident == 'KListViewItem'
