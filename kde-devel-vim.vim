@@ -116,28 +116,34 @@ function! SetCodingStyle()
         call SmartParensOn()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
         let g:need_brace_on_same_line = ''
-        if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            call EnableSmartLineBreak()
-        endif
         set sw=4
         set ts=4
         set noet
         set tw=100
-        "set foldmethod=indent
-        "set foldcolumn=3
-        "map <TAB> za
+    elseif pathfn =~ 'kdepim'
+        if strlen(mapcheck('(','i')) > 0
+            iunmap (
+        endif
+        unlet g:DisableSpaceBeforeParen
+        call SmartParensOn()
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
+        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        set sw=2
+        set sts=2
+        set et
+        set tw=100
     else "if pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
         let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
-        if ( &syntax =~ '^\(c\|cpp\|java\)$' )
-            call EnableSmartLineBreak()
-        endif
         set sw=4
         set sts=4
         set et
         set tw=100
+    endif
+    if ( &syntax =~ '^\(c\|cpp\|java\)$' )
+        call EnableSmartLineBreak()
     endif
 endfunction
 
