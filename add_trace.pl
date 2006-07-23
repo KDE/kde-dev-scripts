@@ -42,6 +42,8 @@ while (<>)
 	      $line = $line . " << \"$1\"";
 	    }
 	  ## Ok now extract args
+	  s/\/\*.*\*\///;
+	  s/\s*\/\/.*//; # remove comments
 	  s/^.*\([\s]*//; # Remove everything before first '('
 	  s/\s*\)\s*:\s+.*$/,/; # Remove any ") : blah", replace with a ','
 	  s/\s*\).*\{\s*$/,/; # Remove anything after ')', replace with a ','
