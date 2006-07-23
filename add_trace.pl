@@ -8,9 +8,26 @@
 ## Generates all statement with kdDebug(0) so that it is very easy
 ## to remove them afterwards :
 ## perl -pi -e 'if (/kdDebug\(0\)/) { $_ = ""; }' myfile.cpp
+## perl -pi -e 'if (/#include <kdebug.h> \/\/ inserted by add_trace/) { $_ = ""; }' myfile.cpp
+## 
+## needs perl 5.8+ for the Tie::File module
 ##
 ## Written by David Faure <faure@kde.org>, licensed under pizzaware.
 ## 18/03/2000
+
+use Tie::File;
+
+sub insert_kdebug()
+{
+# inserts a line "include <kdebug.h>" at the beginning of each file
+  for ($i=0;$i<$#ARGV;$i++)
+  {
+    tie @LOG, 'Tie::File', $ARGV[$i];
+    unshift @LOG, '#include <kdebug.h> // inserted by add_trace';
+  }
+}
+
+insert_kdebug();
 $insignature=0;
 while (<>)
 {
