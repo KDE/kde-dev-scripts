@@ -37,7 +37,8 @@ while (<>)
       chop;
       $oneline .= $_;
     }
-  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/ && !/^\s*class\s/ )
+  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+/ && !/typedef\s/ && !/^\s*class\s/ && !/^[^\s]+\s*[^\s]+::[^\s]+.*;/ && !/ *\/\// )
+  # A function declaration starts. A function is not a typedef, not a class, not a command and not a comment.
     {
       $insignature = 1;
       $statement = $_;
@@ -106,7 +107,7 @@ while (<>)
 	      }
 	    }
 	  $line = $line . " << endl;\n";
-	  print $line;
+	  if ( !m/\}/ ) {print $line;}
 	  #print STDERR "Debug call added : $line\n";
 	}
     }
