@@ -50,8 +50,8 @@ KDE3_ADD_KCFG_FILES(kcalc_KDEINIT_SRCS kcalc_settings.kcfgc )
 
 KDE3_ADD_KDEINIT_EXECUTABLE( kcalc ${kcalc_KDEINIT_SRCS})
 
-# gmp, knumber and kdeui added manually
-TARGET_LINK_LIBRARIES(kdeinit_kcalc  ${QT_AND_KDECORE_LIBS} kdeui knumber gmp)
+# gmp, knumber and ${KDE4_KDEUI_LIBS} added manually
+TARGET_LINK_LIBRARIES(kdeinit_kcalc  ${QT_AND_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} knumber gmp)
 
 INSTALL_TARGETS(/lib kdeinit_kcalc )
 
