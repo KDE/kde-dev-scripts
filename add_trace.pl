@@ -27,7 +27,19 @@ while (<>)
       chop;
       $oneline = $_;
     }
-
+  elsif ( /^\/\/.*/)
+    {
+      # comment
+      # do nothing
+      $insignature = 0;
+    }
+  # [^\s]+ means, one ore more characters that are no spaces
+  elsif ( /^[^\s]+\s*[^\s]+::[^\s]+.*\}/ && !/typedef\s/ && !/^\s*class\s/ )
+    {
+      # declaration and implementation in one line
+      # do nothing
+      $insignature = 0;
+    }
   if ( $insignature )
     {
       if ( /\{/ ) # End of signature
