@@ -13,5 +13,5 @@ install(PROGRAMS
   kdedoc qtdoc extractrc extractattr zonetab2pot.py 
   licensecheck fixkdeincludes fixuifiles includemocs 
   cxxmetric extend_dmalloc kdekillall kdelnk2desktop.py 
-  package_crystalsvg png2mng.pl kdemangen.pl svnintegrate DESTINATION bin)
+  package_crystalsvg png2mng.pl kdemangen.pl svnintegrate DESTINATION ${BIN_INSTALL_DIR})
  
