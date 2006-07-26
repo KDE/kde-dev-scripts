@@ -164,6 +164,24 @@ sub processFile() {
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kdefx[[:space:]]',
 		   'replace "kdefx" with "${KDE4_KDEFX_LIBS}"');
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kdeprint[[:space:]]',
+            'replace "kdeprint" with "${KDE4_KDEPRINT_LIBS}"');
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kdesu[[:space:]]',
+            'replace "kdesu" with "${KDE4_KDESU_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]khtml[[:space:]]',
+            'replace "khtml" with "${KDE4_KHTML_LIBS}"');
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kparts[[:space:]]',
+            'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
+
     }
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
