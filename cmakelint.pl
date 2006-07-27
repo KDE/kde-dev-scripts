@@ -150,6 +150,13 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  'INSTALL_FILES[[:space:]]*\(',
 			  'replace "install_files" with "install(FILES...)');
+    $issues += &checkLine($line,$linecnt,
+			  'FILES[[:space:]]DESTINATION',
+			  'missing list of files between FILES and DESTINATION');
+    $issues += &checkLine($line,$linecnt,
+			  'TARGETS[[:space:]]DESTINATION',
+			  'missing list of files between TARGETS and DESTINATION');
+
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
