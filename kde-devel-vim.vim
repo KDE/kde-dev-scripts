@@ -151,7 +151,11 @@ function! DisableSmartLineBreak()
     iunmap <CR>
 endfunction
 function! EnableSmartLineBreak()
-    inoremap <CR> <C-R>=pumvisible() ? "\<lt>CR>" : "\<lt>ESC>:call SmartLineBreak()\<lt>CR>a\<lt>CR>"<CR>
+    if exists(*pumvisible)
+        inoremap <CR> <C-R>=pumvisible() ? "\<lt>CR>" : "\<lt>ESC>:call SmartLineBreak()\<lt>CR>a\<lt>CR>"<CR>
+    else
+        inoremap <CR> <ESC>:call SmartLineBreak()<CR>a<CR>
+    endif
 endfunction
 
 " automatic indenting is required for SmartLineBreak to work correctly
