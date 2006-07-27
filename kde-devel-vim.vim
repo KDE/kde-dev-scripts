@@ -151,7 +151,7 @@ function! DisableSmartLineBreak()
     iunmap <CR>
 endfunction
 function! EnableSmartLineBreak()
-    if exists(*pumvisible)
+    if exists("*pumvisible")
         inoremap <CR> <C-R>=pumvisible() ? "\<lt>CR>" : "\<lt>ESC>:call SmartLineBreak()\<lt>CR>a\<lt>CR>"<CR>
     else
         inoremap <CR> <ESC>:call SmartLineBreak()<CR>a<CR>
