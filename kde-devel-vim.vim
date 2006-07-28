@@ -141,6 +141,7 @@ function! SetCodingStyle()
         set sts=4
         set et
         set tw=100
+        set ts=4 "for old tab indented code to have the same indent
     endif
     if ( &syntax =~ '^\(c\|cpp\|java\)$' )
         call EnableSmartLineBreak()
