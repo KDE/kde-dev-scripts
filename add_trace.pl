@@ -77,7 +77,7 @@ while (<>)
 	  s/^.*\([\s]*//; # Remove everything before first '('
 	  s/\s*\)\s*:\s+.*$/,/; # Remove any ") : blah", replace with a ','
 	  s/\s*\).*\{\s*$/,/; # Remove anything after ')', replace with a ','
-          s/ const / /g;
+          s/ const[&] / /g;
 	  #print STDERR "Args list : $_\n";
 	  @args = split( ",", $_ );
 	  foreach (@args)
