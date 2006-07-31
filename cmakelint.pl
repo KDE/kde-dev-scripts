@@ -190,6 +190,24 @@ sub processFile() {
             'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
 
     }
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kde3support[[:space:]]',
+            'replace "kde3support" with "${KDE4_KDE3SUPPORT_LIBS}"');
+
+    }
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kutils[[:space:]]',
+            'replace "kutils" with "${KDE4_KUTILS_LIBS}"');
+
+    }
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kdnssd[[:space:]]',
+            'replace "kdnssd" with "${KDE4_KDNSSD_LIBS}"');
+
+    }
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues += 
