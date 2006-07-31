@@ -189,19 +189,16 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kparts[[:space:]]',
             'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
 
-    }
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kde3support[[:space:]]',
             'replace "kde3support" with "${KDE4_KDE3SUPPORT_LIBS}"');
 
-    }
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kutils[[:space:]]',
             'replace "kutils" with "${KDE4_KUTILS_LIBS}"');
 
-    }
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kdnssd[[:space:]]',
