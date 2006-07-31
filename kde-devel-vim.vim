@@ -108,7 +108,13 @@ set incsearch
 function! SetCodingStyle()
     "the path for the file
     let pathfn = expand( '%:p:h' )
-    if pathfn =~ 'phonon'
+    if expand('%') =~ 'Makefile'
+        call SmartParensOff()
+        set sw=8
+        set ts=8
+        set noet
+        set tw=100
+    elseif pathfn =~ 'phonon'
         if strlen(mapcheck('(','i')) > 0
             iunmap (
         endif
