@@ -120,8 +120,17 @@ function! SetCodingStyle()
         endif
         let g:DisableSpaceBeforeParen = 'x'
         call SmartParensOn()
-        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
         let g:need_brace_on_same_line = ''
+        set sw=4
+        set ts=4
+        set noet
+        set tw=100
+    elseif pathfn =~ 'nmm'
+        call SmartParensOff()
+        inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
+        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|enum\|for\|try\|catch\)\>'
         set sw=4
         set ts=4
         set noet
@@ -130,10 +139,9 @@ function! SetCodingStyle()
         if strlen(mapcheck('(','i')) > 0
             iunmap (
         endif
-        unlet g:DisableSpaceBeforeParen
         call SmartParensOn()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
-        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
         set sw=2
         set sts=2
         set et
@@ -142,7 +150,7 @@ function! SetCodingStyle()
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
-        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\)\>'
+        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
         set sw=4
         set sts=4
         set et
