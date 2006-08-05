@@ -122,6 +122,7 @@ $lastdir = '.';
  'invalid use of undefined type ‘struct KSelectAction' => 'kselectaction',
  'invalid use of undefined type .struct KFontSizeAction' => 'kfontsizeaction',
  'invalid use of undefined type .struct KFontAction' => 'kfontaction',
+ "invalid use of undefined type .* KIcon" => 'kicon',
 );
 
 # Initial values are simply to get into the while
