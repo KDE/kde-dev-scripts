@@ -36,6 +36,7 @@ handledir() {
         addignore cmake_install.cmake
         addignore DartTestfile.txt
         addignore install_icons.cmake
+        addignore progress.make
 		grep -q kde4_automoc CMakeLists.txt && addignore "*.moc" 
 		grep -q kde4_add_dcop_skels CMakeLists.txt && addignore "*.kidl"
 		grep -q kde4_add_dcop_skels CMakeLists.txt && addignore "*_skel.c*"
