@@ -223,13 +223,9 @@ directory=`echo $directory | sed -e 's#^/##'`
 pofiles=""
 
 for makefile in `find $directory -name Makefile.am`; do
-    cat $makefile | while read line; do echo $line; done | perl -e '$mes=0; while (<STDIN>) { if (/^messages:/) { $mes=1; next; } if ($_ !~ m/^[^\t ]/) { $mes=0; } if ($mes && /\$\(XGETTEXT\)/ && / -o/) { s,.*-o \$\(podir\)/([a-z.-_]+).*$,$1, ; print "potfile=$_" }  }' > _tmppot
-    potfile=
+    cat $makefile | while read line; do echo $line; done | perl -e '$mes=0; while (<STDIN>) { if (/^messages:/) { $mes=1; next; } if ($_ !~ m/^[^\t ]/) { $mes=0; } if ($mes && /\$\(XGETTEXT\)/ && / -o/) { s,.*-o \$\(podir\)/([a-z._-]+).*$,$1, ; chomp $_; $_ =~ s/\.pot/.po/; print "pofiles=\"$_ \$pofiles\"\n" }  }' > _tmppot
     . _tmppot
     rm -f _tmppot
- 
-    pofile=${potfile/.pot/.po}
-    pofiles="$pofiles $pofile"
 done
 
 if [ -z $name ]; then
