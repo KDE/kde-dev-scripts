@@ -57,8 +57,9 @@ noi18nlang=""
 replace_files=""
 i18nmodule=""
 svnroot=""
-debug=""
+debug=
 branch="trunk"
+version=
 
 while true; do
 	case "$1" in
@@ -219,6 +220,13 @@ fi
 cd $module
 
 directory=`echo $directory | sed -e 's#^/##'`
+pofiles=""
+
+for makefile in `find $directory -name Makefile.am`; do
+    cat $makefile | while read line; do echo $line; done | perl -e '$mes=0; while (<STDIN>) { if (/^messages:/) { $mes=1; next; } if ($_ !~ m/^[^\t ]/) { $mes=0; } if ($mes && /\$\(XGETTEXT\)/ && / -o/) { s,.*-o \$\(podir\)/([a-z._-]+).*$,$1, ; chomp $_; $_ =~ s/\.pot/.po/; print "pofiles=\"$_ \$pofiles\"\n" }  }' > _tmppot
+    . _tmppot
+    rm -f _tmppot
+done
 
 if [ -z $name ]; then
 	name=$directory
@@ -257,6 +265,8 @@ if [ -z $version ]; then
 	filename=$name
 else
 	filename="$name-$version"
+        VERSION=$version
+	export VERSION
 fi
 
 if [ $doi18n = "yes" ]; then
@@ -280,7 +290,8 @@ echo "Temporary directory is $temp_dir." >> $log
 # make a temporary directory
 test -d $temp_dir && rm -Rf $temp_dir
 
-mkdir -p $temp_dist
+mkdir $temp_dir
+mkdir $temp_dist || (echo "failed to create $temp_dist"; exit 1; )
 
 # check if we were able to create temp_dir
 test -d $temp_dist
@@ -338,7 +349,7 @@ if [ $doi18n = "yes" ]; then
             i18nlangs="$i18nlangs $lang"
         fi
     done
-    echo "available languages: $i18nlangs" >> $log
+    echo "available languages: $i18nlangs (Pofiles to fetch: $pofiles)" >> $log
     popd
 fi
 
@@ -349,19 +360,19 @@ if [ -d $module/doc/$name ]; then
 	find $module/doc/ -maxdepth 1 ! -xtype d | xargs --replace={} cp {} $temp_dist/doc
 
 	if [ $doi18n = "yes" ]; then
-	    echo "Getting documentation from i18n..."
 	    pushd $temp_dir
 	    for lang in $i18nlangs; do
+		echo -n "Checking for $lang/$name... "
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
 		docdirname="l10n/$lang/docs/$i18nmodule/$name"
-		echo "svn co $svnroot/$docdirname" >> $log
-		svn co "$svnroot/$docdirname" >> $log 2>&1
-		if [ ! -d "$name" ]; then
+		echo "svn export $svnroot/$docdirname $temp_dist/doc/$lang" >> $log
+                mkdir -p $temp_dist/doc
+		svn export "$svnroot/$docdirname" $temp_dist/doc/$lang >> $log 2>&1
+		if [ ! -d "$temp_dist/doc/$lang" ]; then
 		    echo "$lang's $name documentation does not exist." >> $log
+		    echo "does not exist"
 		    continue
 		fi
-		echo -n "Copying $lang's $name documentation over... "
-		mv $name $temp_dist/doc/$lang
 		echo "KDE_LANG = $lang
 KDE_DOCS = $name" > $temp_dist/doc/$lang/Makefile.am
 
@@ -387,24 +398,25 @@ fi
 if [ $doi18n = "yes" ]; then
 	test -d $temp_dist/po && rm -Rf $temp_dist/po
 	mkdir $temp_dist/po
+        pushd $temp_dir
 
-	echo "Getting translations from i18n..."
+        for pofile in $pofiles; do
+	  echo "Getting translations for $pofile from i18n..."
 
-	pushd $temp_dir/
-	for lang in $i18nlangs; do
-		pofilename="l10n/$lang/messages/$i18nmodule/$name.po";
+	  for lang in $i18nlangs; do
+		pofilename="l10n/$lang/messages/$i18nmodule/$pofile";
 		echo "Getting $pofilename" >> $log
-		svn cat "$svnroot/$pofilename" >$name.po 2>&1 || rm $name.po
-		if [ ! -f "$name.po" ]; then
-			echo "$lang's $name.po does not exist." >> $log
+		svn cat "$svnroot/$pofilename" >$pofile 2>&1 || rm -f $pofile
+		if [ ! -f "$pofile" ]; then
+			echo "$lang's $pofile does not exist." >> $log
 			continue
 		fi
 
 		dest=$temp_dist/po/$lang
-		mkdir $dest
-		echo -n "Copying $lang's $name.po over... "
-		echo "$lang's $name.po file included." >> $log
-		cp $name.po $dest
+		mkdir -p $dest
+		echo -n "Copying $lang's $pofile over... "
+		echo "$lang's $pofile file included." >> $log
+		mv $pofile $dest
 		echo "done."
 		
 		echo "KDE_LANG = $lang
@@ -412,8 +424,10 @@ SUBDIRS = \$(AUTODIRS)
 POFILES = AUTO" > $dest/Makefile.am
 
 		subdirs="non_empty"
-	done
+	  done
+        done
 
+        popd
 	if [ -z "$subdirs" ]; then
 		rm -Rf $temp_dist/po
 	else
@@ -533,10 +547,11 @@ cd $temp_dist
 
 # create the configure script
 # working directory is $temp_dist
-echo "UNSERMAKE=no make -f Makefile.cvs in $temp_dist/:" >> $log
+export UNSERMAKE=no
+echo "make -f Makefile.cvs in $temp_dist/:" >> $log
 echo "" >> $log
-echo -n "UNSERMAKE=no make -f Makefile.cvs in $temp_dist/... "
-UNSERMAKE=no make -f Makefile.cvs >> $log 2>> $log
+echo -n "make -f Makefile.cvs in $temp_dist/... "
+make -f Makefile.cvs >> $log 2>> $log
 echo "rm Makefile.cvs" >> $log
 rm -f Makefile.cvs
 echo "rm autom4te.cache" >> $log
