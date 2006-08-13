@@ -157,6 +157,14 @@ sub processFile() {
 			  'TARGETS[[:space:]]DESTINATION',
 			  'missing list of files between TARGETS and DESTINATION');
 
+    $issues += &checkLine($line,$linecnt,
+			  'macro_bool_to_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
+			  'do not use a digit as a variable');
+    $issues += &checkLine($line,$linecnt,
+			  'MACRO_BOOL_TO_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
+			  'do not use a digit as a variable');
+
+
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
