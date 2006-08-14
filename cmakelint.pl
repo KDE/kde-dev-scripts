@@ -78,7 +78,7 @@ sub processFile() {
     next if ($line =~ m/^[[:space:]]$/); #skip blank lines
 
     $issues += &checkLine($line,$linecnt,
-			  '{$',
+			  '[[:space:]]{\$',
 			  'replace "{$" with "${", or garbage detected');
 
     $issues += &checkLine($line,$linecnt,
