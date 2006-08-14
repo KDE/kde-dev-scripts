@@ -27,7 +27,7 @@ i18n() calls so that xgettext can parse them.
 
                  --attr=Title,data --attr=Description,data,Stencils
 
---context=name : Give i18n calls a context name: i18n("name", ...)
+--context=name : Give i18n calls a context name: i18nc("name", ...)
 --lines        : Include source line numbers in comments (deprecated, it is switched on by default now)
 --help|?       : Display this summary
 
@@ -152,8 +152,13 @@ sub write_i18n
 
   print "//i18n: tag $tag attribute $attr\n";
   print "//i18n: file $file_name line $.\n";
-  print qq|i18n("|;
-  print qq|$context", "|            if $context;
-  print qq|$text");\n|;
+  if ( $context )
+  {
+    print qq|i18nc("$context","$text");\n|;
+  }
+  else
+  {
+    print  qq|i18n("$text");\n|;
+  }
 }
 
