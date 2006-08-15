@@ -21,12 +21,7 @@ cheatmake	Helper for saving time when recompiling, skipping files that
 		haven't changed in a meaningful way (e.g. if you only change
 		a comment...)
 
-check_licenses	Old license checker for source files
-                (Use licensecheck instead)
-
 cmakelint.pl	Looks for problems (simple) in CMakeLists.txt
-
-licensecheck	Simple license checker for source files
 
 create_makefile Create the Makefile in a directory containing a Makefile.am
                 Saves time compared to re-running configure completely 
