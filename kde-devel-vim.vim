@@ -106,6 +106,9 @@ set list
 set incsearch
 
 function! SetCodingStyle()
+    if ( &syntax !~ '^\(c\|cpp\|java\)$' )
+        return
+    endif
     "the path for the file
     let pathfn = expand( '%:p:h' )
     if expand('%') =~ 'Makefile'
