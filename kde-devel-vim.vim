@@ -159,7 +159,7 @@ function! SetCodingStyle()
         set et
         set tw=100
     endif
-    if ( &syntax =~ '^\(c\|cpp\|java\)$' && !exists("g:noautobrace") )
+    if ( !exists("g:noautobrace") )
         call EnableSmartLineBreak()
     endif
 endfunction
