@@ -244,27 +244,27 @@ function! AddClosingBrace(current_line)
 endfunction
 
 function! SmartLineBreak()
-    let current_line = CreateMatchLine()
-    if current_line == ''
+    let match_line = CreateMatchLine()
+    if match_line == ''
         return
     endif
-    if strlen(g:need_brace_on_same_line) > 0 && current_line =~ g:need_brace_on_same_line
-        if current_line =~ '{$'
+    if strlen(g:need_brace_on_same_line) > 0 && match_line =~ g:need_brace_on_same_line
+        if match_line =~ '{$'
             if getline('.') =~ '[^ ]{$'
                 :execute ':s/{$/ {/'
             endif
         else
             :execute ':s/$/ {/'
         endif
-        call AddClosingBrace(current_line)
-    elseif strlen(g:need_brace_on_next_line) > 0 && current_line =~ g:need_brace_on_next_line
-        if current_line =~ '{$'
+        call AddClosingBrace(match_line)
+    elseif getline('.') =~ '^\s*{$'
+        call AddClosingBrace('')
+    elseif strlen(g:need_brace_on_next_line) > 0 && match_line =~ g:need_brace_on_next_line
+        if match_line =~ '{$'
             :execute ':s/\s*{$//'
         endif
         :execute "normal o{"
-        call AddClosingBrace(current_line)
-    elseif getline('.') =~ '^\s*{$'
-        call AddClosingBrace('')
+        call AddClosingBrace(match_line)
     endif
     :execute "normal $"
 endfunction
