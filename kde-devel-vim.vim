@@ -166,6 +166,7 @@ endfunction
 
 function! DisableSmartLineBreak()
     iunmap <CR>
+    iuna else
 endfunction
 function! EnableSmartLineBreak()
     if exists("*pumvisible")
@@ -173,6 +174,22 @@ function! EnableSmartLineBreak()
     else
         inoremap <CR> <ESC>:call SmartLineBreak()<CR>a<CR>
     endif
+    iab else <C-R>=SmartElse()<CR>
+endfunction
+
+function! SmartElse()
+    "let next = nr2char( getchar( 0 ) )
+    let prefix = ''
+    if strlen(g:need_brace_on_same_line) > 0 && 'else' =~ g:need_brace_on_same_line
+        if getline('.') =~ '^\s*$'
+            if getline(line('.') - 1) =~ '}$'
+                let prefix = prefix . "\<ESC>kmMjdd`MA "
+            elseif getline(line('.') - 1) =~ '}\s*$'
+                let prefix = prefix . "\<ESC>kmMjdd`MA"
+            endif
+        endif
+    endif
+    return prefix . "else\<Right>"
 endfunction
 
 " automatic indenting is required for SmartLineBreak to work correctly
@@ -252,6 +269,16 @@ function! SmartLineBreak()
         return
     endif
     if strlen(g:need_brace_on_same_line) > 0 && match_line =~ g:need_brace_on_same_line
+        if match_line =~ '}\s*else\>'
+            " make sure else is on the same line as the closing brace
+            if getline('.') =~ '^\s*else'
+                if getline(line('.') - 1) =~ '}$'
+                    :execute "normal kA \<ESC>J"
+                elseif getline(line('.') - 1) =~ '}\s*$'
+                    :execute "normal kJ"
+                endif
+            endif
+        endif
         while getline('.') =~ '^\s*{$'
             " opening brace is on its own line: move it up
             :execute "normal kJ"
