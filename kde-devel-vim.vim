@@ -249,6 +249,10 @@ function! SmartLineBreak()
         return
     endif
     if strlen(g:need_brace_on_same_line) > 0 && match_line =~ g:need_brace_on_same_line
+        while getline('.') =~ '^\s*{$'
+            " opening brace is on its own line: move it up
+            :execute "normal kJ"
+        endwhile
         if match_line =~ '{$'
             if getline('.') =~ '[^ ]{$'
                 :execute ':s/{$/ {/'
