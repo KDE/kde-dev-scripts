@@ -16,7 +16,7 @@ echo >&2 ""
 cmdline="$@"
 
 returndir=`pwd`
-override="README ChangeLog INSTALL AUTHORS AUTHOR COPYING COPYING.LIB TODO"
+override="README ChangeLog INSTALL AUTHORS AUTHOR COPYING COPYING.LIB TODO COPYING-DOCS"
 remove="config.cache config.log config.status Makefile configure inst-apps CVS acinclude.m4 aclocal.m4 config.h config.h.bot config.h.in configure.files libtool stamp-h stamp-h.in stamp-h1 subdirs *.moc *.la .libs .deps .svn .cvsignore autom4te.cache {arch} .arch-ids *.lo *.o *.bbg *.da *.bb"
 toplevelremove="configure.in.bot"
 # whitespace seperated list of languages to never include.
