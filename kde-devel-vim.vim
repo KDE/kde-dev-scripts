@@ -211,7 +211,7 @@ function! CreateMatchLine()
     endif
     let current_line = getline( linenum )
     " remove all /* */ comments
-    let current_line = substitute( current_line, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+    let current_line = substitute( current_line, '/\*.\{-}\*/', '', 'g' )
     " remove all strings
     let current_line = substitute( current_line, "'[^']*'", '', 'g' )
     let current_line = substitute( current_line, '"\(\\"\|[^"]\)*"', '', 'g' )
@@ -227,7 +227,7 @@ function! CreateMatchLine()
         " concatenate the lines with a space in between
         let current_line = prev_line.' '.current_line
         " remove all /* */ comments
-        let current_line = substitute( current_line, '/\*\([^*]\|\*\@!/\)*\*/', '', 'g' )
+        let current_line = substitute( current_line, '/\*.\{-}\*/', '', 'g' )
         " remove all strings
         let current_line = substitute( current_line, "'[^']*'", '', 'g' )
         let current_line = substitute( current_line, '"\(\\"\|[^"]\)*"', '', 'g' )
