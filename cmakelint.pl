@@ -235,6 +235,14 @@ sub processFile() {
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]emailfunctions[[:space:]]',
 		   'replace "emailfunctions" with "${KDE4_EMAILFUNCTIONS_LIBS}"');
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]syndication[[:space:]]',
+                   'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kldap[[:space:]]',
+                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');	   
     }
   }
 
