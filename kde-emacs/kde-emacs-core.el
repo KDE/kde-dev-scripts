@@ -164,7 +164,7 @@ With arg, do it arg times."
 	 (define-key c++-mode-map "\{" 'insert-curly-brace)
 	 ;; Add (setq magic-parens-mode nil) to your .emacs (before loading this file)
 	 ;; to disable the automatic spaces inside "( ... )" in C++ mode.
-	 (and (boundp 'magic-keys-mode) magic-keys-mode
+	 (and (boundp 'magic-parens-mode) magic-parens-mode
 	      (define-key c++-mode-map "\(" 'insert-parens)
 	      (define-key c++-mode-map "\)" 'insert-parens2)
 	 )))
