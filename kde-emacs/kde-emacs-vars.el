@@ -79,7 +79,12 @@
   :type 'string)
 
 (defcustom magic-keys-mode 't
-  "Set this variable to true to have some special keybindings.  E.g. bind '(' to a function which inserts '( ' when appropriate..."
+  "Set this variable to true to have some special keybindings. E.g. bind ',' to a function which inserts ', ' when appropriate..."
+  :group 'kde-devel
+  :type 'boolean)
+
+(defcustom magic-parens-mode 't
+  "Set this variable to true to bind '(' and ')' to functions which insert spaces when appropriate. Depends on magic-keys-mode being set."
   :group 'kde-devel
   :type 'boolean)
 
