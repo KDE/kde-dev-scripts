@@ -160,8 +160,9 @@ With arg, do it arg times."
   ;; to disable the magic keys in C++ mode.
   (and (boundp 'magic-keys-mode) magic-keys-mode
        (progn
-	 (define-key c++-mode-map "\(" 'insert-parens)
-	 (define-key c++-mode-map "\)" 'insert-parens2)
+	 ; Disabled with the new coding style
+	 ;(define-key c++-mode-map "\(" 'insert-parens)
+	 ;(define-key c++-mode-map "\)" 'insert-parens2)
 	 (define-key c++-mode-map "\," 'insert-comma)
 	 (define-key c++-mode-map "\{" 'insert-curly-brace)
 	 ))
