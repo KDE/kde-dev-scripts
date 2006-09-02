@@ -108,8 +108,8 @@ InstallDirsKDE4 = {
    "kde_wallpaper"=> "${WALLPAPER_INSTALL_DIR}",
    "xdg_apps"     => "${XDG_APPS_DIR}",
    "xdg_directory"=> "${XDG_DIRECTORY_DIR}",
-   "data"         => "/share",
-   "include"      => "/include"
+   "data"         => "${DATA_INSTALL_DIR}",
+   "include"      => "${INCLUDE_INSTALL_DIR}"
 }
 
 $installDirs=InstallDirsKDE3
@@ -973,7 +973,6 @@ class CMakeFile
       file.printf("\n")
 
       if @installIcons
-         #add a default theme (not perfect for convert but enough to avoid pb
 		 file.printf("kde4_install_icons( ${ICON_INSTALL_DIR} )\n\n" )
       end
 
