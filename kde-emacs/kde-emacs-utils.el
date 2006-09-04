@@ -305,10 +305,10 @@ This function does not do any hidden buffer changes."
       )
 
     (setq newcppfile (not (cdr (kde-file-get-cpp-h))))
-    (if (string-match "\\.h$" file)
+    (if (member (file-name-extension file) kde-header-files)
 	(kde-switch-cpp-h)
       )
-    (goto-char (point-max))    
+    (goto-char (point-max))
     (kde-comments-begin)
     (kde-skip-blank-lines)
     (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
