@@ -188,7 +188,6 @@ while ($file = <$F>) {
 
 
 	s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
-	s!#include <kprogress.h>!#include <kprogressbar.h>!;
 
 	#If there is more than one argument add KGuiItem now I think that it will easy to fix it.
 	s!setButtonOKText!setButtonOK!;
