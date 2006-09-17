@@ -1034,8 +1034,10 @@ if (ARGV.length==1)
    elsif ARGV[0]=="--version"
       printf("am2cmake (C) 2005, Alexander Neundorf\n")
       printf("Version 0.3, July 18th, 2006\n");
+      exit
    else
       printf("Invalid argument, try --help\n")
+      exit
    end
 end
 
