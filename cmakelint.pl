@@ -212,6 +212,12 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kdnssd[[:space:]]',
             'replace "kdnssd" with "${KDE4_KDNSSD_LIBS}"');
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]knewstuff[[:space:]]',
+            'replace "knewstuff" with "${KDE4_KNEWSTUFF_LIBS}"');
+
+
     }
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
