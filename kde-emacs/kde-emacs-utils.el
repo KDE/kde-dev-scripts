@@ -207,7 +207,8 @@ This function does not do any hidden buffer changes."
 	)
     (if (or (string-match "\\.cc$" n)
             (string-match "\\.cpp$" n)
-            (string-match "\\.C$" n))
+            (string-match "\\.C$" n)
+            (string-match "\\.cxx$" n))
         ; TODO replace fume-function-before-point, needed for emacs,
         ; and for better namespace support.
 	;(progn
