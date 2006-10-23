@@ -834,7 +834,7 @@ class CMakeFile
                end
             end
             file.printf(")\n\n")
-            file.printf("kde4_automoc(%s ${%s})\n\n",buildTarget.name, srcsName)
+            file.printf("kde4_automoc(${%s})\n\n", srcsName)
 
             if needToCreateDummyFile
 #                  printf("creating dummy file in #{@path} ________\n")
@@ -895,7 +895,7 @@ class CMakeFile
          end
 
          if not buildTarget.kcfgs.empty?
-            file.printf("kde4_add_kcfg_files(%s %s ",buildTarget.name, srcsName)
+            file.printf("kde4_add_kcfg_files(%s )", srcsName)
             buildTarget.kcfgs.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.kcfgs.size>3
