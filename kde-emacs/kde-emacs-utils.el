@@ -205,7 +205,7 @@ This function does not do any hidden buffer changes."
         (function "")
         found
 	)
-    (if (member ext kde-source-files)
+    (if (member n kde-source-files)
         ; TODO replace fume-function-before-point, needed for emacs,
         ; and for better namespace support.
 	;(progn
