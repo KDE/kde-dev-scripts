@@ -34,6 +34,10 @@ while test $# -gt 0 ; do
     esac
 done
 
+if test "$dir" = "." && test ! -f CMakeLists.txt && test -f ../CMakeLists.txt; then
+   cd ..
+fi
+
 if test ! -f $dir/$file; then
   if test -n "$OBJ_SUBDIR"; then
     dir=$PWD
