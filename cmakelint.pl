@@ -246,6 +246,10 @@ sub processFile() {
 		   'replace "ktnef" with "${KDE4_KTNEF_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kmime[[:space:]]',
+		   'replace "kmime" with "${KDE4_KMIME_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kresources[[:space:]]',
 		   'replace "kresources" with "${KDE4_KRESOURCES_LIBS}"');
       $issues +=
