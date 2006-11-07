@@ -315,3 +315,11 @@ define identifyq4object
     print $obj->metaObject()->className()
 end
 
+# You print QString's too often to type the long name :-)
+define qs4
+  printq4string $arg0
+end
+
+define qs3
+  printq3string $arg0
+end
