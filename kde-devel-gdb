@@ -321,5 +321,5 @@ define qs4
 end
 
 define qs3
-  printq3string $arg0
+  printqstring $arg0
 end
