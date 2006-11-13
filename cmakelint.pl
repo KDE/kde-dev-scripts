@@ -228,6 +228,11 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]threadweaver[[:space:]]',
             'replace "threadweaver" with "${KDE4_THREADWEAVER_LIBRARIES}"');
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kspell2[[:space:]]',
+            'replace "kspell2" with "${KDE4_KSPELL2_LIBS}"');
+
 
     }
     # kdepimlibs variables
