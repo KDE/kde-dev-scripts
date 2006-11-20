@@ -8,6 +8,9 @@
 # Disable printing of static members. Qt has too many, it clutters the output
 set print static-members off
 
+# Show the real classname of object instances - e.g. (Kded *) 0x8073440 instead of (class QObject *) 0x8073440
+set print object
+
 define printqstring
     printqstringdata $arg0.d
 end
