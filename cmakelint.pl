@@ -233,6 +233,11 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kspell2[[:space:]]',
             'replace "kspell2" with "${KDE4_KSPELL2_LIBS}"');
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]krosscore[[:space:]]',
+            'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
+
 
     }
     # kdepimlibs variables
