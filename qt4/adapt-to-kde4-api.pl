@@ -379,7 +379,7 @@ while ($file = <$F>) {
 	s!#include <ktoolbarbutton.h>!!g;
 	s!\baddURL\b!addUrl!g;
 
-	s!kapp->makeStdCaption!KInstance::makeStdCaption!;
+	s!kapp->makeStdCaption!KInstance::makeStandardCaption!;
 	s!kapp->caption!KInstance::caption!;
 
 	s!\bsetEnableSounds\b!setSoundsEnabled!;
