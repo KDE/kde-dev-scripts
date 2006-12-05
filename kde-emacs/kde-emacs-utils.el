@@ -63,6 +63,26 @@ This function does not do any hidden buffer changes."
     found)
   )
 
+; Helper function for getting the baseclass of the current class - in a C++ header file
+; Only supports single inheritance
+(defun baseclass-under-point ()
+  (let ((pos (c-safe-scan-lists (point) -1 1)))
+    (save-excursion
+      (goto-char (if pos pos (point-min)))
+      (backward-word 2)			; move back over "public baseclass"
+      (if (looking-at "public\\|protected\\|private\s*")
+	  (progn
+	    (forward-word)
+	    (while (looking-at "[ \t]")
+	      (forward-char 1))
+	    (let ((start (point)))
+	      (forward-word)
+	      (buffer-substring start (point))))
+	nil
+	)))
+    )
+
+
 ; Helper function for parsing our current position in a C++ header file
 ; returns (namespace (class function)) where (a b) is a cons.
 (defun method-under-point ()
@@ -233,8 +253,8 @@ This function does not do any hidden buffer changes."
 		(sig "")
 		(pos 0))
         (setq namespace (car mup))
-	    (setq class (car (cdr mup)))
-	    (setq function (cdr (cdr mup)))
+	    (setq class (cadr mup))
+	    (setq function (cddr mup))
 	    (kde-switch-cpp-h)
 
         ;; First search with namespace prefixed
@@ -270,14 +290,27 @@ This function does not do any hidden buffer changes."
   (let* (
 	 (mup (method-under-point))
 	 (namespace (car mup))  ; will contain A::B::
-	 (class (car (cdr mup)))
-	 (function (cdr (cdr mup)))
+	 (class (cadr mup))
+	 (function (cddr mup))
 	 (file (buffer-file-name))
 	 (insertion-string (kde-function-impl-sig namespace class function))
+	 (function-sig (canonical-function-sig function))
 	 (msubstr nil)
 	 (start nil)
 	 (newcppfile nil)
+	 (baseclass nil)
 	 )
+    ; First, assemble the skeleton text into insertion-string
+    ; At this point it already contains the method signature
+
+    ; If constructor: add call to base class 
+    (and (stringp class)
+	 (string-match (concat "^ *" class "[ \\t]*(") function-sig) ; constructor
+	 (setq baseclass (baseclass-under-point))
+	 ; TODO: passing the parent parameter if baseclass starts with Q :)
+	 (setq insertion-string (concat insertion-string "\n    : " baseclass "()" )))
+
+    ; Method body
     (setq insertion-string 
 	  (concat insertion-string "\n{\n"
 		  (replace-in-string kde-make-member-default-impl "FUNCTION" 
@@ -285,7 +318,8 @@ This function does not do any hidden buffer changes."
 				     (replace-in-string insertion-string "\n" " " t)
 				     t)
 		  "}\n"))
-    ; move to next method, to be ready for next call
+
+    ; Move to next method, to be ready for next call
     (backward-char)                ; in case we're after the ';'
     (re-search-forward ";" nil t)  ; end of this method decl
     (let ((moveToNext t))
@@ -302,30 +336,30 @@ This function does not do any hidden buffer changes."
 	)
       )
 
-    (setq newcppfile (not (cdr (kde-file-get-cpp-h))))
+    ; Switch to .cpp if the declaration was in a header file
     (if (member (file-name-extension file) kde-header-files)
 	(kde-switch-cpp-h)
       )
+    ;(setq newcppfile (= (point-max) 1))
     (goto-char (point-max))
     (kde-comments-begin)
     (kde-skip-blank-lines)
     (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
-    (if (string-match "^#include.*moc.*" msubstr)
+    (if (string-match "^#include.*moc.*" msubstr) ; TODO refine regexp
 	(progn 
 	  (forward-line -1)
 	  (end-of-line)
-	  (insert "\n")))
-    (if (string-match "}" msubstr)
-	(progn
+	  (insert "\n"))
+    ; else
+      (progn
 	  (end-of-line)
 	  (insert "\n")
 	  (forward-line 1)
 	  ))
-    (when newcppfile
-      (insert "\n"))
     (insert insertion-string)
     (forward-char -3)
-    (c-indent-defun)   
+    (c-indent-defun)
+    ; Insert #include for the header if necessary
     (save-excursion
       (and (string-match ".*/" file)
 	   (setq file (replace-match "" t nil file)))

@@ -38,6 +38,13 @@
     )
 )
 
+;; Helper for kde-file-get-cpp-h
+(defun kde-file-or-buffer-exists (path)
+  "Returns true if \"filename\" is an existing file, or an open buffer"
+  (or (file-readable-p path)
+      (get-file-buffer path))
+)
+
 (defun kde-file-get-cpp-h ()
   "Function returns a corresponding source or header file. The returned
 variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
@@ -55,14 +62,14 @@ return (\"test.cpp\" t)."
       (setq listit kde-source-files)
       (while (and listit (not ret)) ; loop over the list but stop once ret is set
 	(setq path (concat nname "." (car listit)))
-	(if (file-readable-p path)
+	(if (kde-file-or-buffer-exists path)
 	    (setq ret (cons path t))
 	  )
 	(if (not ret)
 	    (if (string-match "_p$" nname)
 		(progn 
 		  (setq path (concat (substring nname 0 (string-match "_p$" nname)) "." (car listit)))
-		  (if (file-readable-p path)
+		  (if (kde-file-or-buffer-exists path)
 		      (setq ret (cons path t))
 		    )))
 	  )
