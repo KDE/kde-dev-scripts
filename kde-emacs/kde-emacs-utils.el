@@ -232,7 +232,7 @@ This function does not do any hidden buffer changes."
 	;  (let ((pos (kde-scan-lists (point) -1 1 nil t))) ; Go up a level
 	;    (goto-char (if pos (+ pos 1) (point-min))))
         (let ((a (fume-function-before-point)))
-          (and (string-match "^\\(.*\\)::\\(.*\\)$" a)
+          (if (string-match "^\\(.*\\)::\\(.*\\)$" a)
                (progn
                  (setq class (match-string 1 a))
                  (setq function (match-string 2 a))
@@ -246,7 +246,16 @@ This function does not do any hidden buffer changes."
 			  "[^;]+{"                             ; the optional inheritance and the '{'
 			  ) nil t)
                  ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t)))))
+                 (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t))
+	    ; else: not a member method, maybe just a c function
+	    (progn
+	      (setq function a)
+	      (kde-switch-cpp-h)
+	      (goto-char 0)
+	      (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t))
+	    )
+	  )
+      )
     (if (string-match "\\.h$" n)
         (progn
 	  (let ((mup (method-under-point))
