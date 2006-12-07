@@ -231,7 +231,8 @@ This function does not do any hidden buffer changes."
 	;(progn
 	;  (let ((pos (kde-scan-lists (point) -1 1 nil t))) ; Go up a level
 	;    (goto-char (if pos (+ pos 1) (point-min))))
-        (let ((a (fume-function-before-point)))
+        (let ((a (fume-function-before-point))
+	      (functionregexp ""))
           (if (string-match "^\\(.*\\)::\\(.*\\)$" a)
                (progn
                  (setq class (match-string 1 a))
@@ -241,12 +242,17 @@ This function does not do any hidden buffer changes."
 		 ; Look for beginning of class ("\\s-+" means whitespace including newlines)
                  (re-search-forward
 		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
-			  "\\([A-Z_]+_EXPORT[A-Z_]*\\)?\\s-+"  ; allow for optional EXPORT macro
+			  "\\([A-Z_]+_EXPORT[A-Z_]*\\s-+\\)?"  ; allow for optional EXPORT macro
 			  class "\\b"                          ; the classname - with word separator
 			  "[^;]+{"                             ; the optional inheritance and the '{'
-			  ) nil t)
+			  ) nil t)                             ; no error, just return nil if not found
+
+		 ; Look for function - with \\b prepended, unless this is about ~Foo.
+		 (setq functionregexp (kde-function-regexp-quote function))
+		 (and (not (string-match "^~" functionregexp))
+		      (setq functionregexp (concat "\\b" functionregexp)))
                  ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t))
+                 (re-search-forward (concat functionregexp "[ \t]*(") nil t))
 	    ; else: not a member method, maybe just a c function
 	    (progn
 	      (setq function a)
