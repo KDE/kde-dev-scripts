@@ -117,18 +117,6 @@ function! SetCodingStyle()
         set ts=8
         set noet
         set tw=100
-    elseif pathfn =~ 'phonon'
-        if strlen(mapcheck('(','i')) > 0
-            iunmap (
-        endif
-        let g:DisableSpaceBeforeParen = 'x'
-        call SmartParensOn()
-        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
-        let g:need_brace_on_same_line = ''
-        set sw=4
-        set ts=4
-        set noet
-        set tw=100
     elseif pathfn =~ 'nmm'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
