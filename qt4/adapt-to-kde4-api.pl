@@ -195,6 +195,7 @@ while ($file = <$F>) {
 	s!setButtonCancelText!setButtonCancel!;
 
 	# remove deprecated header
+	s!#include <kanimwidget.h>!#include <kanimatedbutton.h>!;
 	s!#include <kcolordlg.h>!#include <kcolordialog.h>!;
 	s!#include <kcolorbtn.h>!#include <kcolorbutton.h>!;
 	s!#include <kdatepik.h>!#include <kdatepicker.h>!;
