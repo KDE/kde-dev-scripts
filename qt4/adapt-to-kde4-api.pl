@@ -168,6 +168,7 @@ while ($file = <$F>) {
 	s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
 	s!#include <kcodecs.h>!#include <kcodecs.h>!;
 	#kde3support
+	s!#include <kactivelabel.h>!#include <k3activelabel.h>!;
 	s!#include <kdockwidget.h>!#include <k3dockwidget.h>!;
 	s!#include <kmdichildarea.h>!#include <k3mdichildarea.h>!;
 	s!#include <kmdichildfrmcaption.h>!#include <k3mdichildfrmcaption.h>!;
@@ -364,6 +365,7 @@ while ($file = <$F>) {
 
     s!\bKTimezoneSource\b!KTimeZoneSource!g;
 
+    s!\bKActiveLabel\b!K3ActiveLabel!g;
     s!\bKWidgetAction\b!K3WidgetAction!g;
 
     s!#include <kiconview.h>!#include <k3iconview.h>!;
