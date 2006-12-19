@@ -202,6 +202,7 @@ while ($file = <$F>) {
 	s!#include <kdatepik.h>!#include <kdatepicker.h>!;
 	s!#include <kdualcolorbtn.h>!#include <kdualcolorbutton.h>!;
 	s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;
+	s!#include <kstdaction.h>!#include <kstandardaction.h>!;
 
 	# Qt3 name class
 	s!QIconSet!QIcon!g;
@@ -357,6 +358,7 @@ while ($file = <$F>) {
 
 	s!flushX!flush!;
 
+    s!\bKStdAction\b!KStandardAction!g;
     s!\bKTimezone\b!KTimeZone!g;
 
     s!\bKTimezones\b!KTimeZones!g;
