@@ -13,8 +13,8 @@ use File::Basename;
 use Cwd;
 
 # Fix the version number in .ui files if it's bigger than this:
-my $default_minversion_maj = 3;
-my $default_minversion_min = 3;
+my $default_minversion_maj = 4;
+my $default_minversion_min = 0;
 
 # Known words which are ok as captions
 my %knowncaptions = (
