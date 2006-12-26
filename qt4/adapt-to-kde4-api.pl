@@ -359,6 +359,11 @@ while ($file = <$F>) {
 	s!flushX!flush!;
 
     s!\bKStdAction\b!KStandardAction!g;
+    s!\bKStdGuiItem\b!KStandardGuiItem!g;
+    s!\bKStandardGuiItem::StdItem\b!KStandardGuiItem::StandardItem!g;
+    s!\bKStdAccel\b!KStandardShortcut!g;
+    s!\bKStandardShortcut::StdAccel\b!KStandardShortcut::StandardShortcut!g;
+    s!\bKStandardShortcut::findStdAccel\b!KStandardShortcut::findStandardShortcut!g;
     s!\bKTimezone\b!KTimeZone!g;
 
     s!\bKTimezones\b!KTimeZones!g;
