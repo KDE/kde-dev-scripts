@@ -3,7 +3,7 @@
 import os, sys, string
 
 def help():
-	print "Usage: %s <filename>.kdelnk ..."
+	print "Usage: %s <filename>.kdelnk ..." % sys.argv[0]
 
 if len(sys.argv) < 2:
 	help()
