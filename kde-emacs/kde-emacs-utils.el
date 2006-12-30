@@ -35,6 +35,7 @@ This function does not do any hidden buffer changes."
       `(scan-lists ,from ,count ,depth nil t)
     `(c-safe (scan-lists ,from ,count ,depth))))
 
+
 ;; returns non-nil if the given file has a using declaration
 ;; with the passed namespace
 (defun kde-file-has-using (namespace)
@@ -48,7 +49,6 @@ This function does not do any hidden buffer changes."
       )
     found)
   )
-
 ;; returns non-nill if the given file has a "namespace SomeNM" declaration
 ;; where SomeNM is passed via the namespace argument
 (defun kde-file-is-in-namespace (namespace)
@@ -70,7 +70,7 @@ This function does not do any hidden buffer changes."
     (save-excursion
       (goto-char (if pos pos (point-min)))
       (backward-word 2)			; move back over "public baseclass"
-      (if (looking-at "public\\|protected\\|private\s*")
+      (if (looking-at "public\\|protected\\|private\\s*")
 	  (progn
 	    (forward-word)
 	    (while (looking-at "[ \t]")
@@ -81,7 +81,6 @@ This function does not do any hidden buffer changes."
 	nil
 	)))
     )
-
 
 ; Helper function for parsing our current position in a C++ header file
 ; returns (namespace (class function)) where (a b) is a cons.
