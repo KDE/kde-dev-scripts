@@ -187,7 +187,7 @@ write;
 print "\nPercentage Code:\t" , pct( $code, $total ),"%\n";
 print "Percentage Comment:\t" , pct( $comment, $total ),"%\n";
 print "Percentage Blank:\t" , pct( $blank, $total ),"%\n";
-print "Percentage Cmt/Code:\t" , pct( $comment, $code ),"%\n";
+print "Ratio Comment/Code:\t" , pct( $comment, $code + $comment ),"% Comment\n";
 print "Average Code/File:\t" , int($code/$numfiles)," lines\n" 
 	unless $numfiles == 0;
 
