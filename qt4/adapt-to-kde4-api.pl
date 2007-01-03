@@ -295,6 +295,8 @@ while ($file = <$F>) {
         s!KLocale::setActiveCatalogue!KLocale::setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
         s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
+        s!KGlobal::iconLoader!kapp->iconLoader!;
+        s!KGlobal::instance\(\)->iconLoader!kapp->iconLoader!;
 
 	if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
 	    push(@necessaryIncludes, "kworkspace.h");
