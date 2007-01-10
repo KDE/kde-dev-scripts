@@ -145,6 +145,18 @@ function! SetCodingStyle()
         set sts=4
         set et
         set tw=100
+    elseif pathfn =~ 'solid'
+        if strlen(mapcheck('(','i')) > 0
+            iunmap (
+        endif
+        call SmartParensOn()
+        inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
+        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
+        let g:need_brace_on_same_line = ''
+        set sw=4
+        set sts=4
+        set et
+        set tw=100
     else "if pathfn =~ '\(kdelibs\|qt-copy\)'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
@@ -218,8 +230,18 @@ function! CreateMatchLine()
     " prepend earlier lines until we find a ; or {
     while linenum > 1 && current_line !~ ';' && current_line !~ '{.\+$'
         let linenum = linenum - 1
-        " remove all // comments
-        let prev_line = substitute( getline( linenum ), '//.*$', '', '' )
+        let prev_line = getline(linenum)
+        if synIDattr(synID(linenum, 1, 1), "name") == 'cComment' "inside a /* */ comment at the beginning of the line
+            if stridx(prev_line, '*/') == -1
+                " next line please
+                let prev_line = ''
+            else
+                " remove everything before */
+                let prev_line = substitute(prev_line, '^.*\*/', '*/', '')
+            endif
+        endif
+        " remove // comment
+        let prev_line = substitute(prev_line, '//.*$', '', '' )
         " concatenate the lines with a space in between
         let current_line = prev_line.' '.current_line
         " remove all /* */ comments
@@ -260,10 +282,14 @@ function! AddClosingBrace(current_line)
 endfunction
 
 function! SmartLineBreak()
+    if synIDattr(synID(line("."), col("."), 1), "name") == 'cComment' "inside a /* */ comment at the point where the line break occurs
+        return
+    endif
     let match_line = CreateMatchLine()
     if match_line == ''
         return
     endif
+
     if strlen(g:need_brace_on_same_line) > 0 && match_line =~ g:need_brace_on_same_line
         if match_line =~ '}\s*else\>'
             " make sure else is on the same line as the closing brace
@@ -429,9 +455,11 @@ function! SwitchHeaderImpl()
         " save, discard, cancel
         execute( 'edit '.file )
         call append( 0, "#include \"".fn."\"" )
-        call append( 2, "// vim: sw=4 ts=4 noet" )
+        call append( 2, "// vim: sw=4 sts=4 et tw=100" )
         execute( "set sw=4" )
-        execute( "set ts=4" )
+        execute( "set sts=4" )
+        execute( "set et" )
+        execute( "set tw=100" )
     elseif fn =~ impl
         call AskToSave()
         let file = substitute( fn, impl, '.h', '' )
