@@ -150,7 +150,6 @@ function! SetCodingStyle()
             iunmap (
         endif
         call SmartParensOn()
-        inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
         let g:need_brace_on_same_line = ''
         set sw=4
@@ -290,7 +289,25 @@ function! SmartLineBreak()
         return
     endif
 
-    if strlen(g:need_brace_on_same_line) > 0 && match_line =~ g:need_brace_on_same_line
+    let match_position1 = -1
+    let match_position2 = -1
+    if strlen(g:need_brace_on_same_line) > 0
+        let match_position1 = match(match_line, g:need_brace_on_same_line)
+    endif
+    if strlen(g:need_brace_on_next_line) > 0 && match_position1 == -1
+        let match_position2 = match(match_line, g:need_brace_on_next_line)
+    endif
+
+    if match_position1 > -1
+        if match_position1 > 0
+            if strpart(match_line, match_position1 - 1, 1) == '#'
+                if strpart(match_line, match_position1, 2) == 'if'
+                    :execute "normal o#endif\<ESC>k$"
+                endif
+                return
+            endif
+        endif
+
         if match_line =~ '}\s*else\>'
             " make sure else is on the same line as the closing brace
             if getline('.') =~ '^\s*else'
@@ -315,7 +332,16 @@ function! SmartLineBreak()
         call AddClosingBrace(match_line)
     elseif getline('.') =~ '^\s*{$'
         call AddClosingBrace('')
-    elseif strlen(g:need_brace_on_next_line) > 0 && match_line =~ g:need_brace_on_next_line
+    elseif match_position2 > -1
+        if match_position2 > 0
+            if strpart(match_line, match_position2 - 1, 1) == '#'
+                if strpart(match_line, match_position2, 2) == 'if'
+                    :execute "normal o#endif\<ESC>k$"
+                endif
+                return
+            endif
+        endif
+
         if match_line =~ '{$'
             :execute ':s/\s*{$//'
         endif
