@@ -293,21 +293,36 @@ function! SmartLineBreak()
     let match_position2 = -1
     if strlen(g:need_brace_on_same_line) > 0
         let match_position1 = match(match_line, g:need_brace_on_same_line)
+        if match_position1 > 0
+            while strpart(match_line, match_position1 - 1, 1) == '#'
+                let old_position = match_position1
+                let match_position1 = match(match_line, g:need_brace_on_same_line, match_position1 + 1)
+                if match_position1 == -1
+                    if strpart(match_line, old_position, 2) == 'if'
+                        :execute "normal o#endif\<ESC>k$"
+                    endif
+                    return
+                endif
+            endwhile
+        endif
     endif
     if strlen(g:need_brace_on_next_line) > 0 && match_position1 == -1
         let match_position2 = match(match_line, g:need_brace_on_next_line)
+        if match_position2 > 0
+            while strpart(match_line, match_position2 - 1, 1) == '#'
+                let old_position = match_position2
+                let match_position2 = match(match_line, g:need_brace_on_same_line, match_position2 + 1)
+                if match_position2 == -1
+                    if strpart(match_line, old_position, 2) == 'if'
+                        :execute "normal o#endif\<ESC>k$"
+                    endif
+                    return
+                endif
+            endwhile
+        endif
     endif
 
     if match_position1 > -1
-        if match_position1 > 0
-            if strpart(match_line, match_position1 - 1, 1) == '#'
-                if strpart(match_line, match_position1, 2) == 'if'
-                    :execute "normal o#endif\<ESC>k$"
-                endif
-                return
-            endif
-        endif
-
         if match_line =~ '}\s*else\>'
             " make sure else is on the same line as the closing brace
             if getline('.') =~ '^\s*else'
@@ -333,15 +348,6 @@ function! SmartLineBreak()
     elseif getline('.') =~ '^\s*{$'
         call AddClosingBrace('')
     elseif match_position2 > -1
-        if match_position2 > 0
-            if strpart(match_line, match_position2 - 1, 1) == '#'
-                if strpart(match_line, match_position2, 2) == 'if'
-                    :execute "normal o#endif\<ESC>k$"
-                endif
-                return
-            endif
-        endif
-
         if match_line =~ '{$'
             :execute ':s/\s*{$//'
         endif
