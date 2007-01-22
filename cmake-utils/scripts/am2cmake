@@ -231,6 +231,7 @@ class CMakeFile
       @listsFile=@path+"CMakeLists.txt"
       @iconDir="hicolor"
       @installIcons=false
+      @installDoc=false
 
       @createDoxygenDocs=false
       @doxygenRecursive=false
@@ -471,6 +472,11 @@ class CMakeFile
       if line =~ /^\s*KDE_ICON\s*=/
          @installIcons=true
          return
+      end
+
+      if line =~ /^\s*KDE_DOCS\s*=/
+	 @installDoc=true
+	 return
       end
 
       if (line =~ /^\s*\S+_SOURCES\s*=/)
@@ -973,7 +979,10 @@ class CMakeFile
       if @installIcons
 		 file.printf("kde4_install_icons( ${ICON_INSTALL_DIR} )\n\n" )
       end
-
+      
+      if @installDoc
+	         file.printf("kde4_create_handbook(index.docbook)\nkde4_install_handbook()\n\n" )
+      end
       if @createDoxygenDocs
          file.printf("kde4_create_doxygen_docs( ")
 
