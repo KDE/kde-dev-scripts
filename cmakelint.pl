@@ -238,7 +238,10 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]krosscore[[:space:]]',
             'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
 
-
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kwalletclient[[:space:]]',
+            'replace "kwalletclient" with "${KDE4_KWALLETCLIENT_LIBS}"');
     }
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
