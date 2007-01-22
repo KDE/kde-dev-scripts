@@ -92,7 +92,7 @@ for my $file_name ( @ARGV )
 
   while ( <$fh> )
   {
-     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml|<!--)/;
+     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml|<!--|<ui version=)/;
 
      chomp;
 
