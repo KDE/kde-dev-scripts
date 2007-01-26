@@ -685,12 +685,11 @@ This function does not do any hidden buffer changes."
 (defun scroll-other-up () (interactive) (scroll-other-window-down 1)) ; hehe :)
 (defun scroll-other-down () (interactive) (scroll-other-window 1))
 
-(defun match-paren (arg)
-  "Go to the matching parenthesis if on parenthesis otherwise insert %."
-  (interactive "p")
-  (cond ((looking-at "[ \t]\(") (forward-list 1) (backward-char 1))
-        ((looking-at "[ \t]\)") (forward-char 1) (backward-list 1))
-        (t (self-insert-command (or arg 1)))))
+(defun match-paren ()
+  "Go to the matching parenthesis if on parenthesis otherwise do nothing."
+  (interactive)
+  (cond ((looking-at "[ \t]*[\({]") (forward-sexp) (backward-char))
+	((looking-at "[\)}]") (forward-char) (backward-sexp))))
 
 (defun kde-start-c++-header ()
   "Start a new C++ header by inserting include guards ( see \
