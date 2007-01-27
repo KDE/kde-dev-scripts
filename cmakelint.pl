@@ -230,19 +230,45 @@ sub processFile() {
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kspell2[[:space:]]',
-            'replace "kspell2" with "${KDE4_KSPELL2_LIBS}"');
+            'target_link_libraries.*[[:space:]]krosscore[[:space:]]',
+            'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]krosscore[[:space:]]',
-            'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
+            'target_link_libraries.*[[:space:]]phononcore[[:space:]]',
+            'replace "phononcore" with "${KDE4_PHONONCORE_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]phononui[[:space:]]',
+            'replace "phononui" with "${KDE4_PHONONUI_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]solidifaces[[:space:]]',
+            'replace "solidifaces" with "${KDE4_SOLIDIFACES_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]solid[[:space:]]',
+            'replace "solid" with "${KDE4_SOLID_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]sonnetui[[:space:]]',
+            'replace "sonnetui" with "${KDE4_SONNETUI_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]sonnetcore[[:space:]]',
+            'replace "sonnetcore" with "${KDE4_SONNETCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kwalletclient[[:space:]]',
             'replace "kwalletclient" with "${KDE4_KWALLETCLIENT_LIBS}"');
     }
+
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues += 
