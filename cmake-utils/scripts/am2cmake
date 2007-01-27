@@ -879,8 +879,8 @@ class CMakeFile
          end
 
          if not buildTarget.skels.empty?
-            file.printf("kde4_add_dcop_skels(%s ", srcsName)
-            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please\")\n")
+            file.printf("#kde4_add_dcop_skels(%s ", srcsName)
+            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please.kde4_add_dcop_skels macro doesn't exist now. We keep it just to remember to port to dbus\")\n")
             buildTarget.skels.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.skels.size>3
@@ -890,8 +890,8 @@ class CMakeFile
          end
 
          if not buildTarget.stubs.empty?
-            file.printf("kde4_add_dcop_stubs(%s ", srcsName)
-            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please\")\n")
+            file.printf("#kde4_add_dcop_stubs(%s ", srcsName)
+            file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please. kde4_add_dcop_stubs doen't exist. We keep it to remember to port to dbus\")\n")
             buildTarget.stubs.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.stubs.size>3
