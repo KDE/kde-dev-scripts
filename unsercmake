@@ -1,0 +1,538 @@
+#!/usr/bin/perl
+# Copyright (C) 2006 Thomas Zander <zander@kde.org>
+$COMMAND = "unsercmake";
+$VERSION = "$COMMAND 0.13";
+# This script allows you to build a target library including dependency checking, but it
+# limits the dependency checking to the current dir and its subdirs meaning a lot of
+# unwanted steps are skipped.
+# This script assumes the presence of cmake 2.4.3 or greater and the Makefiles it created.
+
+
+# user settings...
+# if we assume the user has something like:  /kde/project as a sourcedir and /kde/current/project
+# as a build dir then we can auto-switch between those dirs
+# Please alter the variable to set the basedir and the builddir.  Like this:
+#  BASE=BUILD
+# Examples:
+#  $buildDirType = "/kde=/kde/current";
+#  $buildDirType = "kde/{project}=kde/{project}/build";
+$buildDirType = "";
+
+##########################
+# Copyright (c) 2006 Thomas Zander <zander@kde.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License,
+# or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+if ($buildDirType eq "") {
+    print "Not setup!\n";
+    print "  This tool can automatically switch from your source dir to the builddir.\n";
+    print "  To do this correctly you have to alter the $COMMAND using your editor\n";
+    print "  and alter the buildDirType variable according to the comments.\n";
+    exit;
+}
+
+#argument options
+$argMap{"C"}="directory";
+$argMap{"j"}="jobs";
+$argMap{"n"}="just-print";
+$argMap{"v"}="verbose";
+$argMap{"k"}="keep-going";
+$argMap{"p"}="projecthelp";
+$argMap{"h"}="help";
+$argMap{"e"}="exclude";
+$argMap{"q"}="quiet";
+@options=split(" ", "help directory jobs just-print verbose keep-going version projecthelp exclude quiet");
+@argCommands=split(" ","directory jobs exclude");
+
+&parseArguments(@ARGV);
+if(defined $help) {
+    print "Usage: $COMMAND [OPTION] ...\n";
+    print "Available options:\n\n";
+    print "  -h,	--help     	This help.\n";
+    print "  -p 	--projecthelp	print project help information\n";
+    print "  -j,	--jobs=N	Allow N parallel jobs.\n";
+    print "  -k,	--keep-going	Keep going when some targets can't be made.\n";
+    print "  -C,	--directory=dir	Change to directory dir before doing anything.\n";
+    print "  -v,	--verbose	Show verbose output.\n";
+    print "     	--version	Show version information and copyright notice.\n";
+    print "  -n 	--just-print	Only print out the commands to call.\n";
+    print "  -q 	--quiet     	Don't print details\n";
+    print "  -e 	--exclude=RegEx	Exclude libraries and subdirs based on a regular expression\n";
+    exit;
+}
+
+if(defined $version) {
+    print "$VERSION\nWritten by Thomas Zander\n\nThis is free software see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
+    exit;
+}
+
+if(defined $directory) {
+    chdir $directory || die "Failed to change directory to '$directory'\n";
+}
+
+while(! -f "CMakeFiles" && ! -f "CMakeLists.txt") {
+    # for the case where there is a subdir but that subdir does not have a cmakefile
+    chdir ".." || die "Error: Can not find a cmake based basedir\nPlease start from the source dir\n";
+    if(`pwd` eq "/\n") {
+        die "Error: Can not find a cmake based basedir\nPlease start from the source dir\n";
+    }
+}
+
+$dir=`pwd`;
+chomp($dir);
+$builddir = "$dir/";
+
+# find the build-dir where the Makefile lives
+@bd = split("=", $buildDirType);
+if($#bd > 0) {
+    # make sure slashes are all round
+    $bd[0]="/$bd[0]/";
+    $bd[1]="/$bd[1]/";
+    $bd[0]=~s/\/\//\//g;
+    $bd[1]=~s/\/\//\//g;
+    my $wildcard="";
+    if($bd[0]=~/(\{.*\})/) { # used {project} wildcard
+        $wildcard=$1;
+        if($bd[1]=~/$wildcard/) {
+            $bd[0]=~s/$wildcard/(.*?)/;
+        }
+    }
+    if($builddir=~/$bd[0]/ && $builddir=~/$bd[1]/ == false) {
+        my $project=$wildcard;
+        $builddir=~/$bd[0]/;
+        if($builddir=~m/$bd[0]/) {
+            $project=$1;
+        }
+        $builddir=~s/$bd[0]/$bd[1]/;
+        if($wildcard ne "" && $project ne "") {
+            $builddir=~s/$wildcard/$project/;
+        }
+        #print "$dir => $builddir\n";
+    }
+}
+
+$makeDependNeeded = 0;
+&readCmakeFile(".");
+
+if(defined $projecthelp) {
+    print "\nLibraries:\n\n";
+    foreach $key (sort {uc($a) cmp uc($b)} @libraries) {
+        print " $key";
+        if(defined $exclude && $key=~/$exclude/) {
+            print "  [excluded]";
+        }
+        print "\n";
+    }
+    exit;
+}
+
+$doInstall = 0;
+if($#userArgs >= 0) { # limit to user request
+    foreach $lib (@userArgs) {
+        if($lib eq "install") {
+            $doInstall = 1;
+            if($#userArgs == 0) {
+                @targets = @libraries;
+            }
+            next;
+        }
+
+        my $pureLib = $lib;
+        $pureLib=~s/^[\/ \\]*//;
+        $pureLib=~s/[\/ \\]*$//;
+        if(&contains($pureLib, @libraries)) {
+            push @targets, $pureLib;
+        }
+        else {
+            push @nonLibTargets, $lib;
+        }
+    }
+}
+else {
+    @targets=@libraries;
+}
+
+foreach $lib (@targets) { # add dependencies
+    @deps = &dependencies(0, $lib);
+    LIB: foreach $l (@deps) {
+        if($l eq "ERROR") {
+            exit 1;
+        }
+        if(defined $exclude && $l=~/$exclude/) {
+            next;
+        }
+        foreach $x (@maketargets) {
+            if($l eq $x) {
+                next LIB;
+            }
+        }
+        push @maketargets, $l;
+    }
+}
+
+# cd to builddir
+chdir $builddir || die "Can't find builddir '$builddir'\n";
+if($makeDependNeeded) {
+    system ("make depend") == 0 or exit 1;
+}
+
+@actualTargets=`make help`;
+foreach $target (@nonLibTargets) {
+    foreach $h (@actualTargets) {
+        if($h=~/\b$target\b/) {
+            push @maketargets, $target;
+        }
+    }
+}
+
+if($doInstall == 0 && $#maketargets < 0) {
+    print "No targets\n";
+    exit;
+}
+
+if(defined $jobs) {
+    $jobs="-j $jobs";
+}
+if(defined $verbose) {
+    $verbose="VERBOSE=0";
+}
+foreach $lib (@maketargets) {
+    chdir "$builddir/$locations{$lib}";
+    $dir = $locations{$lib};
+    $dir=~s/^\.\///;
+    if(&checkTargetAvail($lib) == 1) {
+        if(! defined $quiet) {
+            print "Building lib: $lib (in $dir)\n";
+        }
+        if(defined $just_print) {
+            next;
+        }
+        my $rc = system ("make $jobs $verbose $lib/fast");
+        if(!(defined $keep_going) && $rc != 0) {
+            exit 1;
+        }
+        if($doInstall == 1 && $rc == 0) {
+            # install libs
+            &install("$builddir/$locations{$lib}/cmake_install.cmake", 1);
+        }
+    }
+    elsif(! defined $quiet) {
+        print "Skipping lib: $lib (in $dir)\n";
+    }
+}
+
+# install!
+if($doInstall == 1) {
+    if(! defined $quiet) {
+        print "Installing changed files";
+        #if($dir ne ".") { print " in '$dir'"; }
+        print "\n";
+    }
+    if(! defined $just_print) {
+        &install("$builddir/cmake_install.cmake", 0);
+    }
+}
+
+###############
+sub readCmakeFile {
+    my $dir=shift(@_);
+    my $file="CMakeLists.txt";
+
+    if($makeDependNeeded == 0) {
+        my $buildAge = (stat("$builddir/$dir/CMakeFiles/CMakeDirectoryInformation.cmake"))[9];
+        my $fileAge = (stat("$dir/$file"))[9];
+        if($fileAge > $buildAge) {
+            $makeDependNeeded = 1;
+            print "makeDepend needed due to $dir\n";
+        }
+    }
+
+    my @subdirs;
+    open FILE, "$dir/$file";
+    my $inLink=0;
+    my $lib = "";
+    foreach $line (<FILE>) {
+        if($inLink == 0 && $line=~/^\s*add_subdirectory\s*\((.*)\)/i) {
+            my $d=$1;
+            $d=~s/^\s*//;  #chomp
+            $d=~s/\s*$//;
+            push @subdirs, $d;
+        }
+
+        my $libs = "";
+        if($inLink == 1) {
+            $libs = $line;
+        }
+        if($line=~/^\s*target_link_libraries\s*\((.*)/) {
+            $libs = $1;
+            $inLink=1;
+        }
+        if($inLink == 1 && $libs ne "") {
+            foreach $i (split(" ", $libs)) {
+                if($i=~/\)$/) {  # incase no space was used
+                    $i=~s/\)$//;
+                    $inLink = 0;
+                }
+                if($i eq ")") { #incase a space was used
+                    $inLink = 0;
+                }
+                elsif($inLink==1 && $lib eq "") { # a library is defined in this file
+                    $lib = $i;
+                    push @libraries, $lib;
+#print "found lib: $lib\n";
+                    $locations{$lib} = "$dir";
+                }
+                else { # and that libraries dependencies
+                    $$lib .= "$i ";
+#print "   supportlib $i\n";
+                }
+            }
+            $libs ="";
+        }
+        if($inLink == 0) {
+            $lib = "";
+        }
+    }
+    close FILE;
+
+    # only go into subdir when the DartTestfile lists the subdir.
+    open FILE, "$builddir/$dir/DartTestfile.txt";
+    foreach $line (<FILE>) {
+        if($line=~/^SUBDIRS\s*\((.*)\)/) {
+            my $subdir;
+            foreach $subdir (@subdirs) {
+                if(defined $exclude && "/$subdir/"=~/$exclude/) {
+                    next;
+                }
+                if($line=~/\b$subdir\b/) {
+                    &readCmakeFile("$dir/$subdir");
+                }
+            }
+            last;
+        }
+    }
+    close FILE;
+}
+
+sub dependencies() {
+    my $level=shift(@_);
+    my $target=shift(@_);
+    if($level > 12) {
+        print "ERROR; dependency checking hit 12 levels deep, probably a circular dependency, baling out\n";
+        print " dependencies traceback (bottom depends on top):\n";
+        print " $target\n";
+        return "ERROR";
+    }
+#my $inset ="";
+#for($i=0; $i < $level; $i++) { $inset .="  "; }
+#print "$inset |dependencies of '$target'\n";
+
+    my @depend;
+    my $lib;
+#print "$inset depsLine='$$target'\n";
+    foreach $lib (split(" ", $$target)) {
+        my $found=0;
+        my $l;
+        # if not in our libraries, skip it.
+        foreach $l (@libraries) {
+            if($l eq $lib) {
+                $found=1;
+                last;
+            }
+        }
+        if($found == 0) {
+            next;
+        }
+#print "$inset has dependency $lib\n";
+
+        if(&contains($lib, @depend) == 0) {
+#print "$inset  $lib not yet present in: \"";
+#foreach $dslf (@depend) {
+#    print  " $dslf";
+#}
+#print "\"\n";
+            # before we add it, lets find the dependencies of that library
+            foreach $l (&dependencies($level+1, $lib)) {
+                if($l eq "ERROR") {
+                    print " $target\n";
+                    return "ERROR";
+                }
+                if(&contains($l, @depend) == 0) {
+                    push @depend, $l;
+                }
+            }
+            push @depend, $lib;
+        }
+    }
+    if(&contains($target, @depend) == 0) {
+        push @depend, $target;
+    }
+
+#foreach $dslf (@depend) {
+#    print  "$inset  += '$dslf'\n";
+#}
+
+    return @depend;
+}
+
+## Returns 1 if the first arg is already present in the rest of the array, 0 otherwise
+sub contains() {
+    my $new=shift(@_);
+    @array = @_;
+    my $item;
+    foreach $item (@array) {
+        if($item eq $new) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+sub parseArguments() {
+    @arguments=@_;
+    for($i=0; $i<=$#arguments; $i++) {
+        if($arguments[$i]=~/(-{1,2}\S+?)(=\S+|)$/) {
+            $command=$1;
+            $param=$2;
+            if($command=~/^-\b(.)(.*)/) {
+                my $char=$1;
+                $param=$2;
+                $command=$argMap{$char};
+            }
+            $command=~s/^--//;
+            if(&contains($command, @options) == 0) {
+                print "unrecognized option '$arguments[$i]'\n";
+                print "Try `$COMMAND --help' for more information.\n";
+                exit 1;
+            }
+            if($param eq "" && &contains($command, @argCommands) == 1) {
+                $i++;
+                if($arguments[$i]=~/^-/ || $#arguments < $i) {
+                    print "Missing argument: $arguments[$i-1]\n";
+                    exit 1;
+                }
+                $param = $arguments[$i];
+            }
+            if($param eq "") {
+                $param =1;
+            }
+            $command=~s/\W/_/g;
+            # print "setting param $command\n";
+            $$command=$param;
+        }
+        else {
+            push @userArgs, $arguments[$i];
+        }
+    }
+}
+
+sub checkTargetAvail() {
+    my $target=shift(@_);
+    open FILE, "Makefile";
+    foreach $line (<FILE>) {
+        if($line=~/^$target:/) {
+            close FILE;
+            return 1;
+        }
+    }
+    close FILE;
+    return 0;
+}
+
+
+sub install() {
+    my $inputFile=shift(@_);
+    my $limitToLibs=shift(@_);
+
+    my @subdirs;
+    open FILE, "$inputFile";
+    foreach $line (<FILE>) {
+        if($limitToLibs == 0 && $line=~/^INCLUDE\(\"(.*)\"\)/) {
+            push @subdirs, $1;
+        }
+        elsif($line=~/^FILE\(INSTALL DESTINATION \"(.*)\" TYPE (SHARED_LIBRARY|EXECUTABLE|FILE|MODULE)(.+?)FILES \"(.*)\"\)$/) {
+            my $dest=$1;
+            my $type=$2;
+            my $options=$3;
+            my $input=$4;
+            if($limitToLibs==1 && !($type eq "SHARED_LIBRARY" || $type eq "MODULE")) {
+                next;
+            }
+            $input=~/.*\/(.*)/;
+            $filename=$1;
+            if($type eq "FILE" && $options=~/RENAME \"(.*)\"/) {
+                $filename = $1;
+            }
+            #print " a: '$dest', b: $type, c: '$options', d: '$filename'\n";
+            my $copy=0;
+            my @destInfo = stat "$dest/$filename";
+            if(@destInfo == 0) {
+                #print "dest not exist\n";
+                $copy=1;
+            }
+            else {
+                my @sourceInfo = stat "$input";
+                if(@destInfo[7] != @sourceInfo[7]) { # filesize
+                    #print "different size\n";
+                    $copy=1;
+                }
+                elsif(@destInfo[9] < @sourceInfo[9]) { # mtime
+                    #print "different date\n";
+                    $copy=1;
+                }
+            }
+            if($copy == 1) {
+                system("install -d $dest"); # create dir
+                my $doSymlinks=0;
+                my $ver="";
+                my $sover;
+                if($type eq "SHARED_LIBRARY") {
+                    if($options=~/VERSION ([\d\.]+)/) { # do symlinks since its got versions.
+                        $ver=".$1";
+                        $doSymlinks=1;
+                        $options=~/SOVERSION ([\d\.]+)/;
+                        $sover=".$1";
+                    }
+                }
+                system "install -d $dest" || die "Can not create dir '$dest'";
+                unlink "$dest/$filename$ver";
+                system "cp", "$input", "$dest/$filename$ver";
+                if($type eq "EXECUTABLE") {
+                    chmod 0755, "$dest/$filename";
+                }
+                #print "    cp $input $dest/$filename$ver\n";
+                if($doSymlinks) {
+                    if(!-l "$dest/$filename$sover") {
+                        unlink("$dest/$filename$sover"); #if its a normal file
+                        symlink "$filename$ver", "$dest/$filename$sover";
+                    }
+                    if(!-l "$dest/$filename") {
+                        unlink("$dest/$filename"); #if its a normal file
+                        symlink "$filename$sover", "$dest/$filename";
+                    }
+                }
+                if($limitToLibs == 1) {
+                    print "Installing";
+                }
+                print "  $dest/$filename$ver\n";
+            }
+        }
+    }
+    close FILE;
+
+    foreach $subdir (@subdirs) {
+        &install($subdir, $limitToLibs);
+    }
+}
