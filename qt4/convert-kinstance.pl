@@ -18,6 +18,7 @@ while ($file = <$F>) {
 
     my $nbLoop = 1;
     my $modified;
+    my @necessaryIncludes = ();
     open(my $FILE, $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -25,8 +26,11 @@ while ($file = <$F>) {
         s!#include <kinstance.h>!#include <kcomponentdata.h>!;
         s!#include "kinstance.h"!#include "kcomponentdata.h"!;
         s!kapp->instanceName\s?\(!KGlobal::mainComponent().componentName(!g;
-        s!KInstance::caption\s?\(!KGlobal::caption(!g;
+        s!kapp->dirs\s?\(!KGlobal::dirs(!g;
+        s!KApplication::kApplication\s?\(\)->dirs\s?\(!KGlobal::dirs(!g;
+        s!kapp->aboutData\s?\(!KGlobal::mainComponent().aboutData(!g;
         s!kapp->caption\s?\(!KGlobal::caption(!g;
+        s!KInstance::caption\s?\(!KGlobal::caption(!g;
         s!const\s*KInstance\s*\*\s*!const KComponentData &!g;
         s!KInstance\s*\*\s*!KComponentData !g;
         s!KConfig\s*\*\s*([a-zA-Z0-9_]+)\s*=\s*kapp->config\s?\(!KSharedConfig::Ptr \1 = KGlobal::config(!g;
@@ -56,17 +60,25 @@ while ($file = <$F>) {
         s!\binstance\s?\(\)->!componentData().!g;
         s!\binstance\s?\(!componentData(!g;
         s!\bpartInstance\s?\(!partComponentData(!g;
+        s!\bpartInstanceFromLibrary\s?\(!partComponentDataFromLibrary(!g;
         s!\bcreateInstance\s?\(!createComponentData(!g;
-        s!QCoreApplication::componentData\s?\(\)\.!QCoreApplication::instance()->!g;
-        s!QApplication::componentData\s?\(\)\.!QApplication::instance()->!g;
-        s!QCoreApplication::componentData\s?\(!QCoreApplication::instance(!g;
-        s!QApplication::componentData\s?\(!QApplication::instance(!g;
         #s!\binstance\b!componentData!g;
         s!\b_instance\b!_componentData!g;
         s!\bm_instance\b!m_componentData!g;
         s!\bmInstance\b!mComponentData!g;
         s!\bsetInstance\b!setComponentData!g;
         s!\binstanceName\b!componentName!g;
+        # wrong changes:
+        s!QAbstractEventDispatcher::componentData\s?\(\)\.!QAbstractEventDispatcher::instance()->!g;
+        s!QAbstractEventDispatcher::componentData\s?\(!QAbstractEventDispatcher::instance(!g;
+        s!QCoreApplication::componentData\s?\(\)\.!QCoreApplication::instance()->!g;
+        s!QCoreApplication::componentData\s?\(!QCoreApplication::instance(!g;
+        s!QApplication::componentData\s?\(\)\.!QApplication::instance()->!g;
+        s!QApplication::componentData\s?\(!QApplication::instance(!g;
+
+        if ($_ =~ /KConfigGroup/) {
+                push(@necessaryIncludes, "kconfiggroup.h");
+        }
 
         $modified ||= $orig ne $_;
         $_;
@@ -76,6 +88,14 @@ while ($file = <$F>) {
         open (my $OUT, ">$file");
         print $OUT @l;
     }
+
+    my %alreadyadded = {};
+    foreach my $inc (@necessaryIncludes) {
+        next if (defined $alreadyadded{$inc});
+        $alreadyadded{$inc} = 1;
+
+        functionUtilkde::addIncludeInFile($file, $inc);
+    }
 }
 functionUtilkde::diffFile( "@ARGV" );
-# vim: et
+# vim: et sw=4
