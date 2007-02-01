@@ -272,3 +272,28 @@ document printq4stringlist
   Prints the contents of a Qt4 QStringList.
   Usage: printq4stringlist mylist
 end
+
+define printqdatetime
+  printqdate ($arg0).d
+  printqtime ($arg0).t
+end
+document printqdatetime
+  Prints a QDateTime
+  Usage: printqdatetime myqdt
+end
+define printqdate
+  printf "(Y:%d M:%d D:%d)\n", ($arg0).year(), ($arg0).month(), ($arg0).day()
+end
+document printqdate
+  Prints a QDate
+  Usage: printqdate mydate
+end
+define printqtime
+  printf "(H:%d M:%d S:%d)\n", ($arg0).hour(), ($arg0).minute(), ($arg0).second()
+end
+document printqtime
+  Prints a QTime
+  Usage: printqtime mytime
+end
+
+
