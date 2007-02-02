@@ -146,6 +146,14 @@ sub processFile() {
 			  'replace "${SOUND_INSTALL_DIR}/${...}" with "${SOUND_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
+                          'install_targets[[:space:]]*\(',
+                          'replace "install_targets" with "install(TARGETS...)');
+
+    $issues += &checkLine($line,$linecnt,
+                          'INSTALL_TARGETS[[:space:]]*\(',
+                          'replace "install_targets" with "install(TARGETS...)');
+		  
+    $issues += &checkLine($line,$linecnt,
 			  'install_files[[:space:]]*\(',
 			  'replace "install_files" with "install(FILES...)');
     $issues += &checkLine($line,$linecnt,
