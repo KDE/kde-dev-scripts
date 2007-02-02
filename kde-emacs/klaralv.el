@@ -63,7 +63,6 @@
   '( 
     ; KDE
     (kdebug.h kDebug kWarning kError kFatal kBacktrace kdDebug kdWarning kdError kdFatal kdBacktrace)
-    (kconfig.h KConfigGroup)
     (kicondialog.h KIconCanvas KIconButton)
     (knuminput.h KDoubleNumInput KIntNumInput)
 
