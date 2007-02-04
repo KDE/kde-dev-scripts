@@ -83,6 +83,10 @@ sub processFile() {
 			  'replace "{$" with "${", or garbage detected');
 
     $issues += &checkLine($line,$linecnt,
+			  '[[^:print:]]{\$',
+			  'non-printable characters detected');
+
+    $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]lib[[:space:]]*\)',
 			  'replace "lib" with "${LIB_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
@@ -250,6 +254,11 @@ sub processFile() {
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]phononui[[:space:]]',
             'replace "phononui" with "${KDE4_PHONONUI_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kaudiodevicelist[[:space:]]',
+            'replace "kaudiodevicelist" with "${KDE4_KAUDIODEVICELIST_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
