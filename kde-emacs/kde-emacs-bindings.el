@@ -121,7 +121,7 @@
 (define-key global-map [(shift f4)] 'makeclean)
 (define-key global-map [(f4)] 'make)
 (define-key global-map [(f5)] 'makeinstall)
-(define-key global-map [(shift f5)] 'makeinstallexec)
+(define-key global-map [(shift f5)] 'makeinstallexec) ; TODO replace with run-current-program
 (define-key global-map [(shift f6)] 'makethisfile)
 (if kde-emacs-newline-semicolon 
     (define-key c++-mode-map "\;" 'insert-semicolon))
