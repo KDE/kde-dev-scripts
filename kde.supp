@@ -51,23 +51,6 @@
     fun:_dl_catch_error
 }
 
-# David, annoyed.
-{
-   ld_so/braindamage/known_issue
-   Memcheck:Cond
-   obj:/lib/ld-2.3.6.so
-}
-
-{
-   ld_so/braindamage2
-   Memcheck:Addr8
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-}
-
-
 {
     strrchr/_dl_map_object_from_fd/_dl_map_object
     MemCheck:Cond
@@ -100,38 +83,39 @@
    write(buf)/libc/libICE
    Memcheck:Param
    write(buf)
-   fun:__write_nocancel
-   obj:*libICE.so*
+   fun:__GI___libc_write
+   fun:_IceTransWrite
    fun:_IceWrite
    fun:IceFlush
 }
 
 {
-   write(buf)/libc/libX11/flush
+   write(buf)/libc/libX11
    Memcheck:Param
    write(buf)
-   fun:__write_nocancel
-   obj:*libX11.so.*
-   obj:*libX11.so.*
-   fun:XFlush
+   fun:__GI___libc_write
+   fun:_X11TransWrite
+   fun:_XFlushInt
+   fun:_XFlush
 }
 
 {
-   write(buf)/libc/libX11/reply
+   write(buf)/libc/libX11
    Memcheck:Param
    write(buf)
-   fun:__write_nocancel
-   obj:*libX11.so.*
-   obj:*libX11.so.*
+   fun:__GI___libc_write
+   fun:_X11TransWrite
+   fun:_XFlushInt
    fun:_XReply
 }
 
 {
-   writev(vector)/libX11
+   writev(vector[...])
    Memcheck:Param
    writev(vector[...])
-   fun:writev
-   obj:*libX11.so.*
+   fun:*writev
+   obj:libX11.so.*
+   fun:_X11TransWritev
    fun:_XSend
 }
 
@@ -169,73 +153,3 @@
     Memcheck:Cond
     fun:ssl3_get_message
 }
-
-# Python crap (David)
-
-{
-   addr4_in_pyobject_free
-   Memcheck:Addr4
-   fun:PyObject_Free
-   obj:/usr/lib/libpython2.4.so.1.0
-}
-
-{
-   addr8_in_pyobject_free
-   Memcheck:Addr8
-   fun:PyObject_Free
-   obj:/usr/lib/libpython2.4.so.1.0
-}
-
-{
-   value4_in_pyobject_free
-   Memcheck:Value4
-   fun:PyObject_Free
-   obj:/usr/lib/libpython2.4.so.1.0
-}
-{
-   value8_in_pyobject_free
-   Memcheck:Value8
-   fun:PyObject_Free
-   obj:/usr/lib/libpython2.4.so.1.0
-}
-
-{
-   addr4_in_pyobject_realloc
-   Memcheck:Addr4
-   fun:PyObject_Realloc
-}
-{
-   value4_in_pyobject_realloc
-   Memcheck:Value4
-   fun:PyObject_Realloc
-}
-{
-   value8_in_pyobject_realloc
-   Memcheck:Value8
-   fun:PyObject_Realloc
-}
-{
-   cond_in_pyobject_realloc
-   Memcheck:Cond
-   fun:PyObject_Realloc
-}
-
-{
-   cond_in_pyobject_free
-   Memcheck:Cond
-   fun:PyObject_Free
-   obj:/usr/lib/libpython2.4.so.1.0
-}
-
-# Whatever
-
-{
-   setlocale_stuff
-   Memcheck:Param
-   futex(uaddr2)
-   fun:pthread_once
-   fun:__gconv_compare_alias
-   fun:_nl_find_locale
-   fun:setlocale
-}
-
