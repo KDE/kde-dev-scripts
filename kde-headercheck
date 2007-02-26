@@ -1,0 +1,30 @@
+#!/bin/sh
+# Copyright (C) 2007, mueller@kde.org. Released under GPL.
+
+/bin/true: 2> /dev/null
+	echo -n "Using KDE : "; type -p kde4-config || { echo "kde4-config must be in path!"; exit 1; }
+	echo -n "Using Qt  : "; type -p qmake || { echo "qmake must be in path!"; exit 2; }
+	exec make -f $0 check "$@"
+
+QTINCDIR=$(shell qmake -query QT_INSTALL_HEADERS)
+QTINCS=$(patsubst %, -I$(QTINCDIR)/%, QtCore QtGui Qt)
+KDEINCDIR=$(shell kde4-config --prefix)/include
+
+CXXFLAGS=-I$(KDEINCDIR) $(QTINCS) -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_FROM_ASCII -DQT_NO_KEYWORDS -I$(QTINCDIR)
+CXX=g++
+
+HEADERS=$(subst $(KDEINCDIR)/,,$(shell find $(KDEINCDIR) -type f -name '*.h'))
+SOURCES=$(patsubst %.h, %.cpp, $(HEADERS))
+OBJECTS=$(patsubst %.cpp, %.o, $(SOURCES))
+VPATH=$(KDEINCDIR)
+
+.PHONY: check $(HEADERS)
+
+%.o : %.cpp
+	$(CXX) -Werror -Wno-long-long -pedantic $(CXXFLAGS) -c $(subst /,_, $<) -o $(subst /,_, $@)
+
+%.cpp : %.h
+	echo "#include <$<>" > $(subst /,_, $@)
+
+check: $(OBJECTS)
+	@rm -f $(patsubst /,_, $(SOURCES)) $(patsubst /,_, $(OBJECTS))
