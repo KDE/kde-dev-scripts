@@ -86,6 +86,10 @@ sub processFile() {
 			  '[[^:print:]]{\$',
 			  'non-printable characters detected');
 
+   $issues += &checkLine($line,$linecnt,
+                          'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
+                          'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_DIR}" and convert desktop file to xdg format (add Categories)');
+ 
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]lib[[:space:]]*\)',
 			  'replace "lib" with "${LIB_INSTALL_DIR}"');
