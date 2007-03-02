@@ -3,12 +3,21 @@
 ## This script is based on cyclo.cgi, see http://homepage2.nifty.com/sophia0/
 ## cyclo.cgi v0.3c (CYCLIC IMAGE) 2001.04.15 by techan
 
+# Made slightly less brain-damaged in 2007 by Michael Pyne <michael.pyne@kdemail.net>
+# * Added command line arguments.
+# * Wee bit more error checking.
+# * Help output.
+#
 # usage: png2mng <basename> <width> <height>
+
+use Getopt::Long;
+use Pod::Usage;
 
 $basename = $ARGV[0];
 
 # Image Width Height
-@w_h = ($ARGV[1], $ARGV[2]);
+$width = $ARGV[1];
+$height = $ARGV[2];
 
 # The number of repeats for base (integer > 1)
 $b_repeat = 1;
@@ -16,7 +25,28 @@ $b_repeat = 1;
 # Ticks per second
 $tps = 20;
 
+# Width of number portion of filename.
+$fieldWidth = 4;
+
+# Number of file name to start with. (i.e. 0 or 1)
+$start = 1;
+
+# User wants help?
+$help = 0;
+
 ## Main
+
+$result = GetOptions(
+	"basename:s" => \$basename,
+	"width:i" => \$width,
+	"height:i" => \$height,
+	"fps:i" => \$tps,
+	"fieldwidth:i" => \$fieldWidth,
+	"start-number:i" => \$start,
+	"help|h|?" => \$help,
+	) or pod2usage(-exitstatus => 2);
+
+pod2usage(-verbose => 1, -exitstatus => 0) if $help;
 
 &InitCrcTable;
 
@@ -28,7 +58,7 @@ $sig_m = "\x8aM".$r;
 @png = ();
 $size = 1;
 for ($i=0;$size > 0;) {
-	$file = $basename.sprintf('%04d.png', $i+1);
+	$file = $basename.sprintf('%.*d.png', $fieldWidth, $i+$start);
 	$size = -s $file;
         if ($size > 0)
         {
@@ -45,6 +75,11 @@ $number = $i;
 $it = $number * $b_repeat;
 $ti = $it;
 
+if ($number == 0) {
+	print STDERR "No files were read.\n";
+	exit 1;
+}
+
 $|=1;
 binmode(STDOUT);
 
@@ -53,8 +88,8 @@ print $sig_m;
 
 # MHDR
 $data = 'MHDR'.pack("N7",
-	$w_h[0],	# Width
-	$w_h[1],	# Height
+	$width,
+	$height,
 	$tps,		# Ticks per second
 	$number,	# Layers
 	$ti,		# Frames
@@ -190,4 +225,67 @@ sub OutputData
 print pack("N", length($data)-4).$data.&CalcCrc($data);
 undef($data);
 }
+
+sub usage()
+{
+}
+
 __END__
+
+=head1 NAME
+
+png2mng.pl - Converts PNG files in a sequence to a MNG animation.
+
+=head1 SYNOPSIS
+
+png2mng.pl basename width height [options] > output.mng
+
+Options:
+
+    --basename     Base file name of the PNG frames.  The script adds numbers to
+                   the file name until it can find no more frames.
+
+    --width        Width of the animation.  Each PNG frame should be this width.
+
+    --height       Height of the animation.  Each PNG frame should be this
+                   height.
+
+    --fps          Frames of animation per second (Default 20)
+
+    --fieldwidth   Number of characters in the number (Default 4)
+
+    --start-number Start looking for files from the given number. (e.g. foo002
+                   rather than foo001.png)  (Default 1)
+
+    --help         Show help output.
+
+The MNG output file is printed straight to standard out so be sure to redirect
+to where you want it to go.
+
+=head1 DESCRIPTION
+
+This script reads in a collection of PNG frames, and assembles them into a
+MNG animation file.  This file can be read in any MNG viewer, including
+Konqueror and Gwenview (when appropriately configured).
+
+=head1 BUGS
+
+Width and height are not checked to make sure individual frames are the
+required size.  In fact very little to no error checking is done.
+
+Must specify a basename.  It is not possible to just specify all the PNG files
+on the command line.
+
+All the PNG files are read into memory before the MNG starts to output.  This
+makes the script unsuitable for converting a large amount of PNGs to a MNG
+animation.
+
+=head1 AUTHOR
+
+This script is based on cyclo.cgi, see http://homepage2.nifty.com/sophia0/
+ cyclo.cgi v0.3c (CYCLIC IMAGE) 2001.04.15 by techan.
+
+Man page was written, and a few changes were made by Michael Pyne
+<michael.pyne@kdemail.net>
+
+=cut
