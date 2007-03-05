@@ -32,7 +32,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.2';
+my($Version) = '1.3';
 
 my($help) = '';
 my($version) = '';
@@ -86,69 +86,84 @@ sub processFile() {
 			  '[[^:print:]]{\$',
 			  'non-printable characters detected');
 
-   $issues += &checkLine($line,$linecnt,
+    $issues += &checkLine($line,$linecnt,
+			  '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
+			  'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
+
+    $issues += &checkLine($line,$linecnt,
+			  '^[[:space:]]*[Aa][Dd][Dd]_[Ll][Ii][Bb][Rr][Aa][Rr][Yy]',
+			  'Use KDE4_ADD_LIBRARY() instead of ADD_LIBRARY()');
+
+    $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
                           'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_DIR}" and convert desktop file to xdg format (add Categories)');
- 
+
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]lib[[:space:]]*\)',
+			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
+			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
+    $issues += &checkLine($line,$linecnt,
+			  'DESTINATION[[:space:]]lib',
 			  'replace "lib" with "${LIB_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${LIB_INSTALL_DIR}/\$',
 			  'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]include[[:space:]]*\)',
-			  'replace "include" with "${INCLUDE_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*include/*',
+			  'replace "include" or "/include" with "${INCLUDE_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${INCLUDE_INSTALL_DIR}/\$',
 			  'replace "${INCLUDE_INSTALL_DIR}/${...}" with "${INCLUDE_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]bin[[:space:]]*\)',
-			  'replace "bin" with "${BIN_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*bin/*',
+			  'replace "bin" or "/bin" with "${BIN_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${BIN_INSTALL_DIR}/\$',
 			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
- 			  'DESTINATION[[:space:]].*share/apps[[:space:]]*\)',
- 			  'replace "share/apps" with "${DATA_INSTALL_DIR}"');
+ 			  'DESTINATION[[:space:]]/*share/apps/*',
+ 			  'replace "share/apps" or "/share/apps" with "${DATA_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
  			  'DESTINATION[[:space:]]\${DATA_INSTALL_DIR}/\$',
  			  'replace "${DATA_INSTALL_DIR}/${...}" with "${DATA_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]].*share/autostart[[:space:]]*\)',
-			  'replace "share/autostart" with "${AUTOSTART_INSTALL_DIR}"');
+ 			  'DESTINATION[[:space:]]/*share/applications/*',
+ 			  'replace "share/applications" or "/share/applications" with "${XDG_APPS_DIR}"');
+
+    $issues += &checkLine($line,$linecnt,
+			  'DESTINATION[[:space:]]/*share/autostart/*',
+			  'replace "share/autostart" or "/share/autostart" with "${AUTOSTART_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${AUTOSTART_INSTALL_DIR}/\$',
 			  'replace "${AUTOSTART_INSTALL_DIR}/${...}" with "${AUTOSTART_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]].*/share/icons[[:space:]]*\)',
-			  'replace "share/icons" with "${ICON_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*share/icons/*',
+			  'replace "share/icons" or "/share/icons" with "${ICON_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${ICON_INSTALL_DIR}/\$',
 			  'replace "${ICON_INSTALL_DIR}/${...}" with "${ICON_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]].*share/locale[[:space:]]*\)',
-			  'replace "share/locale" with "${LOCALE_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*share/locale/*',
+			  'replace "share/locale" or "/share/locale" with "${LOCALE_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${LOCALE_INSTALL_DIR}/\$',
 			  'replace "${LOCALE_INSTALL_DIR}/${...}" with "${LOCALE_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]].*share/services[[:space:]]*\)',
-			  'replace "share/services" with "${SERVICES_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*share/services/*',
+			  'replace "share/services" or "/share/services" with "${SERVICES_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${SERVICES_INSTALL_DIR}/\$',
 			  'replace "${SERVICES_INSTALL_DIR}/${...}" with "${SERVICES_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]].*share/sounds[[:space:]]*\)',
-			  'replace "share/sounds" with "${SOUND_INSTALL_DIR}"');
+			  'DESTINATION[[:space:]]/*share/sounds/*',
+			  'replace "share/sounds" or "/share/sounds" with "${SOUND_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${SOUND_INSTALL_DIR}/\$',
 			  'replace "${SOUND_INSTALL_DIR}/${...}" with "${SOUND_INSTALL_DIR}/realname"');
@@ -323,7 +338,7 @@ sub processFile() {
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]kldap[[:space:]]',
-                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');	   
+                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
     }
   }
 
