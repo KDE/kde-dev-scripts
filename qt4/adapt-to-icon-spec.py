@@ -3,8 +3,15 @@
 # Written by Luca Gugelmann <lucag@student.ethz.ch> 
 # This code is in the public domain.
 
+# Minimum required version of Python is 2.5.  If you fix the script to make it work
+# with 2.4, please update the version check requirement below.
+
 import os,os.path
 import re,sys,tty,termios
+import string
+
+# list of ints, for required python version.
+required_python_version = [2, 5, 0]
 
 actions = [ #(new, old)
 ('application-exit', 'exit'), ('arrow-down', '1downarrow'), ('arrow-down-double', '2downarrow'),
@@ -63,6 +70,18 @@ places = [
 iconnames = []
 iconnames += actions
 iconnames += places
+
+# Returns true if python is too old.
+# Pass version in a array of ints.  i.e. [2, 4, 2]
+# version check <- for greppers
+def python_too_old( required_version ):
+	# sys.version = e.g. 2.4.3 (#1 Jan 01 2001, 00:00:00) \nGCC stuff
+	py_version = string.split(string.split(sys.version)[0], ".")
+
+	# py_version is a list of strings, make it a list of ints
+	py_version = map(int, py_version)
+
+	return py_version < required_version
 
 def regexp_clean_name( name ):
 	for c in "+.?^$*()":
@@ -266,6 +285,11 @@ def walk_path( path ):
 			rename_icons( os.path.join( root, f ) )
 
 if __name__ == "__main__":
+# Ensure version is high enough
+	if python_too_old(required_python_version):
+		print "This script requires Python", '.'.join(map(str, required_python_version))
+		sys.exit(1)
+
 	if len(sys.argv) > 1:
 		for f in sys.argv[1:]:
 			if f.endswith( ('.cpp', '.h', '.cc' )):
@@ -276,3 +300,5 @@ if __name__ == "__main__":
 				print "I cowardly refuse to run on", f
 	else:
 		walk_path(os.getcwd())
+
+# vim: set noet sw=8 ts=8:
