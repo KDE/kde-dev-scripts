@@ -201,107 +201,107 @@ sub processFile() {
     if (! $in_kdelibs) {
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdeui[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kdeui[\s/)]',
 		   'replace "kdeui" with "${KDE4_KDEUI_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kio[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kio[\s/)]',
 		   'replace "kio" with "${KDE4_KIO_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdefx[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kdefx[\s/)]',
 		   'replace "kdefx" with "${KDE4_KDEFX_LIBS}"');
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kdeprint[[:space:]]',
+            'target_link_libraries.*[[:space:]]kdeprint[\s/)]',
             'replace "kdeprint" with "${KDE4_KDEPRINT_LIBS}"');
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kdesu[[:space:]]',
+            'target_link_libraries.*[[:space:]]kdesu[\s/)]',
             'replace "kdesu" with "${KDE4_KDESU_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]khtml[[:space:]]',
+            'target_link_libraries.*[[:space:]]khtml[\s/)]',
             'replace "khtml" with "${KDE4_KHTML_LIBS}"');
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kparts[[:space:]]',
+            'target_link_libraries.*[[:space:]]kparts[\s/)]',
             'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kde3support[[:space:]]',
+            'target_link_libraries.*[[:space:]]kde3support[\s/)]',
             'replace "kde3support" with "${KDE4_KDE3SUPPORT_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kutils[[:space:]]',
+            'target_link_libraries.*[[:space:]]kutils[\s/)]',
             'replace "kutils" with "${KDE4_KUTILS_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kdnssd[[:space:]]',
+            'target_link_libraries.*[[:space:]]kdnssd[\s/)]',
             'replace "kdnssd" with "${KDE4_KDNSSD_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]knewstuff[[:space:]]',
+            'target_link_libraries.*[[:space:]]knewstuff[\s/)]',
             'replace "knewstuff" with "${KDE4_KNEWSTUFF_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]knotifyconfig[[:space:]]',
+            'target_link_libraries.*[[:space:]]knotifyconfig[\s/)]',
             'replace "knotifyconfig" with "${KDE4_KNOTIFYCONFIG_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]threadweaver[[:space:]]',
+            'target_link_libraries.*[[:space:]]threadweaver[\s/)]',
             'replace "threadweaver" with "${KDE4_THREADWEAVER_LIBRARIES}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]krosscore[[:space:]]',
+            'target_link_libraries.*[[:space:]]krosscore[\s/)]',
             'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]phononcore[[:space:]]',
+            'target_link_libraries.*[[:space:]]phononcore[\s/)]',
             'replace "phononcore" with "${KDE4_PHONONCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]phononui[[:space:]]',
+            'target_link_libraries.*[[:space:]]phononui[\s/)]',
             'replace "phononui" with "${KDE4_PHONONUI_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kaudiodevicelist[[:space:]]',
+            'target_link_libraries.*[[:space:]]kaudiodevicelist[\s/)]',
             'replace "kaudiodevicelist" with "${KDE4_KAUDIODEVICELIST_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]solidifaces[[:space:]]',
+            'target_link_libraries.*[[:space:]]solidifaces[\s/)]',
             'replace "solidifaces" with "${KDE4_SOLIDIFACES_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]solid[[:space:]]',
+            'target_link_libraries.*[[:space:]]solid[\s/)]',
             'replace "solid" with "${KDE4_SOLID_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]sonnetui[[:space:]]',
+            'target_link_libraries.*[[:space:]]sonnetui[\s/)]',
             'replace "sonnetui" with "${KDE4_SONNETUI_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]sonnetcore[[:space:]]',
+            'target_link_libraries.*[[:space:]]sonnetcore[\s/)]',
             'replace "sonnetcore" with "${KDE4_SONNETCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kwalletclient[[:space:]]',
+            'target_link_libraries.*[[:space:]]kwalletclient[\s/)]',
             'replace "kwalletclient" with "${KDE4_KWALLETCLIENT_LIBS}"');
     }
 
@@ -309,35 +309,39 @@ sub processFile() {
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues += 
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kabc[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kabc[\s/)]',
 		   'replace "kabc" with "${KDE4_KABC_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcal[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
 		   'replace "kcal" with "${KDE4_KCAL_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]ktnef[[:space:]]',
+		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
 		   'replace "ktnef" with "${KDE4_KTNEF_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kmime[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
 		   'replace "kmime" with "${KDE4_KMIME_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kresources[[:space:]]',
+		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
+		   'replace "kimap" with "${KDE4_KIMAP_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kresources[\s/)]',
 		   'replace "kresources" with "${KDE4_KRESOURCES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]emailfunctions[[:space:]]',
+		   'target_link_libraries.*[[:space:]]emailfunctions[\s/)]',
 		   'replace "emailfunctions" with "${KDE4_EMAILFUNCTIONS_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]syndication[[:space:]]',
+                   'target_link_libraries.*[[:space:]]syndication[\s/)]',
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]kldap[[:space:]]',
+                   'target_link_libraries.*[[:space:]]kldap[\s/)]',
                    'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
     }
   }
