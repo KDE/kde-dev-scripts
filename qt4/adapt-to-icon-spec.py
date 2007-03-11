@@ -11,7 +11,7 @@ import re,sys,tty,termios
 import string
 
 # list of ints, for required python version.
-required_python_version = [2, 5, 0]
+required_python_version = [2, 5]
 
 actions = [ #(new, old)
 ('application-exit', 'exit'), ('arrow-down', '1downarrow'), ('arrow-down-double', '2downarrow'),
