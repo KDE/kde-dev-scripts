@@ -3,15 +3,13 @@
 # Written by Luca Gugelmann <lucag@student.ethz.ch> 
 # This code is in the public domain.
 
-# Minimum required version of Python is 2.5.  If you fix the script to make it work
-# with 2.4, please update the version check requirement below.
-
 import os,os.path
 import re,sys,tty,termios
 import string
 
-# list of ints, for required python version.
-required_python_version = [2, 5]
+# tuple of ints for required python version, will be matched against sys.version_info
+# python 2.4 is fine, 2.3 _should_ work too, but is untested, so 2.4 is required
+required_python_version = (2, 4)
 
 actions = [ #(new, old)
 ('application-exit', 'exit'), ('arrow-down', '1downarrow'), ('arrow-down-double', '2downarrow'),
@@ -72,16 +70,16 @@ iconnames += actions
 iconnames += places
 
 # Returns true if python is too old.
-# Pass version in a array of ints.  i.e. [2, 4, 2]
+# Pass version in a tuple of ints, e.g. (2, 4, 2)
 # version check <- for greppers
 def python_too_old( required_version ):
-	# sys.version = e.g. 2.4.3 (#1 Jan 01 2001, 00:00:00) \nGCC stuff
-	py_version = string.split(string.split(sys.version)[0], ".")
-
-	# py_version is a list of strings, make it a list of ints
-	py_version = map(int, py_version)
-
-	return py_version < required_version
+	py_version = sys.version_info[:3] #only compare maj,min,tiny
+	if len(required_version) > 3:
+		required_version = required_version[:3]
+	for n in xrange(len(required_version)):
+		if py_version[n] < required_version[n]:
+			return True
+	return False
 
 def regexp_clean_name( name ):
 	for c in "+.?^$*()":
@@ -280,9 +278,11 @@ def walk_path( path ):
 	for root, dirs, files in os.walk(path):
 		if '.svn' in dirs:
 			dirs.remove( '.svn' )
-		files = filter( lambda x: x.endswith( ('.cpp', '.h', '.cc' ) ), files )
 		for f in files:
-			rename_icons( os.path.join( root, f ) )
+			for ending in ('.cpp', '.h', '.cc' ): # no .endswith with tuples in python 2.4...
+				if f.endswith( ending ):
+					rename_icons( os.path.join( root, f ) )
+					break
 
 if __name__ == "__main__":
 # Ensure version is high enough
@@ -292,9 +292,15 @@ if __name__ == "__main__":
 
 	if len(sys.argv) > 1:
 		for f in sys.argv[1:]:
-			if f.endswith( ('.cpp', '.h', '.cc' )):
-				rename_icons( f )
-			else:
+			if not os.path.isfile(f):
+				break
+			found = False
+			for ending in ('.cpp', '.h', '.cc' ):
+				if f.endswith(ending): #python 2.4 doesen't have the possibility to pass a tuple here
+					rename_icons( f )
+					found = True
+					break
+			if not found:
 				# trust me, you WILL end up running this script on itself,
 				# thus possibly destroying it.
 				print "I cowardly refuse to run on", f
