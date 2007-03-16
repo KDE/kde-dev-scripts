@@ -70,16 +70,31 @@ sub addIncludeInFile
 {
    local *F;
    my ($file, $includefile) = @_;
-   open F, "+<", $file or do { print STDOUT "open($file) failled : \"$!\"\n"; next };
+   open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
    my $str = join '', <F>;
    if( $str !~ /#include <$includefile>/ ) {
-   $str =~ s!(#include <.*#include <[^
+    $str =~ s!(#include <.*#include <[^
 ]*)!\1\n#include <$includefile>!smig;
     seek F, 0, 0;
     print F $str;
     truncate F, tell(F);
    }
-close F;
+   close F;
+}
+
+sub removeIncludeInFile
+{
+   local *F;
+   my ($file, $includefile) = @_;
+   open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
+   my $str = join '', <F>;
+   if( $str =~ m/#include <$includefile>/ ) {
+     $str =~ s!#include <$includefile>!!smig;
+     seek F, 0, 0;
+     print F $str;
+     truncate F, tell(F);
+   }
+   close F;
 }
 
 
