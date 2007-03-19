@@ -17,7 +17,7 @@ HEADER_PROTECTION=string.replace(string.upper(filename),'.','_')
 file=open(filename,'w')
 file.write("\
 /*  This file is part of the KDE project\n\
-    Copyright (C) 2006 David Faure <faure@kde.org>\n\
+    Copyright (C) 2007 David Faure <faure@kde.org>\n\
 \n\
     This library is free software; you can redistribute it and/or\n\
     modify it under the terms of the GNU Library General Public\n\
