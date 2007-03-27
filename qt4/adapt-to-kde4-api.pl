@@ -351,14 +351,14 @@ while ($file = <$F>) {
     s!constref!at!g;
     s!changeInterval!start!g;
 
-	s!kdDebug!kDebug!g;
-	s!kdWarning!kWarning!g;
-	s!kdError!kError!g;
-	s!kdFatal!kFatal!g;
-	s!kdBacktrace!kBacktrace!g;
-	s!kdClearDebugConfig!kClearDebugConfig!g;
+    s!kdDebug!kDebug!g;
+    s!kdWarning!kWarning!g;
+    s!kdError!kError!g;
+    s!kdFatal!kFatal!g;
+    s!kdBacktrace!kBacktrace!g;
+    s!kdClearDebugConfig!kClearDebugConfig!g;
 
-	s!flushX!flush!;
+    s!flushX!flush!;
 
     s!\bKStdAction\b!KStandardAction!g;
     s!\bKStdGuiItem\b!KStandardGuiItem!g;
@@ -399,6 +399,11 @@ while ($file = <$F>) {
 	s!\bsetEnableSqueezedText\b!setSqueezedTextEnabled!;
 	s!\bisSqueezedTextEnabled\b!squeezedTextEnabled!;
 	s!\bsetEnableContextMenu\b!setContextMenuEnabled!;
+
+	s!\bKProcess\b!K3Process!g;
+	s!\bKProcIO\b!K3ProcIO!g;
+	s!#include <kprocio.h>!#include <k3procio.h>!;
+	s!#include <kprocess.h>!#include <k3process.h>!;
 
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
