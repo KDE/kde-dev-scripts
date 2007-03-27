@@ -8,18 +8,9 @@ use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
-open(my $F, q(find -name "*" |));
-my $file;
+foreach my $file (@ARGV) {
 
-while ($file = <$F>) {
-    chomp $file;
-    next if functionUtilkde::excludeFile( $file);
-
-    my $nbLoop = 1;
-    my $modified;
-    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
-    my @l = map {
-        my $orig = $_;
+    functionUtilkde::substInFile {
 
         s!#include <kfiletreeview.h>!#include <k3filetreeview.h>!;
         s!#include "kfiletreeview.h"!#include "k3filetreeview.h"!;
@@ -43,15 +34,8 @@ while ($file = <$F>) {
         s!KCompletionBox!K3CompletionBox!g;
         s!#include <kfiletreeviewitem.h>!#include <k3filetreeviewitem.h>!;
         s!#include "kfiletreeviewitem.h"!#include "k3filetreeviewitem.h"!;
+        s!currentK3FileTreeViewItem!currentKFileTreeViewItem!g;
 
-
-        $modified ||= $orig ne $_;
-        $_;
-    } <$FILE>;
-
-    if ($modified) {
-        open (my $OUT, ">$file");
-        print $OUT @l;
-    }
+    } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );

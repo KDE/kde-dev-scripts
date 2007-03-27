@@ -16,7 +16,6 @@ while ($file = <$F>) {
     chomp $file;
     next if functionUtilkde::excludeFile( $file);
 
-    my $nbLoop = 1;
     my $modified;
     my @necessaryIncludes = ();
     open(my $FILE, $file) or warn "We can't open file $file:$!\n";
