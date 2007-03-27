@@ -402,6 +402,7 @@ while ($file = <$F>) {
 
 	s!\bKProcess\b!K3Process!g;
 	s!\bKProcIO\b!K3ProcIO!g;
+	s!\bKShellProcess\b!K3ShellProcess!g;
 	s!#include <kprocio.h>!#include <k3procio.h>!;
 	s!#include <kprocess.h>!#include <k3process.h>!;
 
