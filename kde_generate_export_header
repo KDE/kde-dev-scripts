@@ -60,6 +60,10 @@ file.write("\
 \n\
 #endif\n\
 \n\
+# ifndef %(FOO_EXPORT)s_DEPRECATED\n\
+#  define %(FOO_EXPORT)s_DEPRECATED KDE_DEPRECATED %(FOO_EXPORT)s\n\
+# endif\n\
+\n\
 #endif\n" % vars())
 file.close()
 
