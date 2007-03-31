@@ -4,7 +4,8 @@
 # Thanks to Rafael Garcia-Suarez and Thierry Vignaud for his help
 # This script try to fix error when we didn't add setVersion after a QDataStream
 
-use lib qw( . );
+use File::Basename;
+use lib dirname( $0 );
 use functionUtilkde;
 
 foreach my $file (@ARGV) {

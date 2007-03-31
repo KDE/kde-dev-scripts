@@ -3,8 +3,9 @@
 # laurent Montel <montel@kde.org>
 # This function convert killTimers to qt4 function
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
 open(my $F, q(find -name "*" |));
 my $file;
 while ($file = <$F>) {

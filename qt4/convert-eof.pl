@@ -3,9 +3,9 @@
 # laurent Montel <montel@kde.org>
 # This function convert .eof() to atEnd()
 
-use lib qw( . );
-use functionUtilkde; 
-
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {

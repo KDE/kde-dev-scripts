@@ -4,8 +4,9 @@
 # This function convert qt_xdisplay and qt_rootwin to qt4 function
 # it added include too
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname($0);
+use functionUtilkde;
 
 foreach my $file (@ARGV) {
 	functionUtilkde::substInFile {

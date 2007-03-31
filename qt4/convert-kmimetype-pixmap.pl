@@ -5,7 +5,8 @@
 # This script converts KMimeType::pixmap (deprecated) to KIconLoader::loadMimeTypeIcon
 #        and KDEDesktopMimeType:: to KDesktopFileActions::
 
-use lib qw( . );
+use File::Basename;
+use lib dirname( $0 );
 use functionUtilkde;
 
 foreach my $file (@ARGV) {

@@ -4,9 +4,10 @@
 # This function convert QLatin1String instead of QString::fromLatin1()
 # see "qlatin1string.html" "is faster than converting the Latin-1 strings using QString::fromLatin1()." 
 # TODO: test "QString::fromLatin1(blabla())"
-# 
-use lib qw( . );
-use functionUtilkde; 
+#
+use File::Basename;
+use lib dirname($0);
+use functionUtilkde;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile { 

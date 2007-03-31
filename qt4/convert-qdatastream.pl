@@ -2,10 +2,10 @@
 
 # Montel Laurent <montel@kde.org>
 # This script allows to convert QDataStream to new API
-# Don't use this script as an example for creating a new one, it's old. See convert-display.pl or convert-stringlist.pl instead.
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname($0);
+use functionUtilkde;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {

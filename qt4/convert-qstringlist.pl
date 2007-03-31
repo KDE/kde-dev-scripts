@@ -3,8 +3,9 @@
 # laurent Montel <montel@kde.org>
 # this function changes QStringList::split (QT3_SUPPORT) to QString::split (QT4)
 
-use lib qw( . );
-use functionUtilkde; 
+use File::Basename;
+use lib dirname($0);
+use functionUtilkde;
 
 sub addQStringElement
 {

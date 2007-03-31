@@ -4,7 +4,8 @@
 # This script converts KStringHandler::*EmSqueeze/*PixelSqueeze to QFontMetrics::elidedText
 # Based on convert-qstringlist.
 
-use lib qw( . );
+use File::Basename;
+use lib dirname( $0 );
 use functionUtilkde;
 
 foreach my $file (@ARGV) {

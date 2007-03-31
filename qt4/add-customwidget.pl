@@ -4,7 +4,8 @@
 # This program allows to add custom widget to ui files
 # for example : add-customwidget.pl OptionsDlgWidget.ui KIntSpinBox knuminput.h
 
-use lib qw( . );
+use File::Basename;
+use lib dirname( $0 );
 use MDK::Common;
 use functionUtilkde; 
 my $numberArgument = @ARGV;
