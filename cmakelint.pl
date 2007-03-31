@@ -289,15 +289,6 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]solid[\s/)]',
             'replace "solid" with "${KDE4_SOLID_LIBS}"');
 
-      $issues +=
-    &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]sonnetui[\s/)]',
-            'replace "sonnetui" with "${KDE4_SONNETUI_LIBS}"');
-
-      $issues +=
-    &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]sonnetcore[\s/)]',
-            'replace "sonnetcore" with "${KDE4_SONNETCORE_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
