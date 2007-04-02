@@ -149,7 +149,8 @@ for my $file_name ( @ARGV )
      {
        print "//i18n: tag $tag\n";
        print "//i18n: file $file_name line $.\n";
-       print "// xgettext: no-c-format\n";
+       # xgettext 0.16.1 does not seem to need no-c-format anymore
+       # print "// xgettext: no-c-format\n";
        if ( $context )
        {
          print qq|i18nc("$context","$text");\n|;
