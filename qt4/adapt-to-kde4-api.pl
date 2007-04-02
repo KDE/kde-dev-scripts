@@ -376,6 +376,8 @@ while ($file = <$F>) {
 
     s!\bKActiveLabel\b!K3ActiveLabel!g;
     s!\bKWidgetAction\b!K3WidgetAction!g;
+    s!\bKEditToolbar\b!KEditToolBar!g;
+    s!\bKEditToolbarWidget\b!KEditToolBarWidget!g;
 
     s!#include <kiconview.h>!#include <k3iconview.h>!;
 	s!\bKIconViewItem\b!K3IconViewItem!g;
