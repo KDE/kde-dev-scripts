@@ -160,6 +160,7 @@ while ($file = <$F>) {
 	s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
 	s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
 	s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
+	s!KCursor::handCursor\(\)!Qt::PointingHandCursor!;
 
 	s!QSlider::Below!QSlider::TicksBelow!;
 	s!QSlider::Above!QSlider::TicksAbove!;
@@ -389,7 +390,6 @@ while ($file = <$F>) {
 	s!\bKListViewItem\b!K3ListViewItem!g;
 	s!KImageIO::registerFormats\s*\(\s*\);!!;
 
-	s!\bKIcon\b!K3Icon!g;
 	s!#include <ktoolbarbutton.h>!!g;
 	s!\baddURL\b!addUrl!g;
 
@@ -553,6 +553,7 @@ while ($file = <$F>) {
         if ( /kapp->geometryArgument/ ) {
 	    s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args && args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
         }
+        s!KFileDialog::getExistingUrl!KFileDialog::getExistingDirectoryUrl!;
         s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
 	s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
 	s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
