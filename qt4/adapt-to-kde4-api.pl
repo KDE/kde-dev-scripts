@@ -161,6 +161,10 @@ while ($file = <$F>) {
 	s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
 	s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
 	s!KCursor::handCursor\(\)!Qt::PointingHandCursor!;
+	s!KCursor::sizeVerCursor\(\)!Qt::SizeVerCursor!;
+	s!KCursor::sizeHorCursor\(\)!Qt::SizeHorCursor!;
+	s!KCursor::sizeBDiagCursor\(\)!Qt::SizeBDiagCursor!;
+	s!KCursor::sizeFDiagCursor\(\)!Qt::SizeFDiagCursor!;
 
 	s!QSlider::Below!QSlider::TicksBelow!;
 	s!QSlider::Above!QSlider::TicksAbove!;
@@ -500,7 +504,7 @@ while ($file = <$F>) {
 
 
 	if ( /new KRun/ ) {
-	    $warning = $warning . "Be carrefull perhaps necessary to add parent into constructor in file : $file\n";
+	    $warning = $warning . "new KRun in $file - might need to add parent argument\n";
 	}
 	s!KParts::ComponentFactory::createInstanceFromLibrary!KLibLoader::createInstance!;
 	if ( /kapp->getDisplay/ ) {
