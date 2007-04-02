@@ -160,6 +160,7 @@ while ($file = <$F>) {
 	s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
 	s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
 	s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
+	s!KCursor::arrowCursor\(\)!Qt::ArrowCursor!;
 	s!KCursor::handCursor\(\)!Qt::PointingHandCursor!;
 	s!KCursor::sizeVerCursor\(\)!Qt::SizeVerCursor!;
 	s!KCursor::sizeHorCursor\(\)!Qt::SizeHorCursor!;
@@ -260,13 +261,11 @@ while ($file = <$F>) {
 	s!KPanelApplet::pBottom!Plasma::Bottom!;
 	s!KPanelApplet::ReportBug!Plasma::ReportBug!;
 
-	if ( /K3ColorDrag/ ) {
-	    s!K3ColorDrag!K3ColorDrag!g;
-	    $warning = $warning . "Necessary to add \$\(LIB_KDE3SUPPORT\) into Makefile.am when $file is \n";
+	if ( /KColorDrag/ ) {
+	    s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
+	    s!KColorDrag!K3ColorDrag!g;
+	    $warning = $warning . "K3ColorDrag used, might need to add \${KDE4_KDE3SUPPORT_LIBRARY} in target that contains $file\n";
 	}
-
-	s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
-	s!KColorDrag!K3ColorDrag!g;
 
 	s!#include <kselect.h>!#include <kselector.h>!;
 	s!#include "kselect.h"!#include "kselector.h"!;
