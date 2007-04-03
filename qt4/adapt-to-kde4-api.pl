@@ -166,6 +166,7 @@ while ($file = <$F>) {
 	s!KCursor::sizeHorCursor\(\)!Qt::SizeHorCursor!;
 	s!KCursor::sizeBDiagCursor\(\)!Qt::SizeBDiagCursor!;
 	s!KCursor::sizeFDiagCursor\(\)!Qt::SizeFDiagCursor!;
+	s!KCursor::sizeAllCursor\(\)!Qt::SizeAllCursor!;
 
 	s!QSlider::Below!QSlider::TicksBelow!;
 	s!QSlider::Above!QSlider::TicksAbove!;
