@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 
-# David Faure <montel@kde.org>
+# David Faure <faure@kde.org>
 # KKeyDialog -> KShortcutDialog
 
 use File::Basename;
