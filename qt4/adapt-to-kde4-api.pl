@@ -192,7 +192,10 @@ while ($file = <$F>) {
 	s!#include <kmditaskbar.h>!#include <k3mditaskbar.h>!;
 	s!#include <kmditoolviewaccessor.h>!#include <k3mditoolviewaccessor.h>!;
 	s!#include <kmdcodec.h>!#include <kcodecs.h>!;
-
+	s!#include <kresolver.h>!#include <k3resolver.h>!;
+	s!#include <ksocks.h>!#include <k3socks.h>!;
+	s!#include <kbufferedsocket.h>!#include <k3bufferedsocket.h>!;
+	s!#include <kserversocket.h>!include <k3serversocket.h>!;
 
 	s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
 
