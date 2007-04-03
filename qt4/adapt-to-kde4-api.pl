@@ -417,6 +417,13 @@ while ($file = <$F>) {
 
 	s!\bKEditToolbar\b!KEditToolBar!g;
 
+	s!#include <kcommand.h>!#include <k3command.h>!;
+	s!\bKCommand\b!K3Command!g;
+	s!\bKNamedCommand\b!K3NamedCommand!g;
+	s!\bKMacroCommand\b!K3MacroCommand!g;
+	s!\bKCommandHistory\b!K3CommandHistory!g;
+	s!\bKUndoRedoAction\b!K3UndoRedoAction!g;
+
 	if ( /kapp->authorizeKAction/ ) {
 	    s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
 	    push(@necessaryIncludes, "kauthorized.h");
