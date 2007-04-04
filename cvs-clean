@@ -7,9 +7,8 @@
 # written by Oswald Buddenhagen <ossi@kde.org>
 #  inspired by the "old" cvs-clean target from Makefile.common
 #
-# This file is free software in terms of the BSD licence. That means
-# that you can do anything with it except removing this license or
-# the above copyright notice. There is NO WARRANTY of any kind.
+# This file is free software in terms of the modified BSD licence.
+# See kdelibs/doc/common/bsd-license.html for the exact conditions.
 #
 
 use File::Path;
