@@ -196,6 +196,14 @@ sub processFile() {
 			  'MACRO_BOOL_TO_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
 			  'do not use a digit as a variable');
 
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'set_target_properties.*PROPERTIES.*[[:space:]]VERSION[[:space:]][[:digit:]]',
+                   'replace a hard-coded VERSION with "${GENERIC_LIB_VERSION}"');
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'set_target_properties.*PROPERTIES.*[[:space:]]SOVERSION[[:space:]][[:digit:]]',
+                   'replace a hard-coded SOVERSION with "${GENERIC_LIB_SOVERSION}"');
 
     # kdelibs variables
     if (! $in_kdelibs) {
@@ -324,8 +332,8 @@ sub processFile() {
 		   'replace "kresources" with "${KDE4_KRESOURCES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]emailfunctions[\s/)]',
-		   'replace "emailfunctions" with "${KDE4_EMAILFUNCTIONS_LIBS}"');
+		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
+		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
