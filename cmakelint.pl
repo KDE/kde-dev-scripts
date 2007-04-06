@@ -99,6 +99,10 @@ sub processFile() {
                           'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_DIR}" and convert desktop file to xdg format (add Categories)');
 
     $issues += &checkLine($line,$linecnt,
+                          'DESTINATION[[:space:]]\${MIME_INSTALL_DIR}',
+                          'Files installed into MIME_INSTALL_DIR will not read. Port them on freedesktop xdg mimetypes.');
+
+    $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
