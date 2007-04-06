@@ -112,14 +112,6 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'qtstream.h'    =>  "qtextstream.h",
  'qwidcoll.h'    =>  "qwidgetlist.h>\n\#include <qwidgetintdict.h",
  'qwindefs.h'    =>  "qwindowdefs.h",
- 'qfile.h'       =>  "QtCore/QFile",
- 'qobject.h'     =>  "QtCore/QObject",
- 'qstring.h'     =>  "QtCore/QString",
- 'qstringlist.h' =>  "QtCore/QStringList",
- 'qlabel.h'      =>  "QtGui/QLabel",
- 'qwidget.h'     =>  "QtGui/QWidget",
- 'qimage.h'      =>  "QtGui/QImage",
- 'qlayout.h'     =>  "QtGui/QLayout",
 
 # and now the KDE specific compat includes
  'kapp.h'        =>  "kapplication.h",
@@ -204,7 +196,7 @@ sub find_removable_includes ($)
       next;
     }
     #if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<]([qk]\S*\.h)[\">]\S*/) {
-    if ($cpplevel == 0 && (($_ =~ m/^\#include\s*\"(\S+\.h)\"\S*/) || ($_ =~ m/^\#include\s*\<([qk]\S+.h)\>\S*/)))  {
+    if ($cpplevel == 0 && (($_ =~ m/^\#include\s*\"(\S+\.h)\"\S*/) || ($_ =~ m/^\#include\s*\<([qk]\S+)\>\S*/)))  {
       push @includes, $1;
       next;
     }
@@ -659,7 +651,7 @@ sub process_source_file($)
   local $file = shift @_;
   my $pure = basename($file);
   print "Checking: $file\n" if($verbose);
-  &fix_include_type($file);
+  #&fix_include_type($file);
   &fix_compat_includes($file);
   &fix_duplicates($file);
   &fix_unnecessary($file) if ($experimental && !grep (/^$pure$/, @instheaders));
@@ -694,9 +686,40 @@ sub check_for_cmake_srcdir($)
   return 0;
 }
 
+sub init_compat_includelist()
+{
+  open(L, "md5sum /usr/include/Qt{,3Support,Core,DBus,Gui,Network," .
+          "OpenGL,Script,Sql,Svg,Test,Xml}/* | sort |") || return;
+
+  my $oldsum = "<invalid>";
+  my $oldname;
+
+  while(<L>) {
+    m/^(\S+)\s+(\S+)/;
+
+    my ($sum, $fname) = ($1, $2);
+
+    $fname = $1 if ($fname =~ /\/(Qt.*)/);
+
+    if ($oldsum eq $sum) {
+      $compatmap{$fname} = $oldname;
+      if ($fname =~ /\/(.*)/) {
+          $compatmap{$1} = $oldname;
+      }
+      next;
+    }
+
+    $oldname = $fname;
+    $oldsum = $sum;
+  }
+  close(L);
+}
+
 #############################################################################
 # here is the main logic
 #
+
+&init_compat_includelist();
 
 # warn about modified files
 if($modify) {
