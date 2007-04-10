@@ -141,7 +141,7 @@ class Generator
     def header()
         "# ########## Project setup ##########\n" +
         "PROJECT(#{@project.projectName})\n" +
-        "CMAKE_MINIMUM_REQUIRED(VERSION 2.4.3)\n\n"
+        "CMAKE_MINIMUM_REQUIRED(VERSION 2.4.5)\n\n"
     end
 
     def setup()
