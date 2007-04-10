@@ -432,6 +432,7 @@ while ($file = <$F>) {
     s!#include <kprocio.h>!#include <k3procio.h>!;
     s!#include <kprocess.h>!#include <k3process.h>!;
 
+    s!\bKHistoryCombo\b!KHistoryComboBox!g;
 
     if ( /kapp->authorizeKAction/ ) {
         s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
