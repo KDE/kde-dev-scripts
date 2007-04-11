@@ -357,6 +357,7 @@ while ($file = <$F>) {
     s!Q_ULLONG!quint64!g;
     s!QMAX!qMax!g;
     s!QMIN!qMin!g;
+    s!\bQABS\b!qAbs!g
 
     s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
     s!Qt::ShiftButton!Qt::ShiftModifier!;
