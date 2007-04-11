@@ -599,4 +599,4 @@ while ($file = <$F>) {
     }
 }
 functionUtilkde::diffFile( <$F> );
-warn "Warning: $warning\n";
+warn "Warning: $warning\n" if ($warning != "");

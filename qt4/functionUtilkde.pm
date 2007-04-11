@@ -5,9 +5,13 @@ package functionUtilkde;
 use strict;
 sub diffFile
 {
-		my $listFileDiff = join (" ", @_);
+	my $listFileDiff = join (" ", @_);
+	if (-d ".svn") {
 		system("svn diff $listFileDiff");
-		warn "file to commit : $listFileDiff\n";
+	} elsif (-d "CVS") {
+		system("cvs diff $listFileDiff");
+	}
+	warn "files to commit: $listFileDiff\n";
 }
 
 sub excludeFile
