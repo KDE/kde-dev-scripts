@@ -258,8 +258,8 @@ sub processFile() {
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]knewstuff[\s/)]',
-            'replace "knewstuff" with "${KDE4_KNEWSTUFF_LIBS}"');
+            'target_link_libraries.*[[:space:]]knewstuff2[\s/)]',
+            'replace "knewstuff2" with "${KDE4_KNEWSTUFF2_LIBS}"');
 
       $issues +=
     &checkLine($line,$linecnt,
@@ -306,6 +306,18 @@ sub processFile() {
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kwalletclient[\s/)]',
             'replace "kwalletclient" with "${KDE4_KWALLETCLIENT_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]ktexteditor[\s/)]',
+            'replace "ktexteditor" with "${KDE4_KTEXTEDITOR_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kfile[\s/)]',
+            'replace "kfile" with "${KDE4_KFILE_LIBS}"');
+
+
     }
 
     # kdepimlibs variables
