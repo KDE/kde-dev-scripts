@@ -278,6 +278,11 @@ sub processFile() {
 
       $issues +=
     &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]krossui[\s/)]',
+            'replace "krossui" with "${KDE4_KROSSUI_LIBS}"');
+
+      $issues +=
+    &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]phononcore[\s/)]',
             'replace "phononcore" with "${KDE4_PHONONCORE_LIBS}"');
 
