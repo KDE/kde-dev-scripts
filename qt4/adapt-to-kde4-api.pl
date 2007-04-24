@@ -435,6 +435,9 @@ while ($file = <$F>) {
 
     s!\bKHistoryCombo\b!KHistoryComboBox!g;
 
+    s!\bKButtonBox\b!K3ButtonBox!g;
+    s!#include <kbuttonbox.h>!#include <k3buttonbox.h>!;
+
     if ( /kapp->authorizeKAction/ ) {
         s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
         push(@necessaryIncludes, "kauthorized.h");
