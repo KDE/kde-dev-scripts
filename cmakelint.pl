@@ -199,6 +199,9 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  'MACRO_BOOL_TO_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
 			  'do not use a digit as a variable');
+    $issues += &checkLine($line,$linecnt,
+			  '-fexceptions',
+			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
