@@ -464,16 +464,15 @@ while ($file = <$F>) {
         $_ = $valuereturn;
 
     }
-        my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KComboBox");
-        if ( $valuereturn ) {
+    my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KComboBox");
+    if ( $valuereturn ) {
         $_ = $valuereturn;
 
     }
-        my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KLineEdit");
-        if ( $valuereturn ) {
+    my $valuereturn = functionUtilkde::removeObjectNameThreeArgument( $_, "KLineEdit");
+    if ( $valuereturn ) {
         $_ = $valuereturn;
-
-        }
+    }
 
 
     #if( /setStatusText/ ) {
@@ -486,6 +485,12 @@ while ($file = <$F>) {
     s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
     s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
+
+    $_="" if (/include <kipc.h>/);
+    s/KIPC::sendMessageAll/KGlobalSettings::self()->emitChange/;
+    s/KIPC::/KGlobalSettings::/;
+    s/KApplication::SETTINGS_/KGlobalSettings::SETTINGS_/;
+    s/KApplication::createApplicationPalette/KGlobalSettings::createApplicationPalette/;
 
     $modified ||= $orig ne $_;
     $_;
