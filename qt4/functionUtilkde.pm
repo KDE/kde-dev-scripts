@@ -114,22 +114,26 @@ sub substInFile(&@) {
         $linkdest = $file;
         $file = $targetfile;
     }
+    my $modified = 0;
     if (-s $file) {
-    local @ARGV = $file;
-    local $^I = '';
-    local $_;
-    while (<>) {
-        $_ .= "\n" if eof && !/\n/;
-        &$f($_);
-        print;
-    }
+	local @ARGV = $file;
+	local $^I = '';
+	local $_;
+	while (<>) {
+	    $_ .= "\n" if eof && !/\n/; # always terminate with a newline
+	    my $orig = $_;
+	    &$f($_);
+	    $modified ||= $orig ne $_;
+	    print;
+	}
     } else {
-    local *F; my $old = select F; # that way eof return true
-    local $_ = '';
-    &$f($_);
-    select $old;
-    eval { output($file, $_) };
+	local *F; my $old = select F; # that way eof return true
+	local $_ = '';
+	&$f($_);
+	select $old;
+	eval { output($file, $_) };
     }
     $linkdest and symlink $file, $linkdest;
+    return $modified;
 }
 1;

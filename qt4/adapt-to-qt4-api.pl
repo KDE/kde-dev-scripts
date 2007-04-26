@@ -25,14 +25,13 @@ sub addQStringElement
 open(my $F, q(find -name "*" |));
 my $file;
 my $warning;
+my @files = ();
 while ($file = <$F>) {
     chomp $file;
     next if functionUtilkde::excludeFile( $file);
-    my $modified;
     my @necessaryIncludes = ();
-    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
-    my @l = map {
-    my $orig = $_;
+
+    if (functionUtilkde::substInFile {
 
     if ( $_ =~ /Q3StyleSheet::escape/ ) {
     	s!Q3StyleSheet::escape!Qt::escape!;
@@ -147,7 +146,7 @@ while ($file = <$F>) {
     if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(QStringList::split.*)\((.*)\s*\);$!) {
 	#warn "blank : $blank, prefix : $prefix, contenu : $contenu \n";
 	if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
-	    #warn "three element : first : $firstelement : second $secondelement : third $thirdelement \n";
+	    #warn "three elements: first: $firstelement second: $secondelement third: $thirdelement \n";
 	    my $argument = $prefix;
 	    # Remove space before argument
 	    $secondelement =~ s/ //g;	
@@ -182,36 +181,18 @@ while ($file = <$F>) {
 	    }
 
 	} elsif ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
+	    # warn "two elements: first: $firstelement second: $secondelement \n";
 	    my $argument = $prefix;
-	    # Remove space before argument
-	    $secondelement =~ s/ //g;
-	    $secondelement = addQStringElement( $secondelement ); 
-	    if ($firstelement ~= /QRegExp/ ) {
-		if ( $blank =~ /insertStringList/ ) {
-		    $secondelement =~ s/\)//g;
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . " QString::SkipEmptyParts));\n" ;
-		} else {
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . "QString::SkipEmptyParts);\n" ;
-		} else {
-		    if ( $blank =~ /insertStringList/ ) {
-			$secondelement =~ s/\)//g;
-			$_ = $blank . $secondelement . ".split( " . $firstelement . "));\n" ;
-		    } else {
-			$_ = $blank . $secondelement . ".split( " . $firstelement . ");\n" ;
-		    }
-		}
+	    # Remove space after argument
+	    $secondelement =~ s/\s+$//;
+	    $secondelement = addQStringElement( $secondelement );
+	    if ($firstelement !~ /QRegExp/ ) { # What to do about QRegExp?
+		$_ = $blank . $secondelement . ".split( " . $firstelement . " );\n" ;
 	    }
     	}
-
-
-    $modified ||= $orig ne $_;
-    $_;
-    } <$FILE>;
-
-    if ($modified) {
-        open (my $OUT, ">$file");
-        print $OUT @l;
     }
+
+    } $file) { push(@files,$file); }
 
     my %alreadyadded = {};
     foreach my $inc (@necessaryIncludes) {
@@ -220,5 +201,5 @@ while ($file = <$F>) {
         functionUtilkde::addIncludeInFile( $file, $inc );
     }
 }
-functionUtilkde::diffFile( <$F> );
+functionUtilkde::diffFile( @files );
 warn "Warning: $warning\n" if ($warning != "");
