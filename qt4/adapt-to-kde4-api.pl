@@ -77,16 +77,6 @@ while ($file = <$F>) {
         s!kapp->random!KRandom::random!;
         push(@necessaryIncludes, "krandom.h");
     }
-    if ( $_ =~ /Q3StyleSheet::escape/ ) {
-    	s!Q3StyleSheet::escape!Qt::escape!;
-    	push(@necessaryIncludes, "QTextDocument");
-    }
-    if ( $_ =~ /Q3StyleSheet::convertFromPlainText/ ) {
-        s!Q3StyleSheet::convertFromPlainText!Qt::convertFromPlainText!;
-        s!Q3StyleSheetItem::!Qt::!;
-        push(@necessaryIncludes, "QTextDocument");
-    }
-
     if ( $_ =~ /\b(\w+(?:\.|->))htmlURL\(\)/ ) { # KUrl::htmlURL() had to disappear
         #$var=$1;
         #s/${var}htmlURL\(\)/Qt::escape(${var}prettyURL())/;
@@ -121,7 +111,6 @@ while ($file = <$F>) {
     s!KPopupMenu!KMenu!g;
     s!\benableButtonOK\b!enableButtonOk!g;
     s!\benableButtonSeparator\b!showButtonSeparator!;
-    s!setWorldMatrix!setMatrix!;
     #TODO test it, perhaps remove all before isRestored (for example if( kapp-> isRestored())
     s!kapp->isRestored!kapp->isSessionRestored!;
     #add some standard version :)
@@ -129,37 +118,6 @@ while ($file = <$F>) {
     s!app.isRestored!app.isSessionRestored!;
     s!a.isRestored!a.isSessionRestored!;
 
-    s!Qt::WordBreak!Qt::TextWordWrap!;
-    s!Qt::SingleLine!Qt::TextSingleLine!;
-    s!Qt::DontClip!Qt::TextDontClip!;
-    s!Qt::ExpandTabs!Qt::TextExpandTabs!;
-    s!Qt::ShowPrefix!Qt::TextShowMnemonic!;
-    s!Qt::BreakAnywhere!Qt::TextWrapAnywhere!;
-    s!Qt::DontPrint!Qt::TextDontPrint!;
-    s!Qt::IncludeTrailingSpaces!Qt::TextIncludeTrailingSpaces!;
-    s!Qt::NoAccel!Qt::TextHideMnemonic!;
-    s!Qt::Key_BackSpace!Qt::Key_Backspace!;
-    s!Qt::Key_BackTab!Qt::Key_Backtab!;
-    s!Qt::Key_Prior!Qt::Key_PageUp!;
-    s!Qt::Key_Next!Qt::Key_PageDown!;
-    s!Qt::Key_MediaPrev([\s*|,])!Qt::Key_MediaPrevious\1!;
-
-    s!Qt::arrowCursor!Qt::ArrowCursor!;
-    s!Qt::upArrowCursor!Qt::UpArrowCursor!;
-    s!Qt::crossCursor!Qt::CrossCursor!;
-    s!Qt::waitCursor!Qt::WaitCursor!;
-    s!Qt::ibeamCursor!Qt::IBeamCursor!;
-    s!Qt::sizeVerCursor!Qt::SizeVerCursor!;
-    s!Qt::sizeHorCursor!Qt::SizeHorCursor!;
-    s!Qt::sizeBDiagCursor!Qt::SizeBDiagCursor!;
-    s!Qt::sizeFDiagCursor!Qt::SizeFDiagCursor!;
-    s!Qt::sizeAllCursor!Qt::SizeAllCursor!;
-    s!Qt::blankCursor!Qt::BlankCursor!;
-    s!Qt::splitVCursor!Qt::SplitVCursor!;
-    s!Qt::splitHCursor!Qt::SplitHCursor!;
-    s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
-    s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
-    s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
     s!KCursor::arrowCursor\(\)!Qt::ArrowCursor!;
     s!KCursor::workingCursor\(\)!Qt::BusyCursor!;
     s!KCursor::waitCursor\(\)!Qt::WaitCursor!;
@@ -172,8 +130,6 @@ while ($file = <$F>) {
     s!KCursor::sizeFDiagCursor\(\)!Qt::SizeFDiagCursor!;
     s!KCursor::sizeAllCursor\(\)!Qt::SizeAllCursor!;
 
-    s!QSlider::Below!QSlider::TicksBelow!;
-    s!QSlider::Above!QSlider::TicksAbove!;
     s!#include <kuniqueapp.h>!#include <kuniqueapplication.h>!;
     s!#include <kapp.h>!#include <kapplication.h>!;
     s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
@@ -243,11 +199,6 @@ while ($file = <$F>) {
     s!#include <kxmlgui.h>!#include <kxmlguifactory.h>!;
     s!#include <kstdaction.h>!#include <kstandardaction.h>!;
 
-    # Qt3 name class
-    s!QIconSet!QIcon!g;
-    s!QWMatrix!QMatrix!g;
-    s!QGuardedPtr!QPointer!g;
-
     # KUrl -> KUrl in all class names [but not in env vars, ifdefs, include guards etc.]
     s!KURLCompletion!KUrlCompletion!g;
     s!KURLCombo!KUrlCombo!g;
@@ -264,14 +215,6 @@ while ($file = <$F>) {
     s!\bfromPathOrURL\b!fromPathOrUrl!g;
     s!\bisRelativeURL\b!isRelativeUrl!g;
     s!\brelativeURL\b!relativeUrl!g;
-
-    s!IO_ReadOnly!QIODevice::ReadOnly!;
-    s!IO_WriteOnly!QIODevice::WriteOnly!;
-    s!IO_ReadWrite!QIODevice::ReadWrite!;
-    s!IO_Append!QIODevice::Append!;
-    s!IO_Truncate!QIODevice::Truncate!;
-    s!IO_Translate!QIODevice::Text!;
-
 
     #KKeyNative
     s!KKeyNative::modX\(\s*KKey::SHIFT\s*\)!KKeyNative::modXShift\(\)!;
@@ -307,15 +250,15 @@ while ($file = <$F>) {
     s!KInputDialog::getText!KInputDialog::getText!;
     s!#include <kde_file.h>!#include <kde_file.h>!;
     s!#include <kpopupmenu.h>!#include <kmenu.h>!;
-    s!cancelPressed!cancelPressed!;
-    s!suggestNewNamePressed!suggestNewNamePressed!;
-    s!renamePressed!renamePressed!;
-    s!skipPressed!skipPressed!;
-    s!autoSkipPressed!autoSkipPressed!;
-    s!overwritePressed!overwritePressed!;
-    s!overwriteAllPressed!overwriteAllPressed!;
-    s!resumePressed!resumePressed!;
-    s!resumeAllPressed!resumeAllPressed!;
+    #s!cancelPressed!cancelPressed!;
+    #s!suggestNewNamePressed!suggestNewNamePressed!;
+    #s!renamePressed!renamePressed!;
+    #s!skipPressed!skipPressed!;
+    #s!autoSkipPressed!autoSkipPressed!;
+    #s!overwritePressed!overwritePressed!;
+    #s!overwriteAllPressed!overwriteAllPressed!;
+    #s!resumePressed!resumePressed!;
+    #s!resumeAllPressed!resumeAllPressed!;
     s!KLocale::setMainCatalogue!KLocale::setMainCatalog!;
     s!KGlobal::locale\(\)->insertCatalogue!KGlobal::locale\(\)->insertCatalog!;
     s!KGlobal::locale\(\)->setMainCatalogue!KGlobal::locale\(\)->setMainCatalog!;
@@ -345,44 +288,7 @@ while ($file = <$F>) {
     s!([, (])kAbs\(!\1qAbs\(!g;
     # never add kClamp here! it's no easy search & replace there
 
-    s!Q_INT8!qint8!g;
-    s!Q_UINT8!quint8!g;
-    s!Q_INT16!qint16!g;
-    s!Q_UINT16!quint16!g;
-    s!Q_INT32!qint32!g;
-    s!Q_UINT32!quint32!g;
-    s!Q_INT64!qint64!g;
-    s!Q_UINT64!quint64!g;
-    s!Q_LLONG!qint64!g;
-    s!Q_ULLONG!quint64!g;
-    s!QMAX!qMax!g;
-    s!QMIN!qMin!g;
-    s!\bQABS\b!qAbs!g;
-
     s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
-    s!Qt::ShiftButton!Qt::ShiftModifier!;
-    s!Qt::ControlButton!Qt::ControlModifier!;
-    s!Qt::AltButton!Qt::AltModifier!;
-    s!Qt::MetaButton!Qt::MetaModifier!;
-    s!Qt::Keypad!Qt::KeypadModifier!;
-    s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
-    s!convertToAbs!makeAbsolute!;
-    s!currentDirPath!currentPath!;
-    s!homeDirPath!homePath!;
-    s!rootDirPath!rootPath!;
-    s!cleanDirPath!cleanPath!;
-    s!absFilePath!absoluteFilePath!;
-    s!QDir::All!QDir::TypeMask!;
-    s!QDir::DefaultFilter!QDir::NoFilter!;
-    s!QDir::DefaultSort!QDir::NoSort!;
-    s!simplifyWhiteSpace!simplified!g;
-    s!stripWhiteSpace!trimmed!g;
-    s!ucs2!utf16!g;
-    s!leftJustify!leftJustified!g;
-    s!rightJustify!rightJustified!g;
-    s!fromUcs2!fromUtf16!g;
-    s!constref!at!g;
-    s!changeInterval!start!g;
 
     s!kdDebug!kDebug!g;
     s!kdWarning!kWarning!g;
@@ -390,8 +296,6 @@ while ($file = <$F>) {
     s!kdFatal!kFatal!g;
     s!kdBacktrace!kBacktrace!g;
     s!kdClearDebugConfig!kClearDebugConfig!g;
-
-    s!flushX!flush!;
 
     s!\bKStdAction\b!KStandardAction!g;
     s!\bKStdGuiItem\b!KStandardGuiItem!g;
@@ -454,14 +358,14 @@ while ($file = <$F>) {
         s!kapp->startServiceByDesktopName!KToolInvocation::startServiceByDesktopName!;
         push(@necessaryIncludes, "ktoolinvocation.h");
     }
-        if ( /kapp->startServiceByDesktopPath/ ) {
+    if ( /kapp->startServiceByDesktopPath/ ) {
         s!kapp->startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
         push(@necessaryIncludes, "ktoolinvocation.h");
-        }
-        if ( /KApplication::startServiceByDesktopPath/ ) {
-            s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
+    }
+    if ( /KApplication::startServiceByDesktopPath/ ) {
+        s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
         push(@necessaryIncludes, "ktoolinvocation.h");
-        }
+    }
 
     if ( /kapp->kdeinitExec/ ) {
         s!kapp->kdeinitExec!KToolInvocation::kdeinitExec!;
@@ -487,14 +391,14 @@ while ($file = <$F>) {
         s!kapp->invokeMailer!KToolInvocation::invokeMailer!;
         push(@necessaryIncludes, "ktoolinvocation.h");
     }
-        if ( /kapp->invokeBrowser/ ) {
+    if ( /kapp->invokeBrowser/ ) {
         s!kapp->invokeBrowser!KToolInvocation::invokeBrowser!;
         push(@necessaryIncludes, "ktoolinvocation.h");
-        }
-        if ( /kapp->kdeinitExecWait/ ) {
+    }
+    if ( /kapp->kdeinitExecWait/ ) {
         s!kapp->kdeinitExecWait!KToolInvocation::kdeinitExecWait!;
         push(@necessaryIncludes, "ktoolinvocation.h");
-        }
+    }
     if ( /KApplication::startServiceByDesktopPath/ ) {
         s!KApplication::startServiceByDesktopPath!KToolInvocation::startServiceByDesktopPath!;
         push(@necessaryIncludes, "ktoolinvocation.h");
@@ -503,10 +407,10 @@ while ($file = <$F>) {
         s!KApplication::startServiceByName!KToolInvocation::startServiceByName!;
         push(@necessaryIncludes, "ktoolinvocation.h");
     }
-        if ( /kapp->startServiceByName/ ) {
+    if ( /kapp->startServiceByName/ ) {
         s!kapp->startServiceByName!KToolInvocation::startServiceByName!;
         push(@necessaryIncludes, "ktoolinvocation.h");
-        }
+    }
     if ( /kapp->config/ ) {
         s!kapp->config!KGlobal::config!;
         push(@necessaryIncludes, "kglobal.h");
@@ -516,15 +420,14 @@ while ($file = <$F>) {
         push(@necessaryIncludes, "kiconloader.h");
     }
 
-        if ( /kapp->icon/ ) {
-            s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
-            push(@necessaryIncludes, "kiconloader.h");
-        }
-        if ( /app.icon/ ) {
-            s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
-            push(@necessaryIncludes, "kiconloader.h");
-        }
-
+    if ( /kapp->icon/ ) {
+	s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
+	push(@necessaryIncludes, "kiconloader.h");
+    }
+    if ( /app.icon/ ) {
+	s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
+	push(@necessaryIncludes, "kiconloader.h");
+    }
 
     if ( /new KRun/ ) {
         $warning = $warning . "new KRun in $file - might need to add parent argument\n";
@@ -546,7 +449,6 @@ while ($file = <$F>) {
         s!Q3Frame::HLine!Qt::Horizontal!;
         s!Q3Frame::VLine!Qt::Vertical!;
     }
-    s!QDir::SortSpec!QDir::SortFlags!;
 
     my $valuereturn = functionUtilkde::removeObjectNameTwoArgument( $_, "KColorButton");
     if ( $valuereturn ) {
@@ -577,28 +479,28 @@ while ($file = <$F>) {
     #if( /setStatusText/ ) {
     #	s!setStatusText!setToolTip!;
     #}
-        if ( /kapp->geometryArgument/ ) {
+    if ( /kapp->geometryArgument/ ) {
         s!kapp->geometryArgument\s*\(\s*\);!QString geometry;\nKCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");\nif (args && args->isSet("geometry"))\ngeometry = args->getOption("geometry");\n!;
-        }
-        s!KFileDialog::getExistingUrl!KFileDialog::getExistingDirectoryUrl!;
-        s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
+    }
+    s!KFileDialog::getExistingUrl!KFileDialog::getExistingDirectoryUrl!;
+    s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
     s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
+
     $modified ||= $orig ne $_;
     $_;
     } <$FILE>;
 
     if ($modified) {
-    open (my $OUT, ">$file");
-    print $OUT @l;
+        open (my $OUT, ">$file");
+        print $OUT @l;
     }
 
     my %alreadyadded = {};
     foreach my $inc (@necessaryIncludes) {
-    next if (defined $alreadyadded{$inc});
-    $alreadyadded{$inc} = 1;
-
-    functionUtilkde::addIncludeInFile( $file, $inc );
+        next if (defined $alreadyadded{$inc});
+        $alreadyadded{$inc} = 1;
+        functionUtilkde::addIncludeInFile( $file, $inc );
     }
 }
 functionUtilkde::diffFile( <$F> );

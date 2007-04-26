@@ -2,8 +2,8 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
-# simple script to replace the old Qt3 QGridLayout constructors:
+#
+# simple script to replace the QT3_SUPPORT QGridLayout constructors:
 #     QGridLayout ( QWidget * parent, int nRows, int nCols = 1, int margin = 0, int space = -1, const char * name = 0 ) 
 #     QGridLayout ( int nRows, int nCols = 1, int spacing = -1, const char * name = 0 ) 
 #     QGridLayout ( QLayout * parentLayout, int nRows = 1, int nCols = 1, int spacing = -1, const char * name = 0 ) 

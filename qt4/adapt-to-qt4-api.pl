@@ -1,0 +1,224 @@
+#!/usr/bin/perl
+
+# Laurent Montel <montel@kde.org> 2005 GPL
+# David Faure <faure@kde.org>
+# This script ports everything in the current directory (and recursively) to the Qt4 API,
+# for things that can be done automatically.
+# Note that there are many other scripts for things that require manual tweaking afterwards,
+# especially for things that would otherwise compile with QT3_SUPPORT so they don't need
+# porting initially.
+
+use File::Basename;
+use lib dirname( $0 );
+use functionUtilkde;
+use strict;
+
+sub addQStringElement
+{
+    my $result = $_[0];
+    if ( $result =~ /^\"/ ) {
+	$result = "QString(" . $result . ")";
+    }
+    return $result;
+}
+
+open(my $F, q(find -name "*" |));
+my $file;
+my $warning;
+while ($file = <$F>) {
+    chomp $file;
+    next if functionUtilkde::excludeFile( $file);
+    my $modified;
+    my @necessaryIncludes = ();
+    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
+    my @l = map {
+    my $orig = $_;
+
+    if ( $_ =~ /Q3StyleSheet::escape/ ) {
+    	s!Q3StyleSheet::escape!Qt::escape!;
+    	push(@necessaryIncludes, "QTextDocument");
+    }
+    if ( $_ =~ /Q3StyleSheet::convertFromPlainText/ ) {
+        s!Q3StyleSheet::convertFromPlainText!Qt::convertFromPlainText!;
+        s!Q3StyleSheetItem::!Qt::!;
+        push(@necessaryIncludes, "QTextDocument");
+    }
+
+    s!Qt::WordBreak!Qt::TextWordWrap!;
+    s!Qt::SingleLine!Qt::TextSingleLine!;
+    s!Qt::DontClip!Qt::TextDontClip!;
+    s!Qt::ExpandTabs!Qt::TextExpandTabs!;
+    s!Qt::ShowPrefix!Qt::TextShowMnemonic!;
+    s!Qt::BreakAnywhere!Qt::TextWrapAnywhere!;
+    s!Qt::DontPrint!Qt::TextDontPrint!;
+    s!Qt::IncludeTrailingSpaces!Qt::TextIncludeTrailingSpaces!;
+    s!Qt::NoAccel!Qt::TextHideMnemonic!;
+    s!Qt::Key_BackSpace!Qt::Key_Backspace!;
+    s!Qt::Key_BackTab!Qt::Key_Backtab!;
+    s!Qt::Key_Prior!Qt::Key_PageUp!;
+    s!Qt::Key_Next!Qt::Key_PageDown!;
+    s!Qt::Key_MediaPrev([\s*|,])!Qt::Key_MediaPrevious\1!;
+
+    s!Qt::arrowCursor!Qt::ArrowCursor!;
+    s!Qt::upArrowCursor!Qt::UpArrowCursor!;
+    s!Qt::crossCursor!Qt::CrossCursor!;
+    s!Qt::waitCursor!Qt::WaitCursor!;
+    s!Qt::ibeamCursor!Qt::IBeamCursor!;
+    s!Qt::sizeVerCursor!Qt::SizeVerCursor!;
+    s!Qt::sizeHorCursor!Qt::SizeHorCursor!;
+    s!Qt::sizeBDiagCursor!Qt::SizeBDiagCursor!;
+    s!Qt::sizeFDiagCursor!Qt::SizeFDiagCursor!;
+    s!Qt::sizeAllCursor!Qt::SizeAllCursor!;
+    s!Qt::blankCursor!Qt::BlankCursor!;
+    s!Qt::splitVCursor!Qt::SplitVCursor!;
+    s!Qt::splitHCursor!Qt::SplitHCursor!;
+    s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
+    s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
+    s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
+
+    s!QSlider::Below!QSlider::TicksBelow!;
+    s!QSlider::Above!QSlider::TicksAbove!;
+
+    # Qt3 name class
+    #s!QIconSet!QIcon!g;
+    s!QWMatrix!QMatrix!g;
+    s!QGuardedPtr!QPointer!g;
+
+    s!IO_ReadOnly!QIODevice::ReadOnly!;
+    s!IO_WriteOnly!QIODevice::WriteOnly!;
+    s!IO_ReadWrite!QIODevice::ReadWrite!;
+    s!IO_Append!QIODevice::Append!;
+    s!IO_Truncate!QIODevice::Truncate!;
+    s!IO_Translate!QIODevice::Text!;
+
+    s!Q_INT8!qint8!g;
+    s!Q_UINT8!quint8!g;
+    s!Q_INT16!qint16!g;
+    s!Q_UINT16!quint16!g;
+    s!Q_INT32!qint32!g;
+    s!Q_UINT32!quint32!g;
+    s!Q_INT64!qint64!g;
+    s!Q_UINT64!quint64!g;
+    s!Q_LLONG!qint64!g;
+    s!Q_ULLONG!quint64!g;
+    s!QMAX!qMax!g;
+    s!QMIN!qMin!g;
+    s!\bQABS\b!qAbs!g;
+
+    s!Qt::ShiftButton!Qt::ShiftModifier!;
+    s!Qt::ControlButton!Qt::ControlModifier!;
+    s!Qt::AltButton!Qt::AltModifier!;
+    s!Qt::MetaButton!Qt::MetaModifier!;
+    s!Qt::Keypad!Qt::KeypadModifier!;
+    s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
+    s!convertToAbs!makeAbsolute!;
+    s!currentDirPath!currentPath!;
+    s!homeDirPath!homePath!;
+    s!rootDirPath!rootPath!;
+    s!cleanDirPath!cleanPath!;
+    s!absFilePath!absoluteFilePath!;
+    s!QDir::SortSpec!QDir::SortFlags!;
+    s!QDir::All!QDir::TypeMask!;
+    s!QDir::DefaultFilter!QDir::NoFilter!;
+    s!QDir::DefaultSort!QDir::NoSort!;
+    s!simplifyWhiteSpace!simplified!g;
+    s!stripWhiteSpace!trimmed!g;
+    s!ucs2!utf16!g;
+    s!leftJustify!leftJustified!g;
+    s!rightJustify!rightJustified!g;
+    s!fromUcs2!fromUtf16!g;
+    s!constref!at!g;
+    #s!changeInterval!start!g;
+
+    if (/app/i) {
+	s!flushX!flush!; # QApplication
+    }
+    s!qt_xdisplay\s*\(\s*\)!QX11Info::display()!;
+    s!qt_xrootwin\s*\(\s*\)!QX11Info::appRootWindow()!;
+    s!qt_x_time!QX11Info::appTime()!;
+    if (/QX11Info/) {
+        push(@necessaryIncludes, "QX11Info");
+    }
+    if (/qHeapSort/) {
+	push(@necessaryIncludes, "q3tl.h");
+    }
+
+    # this changes QStringList::split (QT3_SUPPORT) to QString::split (Qt4)
+    if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(QStringList::split.*)\((.*)\s*\);$!) {
+	#warn "blank : $blank, prefix : $prefix, contenu : $contenu \n";
+	if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
+	    #warn "three element : first : $firstelement : second $secondelement : third $thirdelement \n";
+	    my $argument = $prefix;
+	    # Remove space before argument
+	    $secondelement =~ s/ //g;	
+	    $thirdelement =~ s/ //g;
+					
+	    $secondelement = addQStringElement( $secondelement );
+	    if ( $blank =~ /insertStringList/ ) {
+		$thirdelement =~ s/\)//g;
+		if ( $thirdelement =~ /true/ ) {
+		    #QString::KeepEmptyParts
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::KeepEmptyParts" . "));\n" ;
+		} elsif ( $thirdelement =~ /false/ ) {
+		    #QString::SkipEmptyParts
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::SkipEmptyParts" . "));\n" ;
+		}
+		# different element
+		else {
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", $thirdelement" . "));\n" ;
+		}	
+	    } else {
+		if ( $thirdelement =~ /true/ ) {
+		    #QString::KeepEmptyParts
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::KeepEmptyParts" . ");\n" ;	
+		} elsif ( $thirdelement =~ /false/ ) {
+		    #QString::SkipEmptyParts
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::SkipEmptyParts" . ");\n" ;
+		}
+		# different element
+		else {
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", $thirdelement" . ");\n" ;
+		}
+	    }
+
+	} elsif ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
+	    my $argument = $prefix;
+	    # Remove space before argument
+	    $secondelement =~ s/ //g;
+	    $secondelement = addQStringElement( $secondelement ); 
+	    if ($firstelement ~= /QRegExp/ ) {
+		if ( $blank =~ /insertStringList/ ) {
+		    $secondelement =~ s/\)//g;
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . " QString::SkipEmptyParts));\n" ;
+		} else {
+		    $_ = $blank . $secondelement . ".split( " . $firstelement . "QString::SkipEmptyParts);\n" ;
+		} else {
+		    if ( $blank =~ /insertStringList/ ) {
+			$secondelement =~ s/\)//g;
+			$_ = $blank . $secondelement . ".split( " . $firstelement . "));\n" ;
+		    } else {
+			$_ = $blank . $secondelement . ".split( " . $firstelement . ");\n" ;
+		    }
+		}
+	    }
+    	}
+
+
+    $modified ||= $orig ne $_;
+    $_;
+    } <$FILE>;
+
+    if ($modified) {
+        open (my $OUT, ">$file");
+        print $OUT @l;
+    }
+
+    my %alreadyadded = {};
+    foreach my $inc (@necessaryIncludes) {
+        next if (defined $alreadyadded{$inc});
+        $alreadyadded{$inc} = 1;
+        functionUtilkde::addIncludeInFile( $file, $inc );
+    }
+}
+functionUtilkde::diffFile( <$F> );
+warn "Warning: $warning\n" if ($warning != "");

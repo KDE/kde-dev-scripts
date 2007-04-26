@@ -2,8 +2,8 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
-# simple script to replace find by indexOf
+#
+# simple script to replace QT3_SUPPORT find by indexOf
 #
 # usage:
 #    convert-find-to-indexof.pl *.cpp

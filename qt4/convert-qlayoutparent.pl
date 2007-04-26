@@ -2,7 +2,7 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
+#
 # Call with a file and a line number to change (by grepping compile logs)
 
 # NOTE: This script assumes that the QGridLayout and Q[HV]BoxLayout constructors

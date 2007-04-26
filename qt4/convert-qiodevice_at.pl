@@ -2,7 +2,7 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
+#
 # simple script to replace QIODevice::at by either QIODevice::pos or QIODevice::seek
 #
 # usage:
@@ -35,6 +35,7 @@ foreach my $file (@ARGV) {
 # print "Old line:      \n$orig";
 # print "New line:      \n$_====================\n";
       }
+      s!.eof\s*\(\s*\)!.atEnd()!;
       $modified ||= $orig ne $_;
       $_;
     } <$FILE>;

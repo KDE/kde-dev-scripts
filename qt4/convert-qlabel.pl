@@ -1,16 +1,10 @@
 #!/usr/bin/perl
 
-# laurent Montel <montel@kde.org> 2006 GPL
+# Laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
-# Heuristically try to detect Q*Layout constructors where the parent is a layout.
-# Whenever the parent matches .*[lL]ayout.*, assume the parent is a QLayout* and
-# port the constructor to the new API.
 #
-# NOTE: This script assumes that the QGridLayout and Q[HV]BoxLayout constructors
-#       are already converted to the new API, except for the possible
-#       QLayout*parent first argument. Use the convert-qgridlayout.pl and
-#       convert-qboxlayout.pl scripts for this.
+# Port the QT3_SUPPORT QLabel constructors to the Qt3 constructors.
+#
 
 use File::Basename;
 use lib dirname( $0 );
@@ -33,7 +27,7 @@ while ($file = <$F>) {
 print "Spaces: '$spaces', Trailer: '$trailer', Object: '$object', Call: '$call', WS: '$ws', Params: '$params'\n";
         my @parms = split( /,\s*/, $params );
         my $pws = $ws;
-        
+
         my $buddy, my $text, my $parent, my $name, my $flags;
 
 print "Case ";
@@ -47,7 +41,7 @@ print "1";
         } elsif ( scalar(@parms) == 5 ) {
           ($buddy, $text, $parent, $name, $flags) = @parms;
 print "2";
-        
+
         } elsif (scalar(@parms) == 4 ) {
           if ( $parms[3]=~m/Qt::/ ){
             ($text, $parent, $name, $flags) = @parms;
@@ -55,7 +49,7 @@ print "2";
              ($buddy, $text, $parent, $name) = @parms;
            }
 print "3";
-        
+
         } elsif (scalar(@parms) == 3) {
           if ( $parms[2]=~m/Qt::/ ){
             ($parent, $name, $flags) = @parms;
@@ -79,7 +73,7 @@ print "5";
 print "6";
         }
 print "\n";
-        
+
         $_ = "$spaces$trailer$object$call(";
         my $p="";
         $p.= "$text" if ( defined($text) );
@@ -102,17 +96,17 @@ print "ORIG: $orig";
 print "NEW:  $_";
 # print "Original call: $call($ws$params$ws)\n";
 print "Buddy: $buddy, Text: $text, Parent: $parent, Name: $name, Flags: $flags\n";
-        
-        
+
+
 # QT4 API:
-# QLabel ( QWidget * parent = 0, Qt::WFlags f = 0 ) 
-# QLabel ( const QString & text, QWidget * parent = 0, Qt::WFlags f = 0 ) 
-# 
-#         
+# QLabel ( QWidget * parent = 0, Qt::WFlags f = 0 )
+# QLabel ( const QString & text, QWidget * parent = 0, Qt::WFlags f = 0 )
+#
+#
 # DEPRECATED:
-# QLabel ( QWidget * parent, const char * name, Qt::WFlags f = 0 ) 
-# QLabel ( const QString & text, QWidget * parent, const char * name, Qt::WFlags f = 0 ) 
-# QLabel ( QWidget * buddy, const QString & text, QWidget * parent = 0, const char * name = 0, Qt::WFlags f = 0 ) 
+# QLabel ( QWidget * parent, const char * name, Qt::WFlags f = 0 )
+# QLabel ( const QString & text, QWidget * parent, const char * name, Qt::WFlags f = 0 )
+# QLabel ( QWidget * buddy, const QString & text, QWidget * parent = 0, const char * name = 0, Qt::WFlags f = 0 )
 
       }
       $modified ||= $orig ne $_;

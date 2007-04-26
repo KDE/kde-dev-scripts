@@ -2,8 +2,8 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Reinhold Kainhofer <reinhold@kainhofer.com> 2006 GPL
-# 
-# simple script to replace the old Qt3 Q(H|V|)BoxLayout constructors:
+#
+# simple script to replace the QT3_SUPPORT Q(H|V|)BoxLayout constructors:
 #     QVBoxLayout ( QWidget * parent, int margin, int spacing = -1, const char * name = 0 ) 
 #     QVBoxLayout ( QLayout * parentLayout, int spacing = -1, const char * name = 0 ) 
 #     QVBoxLayout ( int spacing, const char * name = 0 )
