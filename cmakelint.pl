@@ -32,7 +32,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.3';
+my($Version) = '1.4';
 
 my($help) = '';
 my($version) = '';
@@ -62,7 +62,9 @@ sub processFile() {
   my($in_kdepimlibs)=0;
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
   my($top_of_module)=0;
-  $top_of_module=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_module=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=0 if ($apath =~ m+/(cmake|pics)/+);
 
