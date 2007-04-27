@@ -129,6 +129,25 @@ while ($file = <$F>) {
     s!constref!at!g;
     #s!changeInterval!start!g;
 
+    # When using qt3to4 with -strict (to avoid some nonsensical replacements of col.red() or enum { Top, Bottom })
+    # we are then missing the following safer replacements:
+    s!QWidget::WFlags!Qt::WFlags!;
+    s!\bWFlags\b!Qt::WFlags! unless (/Qt::WFlags/);
+    s!WStyle_!Qt::WStyle_!g unless (/Qt::WStyle_/);
+    s!WType_!Qt::WType_!g unless (/Qt::WType_/);
+    s!Key_!Qt::Key_!g unless (/Qt::Key_/);
+    s!QWidget::TabFocus!Qt::TabFocus!;
+    s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
+    s!QWidget::StrongFocus!Qt::StrongFocus!;
+    s!StrongFocus!Qt::StrongFocus!g unless (/Qt::StrongFocus/);
+    s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/);
+    s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/);
+    s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/);
+    s!AlignHCenter!Qt::AlignHCenter!g unless (/Qt::AlignHCenter/ || /"Align/);
+    s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/);
+    s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/);
+    s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/);
+
     if (/app/i) {
 	s!flushX!flush!; # QApplication
     }
@@ -142,7 +161,12 @@ while ($file = <$F>) {
 	push(@necessaryIncludes, "q3tl.h");
     }
 
+    s!class QWidgetList;!typedef QList<QWidget *> QWidgetList;!;
+
     # this changes QStringList::split (QT3_SUPPORT) to QString::split (Qt4)
+    # but it's a bit broken, e.g. with split(',') or split(" ",tr("foo"))
+    # or someCall(QStringList::split("/", path), parent)
+    if (0) {
     if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(QStringList::split.*)\((.*)\s*\);$!) {
 	#warn "blank : $blank, prefix : $prefix, contenu : $contenu \n";
 	if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
@@ -190,6 +214,7 @@ while ($file = <$F>) {
 		$_ = $blank . $secondelement . ".split( " . $firstelement . " );\n" ;
 	    }
     	}
+    }
     }
 
     } $file) { push(@files,$file); }
