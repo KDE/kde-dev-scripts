@@ -163,6 +163,9 @@ while ($file = <$F>) {
 
     s!class QWidgetList;!typedef QList<QWidget *> QWidgetList;!;
 
+    # this changes usage of QObjectList, since queryList returns QObjectList and not a pointer in qt4.
+    s!QObjectList\s*\*!QObjectList! if (/queryList/);
+
     # this changes QStringList::split (QT3_SUPPORT) to QString::split (Qt4)
     # but it's a bit broken, e.g. with split(',') or split(" ",tr("foo"))
     # or someCall(QStringList::split("/", path), parent)
