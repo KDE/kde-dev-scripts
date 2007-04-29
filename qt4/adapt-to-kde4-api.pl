@@ -177,6 +177,9 @@ while ($file = <$F>) {
     s!\bKListView\b!K3ListView!g;
     s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
     s!\bKListViewItem\b!K3ListViewItem!g;
+    s!#include <kaboutapplication.h>!#include <k3aboutapplication.h>!;
+    s!\bKAboutApplication\b!K3AboutApplication!g;
+
     if ( /KColorDrag/ ) {
         s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
         s!KColorDrag!K3ColorDrag!g;
