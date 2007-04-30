@@ -135,10 +135,10 @@ while ($file = <$F>) {
     s!#include <kstddirs.h>!#include <kstandarddirs.h>!;
     s!#include <kcodecs.h>!#include <kcodecs.h>!;
 
-    s!#include <kwin.h>!#include <kwm.h>!;
-    s!#include <kwinmodule.h>!#include <kwm.h>!;
-    s!\bKWin\b!KWM!g;
-    s!\bKWinModule\b!KWM!g;
+    s!#include <kwin.h>!#include <kwindowsystem.h>!;
+    s!#include <kwinmodule.h>!#include <kwindowsystem.h>!;
+    s!\bKWin\b!KWindowSystem!g;
+    s!\bKWinModule\b!KWindowSystem!g;
 
     # kde3support
     s!#include <kactivelabel.h>!#include <k3activelabel.h>!;
