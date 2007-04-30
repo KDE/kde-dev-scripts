@@ -311,12 +311,6 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]solid[\s/)]',
             'replace "solid" with "${KDE4_SOLID_LIBS}"');
 
-
-      $issues +=
-    &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kwalletclient[\s/)]',
-            'replace "kwalletclient" with "${KDE4_KWALLETCLIENT_LIBS}"');
-
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]ktexteditor[\s/)]',
