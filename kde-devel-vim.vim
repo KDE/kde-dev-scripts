@@ -646,12 +646,50 @@ endfunction
 function! MapIdentHeader( ident )
     " Qt stuff
     if a:ident =~ '^Q[A-Z]'
-        return '<' . a:ident . '>'
+        " let's try to find the module
+        let module = ''
+        if $QTDIR != ''
+            if filereadable($QTDIR.'/include/QtCore/'.a:ident)
+                let module = 'QtCore/'
+            elseif filereadable($QTDIR.'/include/QtGui/'.a:ident)
+                let module = 'QtGui/'
+            elseif filereadable($QTDIR.'/include/Qt3Support/'.a:ident)
+                let module = 'Qt3Support/'
+            elseif filereadable($QTDIR.'/include/QtAssistant/'.a:ident)
+                let module = 'QtAssistant/'
+            elseif filereadable($QTDIR.'/include/QtDBus/'.a:ident)
+                let module = 'QtDBus/'
+            elseif filereadable($QTDIR.'/include/QtDesigner/'.a:ident)
+                let module = 'QtDesigner/'
+            elseif filereadable($QTDIR.'/include/QtNetwork/'.a:ident)
+                let module = 'QtNetwork/'
+            elseif filereadable($QTDIR.'/include/QtOpenGL/'.a:ident)
+                let module = 'QtOpenGL/'
+            elseif filereadable($QTDIR.'/include/QtSql/'.a:ident)
+                let module = 'QtSql/'
+            elseif filereadable($QTDIR.'/include/QtSvg/'.a:ident)
+                let module = 'QtSvg/'
+            elseif filereadable($QTDIR.'/include/QtTest/'.a:ident)
+                let module = 'QtTest/'
+            elseif filereadable($QTDIR.'/include/QtUiTools/'.a:ident)
+                let module = 'QtUiTools/'
+            elseif filereadable($QTDIR.'/include/QtXml/'.a:ident)
+                let module = 'QtXml/'
+            endif
+        endif
+        return '<'.module.a:ident.'>'
     elseif a:ident == 'qDebug' ||
           \a:ident == 'qWarning' ||
           \a:ident == 'qCritical' ||
           \a:ident == 'qFatal'
         return '<QtDebug>'
+
+    " Phonon stuff
+    elseif a:ident =~ '^Phonon::[A-Z]'
+        if a:ident =~ '^Phonon::\(NoDisc\|Cd\|Dvd\|Vcd\|.\+MetaData\|.\+State\|.\+Category\|.\+Error\)'
+            return '<Phonon/Global>'
+        endif
+        return '<'.substitute(a:ident, '::', '/', 'g').'>'
 
     " KDE stuff
     elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
@@ -719,9 +757,9 @@ function! AddHeader()
     endwhile
     let start = match( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
     let end = matchend( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
-    if end > col( '.' )
-        let end = matchend( s, '[A-Za-z0-9_]\+', i )
-    endif
+"    if end > col( '.' )
+"        let end = matchend( s, '[A-Za-z0-9_]\+', i )
+"    endif
     let ident = strpart( s, start, end - start )
     let include = '#include ' . MapIdentHeader( ident )
 
