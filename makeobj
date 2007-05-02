@@ -27,6 +27,10 @@ while test $# -gt 0 ; do
 	shift
 	dir="${1}"
 	shift ;;
+      -v)
+        shift
+        exec /usr/bin/make "${args[@]}" -v $@
+        ;;
       *)
 	args=("${args[@]}" "$1")
 	shift 
