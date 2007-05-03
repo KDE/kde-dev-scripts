@@ -319,6 +319,8 @@ while ($file = <$F>) {
     s!\bKEditToolbar\b!KEditToolBar!g;
     s!\bKEditToolbarWidget\b!KEditToolBarWidget!g;
 
+    s!\bKListBox\b!K3ListBox!g;
+    s!klistbox.h!k3listbox.h!;
 
     s!KImageIO::registerFormats\s*\(\s*\);!!;
 
