@@ -644,6 +644,21 @@ function! SmartInclude()
 endfunction
 
 function! MapIdentHeader( ident )
+    let header = tolower(substitute(a:ident, '::', '/', 'g')).'.h'
+    if a:ident =~ 'Private$'
+        let header = substitute(header, 'private', '_p', '')
+    endif
+    " always prefer the headers in the same directory
+    let check = header
+    let slash = 1
+    while slash != -1
+        if filereadable( check )
+            return '"' . check . '"'
+        endif
+        let slash = match( check, '/' )
+        let check = strpart( check, slash + 1 )
+    endwhile
+
     " Qt stuff
     if a:ident =~ '^Q[A-Z]'
         " let's try to find the module
@@ -690,8 +705,22 @@ function! MapIdentHeader( ident )
             return '<Phonon/Global>'
         endif
         return '<'.substitute(a:ident, '::', '/', 'g').'>'
+    endif
 
     " KDE stuff
+    let kdeincdir = substitute(system('kde4-config --prefix'), '[\n\r]*', '', 'g').'/include/KDE/'
+    let classname = substitute(a:ident, '^.*:', '', '')
+    let pathfn = expand('%:p:h')
+    if filereadable(kdeincdir.classname) && !pathfn =~ 'kdelibs'
+        return '<'.classname.'>'
+    elseif filereadable(kdeincdir.'Phonon/'.classname)
+        return '<Phonon/'.classname.'>'
+    elseif filereadable(kdeincdir.'Solid/'.classname)
+        return '<Solid/'.classname.'>'
+    elseif filereadable(kdeincdir.'KIO/'.classname)
+        return '<KIO/'.classname.'>'
+    elseif filereadable(kdeincdir.'KParts/'.classname)
+        return '<KParts/'.classname.'>'
     elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
         return '<knuminput.h>'
     elseif a:ident == 'KSharedConfig'
@@ -727,13 +756,8 @@ function! MapIdentHeader( ident )
         return '<cstdio>'
     endif
 
-    " Private headers
-    let header = tolower( substitute( a:ident, '::', '/', 'g' ) ) . '.h'
-    if a:ident =~ 'Private$'
-        let header = substitute( header, 'private', '_p', '' )
-    endif
     let check = header
-    while 1 
+    while 1
         if filereadable( check )
             return '"' . check . '"'
         endif
