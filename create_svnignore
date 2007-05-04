@@ -73,6 +73,8 @@ handledir() {
         		fi
         		addignore Makefile
         		addignore .obj
+        		addignore .moc
+        		addignore .ui
         		for f in `ls -1 *.pro`; do
         		   if fgrep -q debug_and_release $f; then
         		    addignore "Makefile.Debug"
@@ -80,9 +82,11 @@ handledir() {
         		   fi
         		   template=`grep ^TEMPLATE $f | sed -e 's/.*=[ \t]*//'`
         		   if test -z "$template" -o "$template" = "app"; then
-        		        # TODO grep TARGET
-        			target=`echo $f | sed -e 's/\.pro$//'`
+        		        target=`grep ^TARGET $f | sed -e 's/.*=[ \t]*//'`
+                                test -z "$target" && target=`echo $f | sed -e 's/\.pro$//'`
         			addignore $target
+        			addignore $target.exe
+        			# addignore $target.app # Mac OSX, but only gui apps (grep for CONFIG?)
         		   fi
         		   # RESOURCES = foo.qrc -> addignore qrc_foo.cpp
         		   for resource in `perl -p -e 's/\\\s*\n/ /g' $f | grep ^RESOURCES | sed -e 's/.*=\s*//;s/#.*//;s/\$([^)]*)//'`; do
