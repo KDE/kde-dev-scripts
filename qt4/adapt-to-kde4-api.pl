@@ -347,6 +347,10 @@ while ($file = <$F>) {
     s!\bKButtonBox\b!K3ButtonBox!g;
     s!#include <kbuttonbox.h>!#include <k3buttonbox.h>!;
 
+    if ( /KKeyDialog::configure/ ) {
+    	s!\bKKeyDialog::configure\b!KShortcutsDialog::configure!;
+	push(@necessaryIncludes, "KShortcutsDialog");
+    }
     if ( /kapp->authorizeKAction/ ) {
         s!kapp->authorizeKAction!KAuthorized::authorizeKAction!;
         push(@necessaryIncludes, "kauthorized.h");
