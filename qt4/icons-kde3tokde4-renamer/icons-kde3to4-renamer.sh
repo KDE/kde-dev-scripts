@@ -31,6 +31,7 @@ cd $icon_base
 # rename filesystems to places if neccessary
 if [ -d "filesystems" ]; then
     svn mv filesystems places
+
     echo "filesystems/ renamed to places/"
 fi
 
@@ -45,6 +46,8 @@ while [ "$type_num" -lt "$types" ]; do
     if [ ! -d ${type[$type_num]} ]; then
         mkdir ${type[$type_num]}
         svn add ${type[$type_num]}
+
+        echo "created ${type[$type_num]} directory"
     fi
 
     # change to the type directory
