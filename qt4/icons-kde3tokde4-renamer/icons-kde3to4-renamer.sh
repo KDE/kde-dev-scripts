@@ -28,6 +28,12 @@ type[6]="places"
 # change to icon location
 cd $icon_base
 
+# rename filesystems to places if neccessary
+if [ -d "filesystems" ]; then
+    svn mv filesystems places
+    echo "filesystems/ renamed to places/"
+fi
+
 implemented="0"
 correct="0"
 not_implemented="0"
