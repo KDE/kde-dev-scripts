@@ -1,0 +1,15 @@
+camera
+blockdevice
+exec
+exec_wine
+folder_bomb
+chardevice
+connect_to_network
+pipe
+mycomp
+folder_home2
+folder_crystal
+folder
+folder_print2
+ftp
+www
