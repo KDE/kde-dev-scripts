@@ -4,7 +4,7 @@
 # By Danny Allen (dannya@kde.org)
 # Licenced under the LGPL
 
-script_base="/home/danny/work/projects/icon_rename"
+script_base="/home/kde4/svn/kdesdk/scripts/qt4/icons-kde3tokde4-renamer"
 icon_base="/home/kde4/svn/kdeartwork/IconThemes/primary/scalable"
 old_extension="svgz"
 new_extension="svgz"
@@ -44,6 +44,7 @@ while [ "$type_num" -lt "$types" ]; do
     # check if directory exists for type (otherwise make it)
     if [ ! -d ${type[$type_num]} ]; then
         mkdir ${type[$type_num]}
+        svn add ${type[$type_num]}
     fi
 
     # change to the type directory
@@ -63,7 +64,7 @@ while [ "$type_num" -lt "$types" ]; do
     # renamings
     ########################
     # determine number of icons to process
-    list_entries=`wc -l $rename_list | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\?"`
+    list_entries=`wc -l $rename_list | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\? " | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\?"`
 
     echo ""
     number="0"
@@ -113,7 +114,7 @@ while [ "$type_num" -lt "$types" ]; do
     # removals
     ########################
     # determine number of icons to process
-    list_entries=`wc -l $remove_list | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\?"`
+    list_entries=`wc -l $remove_list | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\? " | grep -o "[0-9][0-9]\?[0-9]\?[0-9]\?[0-9]\?"`
 
     echo ""
     number="0"
@@ -145,3 +146,8 @@ while [ "$type_num" -lt "$types" ]; do
     type_num=$(($type_num + 1))
     cd ..
 done
+
+echo ""
+echo ""
+echo "Don't forget to 'svn commit' your changes!"
+echo ""
