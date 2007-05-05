@@ -1,0 +1,13 @@
+camera
+cam
+cdrom_audio
+printer1
+printer2
+pda_black
+pda_blue
+usb_mount
+usbpendrive_mount
+usbpendrive_unmount
+usb_unmount
+handheld
+hdd_usb
