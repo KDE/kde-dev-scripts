@@ -346,6 +346,9 @@ while ($file = <$F>) {
 
     s!\bKButtonBox\b!K3ButtonBox!g;
     s!#include <kbuttonbox.h>!#include <k3buttonbox.h>!;
+    
+    s!\bKDiskFreeSp\b!KDiskFreeSpace!g;
+    s!#include <kdiskfreesp.h>!#include <kdiskfreespace.h>!;
 
     if ( /KKeyDialog::configure/ ) {
     	s!\bKKeyDialog::configure\b!KShortcutsDialog::configure!;
