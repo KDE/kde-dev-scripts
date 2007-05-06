@@ -42,9 +42,9 @@ file.write("\
 #include <kdemacros.h>\n\
 \n\
 /* We use _WIN32/_WIN64 instead of Q_OS_WIN so that this header can be used from C files too */\n\
-#if defined _WIN32 || defined _WIN64\n\
 \n\
 #ifndef %(FOO_EXPORT)s\n\
+# if defined _WIN32 || defined _WIN64\n\
 # if defined(MAKE_%(LIBNAME)s_LIB)\n\
    /* We are building this library */ \n\
 #  define %(FOO_EXPORT)s KDE_EXPORT\n\
@@ -52,12 +52,9 @@ file.write("\
    /* We are using this library */ \n\
 #  define %(FOO_EXPORT)s KDE_IMPORT\n\
 # endif\n\
-#endif\n\
-\n\
-#else /* UNIX */\n\
-\n\
-#define %(FOO_EXPORT)s KDE_EXPORT\n\
-\n\
+# else /* UNIX */\n\
+#  define %(FOO_EXPORT)s KDE_EXPORT\n\
+# endif\n\
 #endif\n\
 \n\
 # ifndef %(FOO_EXPORT)s_DEPRECATED\n\
