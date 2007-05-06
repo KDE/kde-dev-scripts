@@ -1,4 +1,4 @@
-elp
+help
 application-x-chm
 
 pdf
