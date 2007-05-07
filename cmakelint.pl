@@ -97,6 +97,10 @@ sub processFile() {
 			  'Use KDE4_ADD_LIBRARY() instead of ADD_LIBRARY()');
 
     $issues += &checkLine($line,$linecnt,
+                          '^[[:space:]]*[Qq][Tt]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
+                          'Use KDE4_AUTOMOC() instead of QT4_AUTOMOC()');
+
+    $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
                           'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_DIR}" and convert desktop file to xdg format (add Categories)');
 
