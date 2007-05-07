@@ -41,8 +41,6 @@ file.write("\
 /* needed for KDE_EXPORT and KDE_IMPORT macros */\n\
 #include <kdemacros.h>\n\
 \n\
-/* We use _WIN32/_WIN64 instead of Q_OS_WIN so that this header can be used from C files too */\n\
-\n\
 #ifndef %(FOO_EXPORT)s\n\
 # if defined(MAKE_%(LIBNAME)s_LIB)\n\
    /* We are building this library */ \n\
