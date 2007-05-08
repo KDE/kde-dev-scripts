@@ -150,7 +150,7 @@ class BuildTarget
 
       if $buildType==BuildKDE4
          @libs.push("${KDE4_KDECORE_LIBS}")
-      else
+      elsif $buildType==BuildKDE3
          @libs.push("${QT_AND_KDECORE_LIBS}")
       end
       $allTargets.push(self)
@@ -533,11 +533,12 @@ class CMakeFile
          end
       end
    end
+   
 
    def createKDE3ListsFile
 
       file=File.new(@listsFile, "w+");
-      if @amFile=="Makefile.am" && $buildType != BuildKDE3   # the toplevel Makefile.am
+      if @amFile=="Makefile.am" && $buildType == BuildKDE3   # the toplevel Makefile.am
           file.printf("FIND_PACKAGE(KDE3 REQUIRED)\n\n")
           file.printf("SET(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
           file.printf("ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE3_DEFINITIONS})\n\n")
@@ -591,14 +592,17 @@ class CMakeFile
             file.printf("SET(%s\n", srcsName)
             needToCreateDummyFile=false
             buildTarget.sources.each do |currentFile|
-               file.printf("%s\n", currentFile)
+               file.printf("   %s\n", currentFile)
                if currentFile=="dummy.cpp"
 
                   needToCreateDummyFile=true if not FileTest.exists?(@path+"/dummy.cpp")
                end
             end
-            file.printf(")\n\n")
-            file.printf("KDE3_AUTOMOC(${%s})\n\n", srcsName)
+            file.printf("   )\n\n")
+            
+            if $buildType == BuildKDE3
+               file.printf("KDE3_AUTOMOC(${%s})\n\n", srcsName)
+            end
 
             if needToCreateDummyFile
 #                  printf("creating dummy file in #{@path} ________\n")
@@ -608,31 +612,31 @@ class CMakeFile
 
          if not buildTarget.uis.empty?
             file.printf("SET( %s\n", uisName)
-            buildTarget.uis.each{ |currentFile| file.printf("%s\n", currentFile)}
-            file.printf(")\n\n")
+            buildTarget.uis.each{ |currentFile| file.printf("   %s\n", currentFile)}
+            file.printf("   )\n\n")
             file.printf("KDE3_ADD_UI_FILES(%s ${%s} )\n\n", srcsName, uisName)
          end
 
          if not buildTarget.skels.empty?
             file.printf("SET( %s\n", skelsName)
-            buildTarget.skels.each{ |currentFile| file.printf("%s\n", currentFile)}
-            file.printf(")\n\n")
+            buildTarget.skels.each{ |currentFile| file.printf("   %s\n", currentFile)}
+            file.printf("   )\n\n")
 
             file.printf("KDE3_ADD_DCOP_SKELS(%s ${%s})\n\n", srcsName, skelsName)
          end
 
          if not buildTarget.stubs.empty?
             file.printf("SET( %s\n", stubsName)
-            buildTarget.stubs.each{ |currentFile| file.printf("%s\n", currentFile)}
-            file.printf(")\n\n")
+            buildTarget.stubs.each{ |currentFile| file.printf("   %s\n", currentFile)}
+            file.printf("   )\n\n")
 
             file.printf("KDE3_ADD_DCOP_STUBS(%s ${%s})\n\n", srcsName, stubsName)
          end
 
          if not buildTarget.kcfgs.empty?
             file.printf("SET( %s\n", kcfgsName)
-            buildTarget.kcfgs.each{ |currentFile| file.printf("%s\n", currentFile)}
-            file.printf(")\n\n")
+            buildTarget.kcfgs.each{ |currentFile| file.printf("   %s\n", currentFile)}
+            file.printf("   )\n\n")
 
             file.printf("KDE3_ADD_KCFG_FILES(%s ${%s})\n\n", srcsName, kcfgsName)
          end
@@ -644,7 +648,7 @@ class CMakeFile
             file.printf(" )\n\n")
 
             file.printf("SET_TARGET_PROPERTIES(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
-            file.printf("INSTALL(TARGETS %s DESTINATION ${LIB_INSTALL_DIR} )\n\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS %s DESTINATION lib} )\n\n", buildTarget.name)
          elsif buildTarget.type==StaticLib
             file.printf("ADD_LIBRARY(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
          elsif buildTarget.type==Part
@@ -657,7 +661,7 @@ class CMakeFile
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("INSTALL_TARGETS(/lib/kde3 %s )\n\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS( %s DESTINATION lib/kde3)\n\n", buildTarget.name)
          elsif buildTarget.type==KDEInit
             file.printf("KDE3_ADD_KDEINIT_EXECUTABLE( %s ${%s})\n\n", buildTarget.name, srcsName)
 
@@ -665,11 +669,11 @@ class CMakeFile
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("INSTALL_TARGETS(/lib kdeinit_%s )\n\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS kdeinit_%s DESTINATION lib )\n\n", buildTarget.name)
 
             file.printf("TARGET_LINK_LIBRARIES( %s kdeinit_%s )\n", buildTarget.name, buildTarget.name)
 
-            file.printf("INSTALL_TARGETS(/bin %s )\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS %s DESTINATION bin)\n", buildTarget.name)
 
          else  #executable
             if $buildType == BuildNoKDE
@@ -681,7 +685,7 @@ class CMakeFile
                file.printf(" )\n\n")
 
                if buildTarget.install
-                  file.printf("INSTALL_TARGETS(/bin %s )\n\n", buildTarget.name)
+                  file.printf("INSTALL(TARGETS %s DESTINATION bin)\n\n", buildTarget.name)
                end
 
             else
@@ -696,7 +700,7 @@ class CMakeFile
                file.printf(" )\n\n")
 
                if buildTarget.install
-                  file.printf("INSTALL_TARGETS(/bin %s )\n\n", buildTarget.name)
+                  file.printf("INSTALL( TARGETS %s DESTINATION bin)\n\n", buildTarget.name)
                end
 
                if buildTarget.test
@@ -1024,13 +1028,16 @@ end
 if (ARGV.length==1)
    if ARGV[0]=="--no-kde"
       $buildType=BuildNoKDE
+      printf("*** no KDE\n")
    elsif ARGV[0]=="--kde3"
       $buildType=BuildKDE3
+      printf("*** KDE3\n")
    elsif ARGV[0]=="--kde4"
       $buildType=BuildKDE4
       $withConvLibs=true
       $installDirs=InstallDirsKDE4
       $libMapping=LibMappingKDE4
+      printf("*** KDE4\n")
    elsif ARGV[0]=="--help"
       printf("--help\t print this help text\n")
       printf("--version\t print version information\n")
