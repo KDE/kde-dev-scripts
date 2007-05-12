@@ -364,6 +364,10 @@ sub processFile() {
 		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]mailtransport[\s/)]',
+                   'replace "mailtransport" with "${KDE4_MAILTRANSPORT_LIBS}"');
+      $issues +=
+        &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
       $issues +=
