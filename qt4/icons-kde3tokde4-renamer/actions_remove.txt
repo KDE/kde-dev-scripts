@@ -119,3 +119,15 @@ reports
 forms
 playlist
 mute
+button_cancel
+button_apply
+exclamation
+reset
+red_ball
+green_ball
+transsearch
+ungroup_stencils
+paste_stencil
+group_stencils
+findf
+kontact_summary_green
