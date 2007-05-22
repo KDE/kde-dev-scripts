@@ -34,11 +34,11 @@ while ($file = <$F>) {
     if (functionUtilkde::substInFile {
 
     if ( $_ =~ /Q3StyleSheet::escape/ ) {
-    	s!Q3StyleSheet::escape!Qt::escape!;
+    	s!Q3StyleSheet::escape!Qt::escape!g;
     	push(@necessaryIncludes, "QTextDocument");
     }
     if ( $_ =~ /Q3StyleSheet::convertFromPlainText/ ) {
-        s!Q3StyleSheet::convertFromPlainText!Qt::convertFromPlainText!;
+        s!Q3StyleSheet::convertFromPlainText!Qt::convertFromPlainText!g;
         s!Q3StyleSheetItem::!Qt::!;
         push(@necessaryIncludes, "QTextDocument");
     }
