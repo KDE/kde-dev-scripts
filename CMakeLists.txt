@@ -54,5 +54,6 @@ install(PROGRAMS
   kdemangen.pl 
   svnintegrate 
   kde_generate_export_header
+  fix-include.sh
   DESTINATION ${BIN_INSTALL_DIR})
  
