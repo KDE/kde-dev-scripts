@@ -25,6 +25,21 @@ test_include() {
 		# Test error
         	if test ! -f "$headerfile" ; then
                 	echo "Header <$file> is not correct it try to load <$new>";
+		 else
+			oldpath=$PWD;
+			# remove path from file => we can get class name.
+			classname=`echo "$file" | perl -pi -e "s!$oldpath/!!"`;
+			classexist=`grep -l $classname $headerfile`;
+			if test -z "$classexist" ; then
+				echo "Header <$file> which try to load  <$new> doesn't have $classname into this file. Fix it please";
+				currentpath=`echo "$headerfile" | perl -pi -e "s!$new!!"`;
+				#remove KDE
+				currentpath=`echo "$currentpath" | perl -pi -e "s!KDE!!"`;
+				classexist=`grep -lr $classname $currentpath/*`;
+				if test ! -z "$classexist" ; then
+					echo "This class <$classname> is defined into other header <$classexist>";
+				fi
+			fi
         	fi
 	fi
   done 
