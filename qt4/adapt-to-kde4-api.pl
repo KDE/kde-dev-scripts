@@ -350,6 +350,9 @@ while ($file = <$F>) {
     s!\bKDiskFreeSp\b!KDiskFreeSpace!g;
     s!#include <kdiskfreesp.h>!#include <kdiskfreespace.h>!;
 
+    s!\btwoAlphaToLanguageName\b!languageCodeToName!;
+
+
     if ( /KKeyDialog::configure/ ) {
     	s!\bKKeyDialog::configure\b!KShortcutsDialog::configure!;
 	push(@necessaryIncludes, "KShortcutsDialog");
