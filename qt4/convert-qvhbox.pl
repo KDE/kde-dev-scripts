@@ -22,8 +22,8 @@ while ($file = <$F>) {
 	s!#include <q3hbox.h>!!;
 	s!#include <Q3VBox>!!;
 	s!#include <Q3HBox>!!;
-	s!Q3VBox!KVBox!g;
-	s!Q3HBox!KHBox!g;
+	s!\bQ3VBox\b!KVBox!g;
+	s!\bQ3HBox\b!KHBox!g;
     
         $modified ||= $orig ne $_;
         $_;
