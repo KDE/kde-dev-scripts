@@ -987,28 +987,28 @@ class CMakeFile
       if @installDoc
 	         file.printf("kde4_create_handbook(index.docbook)\nkde4_install_handbook()\n\n" )
       end
-      if @createDoxygenDocs
-         file.printf("kde4_create_doxygen_docs( ")
+      #if @createDoxygenDocs
+      #   file.printf("kde4_create_doxygen_docs( ")
 
-         if @doxygenRecursive
-            file.printf("RECURSIVE ")
-         end
+      #   if @doxygenRecursive
+      #      file.printf("RECURSIVE ")
+      #   end
 
-         if @doxygenInternalDocs
-            file.printf("INTERNAL_DOCS ")
-         end
+      #   if @doxygenInternalDocs
+      #      file.printf("INTERNAL_DOCS ")
+      #   end
 
-         if not @doxygenReferences.empty?
-            file.printf("REFERENCES ")
-            @doxygenReferences.each { |ref| file.printf("%s ", ref) }
-         end
-         if not @doxygenExcludes.empty?
-            file.printf("EXCLUDE ")
-            @doxygenExcludes.each { |exclude| file.printf("%s ", exclude) }
-         end
+       #  if not @doxygenReferences.empty?
+      #      file.printf("REFERENCES ")
+      #      @doxygenReferences.each { |ref| file.printf("%s ", ref) }
+      #   end
+      #   if not @doxygenExcludes.empty?
+      #      file.printf("EXCLUDE ")
+      #      @doxygenExcludes.each { |exclude| file.printf("%s ", exclude) }
+      #   end
 
-         file.printf(" )\n\n")
-      end
+      #   file.printf(" )\n\n")
+      #end
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}
