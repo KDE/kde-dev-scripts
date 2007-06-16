@@ -353,6 +353,10 @@ while ($file = <$F>) {
     s!\btwoAlphaToLanguageName\b!languageCodeToName!;
 
 
+    if ( /K3Process::quote/ ) {
+       s!\bK3Process::quote\b!KShell::quoteArg!g;
+       push(@necessaryIncludes, "kshell.h");
+    }
     if ( /KKeyDialog::configure/ ) {
     	s!\bKKeyDialog::configure\b!KShortcutsDialog::configure!;
 	push(@necessaryIncludes, "KShortcutsDialog");
