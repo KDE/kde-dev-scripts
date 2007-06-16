@@ -70,6 +70,24 @@ my $text_string = qr/($tags$extra_tags)( [^>]*)?>/;    # Precompile regexp
 
 
 ###########################################################################################
+#  Escape characters in string exactly like uic does.
+sub escape_like_uic ($) {
+    my $text = shift;
+
+    $text =~ s/&lt;/</g;
+    $text =~ s/&gt;/>/g;
+    $text =~ s/&amp;/&/g;
+    $text =~ s/&quot;/"/g;
+
+    $text =~ s/\\/\\\\/g; # escape \
+    $text =~ s/\"/\\\"/g; # escape "
+    $text =~ s/\r//g; # remove CR (Carriage Return)
+    $text =~ s/\n/\\n\"\n\"/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
+
+    return $text;
+}
+
+###########################################################################################
 # Program start proper - NB $. is the current line number
 
 for my $file_name ( @ARGV )
@@ -116,8 +134,12 @@ for my $file_name ( @ARGV )
      {
        if ( ($tag, $attr) = $string =~ /<$text_string/o )
        {
-         ($attr) = $attr =~ /\w*context=\"([^\"]*)\"/ if $attr;
-         $context = $attr if $attr;
+         my ($attr_comment) = $attr =~ /\w*comment=\"([^\"]*)\"/ if $attr;
+         $context = $attr_comment if $attr_comment;
+         my ($attr_context) = $attr =~ /\w*context=\"([^\"]*)\"/ if $attr;
+         $context = $attr_context if $attr_context;
+         # It is unlikely that both attributes 'context' and 'comment'
+         # will be present, but if so happens, 'context' has priority.
 
          $string        =~ s/^.*<$text_string//so;
          $in_text       =  1;
@@ -133,17 +155,7 @@ for my $file_name ( @ARGV )
      next unless $string =~ /<\/$text_string/o;
 
      my $text = $string;
-
      $text =~ s/<\/$text_string.*$//o;
-     $text =~ s/&lt;/</g;
-     $text =~ s/&gt;/>/g;
-     $text =~ s/&amp;/&/g;
-     
-     # We need to escape characters exactly like uic does it:
-     $text =~ s/\\/\\\\/g; # escape \
-     $text =~ s/\"/\\\"/g; # escape "
-     $text =~ s/\r//g; # remove CR (Carriage Return)
-     $text =~ s/\n/\\n\"\n\"/g; # escape LF (Line Feed). uic also change the code line at a LF, we do not do that.
 
      if ( $text cmp "" )
      {
@@ -153,10 +165,13 @@ for my $file_name ( @ARGV )
        # print "// xgettext: no-c-format\n";
        if ( $context )
        {
+         $context = escape_like_uic($context);
+         $text = escape_like_uic($text);
          print qq|i18nc("$context","$text");\n|;
        }
        else
        {
+         $text = escape_like_uic($text);
          print  qq|i18n("$text");\n|;
        }
      }
