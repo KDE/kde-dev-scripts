@@ -697,11 +697,43 @@ function! MapIdentHeader( ident )
           \a:ident == 'qWarning' ||
           \a:ident == 'qCritical' ||
           \a:ident == 'qFatal'
-        return '<QtDebug>'
+        return '<QtCore/QtDebug>'
+    elseif a:ident =~ 'Q_DECLARE_INTERFACE'
+        return '<QtCore/QObject>'
+    elseif a:ident =~ '^QT_VERSION' ||
+          \a:ident =~ '^Q_\(W\|O\)S_' ||
+          \a:ident =~ '^Q_CC_' ||
+          \a:ident =~ '^Q_.*STRUCTOR_FUNCTION$' ||
+          \a:ident =~ '^qu\?int' ||
+          \a:ident =~ '^Q_.*_RESOURCE$' ||
+          \a:ident == 'qreal' ||
+          \a:ident == 'qAbs' ||
+          \a:ident == 'qRound' ||
+          \a:ident == 'qRound64' ||
+          \a:ident == 'qMin' ||
+          \a:ident == 'qMax' ||
+          \a:ident == 'qBound' ||
+          \a:ident == 'qVersion' ||
+          \a:ident == 'qSharedBuild' ||
+          \a:ident == 'Q_UNUSED' ||
+          \a:ident == 'Q_ASSERT' ||
+          \a:ident == 'qInstallMsgHandler' ||
+          \a:ident == 'Q_GLOBAL_STATIC' ||
+          \a:ident == 'Q_GLOBAL_STATIC_WITH_ARGS' ||
+          \a:ident == 'qFuzzyCompare' ||
+          \a:ident == 'qIsNull' ||
+          \a:ident == 'qSwap' ||
+          \a:ident =~ 'Q_DECLARE_\(FLAGS\|OPERATORS_FOR_FLAGS\|PRIVATE\|PUBLIC\)' ||
+          \a:ident == 'Q_D' ||
+          \a:ident == 'Q_Q' ||
+          \a:ident == 'Q_DISABLE_COPY' ||
+          \a:ident == 'qsrand' ||
+          \a:ident == 'qrand'
+        return '<QtCore/QtGlobal>'
 
     " Phonon stuff
     elseif a:ident =~ '^Phonon::[A-Z]'
-        if a:ident =~ '^Phonon::\(NoDisc\|Cd\|Dvd\|Vcd\|.\+MetaData\|.\+State\|.\+Category\|.\+Error\)'
+        if a:ident =~ '^Phonon::\(NoDisc\|Cd\|Dvd\|Vcd\|.\+MetaData\|.*State\|.*Category\|.\+Error\)'
             return '<Phonon/Global>'
         endif
         return '<'.substitute(a:ident, '::', '/', 'g').'>'
@@ -779,18 +811,21 @@ function! AddHeader()
     while i > 0 && strpart( s, i, 1 ) =~ '[A-Za-z0-9_:]'
         let i = i - 1
     endwhile
-    let start = match( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
-    let end = matchend( s, '[A-Za-z0-9_]\+\(::[A-Za-z0-9_]\+\)*', i )
+    let start = match( s, '[A-Za-z0-9_]\+\(::[A-Z][A-Za-z0-9_]*\)*', i )
+    let end = matchend( s, '[A-Za-z0-9_]\+\(::[A-Z][A-Za-z0-9_]*\)*', i )
 "    if end > col( '.' )
 "        let end = matchend( s, '[A-Za-z0-9_]\+', i )
 "    endif
     let ident = strpart( s, start, end - start )
-    let include = '#include ' . MapIdentHeader( ident )
+    let header = MapIdentHeader(ident)
+    let include = '#include '.header
 
     let line = 1
     let incomment = 0
     let appendpos = 0
     let codestart = 0
+    let similarpos = 0
+    let similarity = 0
     while line <= line( '$' )
         let s = getline( line )
         if incomment == 1
@@ -811,11 +846,25 @@ function! AddHeader()
             break
         elseif s =~ '^#include' && s !~ '\.moc"'
             let appendpos = line
+            if s =~ '^#include '.header[0:similarity+1]
+                let similarpos = line
+                let similarity = similarity + 1
+                while s =~ '^#include '.header[0:similarity+1]
+                    let similarity = similarity + 1
+                endwhile
+                if s[9:strlen(s)-2] > header[0:strlen(header)-2]
+                    let similarpos = similarpos - 1
+                    let similarity = 100 "this include belongs one line higher (assuming the order of includes already is alphabetically)
+                endif
+            endif
         elseif codestart == 0 && s !~ '^$'
             let codestart = line
         endif
         let line = line + 1
     endwhile
+    if similarpos > 0
+        let appendpos = similarpos
+    endif
     if line == line( '$' ) + 1
         if appendpos == 0
             call append( codestart - 1, include )
