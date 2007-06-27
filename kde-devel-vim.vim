@@ -107,18 +107,20 @@ set list
 set incsearch
 
 function! SetCodingStyle()
+    if &syntax == 'cmake'
+        call SmartParensOff()
+        set sw=3
+        set ts=3
+        set et
+        set tw=100
+        return
+    endif
     if ( &syntax !~ '^\(c\|cpp\|java\)$' )
         return
     endif
     "the path for the file
     let pathfn = expand( '%:p:h' )
-    if expand('%') =~ 'Makefile'
-        call SmartParensOff()
-        set sw=8
-        set ts=8
-        set noet
-        set tw=100
-    elseif pathfn =~ 'nmm'
+    if pathfn =~ 'nmm'
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
@@ -140,17 +142,6 @@ function! SetCodingStyle()
         set tw=100
     elseif pathfn =~ 'kdemultimedia\/juk'
         call SmartParensOff()
-        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
-        let g:need_brace_on_same_line = ''
-        set sw=4
-        set sts=4
-        set et
-        set tw=100
-    elseif pathfn =~ 'solid'
-        if strlen(mapcheck('(','i')) > 0
-            iunmap (
-        endif
-        call SmartParensOn()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
         let g:need_brace_on_same_line = ''
         set sw=4
