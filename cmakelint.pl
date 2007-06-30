@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
-# Copyright (C) 2006 by Allen Winter <winter@kde.org>                         #
+# Copyright (C) 2006-2007 by Allen Winter <winter@kde.org>                    #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
 # it under the terms of the GNU General Public License as published by        #
@@ -14,9 +14,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                #
 # GNU General Public License for more details.                                #
 #                                                                             #
-# You should have received a copy of the GNU General Public License           #
-# along with this program; if not, write to the Free Software                 #
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. #
+# You should have received a copy of the GNU General Public License along     #
+# with this program; if not, write to the Free Software Foundation, Inc.,     #
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.               #
 #                                                                             #
 ###############################################################################
 #
@@ -32,7 +32,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.4';
+my($Version) = '1.5';
 
 my($help) = '';
 my($version) = '';
@@ -185,7 +185,6 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
                           'INSTALL_TARGETS[[:space:]]*\(',
                           'replace "install_targets" with "install(TARGETS...)');
-		  
     $issues += &checkLine($line,$linecnt,
 			  'install_files[[:space:]]*\(',
 			  'replace "install_files" with "install(FILES...)');
@@ -336,44 +335,72 @@ sub processFile() {
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues += 
 	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
+		   'replace "gpgmepp" with "${KDE4_GPGMEPP_LIBS}"');
+      $issues += 
+	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kabc[\s/)]',
 		   'replace "kabc" with "${KDE4_KABC_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kblog[\s/)]',
+		   'replace "kblog" with "${KDE4_KBLOG_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
 		   'replace "kcal" with "${KDE4_KCAL_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
-		   'replace "ktnef" with "${KDE4_KTNEF_LIBS}"');
+		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
+		   'replace "kimap" with "${KDE4_KIMAP_LIBS}"');
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kldap[\s/)]',
+                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kleo[\s/)]',
+                   'replace "kleo" with "${KDE4_KLEO_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
 		   'replace "kmime" with "${KDE4_KMIME_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
-		   'replace "kimap" with "${KDE4_KIMAP_LIBS}"');
+		   'target_link_libraries.*[[:space:]]kpgp[\s/)]',
+		   'replace "kpgp" with "${KDE4_KPGP_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
+		   'replace "kpimidentities" with "${KDE4_KPIMIDENTITIES_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
+		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kresources[\s/)]',
 		   'replace "kresources" with "${KDE4_KRESOURCES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
-		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
+		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
+		   'replace "ktnef" with "${KDE4_KTNEF_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kxmlrpcclient[\s/)]',
+		   'replace "kxmlrpcclient" with "${KDE4_KXMLRPCCLIENT_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]mailtransport[\s/)]',
                    'replace "mailtransport" with "${KDE4_MAILTRANSPORT_LIBS}"');
       $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
+		   'replace "qgpgme" with "${KDE4_QGPGME_LIBS}"');
+      $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
-      $issues +=
-        &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]kldap[\s/)]',
-                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
     }
   }
 
