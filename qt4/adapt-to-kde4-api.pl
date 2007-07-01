@@ -504,6 +504,7 @@ while ($file = <$F>) {
     s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
     s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
+    s!const\s+KFileItem\s\*\s*!const KFileItem& !g if (/gotPreview/ || /slotGotPreview/ || /slotPreview/); # KIO::PreviewJob
 
     $_="" if (/include <kipc.h>/);
     s/KIPC::sendMessageAll/KGlobalSettings::self()->emitChange/;

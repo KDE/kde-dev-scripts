@@ -105,11 +105,18 @@ while ($file = <$F>) {
     s!\bQABS\b!qAbs!g;
 
     s!Qt::ShiftButton!Qt::ShiftModifier!;
+    s!ShiftButton!Qt::ShiftModifier!;
     s!Qt::ControlButton!Qt::ControlModifier!;
+    s!ControlButton!Qt::ControlModifier!;
     s!Qt::AltButton!Qt::AltModifier!;
+    s!AltButton!Qt::AltModifier!;
     s!Qt::MetaButton!Qt::MetaModifier!;
+    s!MetaButton!Qt::MetaModifier!;
     s!Qt::Keypad!Qt::KeypadModifier!;
+    s!Keypad!Qt::KeypadModifier!;
     s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
+    s!KeyButtonMask!Qt::KeyboardModifierMask!;
+
     s!convertToAbs!makeAbsolute!;
     s!currentDirPath!currentPath!;
     s!homeDirPath!homePath!;
