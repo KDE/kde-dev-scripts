@@ -213,6 +213,9 @@ while ($file = <$F>) {
     s!KURLRequester!KUrlRequester!g;
     s!KURLPixmapProvider!KUrlPixmapProvider!g;
     s!KURLLabel!KUrlLabel!g;
+    s!leftClickedURL!leftClickedUrl!;
+    s!rightClickedURL!rightClickedUrl!;
+    s!middleClickedURL!middleClickedUrl!;
 
     #KUrl renames
     s!\bKURL\b!KUrl!g;
@@ -509,6 +512,9 @@ while ($file = <$F>) {
     s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
     s!\bKFileDialog::getOpenURLs\b!KFileDialog::getOpenUrls!;
     s!\bKFileDialog::getOpenURL\b!KFileDialog::getOpenUrl!;
+    s!KFileDialog::getImageOpenURL!KFileDialog::getImageOpenUrl!;
+    s!KFileDialog::getSaveURL!KFileDialog::getSaveUrl!;
+    s!KFileDialog::getExistingURL!KFileDialog::getExistingUrl!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
     s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
     s!const\s+KFileItem\s\*\s*!const KFileItem& !g if (/gotPreview/ || /slotGotPreview/ || /slotPreview/); # KIO::PreviewJob
