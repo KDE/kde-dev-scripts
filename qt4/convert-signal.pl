@@ -2,6 +2,7 @@
 
 # laurent Montel <montel@kde.org> 2006 GPL
 # Script to use Qt macros: Q_SLOTS/Q_SIGNALS
+# Becarefull use this script on lib not on all files
 # 
 use File::Basename;
 use lib dirname( $0 );
