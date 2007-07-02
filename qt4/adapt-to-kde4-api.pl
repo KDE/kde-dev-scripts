@@ -186,6 +186,11 @@ while ($file = <$F>) {
         $warning = $warning . "K3ColorDrag used, might need to add \${KDE4_KDE3SUPPORT_LIBRARY} in target that contains $file\n";
     }
 
+    if( /KURLDrag/ ) {
+       s!#include <kurldrag.h>!#include <k3urldrag.h>!;
+       s!KURLDrag!K3URLDrag!g;
+       $warning = $warning . "K3URLDrag used, might need to add \${KDE4_KDE3SUPPORT_LIBRARY} in target that contains $file\n";
+    }
     s!#include <kpassdlg.h>!#include <kpassworddialog.h>!;
 
     #If there is more than one argument add KGuiItem now I think that it will easy to fix it.
@@ -502,6 +507,8 @@ while ($file = <$F>) {
     }
     s!KFileDialog::getExistingUrl!KFileDialog::getExistingDirectoryUrl!;
     s!KFileMetaInfo::KiloBytes!KFileMimeTypeInfo::KibiBytes!;
+    s!\bKFileDialog::getOpenURLs\b!KFileDialog::getOpenUrls!;
+    s!\bKFileDialog::getOpenURL\b!KFileDialog::getOpenUrl!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
     s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
     s!const\s+KFileItem\s\*\s*!const KFileItem& !g if (/gotPreview/ || /slotGotPreview/ || /slotPreview/); # KIO::PreviewJob
