@@ -62,6 +62,7 @@ sub processFile() {
   my($in_kdepimlibs)=0;
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
   my($top_of_module)=0;
+  my($in_kdebase)=0;
   $in_kdebase=1 if ($apath =~ m+/kdebase/+);
   my($top_of_module)=0;
 
@@ -340,7 +341,7 @@ sub processFile() {
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]plasma[\s/)]',
                    'replace "plasma" with "${PLASMA_LIBRARIES}"',
-		   'add macro_optional_find_package(Plasma) in CMakeLists.txt');    
+		   'add macro_optional_find_package(Plasma) in CMakeLists.txt');
    }
 
     # kdepimlibs variables
@@ -369,10 +370,10 @@ sub processFile() {
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]kldap[\s/)]',
                    'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
-      $issues +=
-        &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]kleo[\s/)]',
-                   'replace "kleo" with "${KDE4_KLEO_LIBS}"');
+#       $issues +=
+#         &checkLine($line,$linecnt,
+#                    'target_link_libraries.*[[:space:]]kleo[\s/)]',
+#                    'replace "kleo" with "${KDE4_KLEO_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
