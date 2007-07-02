@@ -61,7 +61,6 @@ sub processFile() {
   $in_kdelibs=1 if ($apath =~ m+/kdelibs/+);
   my($in_kdepimlibs)=0;
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
-  my($top_of_module)=0;
   my($in_kdebase)=0;
   $in_kdebase=1 if ($apath =~ m+/kdebase/+);
   my($top_of_module)=0;
