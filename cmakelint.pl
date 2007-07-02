@@ -62,6 +62,9 @@ sub processFile() {
   my($in_kdepimlibs)=0;
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
   my($top_of_module)=0;
+  $in_kdebase=1 if ($apath =~ m+/kdebase/+);
+  my($top_of_module)=0;
+
   $top_of_module=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
   $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
@@ -330,6 +333,15 @@ sub processFile() {
             'replace "kmetadata" with "${KDE4_KMETADATA_LIBS}"');
 
     }
+
+    # kebase variables
+    if (! $in_kdelibs && ! $in_kdepimlibs && !$in_kdebase) {
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]plasma[\s/)]',
+                   'replace "plasma" with "${PLASMA_LIBRARIES}"',
+		   'add macro_optional_find_package(Plasma) in CMakeLists.txt');    
+   }
 
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
