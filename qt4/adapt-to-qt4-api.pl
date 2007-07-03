@@ -136,6 +136,8 @@ while ($file = <$F>) {
     s!constref!at!g;
     #s!changeInterval!start!g;
 
+    s!\bQImage::ScaleMin\b!Qt::ScaleMin!;
+
     # When using qt3to4 with -strict (to avoid some nonsensical replacements of col.red() or enum { Top, Bottom })
     # we are then missing the following safer replacements:
     s!QWidget::WFlags!Qt::WFlags!;
