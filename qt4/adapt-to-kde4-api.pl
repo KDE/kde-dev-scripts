@@ -350,6 +350,31 @@ while ($file = <$F>) {
     s!#include <kprocio.h>!#include <k3procio.h>!;
     s!#include <kprocess.h>!#include <k3process.h>!;
 
+    s!#include <kfiletreeview.h>!#include <k3filetreeview.h>!;
+    s!#include "kfiletreeview.h"!#include "k3filetreeview.h"!;
+    s!KFileTreeView!K3FileTreeView!g;
+    s!#include <kfileiconview.h>!#include <k3fileiconview.h>!;
+    s!#include "kfileiconview.h"!#include "k3fileiconview.h"!;
+    s!KFileIconViewItem!K3FileIconViewItem!g;
+    s!KFileIconView!K3FileIconView!g;
+    s!#include <kfiledetailview.h>!#include <k3filedetailview.h>!;
+    s!#include "kfiledetailview.h"!#include "k3filedetailview.h"!;
+    s!KFileListViewItem!K3FileListViewItem!g;
+    s!KFileDetailView!K3FileDetailView!g;
+    s!#include <kfiletreeview.h>!#include <k3filetreeview.h>!;
+    s!#include "kfiletreeview.h"!#include "k3filetreeview.h"!;
+    s!KFileTreeView!K3FileTreeView!g;
+    s!#include <klistbox.h>!#include <k3listbox.h>!;
+    s!#include "klistbox.h"!#include "k3listbox.h"!;
+    s!KListBox!K3ListBox!g;
+    s!#include <kcompletionbox.h>!#include <k3completionbox.h>!;
+    s!#include "kcompletionbox.h"!#include "k3completionbox.h"!;
+    s!KCompletionBox!K3CompletionBox!g;
+    s!#include <kfiletreeviewitem.h>!#include <k3filetreeviewitem.h>!;
+    s!#include "kfiletreeviewitem.h"!#include "k3filetreeviewitem.h"!;
+    s!currentK3FileTreeViewItem!currentKFileTreeViewItem!g;
+
+
     s!\bKHistoryCombo\b!KHistoryComboBox!g;
 
     s!\bKButtonBox\b!K3ButtonBox!g;
