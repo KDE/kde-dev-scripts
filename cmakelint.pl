@@ -379,10 +379,6 @@ sub processFile() {
 		   'replace "kmime" with "${KDE4_KMIME_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kpgp[\s/)]',
-		   'replace "kpgp" with "${KDE4_KPGP_LIBS}"');
-      $issues +=
-	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
 		   'replace "kpimidentities" with "${KDE4_KPIMIDENTITIES_LIBS}"');
       $issues +=
@@ -424,7 +420,7 @@ sub processFile() {
     $line =~ s/#.*$//; #remove comments
     next if ($line =~ m/^[[:space:]]$/); #skip blank lines
     $in_exec = 1
-      if ($line =~ m/add_(|kdeinit_)executable[[:space:]]*\(/i); 
+      if ($line =~ m/add_(|kdeinit_)executable[[:space:]]*\(/i);
     if ($line =~ m/[Pp][Rr][Oo][Jj][Ee][Cc][Tt]/) {
       $has_project=1;
       last;
