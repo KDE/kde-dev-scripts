@@ -310,7 +310,7 @@ class CMakeFile
       
       @targets.each do |buildTarget|
          amBuildTargetName=buildTarget.name.gsub(/\./, "_")
-         printf("- %s [%s]\n", amBuildTargetName, targetName)
+#         printf("- %s [%s]\n", amBuildTargetName, targetName)
          if (amBuildTargetName==targetName)
             return buildTarget
          end
