@@ -189,6 +189,8 @@ class BuildTarget
                lib=$1
             elsif currentLib =~ /^(.+\/)?lib(\w+)\.la$/
                lib=$2
+            elsif currentLib =~ /^(.+\/)?lib(\w+)\.a$/
+               lib=$2
             else
                lib=""
             end
@@ -298,12 +300,17 @@ class CMakeFile
       elsif line =~ /^\s*(\S+)_la_\S+\s*=\s*\S+.*$/
          targetName=$1
 #         type=Executable
+      elsif line =~ /^\s*lib(\S+)_a_\S+\s*=\s*\S+.*$/
+         targetName=$1
+#         type=StaticLib
       elsif line =~ /^\s*(\S+)_\S+\s*=\s*\S+.*$/
          targetName=$1
 #         type=Executable
       end
+      
       @targets.each do |buildTarget|
          amBuildTargetName=buildTarget.name.gsub(/\./, "_")
+         printf("- %s [%s]\n", amBuildTargetName, targetName)
          if (amBuildTargetName==targetName)
             return buildTarget
          end
@@ -323,6 +330,10 @@ class CMakeFile
          type=SharedLib
 #         printf("shared: %s\n", $1)
       elsif line =~ /^\s*noinst_LTLIBRARIES\s*=\s*(\S+.*)/
+         targets=$1
+         type=StaticLib
+#         printf("static: %s\n", $1)
+      elsif line =~ /^\s*noinst_LIBRARIES\s*=\s*(\S+.*)/
          targets=$1
          type=StaticLib
 #         printf("static: %s\n", $1)
@@ -375,11 +386,13 @@ class CMakeFile
             if current =~ /lib(\S+)\.la/
 #                printf("adding target with \"lib\": -%s-\n", $1)
                @targets.push(BuildTarget.new($1, type))
-             else
-               if current =~ /\s*(\S+)\.la/
+             elsif current =~ /\s*(\S+)\.la/
 #                    printf("adding target without \"lib\": -%s-\n", $1)
                   @targets.push(BuildTarget.new($1, type, false))
-               end
+             elsif current =~ /lib(\S+)\.a/
+                @targets.push(BuildTarget.new($1, type))
+             elsif current =~ /\s*(\S+)\.a/
+                @targets.push(BuildTarget.new($1, type, false))
              end
          end
       end
@@ -394,8 +407,11 @@ class CMakeFile
          return
       end
 
-      line =~ /^\s*(lib)?\S+(_la)?_SOURCES\s*=\s*(\S+.*)$/
-      buildTarget.addSourceFiles($3)
+      if line =~ /^\s*(lib)?\S+(_la)?_SOURCES\s*=\s*(\S+.*)$/
+        buildTarget.addSourceFiles($3)
+      elsif line =~ /^\s*(lib)?\S+(_a)?_SOURCES\s*=\s*(\S+.*)$/
+        buildTarget.addSourceFiles($3)
+      end
    end
 
    def addIncludeDirectories(includeDirs)
@@ -500,7 +516,7 @@ class CMakeFile
          end
          return
       end
-
+      
       if (line =~ /^\s*INCLUDES\s*=\s*(\S+.*)$/)
          addIncludeDirectories($1)
          return
