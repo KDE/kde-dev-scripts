@@ -860,7 +860,6 @@ class CMakeFile
                end
             end
             file.printf(")\n\n")
-            file.printf("kde4_automoc(${%s})\n\n", srcsName)
 
             if needToCreateDummyFile
 #                  printf("creating dummy file in #{@path} ________\n")
