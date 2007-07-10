@@ -68,20 +68,37 @@ sub processFile() {
   $top_of_module=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
   $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=0 if ($apath =~ m+/(cmake|pics)/+);
 
   my(@lines) = <IN>;
   my($line);
   my($linecnt)=0;
   my($issues)=0;
+  my(@ch,$c);
+  my($nob,$ncb);
+  my($nop,$ncp)=(0,0);
   #look for "bad" stuff
   foreach $line (@lines) {
     $linecnt++;
     chomp($line);
     $line =~ s/#.*$//; #remove comments
+
     next if (! $line);                   #skip empty lines
     next if ($line =~ m/^[[:space:]]$/); #skip blank lines
+
+    @ch = split(//,$line);
+    $nob = $ncb = 0;
+    foreach $c (@ch) {
+      $nop++ if ($c eq '(');
+      $ncp++ if ($c eq ')');
+      $nob++ if ($c eq '{');
+      $ncb++ if ($c eq '}');
+    }
+    if ($nob != $ncb) {
+      $issues++;
+      print "\tline#$linecnt: Mismatched braces\n";
+    }
 
     $issues += &checkLine($line,$linecnt,
 			  '[[:space:]]{\$',
@@ -92,16 +109,20 @@ sub processFile() {
 			  'non-printable characters detected');
 
     $issues += &checkLine($line,$linecnt,
+			  '[Kk][Dd][Ee]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
+			  'KDE4_AUTOMOC() is obsolete. Remove it.');
+
+    $issues += &checkLine($line,$linecnt,
+                          '^[[:space:]]*[Qq][Tt]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
+                          'No need for QT4_AUTOMOC(). Remove it.');
+
+    $issues += &checkLine($line,$linecnt,
 			  '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
 			  'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
 
     $issues += &checkLine($line,$linecnt,
 			  '^[[:space:]]*[Aa][Dd][Dd]_[Ll][Ii][Bb][Rr][Aa][Rr][Yy]',
 			  'Use KDE4_ADD_LIBRARY() instead of ADD_LIBRARY()');
-
-    $issues += &checkLine($line,$linecnt,
-                          '^[[:space:]]*[Qq][Tt]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
-                          'Use KDE4_AUTOMOC() instead of QT4_AUTOMOC()');
 
     $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
@@ -428,7 +449,11 @@ sub processFile() {
   }
   if (! $has_project && $top_of_module && $in_exec) {
     $issues++;
-    print "\tMissing a PROJECT() command\n";
+    print "\tline#$linecnt: Missing a PROJECT() command\n";
+  }
+  if ($nop != $ncp) {
+    $issues++;
+    print "\tline#$linecnt: Mismatched parens\n";
   }
 
   close(IN);
