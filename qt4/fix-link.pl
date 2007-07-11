@@ -116,6 +116,36 @@ while ($file = <$F>) {
                 {
                         s!\${KDE4_KPARTS_LIBS} !!;
                 }
+		#dependancy for khtml
+		if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
+		{
+			s!\${KDE4_KDECORE_LIBS} !!;
+		}
+                if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KIO_LIBS}/ )
+                {
+                        s!\${KDE4_KIO_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDEPRINT_LIBS}/ )
+                {
+                        s!\${KDE4_KDEPRINT_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDEUI_LIBS}/ )
+                {
+                        s!\${KDE4_KDEUI_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KPARTS_LIBS}/ )
+                {
+                        s!\${KDE4_KPARTS_LIBS} !!;
+                }
+		#dependancy for ktexteditor
+                if( $_ =~ m/\${KDE4_KTEXTEDITOR_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
+                {
+                        s!\${KDE4_KDECORE_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KTEXTEDITOR_LIBS}/ and $_ =~ m/\${KDE4_KPARTS_LIBS}/ )
+                {
+                        s!\${KDE4_KPARTS_LIBS} !!;
+                }
 
 		# Not remove them it will necessary when we removed kde3support into apps.
 		#if( $_ =~ m/\${KDE4_KDE3SUPPORT_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
