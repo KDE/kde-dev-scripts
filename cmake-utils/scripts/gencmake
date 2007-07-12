@@ -98,8 +98,8 @@ class Scanner
     def findFiles()
         Dir.entries(@project.pwd).each do |file|
             @project.got_cmakelist = true if /^CMakeLists.txt$/.match(File.basename(file))
-            @project.addHeader(file) if /(.h|.hh|.H|.hpp)$/.match(File.basename(file))
-            @project.addSource(file) if /(.cc|.C|.cpp)$/.match(File.basename(file))
+            @project.addHeader(file) if /(.h|.hh|.H|.hpp|.hxx)$/.match(File.basename(file))
+            @project.addSource(file) if /(.c|.cc|.C|.cpp|.cxx)$/.match(File.basename(file))
             @project.addUi(file) if /(.ui)$/.match(File.basename(file))
             @project.addKcfg(file) if /(.kcfgc)$/.match(File.basename(file))
             @project.addConfig(file) if /(.in)$/.match(File.basename(file))
@@ -182,7 +182,7 @@ class Generator
             output += "ADD_EXECUTABLE(#{@project.projectName} ${#{@prefix}_SRCS})\n"
         else
             @install_location = "lib"
-            output += "ADD_LIBRARY(#{@project.projectName} ${#{@prefix}}_SCRS ${#{prefix}_HDRS})\n" +
+            output += "ADD_LIBRARY(#{@project.projectName} ${#{@prefix}}_SCRS ${#{@prefix}_HDRS})\n" +
             "SET_TARGET_PROPERTIES(#{@project.projectName} PROPERTIES VERSION 0.0.0)\n"
         end
         return output
