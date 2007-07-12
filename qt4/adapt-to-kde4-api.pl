@@ -284,6 +284,8 @@ while ($file = <$F>) {
     s!KGlobal::iconLoader!KIconLoader::global!;
     s!KGlobal::instance\(\)->iconLoader!KIconLoader::global!;
 
+    s!KIcon::NoGroup!K3Icon::NoGroup!g;
+
     if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
         push(@necessaryIncludes, "kworkspace.h");
     }
