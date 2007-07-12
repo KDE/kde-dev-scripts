@@ -146,7 +146,19 @@ while ($file = <$F>) {
                 {
                         s!\${KDE4_KPARTS_LIBS} !!;
                 }
-
+		#dependancy for KDE4_KPIMIDENTITIES_LIBS
+		if( $_ =~ m/\${KDE4_KPIMIDENTITIES_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
+                {
+                        s!\${KDE4_KDECORE_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KPIMIDENTITIES_LIBS}/ and $_ =~ m/\${KDE4_KDEUI_LIBS}/ )
+                {
+                        s!\${KDE4_KDEUI_LIBS} !!;
+                }
+                if( $_ =~ m/\${KDE4_KPIMIDENTITIES_LIBS}/ and $_ =~ m/\${KDE4_KIO_LIBS}/ )
+                {
+                        s!\${KDE4_KIO_LIBS} !!;
+                }
 		# Not remove them it will necessary when we removed kde3support into apps.
 		#if( $_ =~ m/\${KDE4_KDE3SUPPORT_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
 		#{
