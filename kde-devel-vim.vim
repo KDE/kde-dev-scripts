@@ -112,7 +112,7 @@ function! SetCodingStyle()
         set sw=3
         set ts=3
         set et
-        set tw=100
+        set tw=0
         return
     endif
     if ( &syntax !~ '^\(c\|cpp\|java\)$' )
