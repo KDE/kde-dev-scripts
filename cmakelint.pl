@@ -392,8 +392,8 @@ sub processFile() {
                    'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
        $issues +=
          &checkLine($line,$linecnt,
-                    'target_link_libraries.*[[:space:]]kleopatra[\s/)]',
-                    'replace "kleopatra" with "${KDE4_KLEOPATRA_LIBS}"');
+                    'target_link_libraries.*[[:space:]]kleo[\s/)]',
+                    'replace "kleo" with "${KDE4_KLEO_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
