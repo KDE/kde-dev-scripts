@@ -1,44 +1,50 @@
 
 ########### install files ###############
+if (UNIX)
+#shell program
+install(PROGRAMS
+  adddebug
+  build-progress.sh
+  cheatmake
+  create_cvsignore
+  create_makefiles
+  create_svnignore
+  cvsaddcurrentdir
+  cvsbackport
+  cvsforwardport
+  cvslastlog
+  cvsrevertlast
+  cvsversion
+  findmissingcrystal
+  fix-include.sh
+  kdedoc
+  nonsvnlist
+  pruneemptydirs
+  qtdoc
+  svnbackport
+  svnchangesince
+  svngettags
+  svnlastlog
+  svnrevertlast
+  DESTINATION ${BIN_INSTALL_DIR})
+endif (UNIX)
 
 install( FILES kdesvn-buildrc.xml  DESTINATION  ${DATA_INSTALL_DIR}/katepart/syntax )
 install(PROGRAMS 
   create_makefile 
-  create_makefiles 
-  adddebug 
-  cheatmake 
   makeobj 
-  build-progress.sh 
-  pruneemptydirs 
-  cvsbackport 
-  cvsversion 
   cvscheck 
   cvslastchange 
-  cvslastlog 
-  cvsrevertlast 
   noncvslist 
   cvs-clean 
   cvs2dist 
   cvsblame 
-  cvsforwardport 
-  create_cvsignore 
   colorsvn 
-  create_svnignore 
-  nonsvnlist 
   svn2dist 
-  svnaddcurrentdir 
-  svnbackport 
   svn-clean 
-  svngettags 
   svnlastchange 
-  svnlastlog 
-  svnrevertlast 
   svnversions 
-  svnchangesince 
-  findmissingcrystal 
   kdesvn-build 
-  kdedoc 
-  qtdoc 
   extractrc 
   extractattr 
   zonetab2pot.py 
@@ -54,6 +60,5 @@ install(PROGRAMS
   kdemangen.pl 
   svnintegrate 
   kde_generate_export_header
-  fix-include.sh
   DESTINATION ${BIN_INSTALL_DIR})
  
