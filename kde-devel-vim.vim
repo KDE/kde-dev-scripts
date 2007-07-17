@@ -649,6 +649,15 @@ function! MapIdentHeader( ident )
         let slash = match( check, '/' )
         let check = strpart( check, slash + 1 )
     endwhile
+    let check = tolower(substitute(a:ident, '::', '/', 'g')).'_p.h'
+    let slash = 1
+    while slash != -1
+        if filereadable(check)
+            return '"' . check . '"'
+        endif
+        let slash = match(check, '/')
+        let check = strpart(check, slash + 1)
+    endwhile
 
     " Qt stuff
     if a:ident =~ '^Q[A-Z]'
