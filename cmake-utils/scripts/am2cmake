@@ -664,7 +664,7 @@ class CMakeFile
             file.printf(" )\n\n")
 
             file.printf("SET_TARGET_PROPERTIES(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
-            file.printf("INSTALL(TARGETS %s DESTINATION lib} )\n\n", buildTarget.name)
+            file.printf("INSTALL(TARGETS %s DESTINATION lib )\n\n", buildTarget.name)
          elsif buildTarget.type==StaticLib
             file.printf("ADD_LIBRARY(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
          elsif buildTarget.type==Part
@@ -732,7 +732,7 @@ class CMakeFile
       file.printf("\n########### install files ###############\n\n")
 
       @installs.each do |key, install|
-         file.printf("INSTALL_FILES( %s FILES %s )\n", install.location, install.files)
+         file.printf("INSTALL(FILES  %s DESTINATION %s )\n", install.files, install.location)
       end
       file.printf("\n")
 
