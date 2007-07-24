@@ -126,7 +126,7 @@ sub processFile() {
 
     $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
-                          'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_DIR}" and convert desktop file to xdg format (add Categories)');
+                          'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_INSTALL_DIR}" and convert desktop file to xdg format (add Categories)');
 
     $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\${MIME_INSTALL_DIR}',
@@ -165,7 +165,7 @@ sub processFile() {
 
     $issues += &checkLine($line,$linecnt,
  			  'DESTINATION[[:space:]]/*share/applications/*',
- 			  'replace "share/applications" or "/share/applications" with "${XDG_APPS_DIR}"');
+ 			  'replace "share/applications" or "/share/applications" with "${XDG_APPS_INSTALL_DIR}"');
 
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/*share/autostart/*',
