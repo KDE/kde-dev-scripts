@@ -106,8 +106,8 @@ InstallDirsKDE4 = {
    "kde_sound"    => "${SOUND_INSTALL_DIR}",
    "kde_templates"=> "${TEMPLATES_INSTALL_DIR}",
    "kde_wallpaper"=> "${WALLPAPER_INSTALL_DIR}",
-   "xdg_apps"     => "${XDG_APPS_DIR}",
-   "xdg_directory"=> "${XDG_DIRECTORY_DIR}",
+   "xdg_apps"     => "${XDG_APPS_INSTALL_DIR}",
+   "xdg_directory"=> "${XDG_DIRECTORY_INSTALL_DIR}",
    "data"         => "${DATA_INSTALL_DIR}",
    "include"      => "${INCLUDE_INSTALL_DIR}"
 }
