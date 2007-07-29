@@ -160,11 +160,11 @@ while ($file = <$F>) {
                         s!\${KDE4_KIO_LIBS} !!;
                 }
 		#dependancy for KDE4_KDNSSD_LIBS
-		if( $_  =~ m/\${KDE4_KDNSSD_LIBS}/ and $_  m/\${KDE4_KDECORE_LIBS}/ )
+		if( $_  =~ m/\${KDE4_KDNSSD_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
                 {
                         s!\${KDE4_KDECORE_LIBS} !!;
                 }
-                if( $_  =~ m/\${KDE4_KDNSSD_LIBS}/ and $_  m/\${KDE4_KDEUI_LIBS}/ )
+                if( $_  =~ m/\${KDE4_KDNSSD_LIBS}/ and $_ =~ m/\${KDE4_KDEUI_LIBS}/ )
                 {
                         s!\${KDE4_KDEUI_LIBS} !!;
                 }
