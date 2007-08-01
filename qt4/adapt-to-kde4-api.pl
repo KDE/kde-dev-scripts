@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# laurent Montel <montel@kde.org> 2005 GPL
+# laurent Montel <montel@kde.org> 2005,2006,2007 GPL
 # This function allows to adapt file to new KDE4 API
 
 use File::Basename;
@@ -309,6 +309,7 @@ while ($file = <$F>) {
     s!kdFatal!kFatal!g;
     s!kdBacktrace!kBacktrace!g;
     s!kdClearDebugConfig!kClearDebugConfig!g;
+    s!kndDebug!kDebugDevNull!g;
 
     s!\bKStdAction\b!KStandardAction!g;
     s!\bKStdGuiItem\b!KStandardGuiItem!g;
