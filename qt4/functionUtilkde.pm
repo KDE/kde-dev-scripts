@@ -19,7 +19,7 @@ sub excludeFile
     my ($newFile) = @_;
     return 1 if $newFile =~ /\/\.svn\//;
     return 1 if -d $newFile;
-    return $newFile =~ /TODO|Changelog|ChangeLog|README|Readme|portinglog.txt|Makefile(|\.(in|am))|\.(jpg|png|svgz|svg|html|HOWTO|README|svn|ui|kidl|desktop|pl|libs|o|moc|docbook|dox|l[ao])?$/;
+    return $newFile =~ /TODO|Changelog|ChangeLog|README|Readme|portinglog.txt|Makefile(|\.(in|am))|\.(jpg|png|svgz|svg|html|HOWTO|README|svn|ui|kidl|desktop|pl|libs|o|moc|docbook|gz|ogg|dox|l[ao])?$/;
 }
 
 sub removeObjectNameTwoArgument
