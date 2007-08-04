@@ -178,7 +178,7 @@ sub fix_captions($)
   foreach my $line (@contents) {
       $class = $1 if ($line =~ m/<class>(.*)<\/class>/);
       if ( $inside_caption == 1 ) {
-	  $line =~ m/<string>(.*)<\/string>/ || die "Malformed XML (no string under caption)";
+	  $line =~ m/<string>(.*)<\/string>/ || die "Malformed XML (no string under caption) in file $srcfile";
 	  my $caption = $1;
 	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
 	  if ( ( $caption eq $class && !defined $knowncaptions{$caption} ) ||
