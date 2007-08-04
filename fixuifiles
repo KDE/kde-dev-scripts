@@ -141,7 +141,7 @@ sub fix_accels($)
 	      $inside_accel = 0;
 	  }
       }
-      if ($line =~ m/property name=\"accel\"/) {
+      if ($line =~ m/property name=\"shortcut\"/) {
 	  $inside_accel = 1;
 	  $firstline = $line;
       }
@@ -151,7 +151,7 @@ sub fix_accels($)
       $inside_accel = 0 if ($inside_accel && $line =~ m/<\/property>/);
   }
   if ($accelsremoved) {
-      print "$srcfile: $accelsremoved accels removed\n";
+      print "$srcfile: $accelsremoved shortcut removed\n";
       open(SRC, "> $srcfile") || die "fix_accels: couldn't open '$srcfile' for writing\n";
       print SRC @fixedcontents;
       close(SRC);
@@ -182,7 +182,7 @@ sub fix_captions($)
 	  my $caption = $1;
 	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
 	  if ( ( $caption eq $class && !defined $knowncaptions{$caption} ) ||
-		 ($caption =~ m/Form[0-9]/) ) {
+		 ($caption =~ m/Form[0-9]*/) ) {
 	      if ( $caption =~ m/^[A-Z][a-z]*$/ ) {
 		  print "$srcfile: removing caption '$caption' (warning! could be real caption)\n";
 	      } else {
@@ -196,7 +196,7 @@ sub fix_captions($)
 	      $inside_caption = 0;
 	  }
       }
-      if ($line =~ m/property name=\"caption\"/) {
+      if ($line =~ m/property name=\"windowTitle\"/) {
 	  $inside_caption = 1;
 	  $firstline = $line;
       }
