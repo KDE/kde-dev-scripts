@@ -227,15 +227,7 @@ sub read_required_version($)
 	      $version = $_ if (!/^#/);
 	  }
 	  close(VERSFILE);
-      } else {
-	  $versfile = "$dir/configure.in.in";
-	  if ( open (VERSFILE, "< $versfile") ) {
-	      while (<VERSFILE>) {
-		  $version = $1 if m/^#MIN_CONFIG\(([0-9]+.[0-9]+)\)/;
-	      }
-	      close(VERSFILE);
-	  }
-      }
+      } 
       if (defined $version && $version =~ m/([0-9]+)\.([0-9]+)/) {
 	  $minversion_maj = $1;
 	  $minversion_min = $2;
