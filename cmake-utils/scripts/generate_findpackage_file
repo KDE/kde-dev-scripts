@@ -53,8 +53,6 @@ file.printf("  PATHS\n")
 if not pkgconfig.empty?
    file.printf("  ${_#{package}IncDir}\n")
 end
-file.printf("  /usr/include\n")
-file.printf("  /usr/local/include\n")
 
 if not incSubDir.empty?
    file.printf("  PATH_SUFFIXES #{incSubDir}\n")
@@ -67,8 +65,6 @@ file.printf("  PATHS\n")
 if not pkgconfig.empty?
    file.printf("  ${_#{package}LinkDir}\n")
 end
-file.printf("  /usr/lib\n")
-file.printf("  /usr/local/lib\n")
 file.printf(")\n\n")
 
 file.printf("IF(#{cmakeIncDirName} AND #{cmakeLibName})\n")
