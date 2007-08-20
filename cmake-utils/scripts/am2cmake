@@ -898,7 +898,7 @@ class CMakeFile
          end
 
          if not buildTarget.skels.empty?
-            file.printf("#kde4_add_dcop_skels(%s ", srcsName)
+            file.printf("#kde4_add_dcop_skels(%s );\n", srcsName)
             file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please.kde4_add_dcop_skels macro doesn't exist now. We keep it just to remember to port to dbus\")\n")
             buildTarget.skels.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
@@ -909,7 +909,7 @@ class CMakeFile
          end
 
          if not buildTarget.stubs.empty?
-            file.printf("#kde4_add_dcop_stubs(%s ", srcsName)
+            file.printf("#kde4_add_dcop_stubs(%s )\n", srcsName)
             file.printf("MESSAGE(STATUS \"DCOP stuff was remove into kde4, convert it to dbus please. kde4_add_dcop_stubs doen't exist. We keep it to remember to port to dbus\")\n")
             buildTarget.stubs.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
@@ -1000,7 +1000,7 @@ class CMakeFile
       end
       
       if @installDoc
-	         file.printf("kde4_create_handbook(index.docbook)\nkde4_install_handbook()\n\n" )
+	         file.printf("kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en)\n\n" )
       end
       #if @createDoxygenDocs
       #   file.printf("kde4_create_doxygen_docs( ")
@@ -1058,7 +1058,7 @@ if (ARGV.length==1)
       printf("--version\t print version information\n")
       printf("--no-kde\t disable special KDE application support\n")
       printf("--kde3\t create cmake files from KDE 3 automake files\n")
-      printf("--kde4\t create cmake files from KDE 4 unsermake files\n")
+      printf("--kde4\t create cmake files from KDE 4 automake/unsermake files\n")
       exit
    elsif ARGV[0]=="--version"
       printf("am2cmake (C) 2005, Alexander Neundorf\n")

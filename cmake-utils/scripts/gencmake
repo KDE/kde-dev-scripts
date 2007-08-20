@@ -271,8 +271,7 @@ class KDEGenerator < QtGenerator
     end
 
     def specials()
-        output = "# Special code for KDE4:\n" +
-        "KDE4_AUTOMOC(${#{@prefix}_SRCS})\n"
+        output = "# Special code for KDE4:\n"
         output += "# " unless @project.haveUis?
         output += "KDE4_ADD_UI_FILES(${#{@prefix}_SRCS} ${#{@prefix}_UIS})\n"
         output += "# " unless @project.haveKcfgs?
