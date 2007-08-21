@@ -48,7 +48,7 @@ LibMappingKDE4 = {
    "$(LIB_KDE3SUPPORT)" => "${KDE4_KDE3SUPPORT_LIBS}",
    "$(LIB_KJS)"         => "${KDE4_KJS_LIBS}",
    "$(LIB_KHTML)"       => "${KDE4_KHTML_LIBS}",
-   "$(LIB_KNEWSTUFF)"   => "${KDE4_KNEWSTUFF_LIBS}",
+   "$(LIB_KNEWSTUFF)"   => "knewstuff",
    "$(LIB_KDNSSD)"      => "${KDE4_KDNSSD_LIBS}",
    "$(LIB_KDEPIM)"      => "kdepim",
    "$(LIB_KIMPROXY)"    => "kimproxy",
@@ -755,7 +755,7 @@ class CMakeFile
           file.printf("add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
           file.printf("link_directories(${KDE4_LIB_DIR})\n\n")
           file.printf("include(ConvenienceLibs.cmake)\n\n")
-		  file.printf("include(ManualStuff.cmake)\n\n")
+          file.printf("include(ManualStuff.cmake)\n\n")
           file.printf("include(ConfigureChecks.cmake)\n\n")
       end
 
