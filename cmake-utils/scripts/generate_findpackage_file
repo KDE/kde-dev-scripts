@@ -43,44 +43,37 @@ file.printf("#\n\n\n")
 if not pkgconfig.empty?
    file.printf("# use pkg-config to get the directories and then use these values\n")
    file.printf("# in the FIND_PATH() and FIND_LIBRARY() calls\n")
-   file.printf("INCLUDE(UsePkgConfig)\n\n")
-   file.printf("PKGCONFIG(#{pkgconfig} _#{package}IncDir _#{package}LinkDir _#{package}LinkFlags _#{package}Cflags)\n\n")
-   file.printf("SET(#{cmakeDefsName} ${_#{package}Cflags})\n\n")
+   file.printf("if( NOT WIN32 )\n")
+   file.printf("  INCLUDE(UsePkgConfig)\n\n")
+   file.printf("  PKGCONFIG(#{pkgconfig} _#{package}IncDir _#{package}LinkDir _#{package}LinkFlags _#{package}Cflags)\n\n")
+   file.printf("  SET(#{cmakeDefsName} ${_#{package}Cflags})\n")
+   file.printf("endif( NOT WIN32 )\n\n")
 end
 
-file.printf("FIND_PATH(#{cmakeIncDirName} NAMES #{header}\n")
-file.printf("  PATHS\n")
-if not pkgconfig.empty?
-   file.printf("  ${_#{package}IncDir}\n")
+if not header.empty?
+  file.printf("FIND_PATH(#{cmakeIncDirName} NAMES #{header}\n")
+  if not pkgconfig.empty?
+     file.printf("  PATHS\n")
+     file.printf("  ${_#{package}IncDir}\n")
+  end
+
+  if not incSubDir.empty?
+     file.printf("  PATH_SUFFIXES #{incSubDir}\n")
+  end
+  file.printf(")\n\n")
 end
 
-if not incSubDir.empty?
-   file.printf("  PATH_SUFFIXES #{incSubDir}\n")
+if not lib.empty?
+  file.printf("FIND_LIBRARY(#{cmakeLibName} NAMES #{lib}\n")
+  if not pkgconfig.empty?
+     file.printf("  PATHS\n")
+     file.printf("  ${_#{package}LinkDir}\n")
+  end
+  file.printf(")\n\n")
 end
 
-file.printf(")\n\n")
-
-file.printf("FIND_LIBRARY(#{cmakeLibName} NAMES #{lib}\n")
-file.printf("  PATHS\n")
-if not pkgconfig.empty?
-   file.printf("  ${_#{package}LinkDir}\n")
-end
-file.printf(")\n\n")
-
-file.printf("IF(#{cmakeIncDirName} AND #{cmakeLibName})\n")
-file.printf("   SET(#{cmakeFoundName} TRUE)\n")
-file.printf("ENDIF(#{cmakeIncDirName} AND #{cmakeLibName})\n\n")
-
-file.printf("IF(#{cmakeFoundName})\n")
-file.printf("  IF(NOT #{cmakeQuietName})\n")
-file.printf("    MESSAGE(STATUS \"Found #{package}: ${#{cmakeLibName}}\")\n")
-file.printf("  ENDIF(NOT #{cmakeQuietName})\n")
-file.printf("ELSE(#{cmakeFoundName})\n")
-file.printf("  IF(#{cmakeRequiredName})\n")
-file.printf("    MESSAGE(FATAL_ERROR \"Could not find #{package}\")\n")
-file.printf("  ENDIF(#{cmakeRequiredName})\n")
-file.printf("ENDIF(#{cmakeFoundName})\n\n")
-
+file.printf("include(FindPackageHandleStandardArgs)\n")
+file.printf("FIND_PACKAGE_HANDLE_STANDARD_ARGS(#{package} DEFAULT_MSG #{cmakeIncDirName} #{cmakeLibName} )\n\n")
 
 file.printf("# show the #{cmakeIncDirName} and #{cmakeLibName} variables only in the advanced view\n")
 file.printf("MARK_AS_ADVANCED(#{cmakeIncDirName} #{cmakeLibName} )\n\n")
