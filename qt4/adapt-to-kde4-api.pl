@@ -180,6 +180,9 @@ while ($file = <$F>) {
     s!#include <kaboutapplication.h>!#include <k3aboutapplication.h>!;
     s!\bKAboutApplication\b!K3AboutApplication!g;
 
+    s!\bKStaticDeleter\b!K3StaticDeleter!g;
+    s!#include <kstaticdeleter.h>!#include <k3staticdeleter.h>!;
+
     if ( /KColorDrag/ ) {
         s!#include <kcolordrag.h>!#include <k3colordrag.h>!;
         s!KColorDrag!K3ColorDrag!g;
