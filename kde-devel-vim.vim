@@ -89,9 +89,6 @@ nmap ,lg :call LicenseHeader( "GPL" )<CR>
 nmap ,ll :call LicenseHeader( "LGPL" )<CR>
 nmap ,lm :call LicenseHeader( "MIT" )<CR>
 
-" Insert simple debug statements into each method
-nmap ,d :call InsertMethodTracer()<CR>
-
 " Expand #i to #include <.h> or #include ".h". The latter is chosen
 " if the character typed after #i is a dquote
 " If the character is > #include <> is inserted (standard C++ headers w/o .h)
@@ -698,6 +695,8 @@ function! MapIdentHeader( ident )
           \a:ident == 'qCritical' ||
           \a:ident == 'qFatal'
         return '<QtCore/QtDebug>'
+    elseif a:ident == 'Q_EXPORT_PLUGIN2'
+        return '<QtCore/QtPlugin>'
     elseif a:ident =~ 'Q_DECLARE_INTERFACE'
         return '<QtCore/QObject>'
     elseif a:ident =~ '^QT_VERSION' ||
@@ -988,7 +987,7 @@ function! AddQtSyntax()
         syn keyword qtCast         qt_cast qobject_cast qvariant_cast qstyleoption_cast
         syn keyword qtTypedef      uchar uint ushort ulong Q_INT8 Q_UINT8 Q_INT16 Q_UINT16 Q_INT32 Q_UINT32 Q_LONG Q_ULONG Q_INT64 Q_UINT64 Q_LLONG Q_ULLONG pchar puchar pcchar qint8 quint8 qint16 quint16 qint32 quint32 qint64 quint64 qlonglong qulonglong qreal
         syn keyword kdeKeywords    k_dcop k_dcop_signals
-        syn keyword kdeMacros      K_DCOP ASYNC PHONON_ABSTRACTBASE PHONON_OBJECT PHONON_HEIR PHONON_ABSTRACTBASE_IMPL PHONON_OBJECT_IMPL PHONON_HEIR_IMPL PHONON_PRIVATECLASS PHONON_PRIVATEABSTRACTCLASS K_DECLARE_PRIVATE K_D
+        syn keyword kdeMacros      K_DCOP ASYNC PHONON_ABSTRACTBASE PHONON_OBJECT PHONON_HEIR PHONON_ABSTRACTBASE_IMPL PHONON_OBJECT_IMPL PHONON_HEIR_IMPL PHONON_PRIVATECLASS PHONON_PRIVATEABSTRACTCLASS K_DECLARE_PRIVATE K_D K_EXPORT_PLUGIN K_PLUGIN_FACTORY K_PLUGIN_FACTORY_DEFINITION K_PLUGIN_FACTORY_DECLARATION
         syn keyword cRepeat        foreach
         syn keyword cRepeat        forever
 
@@ -999,10 +998,6 @@ function! AddQtSyntax()
         hi def link kdeKeywords         Statement
         hi def link kdeMacros           Type
     endif
-endfunction
-
-function! InsertMethodTracer()
-    :normal [[kf(yBjokDebug() << ""()" << endl;
 endfunction
 
 function! UpdateMocFiles()
