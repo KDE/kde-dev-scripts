@@ -562,10 +562,10 @@ function! CreatePrivateHeader( privateHeader )
         " check whether a Q_DECLARE_PRIVATE is needed
         let dp = search( '\(^\|\s\+\)Q_DECLARE_PRIVATE\s*(\s*'.className.'\s*)' )
         if dp == 0 "nothing found
-            call search( '^\s*class\s\+\([A-Za-z0-9]\+_EXPORT\s\+\)[A-Za-z_]\+\s*\(:\s*[,\t A-Za-z_]\+\)\?\s*\n\?\s*{' )
+            call search( '^\s*class\s\+\([A-Za-z0-9]\+_EXPORT\s\+\)\?[A-Za-z_]\+\s*\(:\s*[,\t A-Za-z_]\+\)\?\s*\n\?\s*{' )
             call search( '{' )
             let @c = className
-            if match(getline(line('.')+1), 'Q_OBJECT')
+            if getline(line('.')+1) =~ 'Q_OBJECT'
                 :normal joQ_DECLARE_PRIVATE(c)
             else
                 :normal oQ_DECLARE_PRIVATE(c)
@@ -580,15 +580,10 @@ function! CreatePrivateHeader( privateHeader )
     call IncludeGuard()
     " FIXME: find out what license to use
     call LicenseHeader( "LGPL" )
-    :set sw=4
-    :set sts=4
-    :set et
-    :set tw=100
-    :normal Go// vim: sw=4 sts=4 et tw=100
     let @h = header
     let @p = privateClassName
     let @c = className
-    :normal kkko#include "h"class p{Q_DECLARE_PUBLIC(c)protected:c* q_ptr;};
+    :normal Gkko#include "h"class pQ_DECLARE_PUBLIC(c)protected:c *q_ptr;
 endfunction
 
 function! ClassNameFromHeader()
