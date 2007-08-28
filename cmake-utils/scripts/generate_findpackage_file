@@ -41,6 +41,10 @@ file.printf("# Redistribution and use is allowed according to the terms of the B
 file.printf("# For details see the accompanying COPYING-CMAKE-SCRIPTS file.\n")
 file.printf("#\n\n\n")
 
+file.printf("if ( #{cmakeIncDirName} AND #{cmakeLibName} )\n")
+file.printf("   # in cache already\n")
+file.printf("   SET(#{package}_FIND_QUIETLY TRUE)\n")
+file.printf("endif ( #{cmakeIncDirName} AND #{cmakeLibName} )\n\n")
 
 if not pkgconfig.empty?
    file.printf("# use pkg-config to get the directories and then use these values\n")
