@@ -37,6 +37,8 @@ file.printf("#  #{cmakeFoundName} - system has #{package}\n")
 file.printf("#  #{cmakeIncDirName} - the #{package} include directory\n")
 file.printf("#  #{cmakeLibName} - Link these to use #{package}\n")
 file.printf("#  #{cmakeDefsName} - Compiler switches required for using #{package}\n")
+file.printf("# Redistribution and use is allowed according to the terms of the BSD license.\n")
+file.printf("# For details see the accompanying COPYING-CMAKE-SCRIPTS file.\n")
 file.printf("#\n\n\n")
 
 
