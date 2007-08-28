@@ -749,7 +749,7 @@ function! MapIdentHeader( ident )
         return '<KParts/'.classname.'>'
     elseif a:ident == 'K_EXPORT_PLUGIN'
         return '<KPluginLoader>'
-    elseif a:ident ~= '^K_PLUGIN_FACTORY'
+    elseif a:ident =~ 'K_PLUGIN_FACTORY'
         return '<KPluginFactory>'
     elseif a:ident == 'K\(Double\|Int\)\(NumInput\|SpinBox\)'
         return '<knuminput.h>'
