@@ -360,7 +360,7 @@ sub processFile() {
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]plasma[\s/)]',
-                   'replace "plasma" with "${PLASMA_LIBRARIES}"',
+                   'replace "plasma" with "${PLASMA_LIBS}"',
 		   'add macro_optional_find_package(Plasma) in CMakeLists.txt');
    }
 
