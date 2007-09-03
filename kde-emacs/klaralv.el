@@ -298,7 +298,7 @@
                QTextImageFormat QTextFrame QPaintDevice QSizePolicy QTextTable QFocusEvent
                QAction QFocusFrame QTextBlockFormat QHBoxWidget QHeaderView QPaintEngine
                QWidgetPlugin QMainWindow QBitmap QAbstractUndoItem QSpacerItem QFileIconProvider
-               QColorDialog QDialog QCDEStyle QCursor QTabWidget QItemSelectionModel
+               QColorDialog QDialog QDialogButtonBox QCDEStyle QCursor QTabWidget QItemSelectionModel
                QFileDialog QInputEvent QItemSelectionRange QProxyModel QRubberBand QItemEditorCreatorBase
                QMotifStyle QPainterPathPrivate QStatusTipEvent QAbstractButton QPictureIO QWheelEvent
                QAbstractPrintDialog QBrushData QInputContext QMouseEvent QBoxLayout QLayout
@@ -377,7 +377,8 @@
                Q3ActionGroup Q3ListBox Q3GVector Q3IconDragItem Q3RangeControl Q3StyleSheetItem
                Q3StrListIterator Q3TextEdit Q3TextDrag Q3LocalFs Q3TextView Q3Workspace
                Q3GListStdIterator Q3SqlForm Q3UrlOperator Q3ScrollView QGLContext QGLFormat
-               QGLWidget QGLColormap QtOpenGL ) )
+               QGLWidget QGLColormap QtOpenGL 
+               QDesignerFormEditorInterface QDesignerCustomWidgetInterface QDesignerContainerExtension) )
 
 ;; ------------------------------ SOURCE CODE ------------------------------
 

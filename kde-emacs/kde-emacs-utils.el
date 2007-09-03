@@ -142,6 +142,10 @@ This function does not do any hidden buffer changes."
       (re-search-backward "^[ \t]*")
       (while (looking-at "[ \t]")
 	(forward-char 1))
+      (when (looking-at "/\\*") ; C-style comment, like /*! \reimp */
+	(re-search-forward "\\*/" nil t))
+      (while (looking-at "[ \t]")
+	(forward-char 1))
       (setq function (buffer-substring (point) end))
       )
     ) ; end of global save-excursion
