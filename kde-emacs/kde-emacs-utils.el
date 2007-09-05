@@ -35,6 +35,8 @@ This function does not do any hidden buffer changes."
       `(scan-lists ,from ,count ,depth nil t)
     `(c-safe (scan-lists ,from ,count ,depth))))
 
+(if (not (eq kde-include-directory nil))
+    (setq sourcepair-header-path (list "." kde-include-directory "/*")))
 
 ;; returns non-nil if the given file has a using declaration
 ;; with the passed namespace
@@ -228,7 +230,7 @@ This function does not do any hidden buffer changes."
         (function "")
         found
 	)
-    (if (member (file-name-extension n) kde-source-files)
+    (if (member (concat "." (file-name-extension n)) sourcepair-source-extensions)
         ; TODO replace fume-function-before-point, needed for emacs,
         ; and for better namespace support.
 	;(progn
@@ -236,35 +238,40 @@ This function does not do any hidden buffer changes."
 	;    (goto-char (if pos (+ pos 1) (point-min))))
         (let ((a (fume-function-before-point))
 	      (functionregexp ""))
-          (if (string-match "^\\(.*\\)::\\(.*\\)$" a)
-               (progn
-                 (setq class (match-string 1 a))
-                 (setq function (match-string 2 a))
-                 (kde-switch-cpp-h)
-                 (goto-char 0)
-		 ; Look for beginning of class ("\\s-+" means whitespace including newlines)
-                 (re-search-forward
-		  (concat "\\(class\\|struct\\|namespace\\)\\s-+"
-			  "\\([A-Z_]+_EXPORT[A-Z_]*\\s-+\\)?"  ; allow for optional EXPORT macro
-			  class "\\b"                          ; the classname - with word separator
-			  "[^;]+{"                             ; the optional inheritance and the '{'
-			  ) nil t)                             ; no error, just return nil if not found
+          
+          (if (eq a nil)
+              (progn
+                (kde-switch-cpp-h)
+                (message "point is not in a method"))
+            (if (string-match "^\\(.*\\)::\\(.*\\)$" a)
+                (progn
+                  (setq class (match-string 1 a))
+                  (setq function (match-string 2 a))
+                  (kde-switch-cpp-h)
+                  (goto-char 0)
+                                        ; Look for beginning of class ("\\s-+" means whitespace including newlines)
+                  (re-search-forward
+                   (concat "\\(class\\|struct\\|namespace\\)\\s-+"
+                           "\\([A-Z_]+_EXPORT[A-Z_]*\\s-+\\)?"  ; allow for optional EXPORT macro
+                           class "\\b"                          ; the classname - with word separator
+                           "[^;]+{"                             ; the optional inheritance and the '{'
+                           ) nil t)                             ; no error, just return nil if not found
 
-		 ; Look for function - with \\b prepended, unless this is about ~Foo.
-		 (setq functionregexp (kde-function-regexp-quote function))
-		 (and (not (string-match "^~" functionregexp))
-		      (setq functionregexp (concat "\\b" functionregexp)))
-                 ;; TODO keep looking, until we find a match that's not inside a comment
-                 (re-search-forward (concat functionregexp "[ \t]*(") nil t))
-	    ; else: not a member method, maybe just a c function
-	    (progn
-	      (setq function a)
-	      (kde-switch-cpp-h)
-	      (goto-char 0)
-	      (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t))
-	    )
-	  )
-      )
+                                        ; Look for function - with \\b prepended, unless this is about ~Foo.
+                  (setq functionregexp (kde-function-regexp-quote function))
+                  (and (not (string-match "^~" functionregexp))
+                       (setq functionregexp (concat "\\b" functionregexp)))
+                  ;; TODO keep looking, until we find a match that's not inside a comment
+                  (re-search-forward (concat functionregexp "[ \t]*(") nil t))
+                                        ; else: not a member method, maybe just a c function
+              (progn
+                (setq function a)
+                (kde-switch-cpp-h)
+                (goto-char 0)
+                (re-search-forward (concat "\\b" (kde-function-regexp-quote function) "[ \t]*(") nil t))
+              )
+            )
+          ))
     (if (string-match "\\.h$" n)
         (progn
 	  (let ((mup (method-under-point))
@@ -355,7 +362,7 @@ This function does not do any hidden buffer changes."
       )
 
     ; Switch to .cpp if the declaration was in a header file
-    (if (member (file-name-extension file) kde-header-files)
+    (if (member (concat "." (file-name-extension file)) sourcepair-header-extensions)
 	(kde-switch-cpp-h)
       )
     ;(setq newcppfile (= (point-max) 1))

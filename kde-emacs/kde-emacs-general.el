@@ -23,6 +23,7 @@
 ;;; Code:
 
 (require 'kde-emacs-vars)
+(require 'sourcepair)
 
 ;*---------------------------------------------------------------------*/
 ;*    Functions  ...                                                   */
@@ -50,85 +51,23 @@
 variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
 test.h file and having test.cpp file readable in the same directory it will
 return (\"test.cpp\" t)."
-  (interactive)
-  (let* ((name (buffer-file-name))
-	 (nname (file-name-sans-extension name))
-	 (ext (file-name-extension name))
-	 (path nil)
-	 (ret nil)
-	 (listit nil))
-    (cond
-     ((member ext kde-header-files)
-      (setq listit kde-source-files)
-      (while (and listit (not ret)) ; loop over the list but stop once ret is set
-	(setq path (concat nname "." (car listit)))
-	(if (kde-file-or-buffer-exists path)
-	    (setq ret (cons path t))
-	  )
-	(if (not ret)
-	    (if (string-match "_p$" nname)
-		(progn 
-		  (setq path (concat (substring nname 0 (string-match "_p$" nname)) "." (car listit)))
-		  (if (kde-file-or-buffer-exists path)
-		      (setq ret (cons path t))
-		    )))
-	  )
-	(if (not ret)
-	    (progn ; look in kde-source-directory
-	      (setq path (kde-find-file (file-name-nondirectory path) kde-source-directory))
-	      (if (and
-		   path
-		   (file-readable-p path))
-		  (setq ret (cons path t))
-		))
-	  )
-	(setq listit (cdr listit)) ; ++listit
-	)
-      ; not found, will create one
-      (if (not ret)
-	  (setq ret (cons (concat nname "." kde-prefered-source-extension) nil ))
-	))
 
-     ((member ext kde-source-files)
-      (setq listit kde-header-files)
-      (while (and listit (not ret)) ; loop over the list but stop once ret is set
-	(setq path (concat nname "." (car listit)))
-        ; look in current dir
-	(if (file-readable-p path)
-	    (setq ret (cons path t)))
-	(if (not ret) ;check for header_p.h files
-	    (progn (setq path (concat nname "_p." (car listit)))
-		   (if (file-readable-p path)
-		       (setq ret (cons path t)))))
-	(if (not (file-readable-p path))
-	    (progn ;  look in kde-include-directory
-	      (setq path (kde-find-file (file-name-nondirectory path) kde-include-directory))
-	      (if (and 
-		   path
-		   (file-readable-p path))
-		  (setq ret (cons path t))
-		))
-	  )
-	(setq listit (cdr listit)) ; ++listit
-	)
-      ; not found, will create one
-      (if (not ret)
-	  (setq ret (cons (concat nname "." (car kde-header-files)) nil ))
-	))
-     )
-    ret
-    ))
+  (save-excursion
+    (let ((buffer (sourcepair-load)))
+      (if (stringp buffer)
+          (cons "" nil)
+        (cons (buffer-file-name buffer) 't)))))
 
 (defun kde-switch-cpp-h ()
-  "Switches between the source and the header file 
-(both directions)."
+  "Switches between the source and the header file (both directions)."
   (interactive)
-  (let ((file (kde-file-get-cpp-h)))
-    (if (car file)
-	(find-file (car file))
-      (error "Corresponding source file doesn't exist.")
-    )
-  ))
+  (let ((file (kde-file-get-cpp-h))
+        (base-name-no-ext (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))
+    (if (cdr file)
+        (find-file (car file))
+      (if (member (concat "." (file-name-extension (buffer-file-name))) sourcepair-header-extensions)
+          (find-file (concat base-name-no-ext "." kde-prefered-source-extension))
+        (find-file (concat base-name-no-ext ".h"))))))
 
 (defun kde-delete-backward-ws ()
   "Function deletes all preceding whitespace characters."
