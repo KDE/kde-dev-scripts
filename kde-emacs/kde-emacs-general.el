@@ -46,6 +46,8 @@
       (get-file-buffer path))
 )
 
+(setq kde-file-lookup-cache '())
+
 (defun kde-file-get-cpp-h ()
   "Function returns a corresponding source or header file. The returned
 variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
@@ -53,10 +55,24 @@ test.h file and having test.cpp file readable in the same directory it will
 return (\"test.cpp\" t)."
 
   (save-excursion
-    (let ((buffer (sourcepair-load)))
-      (if (stringp buffer)
-          (cons "" nil)
-        (cons (buffer-file-name buffer) 't)))))
+    (let* ((current-file (buffer-file-name))
+           (match (assoc current-file kde-file-lookup-cache))
+           associated-file
+           buffer)
+      (if match
+          (progn 
+            (cons (cdr match) 't)) ; return value
+
+        (progn ;; else !match
+          (setq buffer (sourcepair-load))
+          (if (stringp buffer)
+              (cons "" nil) ; return value
+            (progn ;; Found a value
+              (setq associated-file (buffer-file-name buffer))
+              (setq kde-file-lookup-cache 
+                    (cons (cons current-file associated-file)
+                          (cons (cons associated-file current-file) kde-file-lookup-cache)))
+              (cons (buffer-file-name buffer) 't))))))))
 
 (defun kde-switch-cpp-h ()
   "Switches between the source and the header file (both directions)."
