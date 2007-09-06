@@ -85,7 +85,7 @@
 (if (featurep 'igrep)
     (progn
       (setq igrep-find-prune-clause
-	    (format "-type d %s -name CVS -o -name .libs -o -name .deps %s"
+	    (format "-type d %s -name CVS -o -name .libs -o -name .deps -o -name .svn %s"
 		    (shell-quote-argument "(")
 		    (shell-quote-argument ")")))
       (setq igrep-find-file-clause
