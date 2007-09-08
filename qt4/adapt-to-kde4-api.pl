@@ -547,7 +547,7 @@ while ($file = <$F>) {
     s!KFileDialog::getSaveURL!KFileDialog::getSaveUrl!;
     s!KFileDialog::getExistingURL!KFileDialog::getExistingUrl!;
     s!KIO::convertSizeFromKB!KIO::convertSizeFromKiB!;
-    s!KMimeType::iconForURL!KMimeType::iconNameForURL!;
+    s!KMimeType::iconForURL!KMimeType::iconNameForUrl!;
     s!KMimeType::findByURL!KMimeType::findByUrl!;
     s!const\s+KFileItem\s\*\s*!const KFileItem& !g if (/gotPreview/ || /slotGotPreview/ || /slotPreview/); # KIO::PreviewJob
 
