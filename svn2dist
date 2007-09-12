@@ -335,7 +335,7 @@ remove="$remove $modulename.lsm"
 if [ $doi18n = "yes" ]; then
     pushd $temp_dir
     echo "Getting i18n subdirs" >> $log
-    i18nlangs_tmp=`svn cat "$svnroot/l10n/subdirs"`
+    i18nlangs_tmp=`svn cat "$svnroot/l10n-kde3/subdirs"`
     skiplist="`echo $noi18nlang | sed -e 's/,/ /g'`"
     skiplist="$skiplist $always_skip_languages"
     for lang in $i18nlangs_tmp; do
@@ -364,7 +364,7 @@ if [ -d $module/doc/$name ]; then
 	    for lang in $i18nlangs; do
 		echo -n "Checking for $lang/$name... "
 		test -d $temp_dist/doc/$lang && rm -Rf $temp_dist/doc/$lang
-		docdirname="l10n/$lang/docs/$i18nmodule/$name"
+		docdirname="l10n-kde3/$lang/docs/$i18nmodule/$name"
 		echo "svn export $svnroot/$docdirname $temp_dist/doc/$lang" >> $log
                 mkdir -p $temp_dist/doc
 		svn export "$svnroot/$docdirname" $temp_dist/doc/$lang >> $log 2>&1
@@ -404,7 +404,7 @@ if [ $doi18n = "yes" ]; then
 	  echo "Getting translations for $pofile from i18n..."
 
 	  for lang in $i18nlangs; do
-		pofilename="l10n/$lang/messages/$i18nmodule/$pofile";
+		pofilename="l10n-kde3/$lang/messages/$i18nmodule/$pofile";
 		echo "Getting $pofilename" >> $log
 		svn cat "$svnroot/$pofilename" >$pofile 2>&1 || rm -f $pofile
 		if [ ! -f "$pofile" ]; then
