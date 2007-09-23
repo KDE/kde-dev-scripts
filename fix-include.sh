@@ -1,7 +1,7 @@
 #!/bin/sh
 # fix-include.sh 
 #
-# By Laurent Montel <montel@kde.org>
+# By Laurent Montel <montel@kde.org>  (2007)
 # Licenced under the LGPL
 
 # How to test it ? 
