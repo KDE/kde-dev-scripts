@@ -241,6 +241,11 @@ sub processFile() {
                    'set_target_properties.*PROPERTIES.*[[:space:]]SOVERSION[[:space:]][[:digit:]]',
                    'replace a hard-coded SOVERSION with "${GENERIC_LIB_SOVERSION}"');
 
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]QtDBus[\s/)]',
+                   'replace "QtDBus" with "${QT_QTDBUS_LIBRARY}"');
+
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
