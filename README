@@ -96,6 +96,9 @@ zonetab2pot.py  Reads timezone list as its first argument or from
 		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
 		template.
 
+kdedoxyman.sh   Script that uses doxygen to generate the API documentation
+                in man page format from the KDE source code.
+
 kdemangen.pl	Script to use the output from a KDE application's --author and
 		--help-all output to automatically generate a man page for the
 		application.
