@@ -241,10 +241,31 @@ sub processFile() {
                    'set_target_properties.*PROPERTIES.*[[:space:]]SOVERSION[[:space:]][[:digit:]]',
                    'replace a hard-coded SOVERSION with "${GENERIC_LIB_SOVERSION}"');
 
-      $issues +=
-        &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]QtDBus[\s/)]',
-                   'replace "QtDBus" with "${QT_QTDBUS_LIBRARY}"');
+    #Qt variable
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtDBus[\s/)]',
+                 'replace "QtDBus" with "${QT_QTDBUS_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]Qt3Support[\s/)]',
+                 'replace "Qt3Support" with "${QT_QT3SUPPORT_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtGui[\s/)]',
+                 'replace "QtGui" with "${QT_QTGUI_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtNetwork[\s/)]',
+                 'replace "QtNetwork" with "${QT_QTNETWORK_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtCore[\s/)]',
+                 'replace "QtCore" with "${QT_QTCORE_LIBRARY}"');
 
     # kdelibs variables
     if (! $in_kdelibs) {
