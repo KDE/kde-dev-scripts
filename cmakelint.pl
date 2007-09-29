@@ -116,9 +116,9 @@ sub processFile() {
                           '^[[:space:]]*[Qq][Tt]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
                           'No need for QT4_AUTOMOC(). Remove it.');
 
-    $issues += &checkLine($line,$linecnt,
-			  '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
-			  'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
+    #$issues += &checkLine($line,$linecnt,
+    #			  '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
+    #			  'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
 
     $issues += &checkLine($line,$linecnt,
 			  '^[[:space:]]*[Aa][Dd][Dd]_[Ll][Ii][Bb][Rr][Aa][Rr][Yy]',
