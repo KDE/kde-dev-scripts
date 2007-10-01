@@ -287,7 +287,7 @@ while ($file = <$F>) {
     s!KGlobal::iconLoader!KIconLoader::global!;
     s!KGlobal::instance\(\)->iconLoader!KIconLoader::global!;
 
-    s!KIcon::NoGroup!K3Icon::NoGroup!g;
+    s!KIcon::NoGroup!KIconLoader::NoGroup!g;
 
     if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
         push(@necessaryIncludes, "kworkspace.h");
@@ -474,16 +474,16 @@ while ($file = <$F>) {
         push(@necessaryIncludes, "kglobal.h");
     }
     if ( /kapp->miniIcon/ ) {
-        s!kapp->miniIcon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Small),IconSize(K3Icon::Small))!;
+        s!kapp->miniIcon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small))!;
         push(@necessaryIncludes, "kiconloader.h");
     }
 
     if ( /kapp->icon/ ) {
-	s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
+	s!kapp->icon\s*\(\s*\)!qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop))!;
 	push(@necessaryIncludes, "kiconloader.h");
     }
     if ( /app.icon/ ) {
-	s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(K3Icon::Desktop),IconSize(K3Icon::Desktop))!;
+	s!app.icon\s*\(\s*\)!qApp.windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop))!;
 	push(@necessaryIncludes, "kiconloader.h");
     }
 
