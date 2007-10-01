@@ -79,8 +79,14 @@ edit-undo
 fileimport
 file-import
 
+file-import
+document-import
+
 fileexport
 file-export
+
+file-export
+document-export
 
 redo
 edit-redo
@@ -231,6 +237,12 @@ folder-open
 
 gohome
 go-home
+
+goto
+go-jump
+
+goto-page
+go-jump
 
 history_clear
 history-clear
