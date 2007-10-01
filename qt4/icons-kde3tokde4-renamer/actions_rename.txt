@@ -1,5 +1,8 @@
 about_kde
+help-about-kde
+
 about-kde
+help-about-kde
 
 1downarrow
 arrow-down
@@ -28,20 +31,47 @@ arrow-left-double
 ark_delete
 ark-delete
 
+ark-delete
+archive-remove
+
 ark_extract
 ark-extract
+
+ark-extract
+archive-extract
 
 ark_adddir
 ark-adddir
 
+ark-adddir
+archive-insert-directory
+
 ark_addfile
 ark-addfile
+
+ark-addfile
+archive-insert
 
 ark_view
 ark-view
 
+ark-view
+document-preview-archive
+
 add_user
 add-user
+
+add-user
+list-add-user
+
+bookmark_folder
+folder-bookmarks
+
+bookmark-folder
+folder-bookmarks
+
+compfile
+run-build-file
 
 undo
 edit-undo
@@ -168,6 +198,9 @@ configure-toolbars
 
 delete_user
 delete-user
+
+delete-user
+list-remove-user
 
 edit_add
 edit-add
