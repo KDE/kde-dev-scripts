@@ -85,14 +85,6 @@ while ($file = <$F>) {
                 {
                         s!\${KDE4_KDEUI_LIBS} !!;
                 }
-                if( $_ =~ m/\${KDE4_KNEWSTUFF2_LIBS}/ and $_ =~ m/\${KDE4_KPARTS_LIBS}/ )
-                {
-                        s!\${KDE4_KPARTS_LIBS} !!;
-                }
-                if( $_ =~ m/\${KDE4_KNEWSTUFF2_LIBS}/ and $_ =~ m/\${KDE4_KHTML_LIBS}/ )
-                {
-                        s!\${KDE4_KHTML_LIBS} !!;
-                }
 		#dependancy for kutils
                 if( $_ =~ m/\${KDE4_KUTILS_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
                 {
