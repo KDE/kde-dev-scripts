@@ -278,10 +278,6 @@ sub processFile() {
 		   'target_link_libraries.*[[:space:]]kio[\s/)]',
 		   'replace "kio" with "${KDE4_KIO_LIBS}"');
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdefx[\s/)]',
-		   'replace "kdefx" with "${KDE4_KDEFX_LIBS}"');
-      $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kdeprint[\s/)]',
             'replace "kdeprint" with "${KDE4_KDEPRINT_LIBS}"');
