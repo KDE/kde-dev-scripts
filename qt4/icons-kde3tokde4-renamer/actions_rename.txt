@@ -59,33 +59,27 @@ ark-view
 document-preview-archive
 
 add_user
-add-user
-
-add-user
 list-add-user
 
 bookmark_folder
 folder-bookmarks
 
-bookmark-folder
-folder-bookmarks
-
 compfile
 run-build-file
+
+contexthelp
+help-contextual
+
+identity
+contact
 
 undo
 edit-undo
 
 fileimport
-file-import
-
-file-import
 document-import
 
 fileexport
-file-export
-
-file-export
 document-export
 
 redo
@@ -119,7 +113,7 @@ ok
 dialog-ok
 
 filefind
-file-find
+system-search
 
 frame_edit
 frame-edit
@@ -158,7 +152,7 @@ locationbar_erase
 locationbar-erase
 
 make_kdevelop
-make-kdevelop
+run-build
 
 news_subscribe
 news-subscribe
@@ -203,9 +197,6 @@ configure_toolbars
 configure-toolbars
 
 delete_user
-delete-user
-
-delete-user
 list-remove-user
 
 edit_add
