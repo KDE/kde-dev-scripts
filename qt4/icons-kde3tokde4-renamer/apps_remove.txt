@@ -1,1 +1,2 @@
 konqsidebar_mediaplayer
+kfind
