@@ -48,6 +48,13 @@
 
 (setq kde-file-lookup-cache '())
 
+(defun kde-update-file-lookup-cache (file1 file2)
+  (setq kde-file-lookup-cache (remassoc file1 kde-file-lookup-cache))
+  (setq kde-file-lookup-cache (remassoc file2 kde-file-lookup-cache))
+  (setq kde-file-lookup-cache 
+        (cons (cons file1 file2)
+              (cons (cons file2 file1) kde-file-lookup-cache))))
+  
 (defun kde-file-get-cpp-h ()
   "Function returns a corresponding source or header file. The returned
 variable is a list of the form (FILENAME IS_READABLE) e.g. when being in
@@ -61,6 +68,7 @@ return (\"test.cpp\" t)."
            buffer)
       (if match
           (progn 
+            (kde-update-file-lookup-cache current-file (cdr match))
             (cons (cdr match) 't)) ; return value
 
         (progn ;; else !match
@@ -69,9 +77,7 @@ return (\"test.cpp\" t)."
               (cons "" nil) ; return value
             (progn ;; Found a value
               (setq associated-file (buffer-file-name buffer))
-              (setq kde-file-lookup-cache 
-                    (cons (cons current-file associated-file)
-                          (cons (cons associated-file current-file) kde-file-lookup-cache)))
+              (kde-update-file-lookup-cache current-file associated-file)
               (cons (buffer-file-name buffer) 't))))))))
 
 (defun kde-switch-cpp-h ()
