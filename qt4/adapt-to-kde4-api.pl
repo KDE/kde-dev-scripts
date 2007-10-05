@@ -551,6 +551,21 @@ while ($file = <$F>) {
     s!KMimeType::findByURL!KMimeType::findByUrl!;
     s!const\s+KFileItem\s\*\s*!const KFileItem& !g if (/gotPreview/ || /slotGotPreview/ || /slotPreview/); # KIO::PreviewJob
 
+    # KIO Job API changes
+    s/, ?false, ?false/, KIO::HideProgressInfo/ if (/KIO::del/);
+    s/, ?false, ?false/, KIO::NoReload, KIO::HideProgressInfo/ if (/KIO::get/ || /KIO::storedGet/);
+    s/, ?true, ?false/, KIO::Reload, KIO::HideProgressInfo/ if (/KIO::get/ || /KIO::storedGet/);
+    s/, ?false, ?true// if (/KIO::get/ || /KIO::storedGet/);
+    s/, ?false/, KIO::HideProgressInfo/ if (/KIO::file_delete/ || /KIO::stat/);
+    s/, ?false/, KIO::HideProgressInfo/ if (/KIO::special/ || /KIO::http_post/ || /KIO::rename/ || /KIO::move/);
+    s/, ?true// if (/KIO::special/);
+    s/, ?false, ?false/, KIO::HideProgressInfo, false/ if (/KIO::listDir/);
+    s/, ?false, ?true/, KIO::HideProgressInfo, true/ if (/KIO::listDir/);
+    s/, ?false, ?false, ?false/, KIO::HideProgressInfo/ if (/KIO::storedPut/);
+    s/, ?true, ?false, ?false/, KIO::Overwrite | KIO::HideProgressInfo/ if (/KIO::file_copy/ || /KIO::file_move/);
+    s/, ?true, ?false, ?true/, KIO::Overwrite/ if (/KIO::file_copy/ || /KIO::file_move/);
+    s/, ?false, ?false, ?false/, KIO::HideProgressInfo/ if (/KIO::file_copy/ || /KIO::file_move/);
+
     $_="" if (/include <kipc.h>/);
     s/KIPC::sendMessageAll/KGlobalSettings::self()->emitChange/;
     s/KIPC::/KGlobalSettings::/;
