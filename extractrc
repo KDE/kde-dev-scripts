@@ -161,7 +161,7 @@ for my $file_name ( @ARGV )
      {
        print "//i18n: tag $tag\n";
        print "//i18n: file $file_name line $.\n";
-       print "// xgettext: no-c-format\n";
+       print "// xgettext: no-c-format\n" if $text =~ /%/o;
        if ( $context )
        {
          $context = escape_like_uic($context);
