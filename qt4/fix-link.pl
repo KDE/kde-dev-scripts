@@ -113,10 +113,6 @@ while ($file = <$F>) {
                 {
                         s!\${KDE4_KIO_LIBS} !!;
                 }
-                if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDEPRINT_LIBS}/ )
-                {
-                        s!\${KDE4_KDEPRINT_LIBS} !!;
-                }
                 if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDEUI_LIBS}/ )
                 {
                         s!\${KDE4_KDEUI_LIBS} !!;
