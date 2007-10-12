@@ -178,47 +178,25 @@ variable `sourcepair-source-extensions'."
 	  nil)))
 
 
-(defun sourcepair-load ()
-  "Load the corresponding C/C++ header or source file for the current buffer.
+(defun sourcepair-analyze-filename (filename)
+  (let* ((extension (concat (member ?. (append filename nil))))
+         (basename (substring filename 0 (- 0 (length extension)))))
+    (if (string= (substring basename (- (length basename) 2)) "_p")
+        (setq basename (substring basename 0 (- (length basename) 2))))
 
-This function can be invoked by \\[sourcepair-load].  It will load the the
-corresponding header or source file for the current buffer.  For example, if
-you are looking at the file FooParser.cpp and press \\[sourcepair-load], the
-file FooParser.h will be loaded.  It also works the other way as well.
-
-There are five global variables that can be used to adjust how the function
-works:
-
- `sourcepair-source-extensions'
- `sourcepair-header-extensions'
- `sourcepair-source-path'
- `sourcepair-header-path'
- `sourcepair-recurse-ignore'
-
-See the documentation for these variables for more info.
-"
-
-  (interactive)
-
-  (defun sourcepair-analyze-filename (filename)
-	(let* ((extension (concat (member ?. (append filename nil))))
-		   (basename (substring filename 0 (- 0 (length extension)))))
-      (if (string= (substring basename (- (length basename) 2)) "_p")
-          (setq basename (substring basename 0 (- (length basename) 2))))
-
-	  (if (member extension sourcepair-header-extensions)
-		  (cons sourcepair-source-path (mapcar '(lambda (arg) (concat basename arg)) sourcepair-source-extensions))
-		(if (member extension sourcepair-source-extensions)
-			(cons sourcepair-header-path 
-                  (append (mapcar '(lambda (arg) (concat basename arg)) sourcepair-header-extensions)
-                          (mapcar '(lambda (arg) (concat basename "_p" arg)) sourcepair-header-extensions)))))))
+    (if (member extension sourcepair-header-extensions)
+        (cons sourcepair-source-path (mapcar '(lambda (arg) (concat basename arg)) sourcepair-source-extensions))
+      (if (member extension sourcepair-source-extensions)
+          (cons sourcepair-header-path 
+                (append (mapcar '(lambda (arg) (concat basename arg)) sourcepair-header-extensions)
+                        (mapcar '(lambda (arg) (concat basename "_p" arg)) sourcepair-header-extensions)))))))
   
-  (defun sourcepair-find-one-of (path choices recurse)
-	(catch 'matching-filename
-	  (if (file-directory-p path)
-		  (let ((possible-filenames choices)
-				(matching-filename nil)
-				(files-in-directory nil))
+(defun sourcepair-find-one-of (path choices recurse)
+  (catch 'matching-filename
+    (if (file-directory-p path)
+        (let ((possible-filenames choices)
+              (matching-filename nil)
+              (files-in-directory nil))
 			
 		  ;; Check if there's a match in this directory
 		  (while possible-filenames
@@ -244,33 +222,75 @@ See the documentation for these variables for more info.
 								(if (not (eq matching-filename nil))
 									(throw 'matching-filename matching-filename))))))
 					(setq files-in-directory (cdr files-in-directory))))))))
-	  ;; Return nil if nothing found
-	  nil))
+    ;; Return nil if nothing found
+    nil))
 
+(defun sourcepair-matching-file-for-file (filename)
   (catch 'found-matching-file
-	(let* ((temp (sourcepair-analyze-filename (file-name-nondirectory (buffer-file-name))))
-		   (search-path (car temp))
-		   (possible-filenames (cdr temp)))
-	  (if (= (length possible-filenames) 0)
-		  (message "%s is not a recognized source or header file (consider updating sourcepair-source-extensions or sourcepair-header-extensions)" (buffer-name))
-		(progn
-		  (while search-path
-			(let ((path-to-check (car search-path))
-				  (matching-filename nil))
-			  (if (and (> (length path-to-check) 3)
-					   (equal (substring path-to-check -2) "/*"))
-				  (setq matching-filename (sourcepair-find-one-of (substring path-to-check 0 -2)
-																  possible-filenames
-																  t))
-				(setq matching-filename 
-					  (sourcepair-find-one-of path-to-check possible-filenames nil)))
-			  
-			  (if (eq matching-filename nil)
-				  (setq search-path (cdr search-path))
-				(throw 'found-matching-file (find-file matching-filename)))))
+    (let* ((temp (sourcepair-analyze-filename (file-name-nondirectory filename)))
+           (search-path (car temp))
+           (possible-filenames (cdr temp)))
+      (if (= (length possible-filenames) 0)
+          (message "%s is not a recognized source or header file (consider updating sourcepair-source-extensions or sourcepair-header-extensions)" (buffer-name))
+        (progn
+          (while search-path
+            (let ((path-to-check (car search-path))
+                  (matching-filename nil))
+              (if (and (> (length path-to-check) 3)
+                       (equal (substring path-to-check -2) "/*"))
+                  (setq matching-filename (sourcepair-find-one-of (substring path-to-check 0 -2)
+                                                                  possible-filenames
+                                                                  t))
+                (setq matching-filename 
+                      (sourcepair-find-one-of path-to-check possible-filenames nil)))
+                
+              (if (eq matching-filename nil)
+                  (setq search-path (cdr search-path))
+                (throw 'found-matching-file matching-filename))))
 
-		  (message (concat "No matching file for " (buffer-name)
-						   " (consider updating sourcepair-source-path, sourcepair-header-path)")))))))
+          nil)))))
+
+(defun sourcepair-load ()
+  "Load the corresponding C/C++ header or source file for the current buffer.
+
+This function can be invoked by \\[sourcepair-load].  It will load the the
+corresponding header or source file for the current buffer.  For example, if
+you are looking at the file FooParser.cpp and press \\[sourcepair-load], the
+file FooParser.h will be loaded.  It also works the other way as well.
+
+There are five global variables that can be used to adjust how the function
+works:
+
+ `sourcepair-source-extensions'
+ `sourcepair-header-extensions'
+ `sourcepair-source-path'
+ `sourcepair-header-path'
+ `sourcepair-recurse-ignore'
+
+See the documentation for these variables for more info.
+"
+
+  (interactive)
+
+  (let ((file (sourcepair-matching-file-for-file (buffer-file-name))))
+    (if file
+        (find-file file)
+      (message (concat "No matching file for " (buffer-name)
+                       " (consider updating sourcepair-source-path, sourcepair-header-path)")))))
+
+(defun sourcepair-jump-to-headerfile (prefix)
+  "Jump to header file for class at point"
+  (interactive "P")
+  (save-excursion
+    (let* ((word-at-point (if prefix
+                              (read-from-minibuffer "Class: ")
+                            (current-word)))
+           (file1 (sourcepair-matching-file-for-file (concat word-at-point ".cpp" )))
+           (file (if file1 file1 (sourcepair-matching-file-for-file (concat (downcase word-at-point) ".cpp" )))))
+      (if file
+          (find-file file)
+        (message "Sorry couldn't find include file for class")))))
+      
 
 
 (defun sourcepair-yank-advice ()
