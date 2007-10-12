@@ -467,29 +467,36 @@
                     ((and (string-match "^q" word) (eq kdab-qt-version 3)) (concat word ".h") )
                     (kdab-lowercase-header-files (concat word ".h" ))
                     (t (concat word-with-case ".h"))))
-           header is-local)
+           header is-local override)
 
       
       ;; decide on the header file.
-      (if (file-exists-p (concat word-with-case ".h"))
-          (progn ; file exists in given case in pwd.
-            (setq header (concat word-with-case ".h"))
-            (setq is-local 't))
-        (if  (file-exists-p (concat word ".h")) ; file exists in lowercase in pwd
-            (progn
-              (setq header (concat word ".h"))
+      (if (functionp 'kdab-name-include-file)
+          (setq override (kdab-name-include-file word-with-case)))
+
+      (if override
+          (progn ;; Users hook solved it for us.
+            (setq header (car override))
+            (setq is-local (cdr override)))
+        (if (file-exists-p (concat word-with-case ".h"))
+            (progn ; file exists in given case in pwd.
+              (setq header (concat word-with-case ".h"))
               (setq is-local 't))
-          (if (file-exists-p word-with-case)
+          (if  (file-exists-p (concat word ".h")) ; file exists in lowercase in pwd
               (progn
-              (setq header word-with-case)
-              (setq is-local 't))
-            (if (file-exists-p word)
+                (setq header (concat word ".h"))
+                (setq is-local 't))
+            (if (file-exists-p word-with-case)
                 (progn
-                  (setq header word)
+                  (setq header word-with-case)
                   (setq is-local 't))
-              (progn ; header in <..> path
-                (setq header special-header)
-                (setq is-local nil))))))
+              (if (file-exists-p word)
+                  (progn
+                    (setq header word)
+                    (setq is-local 't))
+                (progn ; header in <..> path
+                  (setq header special-header)
+                  (setq is-local nil)))))))
 
       (kdab-insert-include-file header is-local t))))
 
