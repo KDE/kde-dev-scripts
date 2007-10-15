@@ -286,6 +286,7 @@ while ($file = <$F>) {
     s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
     s!KGlobal::iconLoader!KIconLoader::global!;
     s!KGlobal::instance\(\)->iconLoader!KIconLoader::global!;
+    s!KIconLoader::global\s*\(\)->loadIconSet\s*\(\s*"(.+?)"\s*,\s*KIcon::Small\s*\)!KIcon("$1")!;
 
     s!KIcon::NoGroup!KIconLoader::NoGroup!g;
 
