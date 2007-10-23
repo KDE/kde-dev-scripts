@@ -95,15 +95,6 @@ while ($file = <$F>) {
                 {
                         s!\${KDE4_KDEUI_LIBS} !!;
                 }
-                #dependancy for kprinter
-                if( $_ =~ m/\${KDE4_KDEPRINT_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
-                {
-                        s!\${KDE4_KDECORE_LIBS} !!;
-                }
-                if( $_ =~ m/\${KDE4_KDEPRINT_LIBS}/ and $_ =~ m/\${KDE4_KPARTS_LIBS}/ )
-                {
-                        s!\${KDE4_KPARTS_LIBS} !!;
-                }
 		#dependancy for khtml
 		if( $_ =~ m/\${KDE4_KHTML_LIBS}/ and $_ =~ m/\${KDE4_KDECORE_LIBS}/ )
 		{
