@@ -28,6 +28,10 @@ while ($file = <$F>) {
 	{
 		s!\${KDE4_KSPELL2_LIBS} !!;
 	}
+        if( /KDE4_KDEPRINT_LIBS/ )
+        {
+                s!\${KDE4_KDEPRINT_LIBS} !!;
+        }
     	if ( /target_link_libraries/ or /TARGET_LINK_LIBRARIES/) {
                 if( $_ =~ m/\${KDE4_KDECORE_LIBS}/ and $_ =~ m/\${KDE4_KDEUI_LIBS}/ )
                 {
