@@ -573,6 +573,17 @@ while ($file = <$F>) {
     s/KApplication::SETTINGS_/KGlobalSettings::SETTINGS_/;
     s/KApplication::createApplicationPalette/KGlobalSettings::createApplicationPalette/;
 
+    #KConfig changes
+    s/\bentryIsImmutable\b/isEntryImmutable/g;
+    s/\bgroupIsImmutable\b/isGroupImmutable/g;
+    s/\bgetConfigState\b/accessMode/g;
+    s/\bConfigState\b/AccessMode/g;
+    s/\b(KConfigGroup|KConfig|KConfigBase)::NLS\b/\1::Localized/g;
+    s/\bKConfig::OnlyLocal\b/KConfig::SimpleConfig/g;
+    s/\breadPathEntry(\s*)\(([^,)]+?)(\s*)\)/readPathEntry\1(\2, QString()\3)/g;
+    s/\breadPathListEntry(\s*)\(([^,)]+,[^,)]+)\)/readPathEntry\1(\2)/g;
+    s/\breadPathListEntry(\s*)\(([^,)]+?)(\s*)\)/readPathEntry\1(\2, QStringList()\3)/g;
+
     $modified ||= $orig ne $_;
     $_;
     } <$FILE>;
