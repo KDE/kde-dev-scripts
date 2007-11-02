@@ -448,6 +448,7 @@ This function does not do any hidden buffer changes."
       (insert "kDebug() << ")
     (insert "kdDebug() << k_funcinfo "))
   (insert "<< endl;")
+  (backward-char 8)
   )
 
 ; finds a string to be used in the header-protection function ( see below )
