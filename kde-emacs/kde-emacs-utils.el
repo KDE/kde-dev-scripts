@@ -446,10 +446,8 @@ This function does not do any hidden buffer changes."
   (interactive)
   (if (and (boundp 'kdab-qt-version) (eq kdab-qt-version 4))
       (insert "kDebug() << ")
-    (insert "kdDebug() << "))
-  ;; no unnecessary fume-* functions which aren't available on GNU/Emacs
-  (insert "k_funcinfo")
-  (insert " << endl;")
+    (insert "kdDebug() << k_funcinfo "))
+  (insert "<< endl;")
   )
 
 ; finds a string to be used in the header-protection function ( see below )
