@@ -5,7 +5,7 @@
 
 # The script helps to fix the FSF address
 # Use:
-#   find . -name .svn -prune , type f | xargs fgrep -l "Free Software Foundation" | xargs sed -i -f fixfsfaddr.sed
+#   find . -name .svn -prune , -type f -print | xargs fgrep -l "Free Software Foundation" | xargs sed -i -f fixfsfaddr.sed
 # Note: you should check the changes before committing them.
 
 # Implementation note: we need to replace phrase by phrase, as 
