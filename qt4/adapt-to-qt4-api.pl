@@ -83,6 +83,9 @@ while ($file = <$F>) {
     s!QWMatrix!QMatrix!g;
     s!QGuardedPtr!QPointer!g;
 
+    # Qt2-compat classes :)
+    s!QArray!Q3MemArray!g;
+
     s!IO_ReadOnly!QIODevice::ReadOnly!;
     s!IO_WriteOnly!QIODevice::WriteOnly!;
     s!IO_ReadWrite!QIODevice::ReadWrite!;
@@ -116,6 +119,9 @@ while ($file = <$F>) {
     s!Keypad!Qt::KeypadModifier!;
     s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
     s!KeyButtonMask!Qt::KeyboardModifierMask!;
+
+    s!QMouseEvent::LeftButton!Qt::LeftButton!;
+    s!QMouseEvent::RightButton!Qt::RightButton!;
 
     s!convertToAbs!makeAbsolute!;
     s!currentDirPath!currentPath!;
