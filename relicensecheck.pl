@@ -83,7 +83,7 @@ while(<IN>) {
     if (/^r(\d+) \| (\S+) /)  {
         my ($rev, $author) = ($1, $2);
 
-        next if ($author eq "scripty");
+        next if ($author eq "scripty" or $author eq "(no");
 
         foreach my $license(keys %whitelist) {
             if (!defined($whitelist{$license}->{$author})) {
