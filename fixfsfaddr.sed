@@ -14,17 +14,17 @@
 # Current FSF address: 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 
 # Old address: 59 Temple Place, Suite 330, Boston, MA  02111-1307
-s/59 Temple Place,/51 Franklin Street,/
-s/59 Temple Place -/51 Franklin Street,/
-s/Suite 330,/Fifth Floor,/
-s/Suite 330$/Fifth Floor/
-s/02111-1307/02110-1301/
+s/[5]9 Temple Place,/51 Franklin Street,/
+s/[5]9 Temple Place -/51 Franklin Street,/
+s/[S]uite 330,/Fifth Floor,/
+s/[S]uite 330$/Fifth Floor/
+s/[0]2111-1307/02110-1301/
 
 # Very old address: 675 Mass Ave, Cambridge, MA  02139
-s/675 Mass Ave/51 Franklin Street, Fifth Floor/
-s/Cambridge/Boston/
-s/02139/02110-1301/
+s/[6]75 Mass Ave/51 Franklin Street, Fifth Floor/
+s/[C]ambridge/Boston/
+s/[0]2139/02110-1301/
 # Warning: the last two replaces seem to match the address of the MIT too.
 
 # Typo in KDE: Franklin Steet
-s/Franklin Steet/Franklin Street/
+s/[F]ranklin Steet/Franklin Street/
