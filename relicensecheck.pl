@@ -11,6 +11,7 @@ my @blacklist_revs;
 
 foreach my $who(
     'amantia',
+    'apaku',
     'aseigo',
     'coolo',
     'craig',
@@ -40,6 +41,7 @@ foreach my $who(
 
 foreach my $who(
     'amantia',
+    'apaku',
     'aseigo',
     'coolo',
     'craig',
@@ -69,6 +71,7 @@ foreach my $who(
 
 foreach my $who(
     'aseigo',
+    'apaku',
     'coolo',
     'craig',
     'dfaure',
@@ -92,6 +95,7 @@ foreach my $who(
 }
 
 foreach my $who(
+    'apaku',
     'aseigo',
     'coolo',
     'craig',
