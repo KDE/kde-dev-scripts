@@ -294,6 +294,11 @@ while ($file = <$F>) {
     s!KIcon::NoGroup!KIconLoader::NoGroup!g;
     s!KIcon::SizeMedium!KIconLoader::SizeMedium!g;
     s!KIcon::DefaultState!KIconLoader::DefaultState!g;
+    s!KIcon::SizeSmall!KIconLoader::SizeSmall!g;
+    s!KIcon::Desktop!KIconLoader::Desktop!g;
+    s!KIcon::SizeLarge!KIconLoader::SizeLarge!g;
+    s!KIcon::Toolbar!KIconLoader::Toolbar!g;
+
 
     if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
         push(@necessaryIncludes, "kworkspace.h");
