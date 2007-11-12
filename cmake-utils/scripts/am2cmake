@@ -261,6 +261,7 @@ class CMakeFile
           @includeDirs.push("${KDE3_INCLUDE_DIR}")
           @includeDirs.push("${QT_INCLUDE_DIR}")
       elsif $buildType==BuildKDE4
+          @includeDirs.push("${KDE4_INCLUDES}")
           @includeDirs.push("${KDE4_INCLUDE_DIR}")
           @includeDirs.push("${QT_INCLUDES}")
       end
