@@ -221,6 +221,7 @@ while ($file = <$F>) {
     s!leftClickedURL!leftClickedUrl!;
     s!rightClickedURL!rightClickedUrl!;
     s!middleClickedURL!middleClickedUrl!;
+    s!setKURL!setUrl!;
 
     #KUrl renames
     s!\bKURL\b!KUrl!g;
