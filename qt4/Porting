@@ -4,6 +4,7 @@ Now servicemenu for konqueror/dolphin was moved to services/ServiceMenus.
 You must change:
 -> change install file to ${SERVICES_INSTALL_DIR}/ServiceMenus
 -> add KonqPopupMenu/Plugin to ServiceTypes=
+(perl -pi -e 's!ServiceTypes=!ServiceTypes=KonqPopupMenu/Plugin;!'  *.desktop)
 
 Thumbnail:
 ==========
