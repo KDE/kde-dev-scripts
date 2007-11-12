@@ -757,6 +757,13 @@ class CMakeFile
           file.printf("include(ConfigureChecks.cmake)\n\n")
       end
 
+      if not @includeDirs.empty?
+         file.printf("include_directories( ")
+         @includeDirs.each{ |dir| file.printf("%s ", dir) }
+         file.printf(" )\n\n")
+      end
+
+
       if !@configHeaders.empty?
          @configHeaders.each{ |header| file.printf("configure_file(${CMAKE_CURRENT_SOURCE_DIR}/#{header}.cmake ${CMAKE_CURRENT_BINARY_DIR}/#{header} )\n\n") }
       end
@@ -769,12 +776,6 @@ class CMakeFile
          @skippedSubDirs.each{ |dir| file.printf("message(STATUS \"${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir %s\")\n", dir)}
       end
 
-
-      if not @includeDirs.empty?
-         file.printf("include_directories( ")
-         @includeDirs.each{ |dir| file.printf("%s ", dir) }
-         file.printf(" )\n\n")
-      end
       @targets.each do |buildTarget|
          file.printf("\n########### next target ###############\n\n")
 #         printf("target name: %s\n", buildTarget.name)
