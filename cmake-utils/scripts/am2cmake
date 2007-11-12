@@ -751,9 +751,7 @@ class CMakeFile
 
       if @amFile=="Makefile.am"          # the toplevel Makefile.am
           file.printf("find_package(KDE4 REQUIRED)\n\n")
-          file.printf("set(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
           file.printf("add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
-          file.printf("link_directories(${KDE4_LIB_DIR})\n\n")
           file.printf("include(ConvenienceLibs.cmake)\n\n")
           file.printf("include(ManualStuff.cmake)\n\n")
           file.printf("include(ConfigureChecks.cmake)\n\n")
