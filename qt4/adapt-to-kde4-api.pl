@@ -292,6 +292,8 @@ while ($file = <$F>) {
     s!KIconLoader::global\s*\(\)->loadIconSet\s*\(\s*"(.+?)"\s*,\s*KIcon::Small\s*\)!KIcon("$1")!;
 
     s!KIcon::NoGroup!KIconLoader::NoGroup!g;
+    s!KIcon::SizeMedium!KIconLoader::SizeMedium!g;
+    s!KIcon::DefaultState!KIconLoader::DefaultState!g;
 
     if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
         push(@necessaryIncludes, "kworkspace.h");
