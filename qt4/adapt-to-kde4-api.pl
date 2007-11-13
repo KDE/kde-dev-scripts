@@ -286,18 +286,24 @@ while ($file = <$F>) {
 
     s!KLocale::setActiveCatalogue!KLocale::setActiveCatalog!;
     s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
-    s!KGlobal::locale\(\)->setActiveCatalogue!KGlobal::locale\(\)->setActiveCatalog!;
     s!KGlobal::iconLoader!KIconLoader::global!;
     s!KGlobal::instance\(\)->iconLoader!KIconLoader::global!;
     s!KIconLoader::global\s*\(\)->loadIconSet\s*\(\s*"(.+?)"\s*,\s*KIcon::Small\s*\)!KIcon("$1")!;
 
     s!KIcon::NoGroup!KIconLoader::NoGroup!g;
-    s!KIcon::SizeMedium!KIconLoader::SizeMedium!g;
     s!KIcon::DefaultState!KIconLoader::DefaultState!g;
-    s!KIcon::SizeSmall!KIconLoader::SizeSmall!g;
+
     s!KIcon::Desktop!KIconLoader::Desktop!g;
-    s!KIcon::SizeLarge!KIconLoader::SizeLarge!g;
     s!KIcon::Toolbar!KIconLoader::Toolbar!g;
+    s!KIcon::Panel!KIconLoader::Panel!g;
+    s!KIcon::Dialog!KIconLoader::Dialog!g;
+
+    s!KIcon::SizeMedium!KIconLoader::SizeMedium!g;
+    s!KIcon::SizeSmall!KIconLoader::SizeSmall!g;
+    s!KIcon::SizeLarge!KIconLoader::SizeLarge!g;
+    s!KIcon::SizeSmallMedium!KIconLoader::SizeSmallMedium!g;
+    s!KIcon::SizeHuge!KIconLoader::SizeHuge!g;
+    s!KIcon::SizeEnormous!KIconLoader::SizeEnormous!g;
 
 
     if ( /KApplication::ShutdownType|KApplication::ShutdownTypeHalt|KApplication::ShutdownMode|KApplication::ShutdownTypeReboot|KApplication::ShutdownTypeNone/ ) {
