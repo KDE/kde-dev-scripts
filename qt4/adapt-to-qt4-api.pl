@@ -155,6 +155,15 @@ while ($file = <$F>) {
     s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
     s!QWidget::StrongFocus!Qt::StrongFocus!;
     s!StrongFocus!Qt::StrongFocus!g unless (/Qt::StrongFocus/);
+
+    s!QLabel::AlignLeft!Qt::AlignLeft!g;
+    s!QLabel::AlignRight!Qt::AlignRight!g;
+    s!QLabel::AlignCenter!Qt::AlignCenter!g;
+    s!QLabel::AlignHCenter!Qt::AlignHCenter!g;
+    s!QLabel::AlignVCenter!Qt::AlignVCenter!g;
+    s!QLabel::AlignTop!Qt::AlignTop!g;
+    s!QLabel::AlignBottom!Qt::AlignBottom!g;
+
     s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/);
     s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/);
     s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/);
