@@ -1,5 +1,5 @@
 # Util function for script to convert kde3 to kde4
-# laurent Montel <montel@kde.org> 2005-2006 GPL
+# laurent Montel <montel@kde.org> 2005-2006-2007 GPL
 
 package functionUtilkde;
 use strict;
@@ -9,7 +9,7 @@ sub diffFile
 	if (-d ".svn") {
 		system("svn diff $listFileDiff");
 	} elsif (-d "CVS") {
-		system("cvs diff $listFileDiff");
+		system("cvs diff -up $listFileDiff");
 	}
 	warn "files to commit: $listFileDiff\n";
 }
