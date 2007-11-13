@@ -141,6 +141,7 @@ while ($file = <$F>) {
     s!\bKWinModule\b!KWindowSystem!g;
 
     s!#include <ktempfile.h>!#include <ktemporaryfile.h>!;
+    s!\bKTempFile\b!KTemporaryFile!g;
 
     # kde3support
     s!#include <kactivelabel.h>!#include <k3activelabel.h>!;
