@@ -413,6 +413,8 @@ while ($file = <$F>) {
 
     s!#include <kprogress.h>!#include <kprogressdialog.h>!;
 
+    s!#include <klineeditdlg.h>\n!!;
+
     if ( /K3Process::quote/ ) {
        s!\bK3Process::quote\b!KShell::quoteArg!g;
        push(@necessaryIncludes, "kshell.h");
