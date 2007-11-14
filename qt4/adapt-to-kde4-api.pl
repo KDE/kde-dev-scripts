@@ -291,6 +291,8 @@ while ($file = <$F>) {
     s!KGlobal::instance\(\)->iconLoader!KIconLoader::global!;
     s!KIconLoader::global\s*\(\)->loadIconSet\s*\(\s*"(.+?)"\s*,\s*KIcon::Small\s*\)!KIcon("$1")!;
 
+    s!locateLocal!KStandardDirs::locateLocal! unless (/KStandardDirs::locateLocal/);
+
     s!KIcon::NoGroup!KIconLoader::NoGroup!g;
     s!KIcon::DefaultState!KIconLoader::DefaultState!g;
 
