@@ -163,6 +163,9 @@ while ($file = <$F>) {
     s!QLabel::AlignVCenter!Qt::AlignVCenter!g;
     s!QLabel::AlignTop!Qt::AlignTop!g;
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
+ 
+
+    s!QBrush::NoBrush!Qt::NoBrush!g;
 
     s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/);
     s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/);
