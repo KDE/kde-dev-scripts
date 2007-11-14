@@ -166,6 +166,7 @@ while ($file = <$F>) {
  
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
+    s!QButton::NoChange!QCheckBox::NoChange!g;
 
     s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/);
     s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/);
