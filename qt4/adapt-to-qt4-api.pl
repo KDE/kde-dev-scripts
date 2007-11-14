@@ -153,6 +153,8 @@ while ($file = <$F>) {
     s!Key_!Qt::Key_!g unless (/Qt::Key_/);
     s!CTRL!Qt::CTRL!g unless (/Qt::CTRL/);
     s!SHIFT!Qt::SHIFT!g unless (/Qt::SHIFT/);
+    s!LeftButton!Qt::LeftButton!g unless (/Qt::LeftButton/);
+    s!RightButton!Qt::RightButton!g unless (/Qt::RightButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
     s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
     s!QWidget::StrongFocus!Qt::StrongFocus!;
