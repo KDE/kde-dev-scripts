@@ -411,6 +411,7 @@ while ($file = <$F>) {
 
     s!\btwoAlphaToLanguageName\b!languageCodeToName!;
 
+    s!#include <kprogress.h>!#include <kprogressdialog.h>!;
 
     if ( /K3Process::quote/ ) {
        s!\bK3Process::quote\b!KShell::quoteArg!g;
