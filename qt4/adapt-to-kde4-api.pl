@@ -383,8 +383,10 @@ while ($file = <$F>) {
     s!#include "kfileiconview.h"!#include "k3fileiconview.h"!;
     s!KFileIconViewItem!K3FileIconViewItem!g;
     s!KFileIconView!K3FileIconView!g;
-    s!#include <kfiledetailview.h>!#include <k3filedetailview.h>!;
-    s!#include "kfiledetailview.h"!#include "k3filedetailview.h"!;
+
+#    s!#include <kfiledetailview.h>!#include <k3filedetailview.h>!;
+#    s!#include "kfiledetailview.h"!#include "k3filedetailview.h"!;
+
     s!KFileListViewItem!K3FileListViewItem!g;
     s!KFileDetailView!K3FileDetailView!g;
     s!#include <kfiletreeview.h>!#include <k3filetreeview.h>!;
