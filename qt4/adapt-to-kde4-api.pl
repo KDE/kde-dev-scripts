@@ -358,6 +358,8 @@ while ($file = <$F>) {
 
     s!KImageIO::registerFormats\s*\(\s*\);!!;
 
+    s!#include <kpixmapeffect.h>!!;
+    
     s!#include <ktoolbarbutton.h>!!g;
     s!\baddURL\b!addUrl!g;
 
