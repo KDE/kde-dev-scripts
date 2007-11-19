@@ -29,6 +29,17 @@
 ;*    Functions  ...                                                   */
 ;*---------------------------------------------------------------------*/
 
+;; remassoc exists as a built-in function in xemacs, but
+;; not in GNU emacs
+(if (not (functionp 'remassoc))
+    (defun remassoc (key a)
+      "remove an association pair from an alist"
+      (if a
+	  (let ((pair (car a)))
+	    (if (equal (car pair) key)
+		(cdr a)
+		(cons pair (remassoc key (cdr a))))))))
+
 ;; Helper for kde-file-get-cpp-h
 (defun kde-find-file (filename basedir)
   "Looks for \"filename\" under \"basedir\""
