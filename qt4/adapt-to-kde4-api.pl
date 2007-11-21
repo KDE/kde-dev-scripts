@@ -614,7 +614,7 @@ while ($file = <$F>) {
     s!#include <knotifyclient.h>!#include <knotification.h>!;
     s!#include <knotifydialog.h>!#include <knotifyconfigwidget.h>!;
     s!KNotifyClient::event\((\s*winId\s*\(\s*\)\s*?)\,\s*\"(.*?)\"\s*\,\s*(.*?)\s*\);!KNotification::event\(QString::fromLatin1\(\"$2\"\), $3, this\);!;
-    s!KNotifyClient::event\(([a-zA-Z0-9\s_]+?)\->\s*winId\s*\(\s*\)\s*\,\s*\"(.*?)\"\s*\,\s*(.*?)\s*\);!KNotification::event\(QString::fromLatin1\(\"$2\"\), $3, $1\);!;
+    s!KNotifyClient::event\(\s*([a-zA-Z0-9_]+?)\s*\->\s*winId\s*\(\s*\)\s*\,\s*\"(.*?)\"\s*\,\s*(.*?)\s*\);!KNotification::event\(QString::fromLatin1\(\"$2\"\), $3, $1\);!;
     s!KNotifyClient::event!KNotification::event!;
     s!KNotifyDialog::configure!KNotifyConfigWidget::configure!;
 
