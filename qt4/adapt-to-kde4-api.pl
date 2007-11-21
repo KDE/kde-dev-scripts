@@ -610,6 +610,12 @@ while ($file = <$F>) {
     s/\breadPathListEntry(\s*)\(([^,)]+,[^,)]+)\)/readPathEntry\1(\2)/g;
     s/\breadPathListEntry(\s*)\(([^,)]+?)(\s*)\)/readPathEntry\1(\2, QStringList()\3)/g;
 
+    #KNotify changes
+    s!#include <knotifyclient.h>!#include <knotification.h>!;
+    s!#include <knotifydialog.h>!#include <knotifyconfigwidget.h>!;
+    s!KNotifyClient::event!KNotification::event!;
+    s!KNotifyDialog::configure!KNotifyConfigWidget::configure!;
+
     $modified ||= $orig ne $_;
     $_;
     } <$FILE>;
