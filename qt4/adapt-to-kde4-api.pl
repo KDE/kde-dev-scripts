@@ -183,6 +183,11 @@ while ($file = <$F>) {
     s!#include <kaboutapplication.h>!#include <k3aboutapplication.h>!;
     s!\bKAboutApplication\b!K3AboutApplication!g;
 
+    s!\bKDockMainWindow\b!K3DockMainWindow!g;
+    s!\bKDockWidget\b!K3DockWidget!g;
+
+    s!KInstance::makeStandardCaption!KDialog::makeStandardCaption!g;
+
     s!\bKStaticDeleter\b!K3StaticDeleter!g;
     s!#include <kstaticdeleter.h>!#include <k3staticdeleter.h>!;
 
