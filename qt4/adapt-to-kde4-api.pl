@@ -188,6 +188,8 @@ while ($file = <$F>) {
 
     s!KInstance::makeStandardCaption!KDialog::makeStandardCaption!g;
 
+    s!\bDockMainWindow\b!DockMainWindow3!g;
+
     s!\bKStaticDeleter\b!K3StaticDeleter!g;
     s!#include <kstaticdeleter.h>!#include <k3staticdeleter.h>!;
 
