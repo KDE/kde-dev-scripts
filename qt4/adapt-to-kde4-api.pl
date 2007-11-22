@@ -143,6 +143,8 @@ while ($file = <$F>) {
     s!#include <ktempfile.h>!#include <ktemporaryfile.h>!;
     s!\bKTempFile\b!KTemporaryFile!g;
 
+    s!kinstance.h!kcomponentdata.h!;
+
     # kde3support
     s!#include <kactivelabel.h>!#include <k3activelabel.h>!;
     s!#include <kdockwidget.h>!#include <k3dockwidget.h>!;
