@@ -14,6 +14,7 @@ foreach my $who(
     'apaku',
     'aseigo',
     'binner',
+    'bmeyer',
     'boemann',
     'chani',
     'coolo',
@@ -68,6 +69,7 @@ foreach my $who(
     'apaku',
     'aseigo',
     'binner',
+    'bmeyer',
     'boemann',
     'chani',
     'coolo',
@@ -120,6 +122,7 @@ foreach my $who(
 foreach my $who(
     'apaku',
     'aseigo',
+    'bmeyer',
     'boemann',
     'chani',
     'coolo',
@@ -166,6 +169,7 @@ foreach my $who(
 foreach my $who(
     'apaku',
     'aseigo',
+    'bmeyer',
     'boemann',
     'chani',
     'coolo',
