@@ -237,6 +237,17 @@ while(<IN>) {
 }
 close(IN);
 
+my %loc_author = ();
+
+if (-f $file) {
+    open(IN, "-|") || exec 'svn', 'ann', $file;
+    while(<IN>) {
+        my ($author) = (split)[1];
+        $loc_author{$author}++;
+    }
+    close(IN);
+}
+
 if (defined (keys %blacklist)) {
     print "Need permission for licensing:\n\n";
 
@@ -246,7 +257,7 @@ if (defined (keys %blacklist)) {
         print "- $license:\n";
         foreach my $who(keys %{$blacklist{$license}}) {
             $stat{$license} += length(@{$blacklist{$license}->{$who}});
-            printf "%8s:  %s\n", $who, join(",", @{$blacklist{$license}->{$who}});
+            printf "%9s (%4d LOC): %s \n", $who, $loc_author{$who} || 0, join(",", @{$blacklist{$license}->{$who}});
         }
         print "\n";
     }
@@ -258,4 +269,3 @@ if (defined (keys %blacklist)) {
         printf "%5d commits possibly violating %s\n", $stat{$license}, $license
     }
 }
-
