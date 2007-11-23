@@ -32,8 +32,9 @@ while ($file = <$F>) {
     if ($modified) {
         open (my $OUT, ">$file");
         print $OUT @l;
+        close ($OUT);
+        functionUtilkde::addIncludeInFile( $file, "kvbox.h");
     }
 
-    functionUtilkde::addIncludeInFile( $file, "kvbox.h");
 }
 functionUtilkde::diffFile( "@ARGV" );
