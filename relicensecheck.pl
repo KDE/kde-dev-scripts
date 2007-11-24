@@ -10,6 +10,7 @@ my %blacklist;
 my @blacklist_revs;
 
 foreach my $who(
+    'adawit',
     'amantia',
     'apaku',
     'aseigo',
@@ -70,6 +71,7 @@ foreach my $who(
 }
 
 foreach my $who(
+    'adawit',
     'amantia',
     'apaku',
     'aseigo',
