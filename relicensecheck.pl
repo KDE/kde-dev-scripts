@@ -84,6 +84,7 @@ foreach my $who(
     'pino',
     'ppenz',
     'pstirnweiss',
+    'pvicente'
     'quique',
     'raabe',
     'ralsina',
@@ -184,6 +185,7 @@ foreach my $who(
     'ppenz',
     'piacentini',
     'pstirnweiss',
+    'pvicente'
     'quique',
     'raabe',
     'ralsina',
@@ -279,6 +281,7 @@ foreach my $who(
     'ppenz',
     'piacentini',
     'pstirnweiss',
+    'pvicente'
     'quique',
     'ralsina',
     'rohanpm',
@@ -371,6 +374,7 @@ foreach my $who(
     'ppenz',
     'piacentini',
     'pstirnweiss',
+    'pvicente'
     'quique',
     'ralsina',
     'rohanpm',
