@@ -271,6 +271,7 @@ foreach my $who(
     'coolo',
     'craig',
     'cschumac',
+    'danimo',
     'dfaure',
     'dmacvicar',
     'dymo',
