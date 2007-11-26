@@ -56,6 +56,7 @@ foreach my $who(
     'harald',
     'harris',
     'hdhoang',
+    'hschaefer',
     'ingwa',
     'isaac',
     'jens',
