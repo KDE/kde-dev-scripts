@@ -130,7 +130,8 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander'
+    'zander',
+    'rjarosz'
 ) {
     $whitelist{"gplv23"}->{$who} = 1;
 }
@@ -255,7 +256,8 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander'
+    'zander',
+    'rjarosz'
 ) {
     $whitelist{"lgplv23"}->{$who} = 1;
 }
@@ -372,7 +374,8 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander'
+    'zander',
+    'rjarosz'
 ) {
     $whitelist{"gplv2+"}->{$who} = 1;
 }
@@ -489,7 +492,8 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander'
+    'zander',
+    'rjarosz'
 ) {
     $whitelist{"lgplv2+"}->{$who} = 1;
 }
