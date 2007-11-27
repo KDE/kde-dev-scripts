@@ -68,6 +68,7 @@ foreach my $who(
     'jriddell',
     'rodda',
     'raggi',
+    'rjarosz',
     'kainhofe',
     'kleag', 
     'knight',
@@ -130,8 +131,7 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander',
-    'rjarosz'
+    'zander'
 ) {
     $whitelist{"gplv23"}->{$who} = 1;
 }
@@ -194,6 +194,7 @@ foreach my $who(
     'jriddell',
     'rodda',
     'raggi',
+    'rjarosz',
     'kainhofe',
     'kleag',
     'knight',
@@ -256,8 +257,7 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander',
-    'rjarosz'
+    'zander'
 ) {
     $whitelist{"lgplv23"}->{$who} = 1;
 }
@@ -315,6 +315,7 @@ foreach my $who(
     'jriddell',
     'rodda',
     'raggi',
+    'rjarosz',
     'kainhofe',
     'kleag',
     'knight',
@@ -374,8 +375,7 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander',
-    'rjarosz'
+    'zander'
 ) {
     $whitelist{"gplv2+"}->{$who} = 1;
 }
@@ -472,6 +472,7 @@ foreach my $who(
     'quique',
     'ralsina',
     'rempt',
+    'rjarosz',
     'rohanpm',
     'schmeisser',
     'sebsauer',
@@ -492,8 +493,7 @@ foreach my $who(
     'woebbe',
     'wstephens',
     'zachmann',
-    'zander',
-    'rjarosz'
+    'zander'
 ) {
     $whitelist{"lgplv2+"}->{$who} = 1;
 }
