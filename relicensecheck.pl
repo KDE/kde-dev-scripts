@@ -534,7 +534,7 @@ close(IN);
 my %loc_author = ();
 
 if (-f $file) {
-    open(IN, "-|") || exec 'svn', 'ann', $file;
+    open(IN, "-|") || exec 'svn', 'ann', '-x', '-w', $file;
     while(<IN>) {
         my ($author) = (split)[1];
         $loc_author{$author}++;
