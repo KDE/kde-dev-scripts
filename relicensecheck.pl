@@ -23,7 +23,7 @@ foreach my $who(
     'bjacob',
     'bmeyer',
     'boemann',
-    'bram'
+    'bram',
     'braxton',
     'bvirlet',
     'cartman',
@@ -157,7 +157,7 @@ foreach my $who(
     'bjacob',
     'bmeyer',
     'boemann',
-    'bram'
+    'bram',
     'braxton',
     'bvirlet',
     'cartman',
@@ -287,7 +287,7 @@ foreach my $who(
     'bjacob',
     'bmeyer',
     'boemann',
-    'bram'
+    'bram',
     'braxton',
     'bvirlet',
     'cartman',
@@ -412,7 +412,7 @@ foreach my $who(
     'bjacob',
     'bmeyer',
     'boemann',
-    'bram'
+    'bram',
     'braxton',
     'bvirlet',
     'cartman',
