@@ -29,7 +29,7 @@
 
 (defvar kde-emacs-type
   (eval-when-compile
-    (if (string-match "XEmacs" (emacs-version))
+    (if (not (eq (string-match "XEmacs" (emacs-version)) nil))
 	'xemacs
       'emacs))
   "The type of Emacs we are running on.")
