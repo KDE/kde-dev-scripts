@@ -95,16 +95,16 @@ align_left
 leftjust
 
 connect_established
-connection-established
+network-connected
 
-connect_established
-connection-no
+connect_no
+network-disconnected
 
 cancel
 dialog-cancel
 
 apply
-dialog-apply
+dialog-ok-apply
 
 cancel
 dialog-cancel
@@ -122,28 +122,28 @@ images_display
 images-display
 
 kontact_contacts
-kontact-contacts
+view-pim-contacts
 
 kontact_date
-kontact-date
+view-pim-calendar
 
 kontact_journal
-kontact-journal
+view-pim-journal
 
 kontact_mail
-kontact-mail
+view-pim-mail
 
 kontact_news
-kontact-news
+view-pim-news
 
 kontact_notes
-kontact-notes
+view-pim-notes
 
 kontact_summary
-kontact-summary
+view-pim-summary
 
 kontact_todo
-kontact-todo
+view-pim-tasks
 
 konv_message
 konv-message

@@ -30,7 +30,7 @@ actions = [ #(new, old)
   ('configure-toolbars', 'configure_toolbars'),
   ('connection-established', 'connect_established'),
   ('contact', 'identity'),
-  ('dialog-apply', 'apply'),
+  ('dialog-ok-apply', 'apply'),
   ('dialog-cancel', 'button_cancel'),
   ('dialog-error', 'messagebox_critical'),
   ('dialog-information', 'messagebox_info'),
