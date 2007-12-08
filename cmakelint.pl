@@ -157,6 +157,10 @@ sub processFile() {
 			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
+                          'DESTINATION[[:space:]]/*share/doc/HTML/*',
+                          'replace "share/doc/HTML/" or "/share/doc/HTML/" with "${HTML_INSTALL_DIR}"');
+
+    $issues += &checkLine($line,$linecnt,
  			  'DESTINATION[[:space:]]/*share/apps/*',
  			  'replace "share/apps" or "/share/apps" with "${DATA_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
