@@ -4,6 +4,9 @@ use strict;
 use Cwd;
 use File::Find;
 
+my $qmake_mode=0;
+$qmake_mode = 1 if (`ls -1 *.pro 2>/dev/null`);
+
 my %dir2files=();
 my $cppExt=" cpp cc cxx C c++ ";
 my $cppFiles="*.cpp *.cc *.cxx *.C *.c++";
@@ -32,7 +35,9 @@ sub checkdir($)
   my $srcs=$dir2files{$dir}->{sources};
   foreach my $h (keys %$hdrs) {
     (my $name=$h) =~ s/\.[^.]+$//;
-    my @answer = `grep -l "^#include[ ]*.$name\.moc." $cppFiles 2> /dev/null`;
+    my $mocfile = "$name.moc";
+    $mocfile = "moc_$name.cpp" if ($qmake_mode);
+    my @answer = `grep -l "^#include[ ]*.$mocfile." $cppFiles 2> /dev/null`;
     if (@answer == 0) {
       my $s;
       foreach my $e (split(/\s+/, $cppExt)) {
@@ -42,7 +47,7 @@ sub checkdir($)
       }
       if ($s) {
         print "echo >> $s ;\n";
-        print "echo '#include \"$name.moc\"' >> $s ;\n";
+        print "echo '#include \"$mocfile\"' >> $s ;\n";
       } else {
         print "echo \"can't guess a C++ file for $dir/$h\" ;\n";
       }
