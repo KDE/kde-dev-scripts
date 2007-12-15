@@ -5,9 +5,26 @@
 
 use strict;
 
-my %whitelist;
+my %ruletable;
 my %blacklist;
+my %whitelist;
 my @blacklist_revs;
+
+# licensing table. 
+
+my %license_table = (
+    'dfaure'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'mueller'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
+    'waba'      => ['gplv23', 'lgplv23',                      '+eV' ],
+);
+
+foreach my $who (keys %license_table) {
+    foreach my $license(@{$license_table{$who}}) {
+        $ruletable{$license}->{$who} = 1;
+    }
+}
+
+#### this is the older listing, do not modify it anymore!
 
 foreach my $who(
     'adawit',
@@ -44,7 +61,6 @@ foreach my $who(
     'cullmann',
     'danimo',
     'dannya',
-    'dfaure',
     'dimsuz',
     'djurban',
     'dmacvicar',
@@ -148,7 +164,6 @@ foreach my $who(
     'troeder',
     'trueg',
     'uwolfer',
-    'waba',
     'wgreven',
     'whiting',
     'winterz',
@@ -157,7 +172,7 @@ foreach my $who(
     'zachmann',
     'zander'
 ) {
-    $whitelist{"gplv23"}->{$who} = 1;
+    $ruletable{"gplv23"}->{$who} = 1;
 }
 
 foreach my $who(
@@ -195,7 +210,6 @@ foreach my $who(
     'cullmann',
     'danimo',
     'dannya',
-    'dfaure',
     'dimsuz',
     'djurban',
     'dmacvicar',
@@ -298,7 +312,6 @@ foreach my $who(
     'troeder',
     'trueg',
     'uwolfer',
-    'waba',
     'wgreven',
     'whiting',
     'winterz',
@@ -307,7 +320,7 @@ foreach my $who(
     'zachmann',
     'zander'
 ) {
-    $whitelist{"lgplv23"}->{$who} = 1;
+    $ruletable{"lgplv23"}->{$who} = 1;
 }
 
 foreach my $who(
@@ -339,7 +352,6 @@ foreach my $who(
     'cschumac',
     'danimo',
     'dannya',
-    'dfaure',
     'dimsuz',
     'djurban',
     'dmacvicar',
@@ -445,7 +457,7 @@ foreach my $who(
     'zachmann',
     'zander'
 ) {
-    $whitelist{"gplv2+"}->{$who} = 1;
+    $ruletable{"gplv2+"}->{$who} = 1;
 }
 
 foreach my $who(
@@ -477,7 +489,6 @@ foreach my $who(
     'cschumac',
     'danimo',
     'dannya',
-    'dfaure',
     'dimsuz',
     'djurban',
     'dmacvicar',
@@ -583,7 +594,7 @@ foreach my $who(
     'zachmann',
     'zander'
 ) {
-    $whitelist{"lgplv2+"}->{$who} = 1;
+    $ruletable{"lgplv2+"}->{$who} = 1;
 }
 
 my $file = $ARGV[0] || "";
@@ -598,10 +609,14 @@ while(<IN>) {
 
         next if ($author eq "scripty" or $author eq "(no");
 
-        foreach my $license(keys %whitelist) {
-            if (!defined($whitelist{$license}->{$author})) {
+        foreach my $license(keys %ruletable) {
+            if (!defined($ruletable{$license}->{$author})) {
                 push(@{$blacklist{$license}->{$author}}, $rev);
             }
+            else {
+                push(@{$whitelist{$license}->{$author}}, $rev);
+            }
+ 
         }
     }
 }
@@ -639,3 +654,18 @@ if (defined (keys %blacklist)) {
         printf "%5d commits possibly violating %s\n", $stat{$license}, $license
     }
 }
+
+if (defined (keys %whitelist)) {
+    print "\nRelicensing allowed:\n";
+
+    my %stat;
+
+    foreach my $license(keys %whitelist) {
+        next if defined($blacklist{$license});
+        print "- $license\n";
+    }
+
+    print "\n";
+}
+
+print "\ndo not forget to check copyright headers and for patches committed in the name of others!\n";
