@@ -22,6 +22,7 @@ my %license_table = (
     'reiher'    => ['gplv23', 'lgplv23',                      '+eV' ],
     'waba'      => ['gplv23', 'lgplv23',                      '+eV' ],
     'teske'	=> ['gplv23', 'lgplv23',                            ],
+    'taj'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
 );
 
 foreach my $who (keys %license_table) {
