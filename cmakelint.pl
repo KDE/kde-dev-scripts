@@ -32,13 +32,14 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.5';
+my($Version) = '1.6';
 
 my($help) = '';
 my($version) = '';
+my($verbose) = '';
 
 exit 1
-if (!GetOptions('help' => \$help, 'version' => \$version));
+if (!GetOptions('help' => \$help, 'version' => \$version, 'verbose' => \$verbose));
 
 &Help() if ($help);
 if ($#ARGV < 0){ &Help(); exit 0; }
@@ -63,31 +64,44 @@ sub processFile() {
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
   my($in_kdebase)=0;
   $in_kdebase=1 if ($apath =~ m+/kdebase/+);
-  my($top_of_module)=0;
 
-  $top_of_module=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
-  $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_module=0 if ($apath =~ m+/(cmake|pics)/+);
+  my($top_of_module)=0;
+  $top_of_module=1 if ($apath =~ m+/koffice/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/CMakeLists.txt+);
+
+  my($top_of_project)=0;
+  $top_of_project=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_project=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=0 if ($apath =~ m+/(cmake|pics)/+);
 
   my(@lines) = <IN>;
-  my($line);
+  my($line,$pline);
   my($linecnt)=0;
   my($issues)=0;
   my(@ch,$c);
-  my($nob,$ncb);
+  my($nob,$ncb)=(0,0);
   my($nop,$ncp)=(0,0);
+  my($pack,%optpacks);
+
   #look for "bad" stuff
   foreach $line (@lines) {
     $linecnt++;
     chomp($line);
+    #pline is used for paren/brace matching only
+    $pline = $line;
+    $pline =~ s/".*"//g;
+    $pline =~ s/#.*$//;
+
     $line =~ s/#.*$//; #remove comments
 
     next if (! $line);                   #skip empty lines
     next if ($line =~ m/^[[:space:]]$/); #skip blank lines
 
-    @ch = split(//,$line);
+    @ch = split(//,$pline);
     $nob = $ncb = 0;
     foreach $c (@ch) {
       $nop++ if ($c eq '(');
@@ -95,9 +109,27 @@ sub processFile() {
       $nob++ if ($c eq '{');
       $ncb++ if ($c eq '}');
     }
-    if ($nob != $ncb) {
-      $issues++;
-      print "\tline#$linecnt: Mismatched braces\n";
+
+    if ($in !~ m+kjsembed/qtonly/CMakeLists.txt+) {
+      if ($line =~ m/macro_optional_find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i){
+	$pack = lc($1);
+	$pack = "libusb" if ($pack eq "usb");
+	$pack = "mysql_embedded" if ($pack eq "mysql");
+	$optpacks{$pack}{'name'} = $pack;
+	$optpacks{$pack}{'log'} = 0;
+      }
+      if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
+	$pack = lc($1);
+	$pack = "libxslt" if ($pack eq "xsltproc_executable");
+	if ($pack !~ m/^(have|boost|x11|strigiqtdbusclient)_/) {
+	  $pack =~ s/_found//;
+	  if (!defined($optpacks{$pack}{'name'})) {
+	    $issues++;
+	    &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
+	  }
+	  $optpacks{$pack}{'log'} = 1;
+	}
+      }
     }
 
     $issues += &checkLine($line,$linecnt,
@@ -181,10 +213,11 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/*share/icons/*',
 			  'replace "share/icons" or "/share/icons" with "${ICON_INSTALL_DIR}"');
-    $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${ICON_INSTALL_DIR}/\$',
-			  'replace "${ICON_INSTALL_DIR}/${...}" with "${ICON_INSTALL_DIR}/realname"');
-
+    if ($in !~ m/IconThemes/) {
+      $issues += &checkLine($line,$linecnt,
+			    'DESTINATION[[:space:]]\${ICON_INSTALL_DIR}/\$',
+			    'replace "${ICON_INSTALL_DIR}/${...}" with "${ICON_INSTALL_DIR}/realname"');
+    }
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/*share/locale/*',
 			  'replace "share/locale" or "/share/locale" with "${LOCALE_INSTALL_DIR}"');
@@ -235,7 +268,7 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  '-fexceptions',
 			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
-
+    if ($in !~ m+/(okular)/+) { #pinotree doesn't want GENERIC in okular
       $issues +=
         &checkLine($line,$linecnt,
                    'set_target_properties.*PROPERTIES.*[[:space:]]VERSION[[:space:]][[:digit:]]',
@@ -244,6 +277,7 @@ sub processFile() {
         &checkLine($line,$linecnt,
                    'set_target_properties.*PROPERTIES.*[[:space:]]SOVERSION[[:space:]][[:digit:]]',
                    'replace a hard-coded SOVERSION with "${GENERIC_LIB_SOVERSION}"');
+    }
 
     #Qt variable
     $issues +=
@@ -449,11 +483,19 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
     }
+
+    if ($line !~ m+(Plasma|ACL|Alsa|Boost|Kttsmodule)+ && $in !~ m+/(examples|qtonly)/+) {
+      $issues +=
+	&checkLine($line,$linecnt,
+		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
+		   'Use the REQUIRED keyword with find_package()');
+    }
   }
 
   #look for "missing" stuff
   my($in_exec)=0;
   my($has_project)=0;
+  my($has_display_log)=0;
   foreach $line (@lines) {
     chomp($line);
     $line =~ s/#.*$//; #remove comments
@@ -462,16 +504,38 @@ sub processFile() {
       if ($line =~ m/add_(|kdeinit_)executable[[:space:]]*\(/i);
     if ($line =~ m/[Pp][Rr][Oo][Jj][Ee][Cc][Tt]/) {
       $has_project=1;
-      last;
+    }
+    if ($line =~ m/macro_display_feature_log/i) {
+      $has_display_log=1;
     }
   }
-  if (! $has_project && $top_of_module && $in_exec) {
+  if (! $has_project && $top_of_project && $in_exec) {
     $issues++;
-    print "\tline#$linecnt: Missing a PROJECT() command\n";
+    &printIssue($line,$linecnt,"Missing a PROJECT() command");
+  }
+  if ($top_of_module && $has_display_log == 0) {
+    $issues++;
+    &printIssue($line,$linecnt,"Missing macro_display_feature_log() command");
+  }
+  if (!$top_of_module && $has_display_log == 1) {
+    $issues++;
+    &printIssue($line,$linecnt,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
   }
   if ($nop != $ncp) {
     $issues++;
-    print "\tline#$linecnt: Mismatched parens\n";
+    &printIssue($line,$linecnt,"Mismatched parens");
+  }
+  if ($nob != $ncb) {
+    $issues++;
+    &printIssue($line,$linecnt,"Mismatched braces");
+  }
+
+  #missing macro_log_feature()
+  foreach $pack ( keys %optpacks ) {
+    if ($optpacks{$pack}{'log'} == 0) {
+      $issues++;
+      &printIssue("","","Missing macro_log_feature($pack)");
+    }
   }
 
   close(IN);
@@ -480,11 +544,21 @@ sub processFile() {
 
 sub checkLine {
   my($line,$cnt,$regex,$explain) = @_;
-  if ($line =~ m/$regex/) {
-    print "\tline#$cnt: $explain\n";
+  if ($line =~ m/$regex/i) {
+    &printIssue($line,$cnt,$explain);
     return 1;
   }
   return 0;
+}
+
+sub printIssue {
+  my($line,$cnt,$explain) = @_;
+  if ($line) {
+    print "\tline#$cnt: $explain\n";
+    print "\t=>$line\n" if ($verbose);
+  } else {
+    print "\t$explain\n";
+  }
 }
 
 #==============================================================================
