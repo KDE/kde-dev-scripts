@@ -576,3 +576,15 @@ dialog-error
 
 messagebox_warning
 dialog-warning
+
+3downarrow
+go-bottow
+
+3leftarrow
+go-first
+
+3rightarrow
+go-last
+
+3uparrow
+go-top
