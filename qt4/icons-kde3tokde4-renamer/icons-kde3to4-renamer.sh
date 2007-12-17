@@ -4,8 +4,8 @@
 # By Danny Allen (dannya@kde.org)
 # Licenced under the LGPL
 
-script_base="/home/kde4/svn/kdesdk/scripts/qt4/icons-kde3tokde4-renamer"
-icon_base="/home/kde4/svn/kdeartwork/IconThemes/primary/scalable"
+script_base="/home/kde-devel/kde/src/KDE/kdesdk/scripts/qt4/icons-kde3tokde4-renamer"
+icon_base="/home/kde-devel/kde/src/KDE/kdeartwork/IconThemes/primary/scalable"
 old_extension="svgz"
 new_extension="svgz"
 
@@ -25,43 +25,45 @@ type[4]="emblems"
 type[5]="mimetypes"
 type[6]="places"
 
-# change to icon location
-cd $icon_base
-
-# rename filesystems to places if neccessary
-if [ -d "filesystems" ]; then
-    svn mv filesystems places
-
-    echo "filesystems/ renamed to places/"
-fi
-
+# counters (leave as 0)
 implemented="0"
 correct="0"
 not_implemented="0"
 removed="0"
 
-type_num="0"
-while [ "$type_num" -lt "$types" ]; do
-    # check if directory exists for type (otherwise make it)
-    if [ ! -d ${type[$type_num]} ]; then
-        mkdir ${type[$type_num]}
-        svn add ${type[$type_num]}
 
-        echo "created ${type[$type_num]} directory"
+# change to icon location
+cd $icon_base
+
+
+function make_changes {
+    area="$1"
+
+    # check if directory exists for type (otherwise make it)
+    if [ ! -d $area ]; then
+        mkdir $area
+        svn add $area
+
+        echo "created $area directory"
     fi
 
     # change to the type directory
-    cd ${type[$type_num]}
+    cd $area
 
     # report area
     echo "--------------------------------"
-    echo "Processing ${type[$type_num]}..."
+    echo "Processing $area..."
     echo "--------------------------------"
 
     # set filenames
-    rename_list="$script_base/${type[$type_num]}_rename.txt"
-    remove_list="$script_base/${type[$type_num]}_remove.txt"
-    missing_log="$script_base/missing_${type[$type_num]}.txt"
+    rename_list="$script_base/$area"_rename.txt
+    remove_list="$script_base/$area"_remove.txt
+    missing_log="$script_base/missing_"$area.txt
+
+    # remove old logs
+    if [ -f "$missing_log" ]; then
+        rm $missing_log
+    fi
 
     ########################
     # renamings
@@ -108,7 +110,7 @@ while [ "$type_num" -lt "$types" ]; do
         echo ""
         echo "Missing icons in this set: $not_implemented"
         echo ""
-        echo "See missing_${type[$type_num]}.txt for more details"
+        echo "See missing_$area.txt for more details"
     fi
     echo "###############"
 
@@ -148,7 +150,27 @@ while [ "$type_num" -lt "$types" ]; do
     # change back to parent dir
     type_num=$(($type_num + 1))
     cd ..
-done
+}
+
+
+# do all the changes, or only on a specific area?
+if [ "$1" != "" ]; then
+    # perform changes on one area
+    make_changes $1
+else
+    # rename filesystems to places if neccessary
+    if [ -d "filesystems" ]; then
+        svn mv filesystems places
+
+        echo "filesystems/ renamed to places/"
+    fi
+
+    # perform changes on all areas
+    type_num="0"
+    while [ "$type_num" -lt "$types" ]; do
+        make_changes ${type[$type_num]}
+    done
+fi
 
 echo ""
 echo ""

@@ -1,6 +1,3 @@
-file_broken
-file-broken
-
 
 folder-blue
 
@@ -22,8 +19,8 @@ folder-green
 folder_grey_open
 folder-grey
 
-folder_home
 folder-home
+user-home
 
 folder_html
 folder-html
@@ -81,3 +78,6 @@ user-trash-full
 
 trashcan_empty
 user-trash
+
+server
+network-server
