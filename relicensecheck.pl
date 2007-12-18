@@ -671,17 +671,17 @@ if (defined (keys %blacklist)) {
     }
 }
 
+my @allowed_list = ();
+
 if (defined (keys %whitelist)) {
-    print "\nRelicensing allowed:\n";
-
-    my %stat;
-
     foreach my $license(keys %whitelist) {
         next if defined($blacklist{$license});
-        print "- $license\n";
+        push(@allowed_list, $license);
     }
+}
 
-    print "\n";
+if ($#allowed_list >= 0) {
+    print "\nRelicensing allowed: ". join(' ', @allowed_list) . "\n";
 }
 
 print "\ndo not forget to check copyright headers and for patches committed in the name of others!\n";
