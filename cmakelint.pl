@@ -411,7 +411,7 @@ sub processFile() {
 
     }
 
-    # kebase variables
+    # kdebase variables
     if (! $in_kdelibs && ! $in_kdepimlibs && !$in_kdebase) {
       $issues +=
         &checkLine($line,$linecnt,
