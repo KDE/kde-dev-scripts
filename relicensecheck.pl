@@ -23,15 +23,16 @@ my %license_table = (
     'fawcett'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'jlee'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mbritton'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'mirko'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mueller'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'ogoffart'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'pino'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'reiher'    => ['gplv23', 'lgplv23',                      '+eV' ],
     'robbilla'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'taj'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
-    'teske'	=> ['gplv23', 'lgplv23',                            ],
+    'teske'	    => ['gplv23', 'lgplv23',                            ],
     'waba'      => ['gplv23', 'lgplv23',                      '+eV' ],
-    'mirko'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'willy'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
 );
 
 foreach my $who (keys %license_table) {
