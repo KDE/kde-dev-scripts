@@ -152,14 +152,16 @@ while ($file = <$F>) {
     s!WStyle_!Qt::WStyle_!g unless (/Qt::WStyle_/);
     s!WType_!Qt::WType_!g unless (/Qt::WType_/);
     s!Key_!Qt::Key_!g unless (/Qt::Key_/);
-    s!CTRL!Qt::CTRL!g unless (/Qt::CTRL/);
+    s!CTRL!Qt::CTRL!g unless (/Qt::CTRL/ || /_CTRL/ );
     s!SHIFT!Qt::SHIFT!g unless (/Qt::SHIFT/);
     s!LeftButton!Qt::LeftButton!g unless (/Qt::LeftButton/);
     s!RightButton!Qt::RightButton!g unless (/Qt::RightButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
     s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
-    s!QWidget::StrongFocus!Qt::StrongFocus!;
-    s!StrongFocus!Qt::StrongFocus!g unless (/Qt::StrongFocus/);
+    
+    s!QWidget::StrongFocus!Qt::StrongFocus!g;
+    s!QPushButton::StrongFocus!Qt::StrongFocus!g;
+    s!StrongFocus!Qt::StrongFocus!g unless (/Qt::StrongFocus/ );
 
     s!QLabel::AlignLeft!Qt::AlignLeft!g;
     s!QLabel::AlignRight!Qt::AlignRight!g;
@@ -168,18 +170,36 @@ while ($file = <$F>) {
     s!QLabel::AlignVCenter!Qt::AlignVCenter!g;
     s!QLabel::AlignTop!Qt::AlignTop!g;
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
+
  
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
     s!QButton::NoChange!QCheckBox::NoChange!g;
 
-    s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/);
-    s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/);
-    s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/);
-    s!AlignHCenter!Qt::AlignHCenter!g unless (/Qt::AlignHCenter/ || /"Align/);
-    s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/);
-    s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/);
-    s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/);
+    s!QObject::AlignLeft!Qt::AlignLeft!g;
+    s!QObject::AlignRight!Qt::AlignRight!g;
+    s!QObject::AlignCenter!Qt::AlignCenter!g;
+    s!QObject::AlignHCenter!Qt::AlignHCenter!g;
+    s!QObject::AlignVCenter!Qt::AlignVCenter!g;
+    s!QObject::AlignTop!Qt::AlignTop!g;
+    s!QObject::AlignBottom!Qt::AlignBottom!g;
+
+    s!Q3ListViewItem::AlignLeft!Qt::AlignLeft!g;
+    s!Q3ListViewItem::AlignRight!Qt::AlignRight!g;
+    s!Q3ListViewItem::AlignCenter!Qt::AlignCenter!g;
+    s!Q3ListViewItem::AlignHCenter!Qt::AlignHCenter!g;
+    s!Q3ListViewItem::AlignVCenter!Qt::AlignVCenter!g;
+    s!Q3ListViewItem::AlignTop!Qt::AlignTop!g;
+    s!Q3ListViewItem::AlignBottom!Qt::AlignBottom!g;
+
+
+    s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/ );
+    s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/ );
+    s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/ );
+    s!AlignHCenter!Qt::AlignHCenter!g unless (/Qt::AlignHCenter/ || /"Align/ );
+    s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/ );
+    s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/ );
+    s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/ );
 
     if (/app/i) {
 	s!flushX!flush!; # QApplication
