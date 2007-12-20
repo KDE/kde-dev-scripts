@@ -140,6 +140,13 @@ sub processFile() {
 			  '[[^:print:]]{\$',
 			  'non-printable characters detected');
 
+    if (!$top_of_module && $in !~ m+kdebase/[a-z]*/CMakeLists.txt+ && $in !~ m+/doc/CMakeLists.txt+) {
+      $issues +=
+	&checkLine($line,$linecnt,
+		   '[Mm][Aa][Cc][Rr][Oo]_[Oo][Pp][Tt][Ii][Oo][Nn][Aa][Ll]_[Aa][Dd][Dd]_[Ss][Uu][Bb][Dd][Ii][Rr][Ee][Cc][Tt][Oo][Rr][Yy]',
+		   'replace macro_optional_add_subdirectory with add_subdirectory');
+    }
+
     $issues += &checkLine($line,$linecnt,
 			  '[Kk][Dd][Ee]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
 			  'KDE4_AUTOMOC() is obsolete. Remove it.');
@@ -484,7 +491,7 @@ sub processFile() {
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
     }
 
-    if ($line !~ m+(Plasma|ACL|Alsa|Boost|Kttsmodule)+ && $in !~ m+/(examples|qtonly)/+) {
+    if ($line !~ m+(Plasma|Nepomuk|ACL|Alsa|Boost|Kttsmodule)+ && $in !~ m+/(examples|qtonly)/+) {
       $issues +=
 	&checkLine($line,$linecnt,
 		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
@@ -517,7 +524,7 @@ sub processFile() {
     $issues++;
     &printIssue($line,$linecnt,"Missing macro_display_feature_log() command");
   }
-  if (!$top_of_module && $has_display_log == 1) {
+  if (!$top_of_module && $has_display_log == 1 && $in !~ m+/qtonly/+) {
     $issues++;
     &printIssue($line,$linecnt,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
   }
