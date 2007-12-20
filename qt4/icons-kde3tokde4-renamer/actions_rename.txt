@@ -578,7 +578,7 @@ messagebox_warning
 dialog-warning
 
 3downarrow
-go-bottow
+go-bottom
 
 3leftarrow
 go-first
@@ -588,3 +588,9 @@ go-last
 
 3uparrow
 go-top
+
+edit_remove
+edit-remove
+
+editpaste
+edit-paste

@@ -6,6 +6,7 @@
 
 script_base="/home/kde-devel/kde/src/KDE/kdesdk/scripts/qt4/icons-kde3tokde4-renamer"
 icon_base="/home/kde-devel/kde/src/KDE/kdeartwork/IconThemes/primary/scalable"
+# icon_base="/home/kde-devel/kde/src/KDE/kdeaccessibility/IconThemes/mono/scalable"
 old_extension="svgz"
 new_extension="svgz"
 
