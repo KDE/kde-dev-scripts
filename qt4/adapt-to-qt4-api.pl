@@ -185,6 +185,7 @@ while ($file = <$F>) {
     s!BDiagPattern!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
     s!FDiagPattern!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );     
     s!DiagCrossPattern!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
+    s!SolidLine!Qt::SolidLine!g unless ( /Qt::SolidLine/ );
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
     s!QButton::NoChange!QCheckBox::NoChange!g;
