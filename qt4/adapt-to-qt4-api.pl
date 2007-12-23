@@ -171,7 +171,20 @@ while ($file = <$F>) {
     s!QLabel::AlignTop!Qt::AlignTop!g;
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
 
- 
+    s!SolidPattern!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
+    s!Dense1Pattern!Qt::Dense1Pattern!g unless ( /Qt::Dense1Pattern/ );
+    s!Dense2Pattern!Qt::Dense2Pattern!g unless ( /Qt::Dense2Pattern/ );
+    s!Dense3Pattern!Qt::Dense3Pattern!g unless ( /Qt::Dense3Pattern/ );
+    s!Dense4Pattern!Qt::Dense4Pattern!g unless ( /Qt::Dense4Pattern/ );
+    s!Dense5Pattern!Qt::Dense5Pattern!g unless ( /Qt::Dense5Pattern/ );
+    s!Dense6Pattern!Qt::Dense6Pattern!g unless ( /Qt::Dense6Pattern/ );
+    s!Dense7Pattern!Qt::Dense7Pattern!g unless ( /Qt::Dense7Pattern/ );
+    s!HorPattern!Qt::HorPattern!g unless ( /Qt::HorPattern/ );
+    s!VerPattern!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
+    s!CrossPattern!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
+    s!BDiagPattern!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
+    s!FDiagPattern!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );     
+    s!DiagCrossPattern!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
     s!QButton::NoChange!QCheckBox::NoChange!g;
