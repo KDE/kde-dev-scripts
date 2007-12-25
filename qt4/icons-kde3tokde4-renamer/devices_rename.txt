@@ -161,7 +161,7 @@ hdd-usb-mount
 drive-removable-media-usb
 
 nfs-mount
-drive-remote
+folder-remote
 
 cdwriter-mount
 media-optical-recordable
