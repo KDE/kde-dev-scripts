@@ -214,6 +214,8 @@ while ($file = <$F>) {
     s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/ );
     s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/ );
     s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/ );
+    
+    s!QCursor::WaitCursor!Qt::waitCursor!g;
 
     if (/app/i) {
 	s!flushX!flush!; # QApplication
