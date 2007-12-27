@@ -216,6 +216,9 @@ while ($file = <$F>) {
     s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/ );
     
     s!QCursor::WaitCursor!Qt::waitCursor!g;
+    s!QSplitter::Vertical!Qt::Vertical!g;
+    s!QSplitter::Horizontal!Qt::Horizontal!g;
+
 
     if (/app/i) {
 	s!flushX!flush!; # QApplication
