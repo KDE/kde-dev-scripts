@@ -1,8 +1,11 @@
 about_kde
-help-about-kde
+kde
 
 about-kde
+kde
+
 help-about-kde
+kde
 
 1downarrow
 arrow-down
@@ -35,25 +38,25 @@ ark-delete
 archive-remove
 
 ark_extract
-ark-extract
+archive-extract
 
 ark-extract
 archive-extract
 
 ark_adddir
-ark-adddir
+archive-insert-directory
 
 ark-adddir
 archive-insert-directory
 
 ark_addfile
-ark-addfile
+archive-insert
 
 ark-addfile
 archive-insert
 
 ark_view
-ark-view
+document-preview-archive
 
 ark-view
 document-preview-archive
@@ -95,10 +98,10 @@ align_left
 leftjust
 
 connect_established
-network-connected
+network-connect
 
 connect_no
-network-disconnected
+network-disconnect
 
 cancel
 dialog-cancel
