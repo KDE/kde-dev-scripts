@@ -566,7 +566,7 @@ form_newobj
 database-form-new
 
 player_playlist
-media-playlist
+view-media-playlist
 
 podcast
 media-podcast
