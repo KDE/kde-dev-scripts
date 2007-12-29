@@ -569,7 +569,7 @@ player_playlist
 view-media-playlist
 
 podcast
-media-podcast
+x-media-podcast
 
 messagebox_info
 dialog-information
