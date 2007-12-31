@@ -337,6 +337,12 @@ sub processFile() {
                  'target_link_libraries.*[[:space:]]QtXml[\s/)]',
                  'replace "QtXml" with "${QT_QTXML_LIBRARY}"');
 
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtScript[\s/)]',
+                 'replace "QtScript" with "${QT_QTSCRIPT_LIBRARY}"');
+
+
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
