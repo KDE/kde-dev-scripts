@@ -312,6 +312,31 @@ sub processFile() {
                  'target_link_libraries.*[[:space:]]QtCore[\s/)]',
                  'replace "QtCore" with "${QT_QTCORE_LIBRARY}"');
 
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtSql[\s/)]',
+                 'replace "QtSql" with "${QT_QTSQL_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtSvg[\s/)]',
+                 'replace "QtSvg" with "${QT_QTSVG_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtSvg[\s/)]',
+                 'replace "QtSvg" with "${QT_QTSVG_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtTest[\s/)]',
+                 'replace "QtTest" with "${QT_QTTEST_LIBRARY}"');
+
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtXml[\s/)]',
+                 'replace "QtXml" with "${QT_QTXML_LIBRARY}"');
+
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
