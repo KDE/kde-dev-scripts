@@ -74,7 +74,7 @@ contexthelp
 help-contextual
 
 identity
-contact
+user-identity
 
 undo
 edit-undo
@@ -323,13 +323,13 @@ rotate_right
 object-rotate-right
 
 key_enter
-browser-go
+go-jump-locationbar
 
 window_fullscreen
 view-fullscreen
 
 view_icon
-view-icon
+view-list-icons
 
 view_left_right
 view-left-right
@@ -344,7 +344,7 @@ view_sidetree
 view-sidetree
 
 view_tree
-view-tree
+view-list-tree
 
 close
 window-close
