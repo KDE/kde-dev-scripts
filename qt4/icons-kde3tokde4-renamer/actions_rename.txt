@@ -332,7 +332,7 @@ view_icon
 view-list-icons
 
 view_left_right
-view-left-right
+view-split-left-right
 
 view_remove
 view-remove
