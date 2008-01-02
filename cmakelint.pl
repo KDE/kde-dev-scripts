@@ -449,6 +449,14 @@ sub processFile() {
 
     }
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kjs[\s/)]',
+            'replace "kjs" with "${KDE4_KJS_LIBS}"');
+
+    }
+
+
     # kdebase variables
     if (! $in_kdelibs && ! $in_kdepimlibs && !$in_kdebase) {
       $issues +=
