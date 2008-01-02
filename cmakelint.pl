@@ -447,8 +447,6 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kmetadata[\s/)]',
             'replace "kmetadata" with "${KDE4_KMETADATA_LIBS}"');
 
-    }
-
       $issues +=
     &checkLine($line,$linecnt,
             'target_link_libraries.*[[:space:]]kjs[\s/)]',
