@@ -167,7 +167,7 @@ project_open
 project-open
 
 rss_tag
-rss-tag
+feed-subscribe
 
 tab_breakoff
 tab-breakoff
