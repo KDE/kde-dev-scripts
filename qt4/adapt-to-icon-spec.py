@@ -152,7 +152,7 @@ actions = [ #(new, old)
   ('view-restore', 'window_nofullscreen'),
   ('window-close', 'fileclose'),
   ('window-new', 'window_new'),
-  ('zoom-best-fit', 'viewmagfit'),
+  ('zoom-fit-best', 'viewmagfit'),
   ('zoom-in', 'viewmag+'),
   ('zoom-original', 'viewmag'),
   ('zoom-out', 'viewmag-'),
