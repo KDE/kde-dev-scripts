@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Copyright (C) 2006 Thomas Zander <zander@kde.org>
 $COMMAND = "unsercmake";
-$VERSION = "$COMMAND 0.13";
+$VERSION = "$COMMAND 0.14";
 # This script allows you to build a target library including dependency checking, but it
 # limits the dependency checking to the current dir and its subdirs meaning a lot of
 # unwanted steps are skipped.
@@ -477,6 +477,25 @@ sub install() {
             }
             #print " a: '$dest', b: $type, c: '$options', d: '$filename'\n";
             my $copy=0;
+
+            if($filename=~/\.so$/) { # cmake may be lying to us in this case about the source path
+                my @sourceInfo = stat "$input";
+                if (@sourceInfo == 0) {
+                    # in this case cmake moved the .so to the [build]/lib/ dir. Which sucks as we don't know what the build dir is!
+                    my $testPath = $input;
+                    while (1) {
+                        $testPath=~/(.*)\/.*/; # aka 'cd ..'
+                        $testPath = $1;
+                        if ($testPath eq "") { last; }
+                        if (-f "$testPath/lib/$filename") {
+                            # found it!
+                            $input = "$testPath/lib/$filename";
+                            last;
+                        }
+                    }
+                }
+            }
+
             my @destInfo = stat "$dest/$filename";
             if(@destInfo == 0) {
                 #print "dest not exist\n";
@@ -488,7 +507,7 @@ sub install() {
                     #print "different size\n";
                     $copy=1;
                 }
-                elsif(@destInfo[9] < @sourceInfo[9]) { # mtime
+                elsif(abs(@destInfo[9] - @sourceInfo[9]) > 2) { # mtime
                     #print "different date\n";
                     $copy=1;
                 }
@@ -508,7 +527,7 @@ sub install() {
                 }
                 system "install -d $dest" || die "Can not create dir '$dest'";
                 unlink "$dest/$filename$ver";
-                system "cp", "$input", "$dest/$filename$ver";
+                system "cp", "--preserve=timestamps,mode", "$input", "$dest/$filename$ver";
                 if($type eq "EXECUTABLE") {
                     chmod 0755, "$dest/$filename";
                 }
