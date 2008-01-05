@@ -22,7 +22,7 @@ if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
     exit;
 fi
 
-BRANCH=3.5
+BRANCH=4.0
 
 SRC_REMOTE=`svn info | grep URL: | cut -c6-`
 TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|trunk/KDE|branches/KDE/$BRANCH|"`
