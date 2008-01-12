@@ -12,7 +12,7 @@ sub usage
 
 extractattr [flags] filenames
 
-This script extracts element attributes from designer (.ui) and XMLGIU (.rc) files
+This script extracts element attributes from designer (.ui) and XMLGUI (.rc) files
 and writes on standard output (usually redirected to rc.cpp) the equivalent
 i18n() calls so that xgettext can parse them.
 
