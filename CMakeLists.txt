@@ -23,6 +23,7 @@ install(PROGRAMS
   qtdoc
   svnbackport
   svnchangesince
+  svnforwardport
   svngettags
   svnlastlog
   svnrevertlast
