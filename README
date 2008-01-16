@@ -172,6 +172,8 @@ cvslastreferenced Goes through the whole history of a file to find all modificat
                 when a function has been removed/modified/added to a file if a
                 recent cvs annotate doesn't reference it anymore. 
 
+wcgrep Useful for grep'ing in a subversion working copy.
+
 === KDE BUILD SCRIPTS
 
 build-progress.sh Displays the progress of kde-build, times needed to complete each
