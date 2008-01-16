@@ -30,11 +30,28 @@
 # Turn on warnings the best way depending on the Perl version.
 BEGIN {
   if ( $] >= 5.006_000)
-    { require warnings; import warnings; }                      
-  else  
-    { $^W = 1; }               
+    { require warnings; import warnings; }
+  else
+    { $^W = 1; }
 }
 use strict;
+
+my $want_whitespace = 0;
+
+sub showdiff($@) #depends on global var $want_whitespace
+{
+    my ($revisions) = shift(@_);
+    my (@files) = @_;
+    if ($want_whitespace) {
+        system('svn', 'diff',
+               # This is for people who set a diff-cmd to exclude whitespace; when forwardporting we need the indentation to be preserved
+               '--diff-cmd=diff',
+               '-r', $revisions, @files);
+    } else {
+        # By default, use plain svn diff; whitespace depends on user configuration
+        system('svn', 'diff', '-r', $revisions, @files);
+    }
+}
 
 #
 # Read the parameters
@@ -71,6 +88,10 @@ while (@ARGV)
       {
 	$onlylog = 1;
       }
+    elsif ($arg eq '-ws')
+      {
+	$want_whitespace = 1;
+      }
     else
       {
 	push(@files, $arg);
@@ -90,12 +111,12 @@ if (!$special)
 	$rev = 'COMMITTED';
 	$prev = 'PREV';
       }
-      
+
     system('svn', 'log', '-r', $rev, @files);
-    system('svn', 'diff', '-r', "$prev:$rev", @files) unless $onlylog;
+    &showdiff("$prev:$rev", @files) unless $onlylog;
     exit $?;
   }
-  
+
 #
 # Special operation
 # Retrieve the full log in order to find the right version
@@ -129,8 +150,7 @@ foreach my $file (@files)
 		else
 		  {
 		    system('svn', 'log', '-r', $1, $file);
-		    system('svn', 'diff', '-r', ($1 - 1) . ":$1", $file)
-		      unless $onlylog;
+		    &showdiff( ($1 - 1) . ":$1", $file) unless $onlylog;
 		  }
 		last;
 	      }
