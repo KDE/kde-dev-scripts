@@ -52,8 +52,9 @@ until test $# -eq 0; do
   shift
 done
 
-kdialog --yesno "Do you want to commit all changes?"
-if [ $? = 0 ]; then
+echo "Do you want to commit all changes? (y/n) [y]"
+read confirm
+if test "$confirm" != "n"; then
   svn ci $files
 fi
 
