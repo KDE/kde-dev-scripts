@@ -26,6 +26,7 @@ install(PROGRAMS
   svngettags
   svnlastlog
   svnrevertlast
+  wcgrep
   DESTINATION ${BIN_INSTALL_DIR})
 endif (UNIX)
 
