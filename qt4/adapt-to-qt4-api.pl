@@ -158,7 +158,13 @@ while ($file = <$F>) {
     s!RightButton!Qt::RightButton!g unless (/Qt::RightButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
     s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
-    
+   
+
+    s!QStyle::Style_Enabled!QStyle::State_Enabled!g;
+    s!QStyle::Style_On!QStyle::State_On!g;
+    s!QStyle::Style_Off!QStyle::State_Off!g; 
+    s!QStyle::Style_NoChange!QStyle::State_NoChange!g;
+
     s!QWidget::StrongFocus!Qt::StrongFocus!g;
     s!QPushButton::StrongFocus!Qt::StrongFocus!g;
     s!StrongFocus!Qt::StrongFocus!g unless (/Qt::StrongFocus/ );
