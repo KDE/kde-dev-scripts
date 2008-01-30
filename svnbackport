@@ -34,7 +34,7 @@ files=$*
 until test $# -eq 0; do
 
   echo "looking for last change to $1..."
-  svnlastchange $1 > $TMPFILE
+  svnlastchange $1 > $TMPFILE || exit 1
   echo "browsing last change to $1..."
   less $TMPFILE
 
