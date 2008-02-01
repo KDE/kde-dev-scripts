@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Copyright 2008 Urs Wolfer <uwolfer @ kde.org>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of 
+# the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+#
+# Thin wrapper script around optipng and advdef.
+# It filters the output and shows a summary at the end of the optimization run.
+# Tested with:
+# * OptiPNG 0.5.5 http://optipng.sourceforge.net/
+# * advdef (AdvanceCOMP) 1.15 http://advancemame.sourceforge.net/comp-readme.html
+
+
+if test "$1" = "-h" -o "$1" = "--help"; then
+    echo "Usage: optimizegraphics [FILE]";
+    echo "If [FILE] is not defined, it optimizes all files recursively starting at the current working directory.";
+    exit;
+fi
+
+if [ $# -ne 0 ]; then # file is defined
+    optipng -o5 "$1";
+    advdef -z -4 "$1";
+exit;
+else # do it recursively
+    STARTSIZE=`du -s | awk '{ print $1 }'`;
+
+    find . -name "*.png" -exec optipng -o5 '{}' \; -print | grep 'Processing\|already\|% decrease';
+    find . -name "*.png" -exec advdef -z -4 '{}' \; -print | grep '% ./';
+ 
+    find . -name "*.svgz" -exec advdef -z -4 '{}' \; -print | grep '% ./';
+
+    ENDSIZE=`du -s | awk '{ print $1 }'`;
+
+    REDUCEDSIZE=$(($STARTSIZE-$ENDSIZE));
+
+    echo "optimizegraphics: Losslessly optimized PNG and SVGZ files with \"optipng -o5\" and \"advdef -z -4\".";
+    echo "Reduced disk space:" $REDUCEDSIZE"KB ("$(($REDUCEDSIZE/1024))"MB)";
+fi

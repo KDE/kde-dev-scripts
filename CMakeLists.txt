@@ -18,6 +18,7 @@ install(PROGRAMS
   findmissingcrystal
   fix-include.sh
   kdedoc
+  optimizegraphics
   nonsvnlist
   pruneemptydirs
   qtdoc
