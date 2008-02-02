@@ -62,9 +62,9 @@ while (<>)
 	  print $statement;
 	  $line = "kDebug(0)";
 	  if ( m/([^\*\s]+::[^\s]+)\(/ )
-	    {
-	      $line = $line . " << \"$1\"";
-	    }
+	  {
+	    $line = $line . " << \"Entering function\"";
+	  }
 	  ## Ok now extract args
 	  s/^.*\([\s]*//; # Remove everything before first '('
 	  s/\s*\)\s*:\s+.*$/,/; # Remove any ") : blah", replace with a ','
