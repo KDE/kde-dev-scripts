@@ -136,7 +136,7 @@ With arg, do it arg times."
 			 (c-offsets-alist . ((case-label . 0)
 					     (inline-open . 0)))
 			 ))
-		    
+
 ;; KDE C++ mode
 ;; Not a "(setq c++-mode-hook ..." because this way we would
 ;; prune all other hooks!
@@ -154,8 +154,10 @@ With arg, do it arg times."
   ;; fontify "public|protected|private slots" with one and the same face :)
   ;; NOTE: write face-at-point function to fontify those just like other
   ;; access specifiers
-  (font-lock-add-keywords nil '(("\\<\\(\\(public\\|protected\\|private\\) \\(slots\\|Q_SLOTS\\)\\)\\>" 
-				 . font-lock-reference-face)))
+  ;; This breaks in the font-lock-fontify engine in xemacs-21.5.28... no solution known yet.
+  ;; TODO use the const variable kde-access-labels here. Couldn't figure out the syntax.
+  (font-lock-add-keywords nil '(("\\<\\(signals\\|Q_SIGNALS\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+\\(slots\\|Q_SLOTS\\)\\)?\\)\\>:" . font-lock-reference-face)))
+
   ;; Add (setq magic-keys-mode nil) to your .emacs (before loading this file)
   ;; to disable the magic keys in C++ mode.
   (and (boundp 'magic-keys-mode) magic-keys-mode
