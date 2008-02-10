@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
-# Copyright (C) 2006-2007 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2006-2008 by Allen Winter <winter@kde.org>                    #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
 # it under the terms of the GNU General Public License as published by        #
@@ -32,7 +32,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.6';
+my($Version) = '1.7';
 
 my($help) = '';
 my($version) = '';
@@ -121,7 +121,7 @@ sub processFile() {
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
 	$pack = "libxslt" if ($pack eq "xsltproc_executable");
-	if ($pack !~ m/^(have|boost|x11|strigiqtdbusclient)_/) {
+	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient)_/) {
 	  $pack =~ s/_found//;
 	  if (!defined($optpacks{$pack}{'name'})) {
 	    $issues++;
@@ -275,7 +275,7 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  '-fexceptions',
 			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
-    if ($in !~ m+/(okular)/+) { #pinotree doesn't want GENERIC in okular
+    if ($in !~ m+/(phonon|okular|kopete|kdevelop)/+) {
       $issues +=
         &checkLine($line,$linecnt,
                    'set_target_properties.*PROPERTIES.*[[:space:]]VERSION[[:space:]][[:digit:]]',
@@ -528,7 +528,7 @@ sub processFile() {
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
     }
 
-    if ($line !~ m+(Plasma|Nepomuk|ACL|Alsa|Boost|Kttsmodule)+ && $in !~ m+/(examples|qtonly)/+) {
+    if ($line !~ m+(Plasma|Nepomuk|ACL|Alsa|PCRE|Boost|Gpgme|Kttsmodule|KdeSubversion)+ && $in !~ m+/(examples|qtonly)/+) {
       $issues +=
 	&checkLine($line,$linecnt,
 		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
