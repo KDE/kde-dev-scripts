@@ -38,7 +38,7 @@ while test $# -gt 0 ; do
     esac
 done
 
-if test "$dir" = "." && test ! -f CMakeLists.txt && test -f ../CMakeLists.txt; then
+if test "$dir" = "." && test ! -f CMakeLists.txt && test ! -f Makefile && test -f ../CMakeLists.txt; then
    cd ..
 fi
 
