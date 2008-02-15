@@ -342,6 +342,27 @@ sub processFile() {
                  'target_link_libraries.*[[:space:]]QtScript[\s/)]',
                  'replace "QtScript" with "${QT_QTSCRIPT_LIBRARY}"');
 
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtClucene[\s/)]',
+                 'replace "QtClucene" with "${QT_QTCLUCENE_LIBRARY}"');
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtAssistantClient[\s/)]',
+                 'replace "QtAssistantClient" with "${QT_QTASSISTANTCLIENT_LIBRARY}"');
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtHelp[\s/)]',
+                 'replace "QtHelp" with "${QT_QTHELP_LIBRARY}"');
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtWebKit[\s/)]',
+                 'replace "QtWebKit" with "${QT_QTWEBKIT_LIBRARY}"');
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtXmlPatterns[\s/)]',
+                 'replace "QtXmlPatterns" with "${QT_QTXMLPATTERNS_LIBRARY}"');
+
 
     # kdelibs variables
     if (! $in_kdelibs) {
