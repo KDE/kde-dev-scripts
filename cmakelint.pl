@@ -344,10 +344,6 @@ sub processFile() {
 
     $issues +=
       &checkLine($line,$linecnt,
-                 'target_link_libraries.*[[:space:]]QtClucene[\s/)]',
-                 'replace "QtClucene" with "${QT_QTCLUCENE_LIBRARY}"');
-    $issues +=
-      &checkLine($line,$linecnt,
                  'target_link_libraries.*[[:space:]]QtAssistantClient[\s/)]',
                  'replace "QtAssistantClient" with "${QT_QTASSISTANTCLIENT_LIBRARY}"');
     $issues +=
