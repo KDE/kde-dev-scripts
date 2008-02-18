@@ -3,6 +3,7 @@
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
 # Copyright (C) 2006-2008 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2008 by Laurent Montel <montel@kde.org>                       #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
 # it under the terms of the GNU General Public License as published by        #
@@ -32,7 +33,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.7';
+my($Version) = '1.8';
 
 my($help) = '';
 my($version) = '';
@@ -64,6 +65,8 @@ sub processFile() {
   $in_kdepimlibs=1 if ($apath =~ m+/kdepimlibs/+);
   my($in_kdebase)=0;
   $in_kdebase=1 if ($apath =~ m+/kdebase/+);
+  my($in_kdegames)=0;
+  $in_kdegames=1 if ($apath =~ m+/kdegames/+);
 
   my($top_of_module)=0;
   $top_of_module=1 if ($apath =~ m+/koffice/CMakeLists.txt+);
@@ -359,6 +362,13 @@ sub processFile() {
                  'target_link_libraries.*[[:space:]]QtXmlPatterns[\s/)]',
                  'replace "QtXmlPatterns" with "${QT_QTXMLPATTERNS_LIBRARY}"');
 
+    # kdegames variables
+    if (! $in_kdegames) {
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kdegames[\s/)]',
+                   'replace "kdegames" with "${KDEGAMES_LIBRARY}"');
+    }
 
     # kdelibs variables
     if (! $in_kdelibs) {
