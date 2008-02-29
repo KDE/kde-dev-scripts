@@ -33,7 +33,7 @@ export LC_ALL="C"
 
 SRC_REMOTE="`svn info | sed -n '/URL:/s/^URL: //p'`"
 BRANCH="`echo $SRC_REMOTE | sed 's|.*branches/KDE/\([^/]*\).*|\1|'`"
-TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|branches/KDE/$BRANCH|trunk/KDE\1|"`
+TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|branches/KDE/$BRANCH|trunk/KDE|"`
 
 echo "Forward porting from $BRANCH to trunk"
 TMPFILE="`mktemp svnforport.XXXXXX`" || exit 1
