@@ -1,67 +1,76 @@
 #!/bin/sh
 # Backport the last change in HEAD, to a branch.
-# Usage: svnbackport <files>
-# WARNING: the branch tag is hardcoded into the script, make sure to check it!
+# Usage: svnbackport [-b branch] <file> [<file> ...]
 #
 # This is a port of the "cvsbackport" script:
 # Initial author: Dirk Mueller
 # Support for multiple command-line arguments: David Faure
 # Ported to SVN: Till Gerken
-# Help message: Thomas Zander
+# Options and quote-safety: Matthew Woehlke
 #
-# It is a straight port and not very sophisticated. It might break. I hope
-# that someone else with more knowledge about Subversion will pick it up.
-# It needs to be used from within the repository so that it can guess
-# the remote URL correctly.
+# This isn't the most sophisticated script ever, and might break. It needs to be
+# used from within the repository so that it can guess the remote URL correctly.
 #
 
 #REPOSITORY=https://svn.kde.org/home/kde
 
-if test -z "$1" -o "$1" = "-h" -o "$1" = "--help"; then
-    echo "Usage: svnbackport recentlyCommittedFile";
-    exit;
-fi
+usage() {
+  echo "Usage: $0 [-b <branch>] <file> [<file> ...]"
+  echo "  default branch is $DEF_BRANCH"
+  exit
+}
+
+DEF_BRANCH=4.0
+BRANCH=$DEF_BRANCH
+
+while getopts 'b:-:h' opt ; do
+  case $opt in
+    b) BRANCH="$OPTARG";;
+    *) usage;; # -h, --help will also trip this
+  esac
+done
+unset opt
+shift `expr ${OPTIND} - 1`
+
+[ -z "$*" ] && usage
 
 export LC_ALL="C"
 
-BRANCH=4.0
-
-SRC_REMOTE=`svn info | grep URL: | cut -c6-`
-TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|trunk/KDE|branches/KDE/$BRANCH|"`
-
+SRC_REMOTE="`svn info | sed -n '/URL:/s/^URL: //p'`"
+TARGET_REMOTE="`echo $SRC_REMOTE | sed "s|trunk/KDE|branches/KDE/$BRANCH|"`"
 
 echo "Backporting to $BRANCH"
 TMPFILE=`mktemp svnbackport.XXXXXX` || exit 1
-files=$*
-until test $# -eq 0; do
 
-  echo "looking for last change to $1..."
-  svnlastchange -ws $1 > $TMPFILE || exit 1
-  echo "browsing last change to $1..."
-  less $TMPFILE
+for file in "$@" ; do
 
-  FILE_PATH=$1
-  FROM_URL=$SRC_REMOTE/$1
-  TO_URL=$TARGET_REMOTE/$1
+  echo "Looking for last change to $file..."
+  svnlastchange -ws "$file" > $TMPFILE || exit 1
+  echo "Browsing last change to $file..."
+  less "$TMPFILE"
 
-  echo "switching to branch..."
-  svn switch $TO_URL $FILE_PATH
-  patch $FILE_PATH $TMPFILE
-  rm -f $TMPFILE
-  echo "showing diff for $1..."
-  svn diff $FILE_PATH | less
+  FILE_PATH="$file"
+  FROM_URL="$SRC_REMOTE/$file"
+  TO_URL="$TARGET_REMOTE/$file"
 
-  shift
+  echo "Switching to branch..."
+  svn switch "$TO_URL" "$FILE_PATH" || exit 1
+  patch "$FILE_PATH" "$TMPFILE"
+  rm -f "$TMPFILE"
+  echo "Showing diff for $file..."
+  svn diff "$FILE_PATH" | less
+
 done
 
 echo "Do you want to commit all changes? (y/n) [y]"
 read confirm
-if test "$confirm" != "n"; then
-  svn ci $files
+if [ -z "$confirm" ] || [ "`echo $confirm | cut -c 1 | tr Y y`" = "y" ] ; then
+  svn ci "$@"
+else
+  echo "Aborted!" >&2
 fi
 
-echo "switching back to trunk..."
-for file in $files
-do
-  svn switch $SRC_REMOTE/$file $file
+echo "Switching back to trunk..."
+for file in "$@" ; do
+  svn switch "$SRC_REMOTE/$file" "$file"
 done
