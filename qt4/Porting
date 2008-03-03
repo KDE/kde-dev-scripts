@@ -4,6 +4,7 @@ Servicemenus for konqueror and dolphin have moved to services/ServiceMenus/.
 To port kde3 servicemenus you need to:
 -> change installation rule so that it installs to ${SERVICES_INSTALL_DIR}/ServiceMenus
 -> add KonqPopupMenu/Plugin to the ServiceTypes line
+See http://techbase.kde.org/index.php?title=Development/Tutorials/Creating_Konqueror_Service_Menus for more info.
 
 Thumbnail:
 ==========
