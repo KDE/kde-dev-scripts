@@ -128,7 +128,7 @@ for my $file_name ( @ARGV )
        $in_skipped_prop = 0;
      }
 
-     $context = $opt_context;
+     $context = $opt_context unless $in_text;
 
      unless ( $in_skipped_prop or $in_text )
      {
@@ -164,9 +164,16 @@ for my $file_name ( @ARGV )
        print "// xgettext: no-c-format\n" if $text =~ /%/o;
        if ( $context )
        {
-         $context = escape_like_uic($context);
-         $text = escape_like_uic($text);
-         print qq|i18nc("$context","$text");\n|;
+         if ( $context ne "KDE::DoNotExtract" )
+         {
+           $context = escape_like_uic($context);
+           $text = escape_like_uic($text);
+           print qq|i18nc("$context","$text");\n|;
+         }
+         else
+         {
+           print "// Manually excluded message at $file_name line $.\n";
+         }
        }
        else
        {
