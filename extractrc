@@ -159,12 +159,12 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
-       print "//i18n: tag $tag\n";
-       print "//i18n: file $file_name line $.\n";
-       print "// xgettext: no-c-format\n" if $text =~ /%/o;
-       if ( $context )
+       if ( $context ne "KDE::DoNotExtract" )
        {
-         if ( $context ne "KDE::DoNotExtract" )
+         print "//i18n: tag $tag\n";
+         print "//i18n: file $file_name line $.\n";
+         print "// xgettext: no-c-format\n" if $text =~ /%/o;
+         if ( $context )
          {
            $context = escape_like_uic($context);
            $text = escape_like_uic($text);
@@ -172,13 +172,13 @@ for my $file_name ( @ARGV )
          }
          else
          {
-           print "// Manually excluded message at $file_name line $.\n";
+           $text = escape_like_uic($text);
+           print  qq|i18n("$text");\n|;
          }
        }
        else
        {
-         $text = escape_like_uic($text);
-         print  qq|i18n("$text");\n|;
+         print "// Manually excluded message at $file_name line $.\n";
        }
      }
      else
