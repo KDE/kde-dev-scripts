@@ -159,7 +159,7 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
-       if ( $context and $context ne "KDE::DoNotExtract" )
+       if ( not $context or $context ne "KDE::DoNotExtract" )
        {
          print "//i18n: tag $tag\n";
          print "//i18n: file $file_name line $.\n";
