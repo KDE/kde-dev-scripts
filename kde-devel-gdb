@@ -45,9 +45,10 @@ document printqstringdata
 end
 
 define printq4stringdata
-    set $i=0
     set $d = $arg0
-    while $i < $d->size
+    set $i = 0
+    # abort after a '-1' character, to avoid going on forever when printing a garbage string
+    while $i < $d->size && ($i == 0 || (char)$d->data[$i-1] != -1)
         printf "%c", (char)($d->data[$i++] & 0xff)
     end
     printf "\n"
