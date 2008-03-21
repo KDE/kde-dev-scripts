@@ -70,13 +70,15 @@ sub processFile() {
 
   my($top_of_module)=0;
   $top_of_module=1 if ($apath =~ m+/koffice/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_module=1 if ($apath =~ m+/kdereview/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/CMakeLists.txt+);
 
   my($top_of_project)=0;
   $top_of_project=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_project=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+); 
+  $top_of_project=1 if ($apath =~ m+/kdereview/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=0 if ($apath =~ m+/(cmake|pics)/+);
