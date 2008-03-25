@@ -5,6 +5,9 @@
 # Please don't use tabs in this file. When pasting a
 # macro definition to gdb, tabs are interpreted as completion.
 
+# Note for macro development: when working a macro,
+# disable the confirmation before gdb allows to redefine a macro, using "set confirm 0".
+
 # Disable printing of static members. Qt has too many, it clutters the output
 set print static-members off
 
@@ -45,7 +48,7 @@ document printqstringdata
 end
 
 define printq4stringdata
-    set $d = $arg0
+    set $d = ('QString::Data'*) $arg0
     set $i = 0
     # abort after a '-1' character, to avoid going on forever when printing a garbage string
     while $i < $d->size && ($i == 0 || (char)$d->data[$i-1] != -1)
@@ -188,7 +191,7 @@ document printqptrvectoritem
   Usage: printqptrvectoritem vector type index
 end
 
-define printqmap
+define printq3map
     set $map = $arg0
     set $len = $map.sh->node_count
     output $len
@@ -206,11 +209,41 @@ define printqmap
         set $it = (QMapNode<$arg1,$arg2> *)($ret)
     end
 end
-document printqmap
-  Prints the full contents of a QMap
-  Usage: 'printqmap map keytype valuetype'
+document printq3map
+  Prints the full contents of a Qt 3 QMap
+  Usage: 'printq3map map keytype valuetype'
 end
 
+
+define printq4map
+    set $map = $arg0
+    set $len = $map.d->size
+    output $len
+    printf " items in the map\n"
+    set $it = $map.e->forward[0]
+    set $_qmap_end = $map.e
+    ## Requires a process...
+    set $_qmap_payload = $map->payload()
+    while $it != $map.e
+        set $_qmap_nodeaddress = (char*)($it) - $_qmap_payload
+        set $_qmap_node = ('QMap<$arg1,$arg2>::Node' *)($_qmap_nodeaddress)
+        printf " key="
+        output $_qmap_node->key
+        printf " value="
+        output $_qmap_node->value
+        printf "\n"
+        # just in case the key and/or the value is a qstring, try printq4string on it
+        # (if this is too noisy with other types, remove it, and use
+        #  printq4stringdata on the shown d pointers instead, by hand)
+        printq4string $_qmap_node->key
+        printq4string $_qmap_node->value
+        set $it = $it->forward[0]
+    end
+end
+document printq4map
+  Prints the full contents of a Qt 4 QMap
+  Usage: 'printq4map map keytype valuetype'
+end
 
 define _qmapiterator_inc
     set $ret = $arg0
@@ -231,7 +264,7 @@ define _qmapiterator_inc
     end
 end
 document _qmapiterator_inc
-  Increment a qmap iterator (internal method, used by printqmap)
+  Increment a qmap iterator (internal method, used by printq3map)
 end
 
 define printqptrlist
