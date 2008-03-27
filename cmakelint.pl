@@ -497,8 +497,12 @@ sub processFile() {
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues +=
 	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi[\s/)]',
-		   'replace "akonadi" with "${KDE4_AKONADI_LIBS}"');
+		   'target_link_libraries.*[[:space:]]akonadi-kde[\s/)]',
+		   'replace "akonadi-kde" with "${KDE4_AKONADI_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-kmime[\s/)]',
+		   'replace "akonadi-kmime" with "${KDE4_AKONADI_KMIME_LIBS}"');
       $issues += 
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
