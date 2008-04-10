@@ -50,7 +50,7 @@ fi
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.0
+PROJECT_NUMBER         = 4.1
 OUTPUT_DIRECTORY       = $install_dir
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -95,7 +95,7 @@ EXTRACT_LOCAL_CLASSES  = YES
 EXTRACT_LOCAL_METHODS  = NO
 HIDE_UNDOC_MEMBERS     = NO
 HIDE_UNDOC_CLASSES     = NO
-HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_FRIEND_COMPOUNDS  = YES
 HIDE_IN_BODY_DOCS      = NO
 INTERNAL_DOCS          = NO
 CASE_SENSE_NAMES       = YES
@@ -138,7 +138,15 @@ FILE_PATTERNS          = *.cpp \
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = *.ui *.svn *.dir CMakeFiles
+EXCLUDE_PATTERNS       = */.svn/* \
+                         */cmake/* \
+                         *.moc.* \
+                         moc* \
+                         *.all_cpp.* \
+                         *unload.* \
+                         */test/* \
+                         */tests/* \
+                         *_p.h *_p.cpp
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
