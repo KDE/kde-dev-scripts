@@ -139,6 +139,7 @@ RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
+                         */.git/* \
                          */cmake/* \
                          *.moc.* \
                          moc* \
