@@ -481,6 +481,10 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kjs[\s/)]',
             'replace "kjs" with "${KDE4_KJS_LIBS}"');
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kjsapi[\s/)]',
+            'replace "kjsapi" with "${KDE4_KJSAPI_LIBS}"');
     }
 
 
