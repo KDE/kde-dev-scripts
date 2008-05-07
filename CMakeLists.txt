@@ -3,7 +3,6 @@
 if (UNIX)
 #shell program
 install(PROGRAMS
-  adddebug
   build-progress.sh
   cheatmake
   create_cvsignore
