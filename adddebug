@@ -4,7 +4,8 @@
 # - optionally (default) remove optimizations (-O[1-9]?)
 # - optionally remove -DNDEBUG and -DNO_DEBUG
 
-mxdp="-maxdepth 1"
+# depth is 2 because flags.make is within CMakeFiles/
+mxdp="-maxdepth 2"
 for i in $*; do
   case $i in
     -k) keep=1;;
