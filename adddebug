@@ -4,8 +4,8 @@
 # - optionally (default) remove optimizations (-O[1-9]?)
 # - optionally remove -DNDEBUG and -DNO_DEBUG
 
-# depth is 2 because flags.make is within CMakeFiles/
-mxdp="-maxdepth 2"
+# depth is 3 because flags.make is within CMakeFiles/foo.dir/
+mxdp="-maxdepth 3"
 for i in $*; do
   case $i in
     -k) keep=1;;
@@ -15,7 +15,7 @@ for i in $*; do
   esac
 done
 
-xpr='s/^((C|CXX|LD)FLAGS[ \t]*=.*)$/\1 -g3/'
+xpr='s/^((C|CXX|LD)_FLAGS[ \t]*=.*)$/\1 -g3/'
 if test -z $keep; then
   xpr="$xpr;"'s/[\t ]-O[1-9]?\b//g'
   xpr="$xpr;"'s/[\t ]-march=\S+\b//g'
@@ -24,5 +24,4 @@ if test -z $ndebug; then
   xpr="$xpr;"'s/[\t ]-DNDEBUG\b//g'
   xpr="$xpr;"'s/[\t ]-DNO_DEBUG\b//g'
 fi
-echo "xpr: $xpr"
 find . $mxdp -name flags.make -print0 | xargs -0 sed -rie "$xpr"
