@@ -17,7 +17,7 @@ ask_for_adding() {
 echo
 read -p "Add file $file to SVN ? (y/n) " answer rest
 #if [ "$answer" != "y" ]; then echo $file; fi
-if [ "$answer" == "y" ]; then svn add $file; fi
+if [ "$answer" = "y" ]; then svn add $file; fi
 }
 
 

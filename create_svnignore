@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # This script makes a preliminary svn:ignore in the current dir by
 # adding some standard stuff according to Makefile.am.
 # License: GPL
