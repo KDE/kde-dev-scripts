@@ -938,7 +938,7 @@ class CMakeFile
             file.printf(")\n\n")
 
             file.printf("set_target_properties(%s PROPERTIES VERSION %d.%d.%d SOVERSION %d)\n", buildTarget.name, buildTarget.versionNumberMajor, buildTarget.versionNumberMinor, buildTarget.versionNumberPatch, buildTarget.versionNumberMajor)
-            file.printf("install(TARGETS %s DESTINATION ${LIB_INSTALL_DIR})\n\n", buildTarget.name)
+            file.printf("install(TARGETS %s ${INSTALL_TARGETS_DEFAULT_ARGS})\n\n", buildTarget.name)
 
          elsif buildTarget.type==StaticLib
             file.printf("kde4_add_library(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
