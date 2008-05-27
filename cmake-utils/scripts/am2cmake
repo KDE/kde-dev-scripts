@@ -965,7 +965,7 @@ class CMakeFile
 
             file.printf("target_link_libraries(%s kdeinit_%s)\n", buildTarget.name, buildTarget.name)
 
-            file.printf("install(TARGETS %s DESTINATION ${BIN_INSTALL_DIR})\n", buildTarget.name)
+            file.printf("install(TARGETS %s ${INSTALL_TARGETS_DEFAULT_ARGS})\n", buildTarget.name)
 
          else  #executable
             if buildTarget.test
@@ -979,7 +979,7 @@ class CMakeFile
             file.printf(")\n\n")
 
             if buildTarget.install
-               file.printf("install(TARGETS %s DESTINATION ${BIN_INSTALL_DIR})\n\n", buildTarget.name)
+               file.printf("install(TARGETS %s ${INSTALL_TARGETS_DEFAULT_ARGS})\n\n", buildTarget.name)
             end
 
             if buildTarget.test
