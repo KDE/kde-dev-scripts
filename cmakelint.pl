@@ -174,10 +174,10 @@ sub processFile() {
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
-                          'replace "${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+                          'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]lib',
-			  'replace "lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+			  'replace "DESTINATION lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${LIB_INSTALL_DIR}/\$',
 			  'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
@@ -191,10 +191,10 @@ sub processFile() {
 
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
-			  'replace "${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+			  'replace "DESTINATION ${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/*bin/*',
-			  'replace "bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+			  'replace "DESTINATION bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${BIN_INSTALL_DIR}/\$',
 			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
