@@ -33,7 +33,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.8';
+my($Version) = '1.10';
 
 my($help) = '';
 my($version) = '';
@@ -73,14 +73,15 @@ sub processFile() {
   $top_of_module=1 if ($apath =~ m+/kdereview/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/kdebase/(apps|runtime|workspace)/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|base-apps|base-runtime|base-workspace|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasmoids)/CMakeLists.txt+);
 
   my($top_of_project)=0;
   $top_of_project=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/kdereview/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev)/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasmoids)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=0 if ($apath =~ m+/(cmake|pics)/+);
 
   my(@lines) = <IN>;
@@ -125,8 +126,7 @@ sub processFile() {
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	$pack = "libxslt" if ($pack eq "xsltproc_executable");
-	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient)_/) {
+	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/) {
 	  $pack =~ s/_found//;
 	  if (!defined($optpacks{$pack}{'name'})) {
 	    $issues++;
@@ -144,13 +144,6 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  '[[^:print:]]{\$',
 			  'non-printable characters detected');
-
-    if (!$top_of_module && $in !~ m+kdebase/[a-z]*/CMakeLists.txt+ && $in !~ m+/doc/CMakeLists.txt+) {
-      $issues +=
-	&checkLine($line,$linecnt,
-		   '[Mm][Aa][Cc][Rr][Oo]_[Oo][Pp][Tt][Ii][Oo][Nn][Aa][Ll]_[Aa][Dd][Dd]_[Ss][Uu][Bb][Dd][Ii][Rr][Ee][Cc][Tt][Oo][Rr][Yy]',
-		   'replace macro_optional_add_subdirectory with add_subdirectory');
-    }
 
     $issues += &checkLine($line,$linecnt,
 			  '[Kk][Dd][Ee]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
@@ -180,8 +173,11 @@ sub processFile() {
 			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
+                          'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
+                          'replace "${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+    $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]lib',
-			  'replace "lib" with "${LIB_INSTALL_DIR}"');
+			  'replace "lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${LIB_INSTALL_DIR}/\$',
 			  'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
@@ -194,8 +190,11 @@ sub processFile() {
 			  'replace "${INCLUDE_INSTALL_DIR}/${...}" with "${INCLUDE_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
+			  'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
+			  'replace "${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+    $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/*bin/*',
-			  'replace "bin" or "/bin" with "${BIN_INSTALL_DIR}"');
+			  'replace "bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${BIN_INSTALL_DIR}/\$',
 			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
@@ -265,7 +264,7 @@ sub processFile() {
 			  'INSTALL_FILES[[:space:]]*\(',
 			  'replace "install_files" with "install(FILES...)');
     $issues += &checkLine($line,$linecnt,
-			  'FILES[[:space:]]DESTINATION',
+			  '\sFILES\sDESTINATION',
 			  'missing list of files between FILES and DESTINATION');
     $issues += &checkLine($line,$linecnt,
 			  'TARGETS[[:space:]]DESTINATION',
@@ -575,6 +574,24 @@ sub processFile() {
 		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
 		   'Use the REQUIRED keyword with find_package()');
     }
+
+    my($subdir);
+    if ($line =~ m+macro_optional_add_subdirectory\s*\(\s*(\S*)\s*\)+) {
+      $subdir = $1;
+      if (!&canBeOptional($subdir) || ($top_of_module && ($in_kdelibs || $in_kdepimlibs))) {
+	if (!&mustBeOptional($subdir)) {
+	  $issues++;
+	  &printIssue($line,$linecnt,"Replace macro_optional_add_subdirectory($subdir) with add_subdirectory($subdir)");
+	}
+      }
+    }
+    if ($line =~ m+^\s*add_subdirectory\s*\(\s*(\S*)\s*\)+) {
+      $subdir = $1;
+      if (&mustBeOptional($subdir)) {
+	$issues++;
+	&printIssue($line,$linecnt,"Replace add_subdirectory($subdir) with macro_optional_add_subdirectory($subdir)");
+      }
+    }
   }
 
   #look for "missing" stuff
@@ -644,6 +661,27 @@ sub printIssue {
   } else {
     print "\t$explain\n";
   }
+}
+
+sub canBeOptional {
+  my($guy) = @_;
+
+  my($ret) = 1;
+  $ret = 0
+    if ($guy =~ m/^lib/ ||
+	$guy =~ m/lib$/ ||
+        $guy =~ m/^cmake$/
+       );
+  return $ret;
+}
+
+sub mustBeOptional {
+  my($guy) = @_;
+
+  my($ret) = 0;
+  $ret = 1
+    if ($guy =~ m/^doc$/);
+  return $ret;
 }
 
 #==============================================================================
