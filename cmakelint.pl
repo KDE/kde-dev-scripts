@@ -271,6 +271,10 @@ sub processFile() {
 			  'missing list of files between TARGETS and DESTINATION');
 
     $issues += &checkLine($line,$linecnt,
+			  'DESTINATION\s\$\{INSTALL_TARGETS_DEFAULT_ARGS\}',
+			  'remove DESTINATION keyword before ${INSTALL_TARGETS_DEFAULT_ARGS}');
+
+    $issues += &checkLine($line,$linecnt,
 			  'macro_bool_to_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
 			  'do not use a digit as a variable');
     $issues += &checkLine($line,$linecnt,
