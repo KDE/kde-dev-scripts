@@ -143,7 +143,7 @@ actions = [ #(new, old)
   ('system-lock-screen', 'lock'),
   ('system-run', 'run'),
   ('tab-new', 'tab_new'),
-  ('tab-remove', 'tab_remove'),
+  ('tab-close', 'tab_remove'),
   ('text-completion', 'completion'),
   ('thumbnail-show', 'thumbnail'),
   ('tools-check-spelling', 'spellcheck'),
