@@ -41,6 +41,9 @@ includemocs	Adds missing "#include foobar.moc" lines
 
 kdedoc		Open a kde help page in kfm/konqueror
 
+krazy-licensecheck Runs the Krazy2 license checker on a list of source files
+                   Requires Krazy2.
+
 qtdoc		Open a qt help page in kfm/konqueror
 
 kde-spellcheck.pl A script to check source code for misspelings and optionally
