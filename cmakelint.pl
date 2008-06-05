@@ -126,8 +126,10 @@ sub processFile() {
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/) {
+	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/ &&
+	    $pack !~ m/true/i && $pack !~ m/false/i) {
 	  $pack =~ s/_found//;
+	  $pack =~ s/_video//;
 	  if (!defined($optpacks{$pack}{'name'})) {
 	    $issues++;
 	    &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
@@ -172,12 +174,16 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
-    $issues += &checkLine($line,$linecnt,
-                          'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
-                          'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
-    $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]lib',
-			  'replace "DESTINATION lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+
+    if ($line !~ m/kdeinit/) {
+      $issues += &checkLine($line,$linecnt,
+			    'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
+			    'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+      $issues += &checkLine($line,$linecnt,
+			    'DESTINATION[[:space:]]lib',
+			    'replace "DESTINATION lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+    }
+
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${LIB_INSTALL_DIR}/\$',
 			  'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
@@ -189,12 +195,18 @@ sub processFile() {
 			  'DESTINATION[[:space:]]\${INCLUDE_INSTALL_DIR}/\$',
 			  'replace "${INCLUDE_INSTALL_DIR}/${...}" with "${INCLUDE_INSTALL_DIR}/realname"');
 
-    $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
-			  'replace "DESTINATION ${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
-    $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*bin/*',
-			  'replace "DESTINATION bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+    if ($line !~ m/PROGRAMS/ && $line !~ m/FILES/ &&
+	$line !~ m/PERMISSIONS/ &&
+	$line !~ m/OWNER/ && $line !~ m/GROUP/ && $line !~ m/WORLD/) {
+      $issues += &checkLine($line,$linecnt,
+			    'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
+			    'replace "DESTINATION ${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+
+      $issues += &checkLine($line,$linecnt,
+			    'DESTINATION[[:space:]]/*bin/*',
+			    'replace "DESTINATION bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+    }
+
     $issues += &checkLine($line,$linecnt,
 			  'DESTINATION[[:space:]]\${BIN_INSTALL_DIR}/\$',
 			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
