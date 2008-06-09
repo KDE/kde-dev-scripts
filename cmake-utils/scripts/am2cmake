@@ -15,7 +15,7 @@ BuildKDE4=2
 $withConv=false
 
 
-$buildType=BuildKDE3
+$buildType=BuildKDE4
 
 $allTargets=Array.new
 
@@ -1063,8 +1063,9 @@ if (ARGV.length==1)
       printf("--kde4\t create cmake files from KDE 4 automake/unsermake files\n")
       exit
    elsif ARGV[0]=="--version"
-      printf("am2cmake (C) 2005, Alexander Neundorf\n")
-      printf("Version 0.3, July 18th, 2006\n");
+      printf("am2cmake (C) 2005-2008, Alexander Neundorf\n")
+      printf("am2cmake (C) 2005-2008, Laurent Montel\n")
+      printf("Version 0.4, June 9th, 2008\n");
       exit
    else
       printf("Invalid argument, try --help\n")
