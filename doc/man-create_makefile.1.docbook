@@ -70,7 +70,7 @@ simpler variable <envar>OBJ_SUBDIR</envar> should be used. </para>
 </varlistentry>
 <varlistentry>
 <term><envar>OBJ_REPLACEMENT</envar></term>
-<listitem><para>A <command>sed</command> expression that is used to transform the source directory into the build directory. For instance, if the source directory is <filename class="directory">~/src/kdesdk</filename> and the build directory is <filename class="directory">~/src/kdesdk-obj</filename>, then <envar>OBJ_REPLACEMENT</envar> should be set to <paramater>s#kdesdk#kdesdk-obj#</parameter>.</para></listitem>
+<listitem><para>A <command>sed</command> expression that is used to transform the source directory into the build directory. For instance, if the source directory is <filename class="directory">~/src/kdesdk</filename> and the build directory is <filename class="directory">~/src/kdesdk-obj</filename>, then <envar>OBJ_REPLACEMENT</envar> should be set to <parameter>s#kdesdk#kdesdk-obj#</parameter>.</para></listitem>
 </varlistentry>
 </variablelist>
 
