@@ -225,6 +225,12 @@ while ($file = <$F>) {
     s!QSplitter::Vertical!Qt::Vertical!g;
     s!QSplitter::Horizontal!Qt::Horizontal!g;
 
+    s!\bQSqlError::Connection\b!QSqlError::ConnectionError!g;
+    s!QSqlError::None!QSqlError::NoError!g;
+    s!\bQSqlError::Statement\b!QSqlError::StatementError!g;
+    s!\bQSqlError::Transaction\b!QSqlError::TransactionError!g;
+    s!\bQSqlError::Unknown\b!QSqlError::UnknownError!g;
+
 
     if (/app/i) {
 	s!flushX!flush!; # QApplication
