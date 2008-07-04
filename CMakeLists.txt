@@ -18,6 +18,7 @@ install(PROGRAMS
   findmissingcrystal
   fix-include.sh
   kdedoc
+  krazy-licensecheck
   optimizegraphics
   nonsvnlist
   pruneemptydirs
