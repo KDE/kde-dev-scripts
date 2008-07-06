@@ -155,7 +155,8 @@ for my $file_name ( @ARGV )
      }
      else
      {
-       print "// Skipped empty message at $file_name line $.\n";
+       #print "// Skipped empty message at $file_name line $.\n";
+       # - seems this comment may confuse old custom xgettext of KDE3; not needed anyway
      }
 
      $string  =~ s/^.*<\/$text_string//o;
