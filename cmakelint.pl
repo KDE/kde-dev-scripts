@@ -74,14 +74,14 @@ sub processFile() {
   $top_of_module=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_module=1 if ($apath =~ m+/kdebase/(apps|runtime|workspace)/CMakeLists.txt+);
-  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|base-apps|base-runtime|base-workspace|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasmoids)/CMakeLists.txt+);
+  $top_of_module=1 if ($apath =~ m+/kde(libs|pimlibs|base|base-apps|base-runtime|base-workspace|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasma-addons)/CMakeLists.txt+);
 
   my($top_of_project)=0;
   $top_of_project=1 if ($apath =~ m+/koffice/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/kdereview/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/playground/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=1 if ($apath =~ m+/extragear/[a-zA-Z_1-9]*/[a-zA-Z_1-9]*/CMakeLists.txt+);
-  $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasmoids)/[a-zA-Z_1-9]*/CMakeLists.txt+);
+  $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasma-addons)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=0 if ($apath =~ m+/(cmake|pics)/+);
 
   my(@lines) = <IN>;
@@ -94,6 +94,7 @@ sub processFile() {
   my($pack,%optpacks);
 
   #look for "bad" stuff
+  my($prevline)="";
   foreach $line (@lines) {
     $linecnt++;
     chomp($line);
@@ -126,13 +127,16 @@ sub processFile() {
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(have|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/ &&
+	if ($pack !~ m/^(compositing|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/ &&
 	    $pack !~ m/true/i && $pack !~ m/false/i) {
+	  $pack =~ s/have_//;
 	  $pack =~ s/_found//;
 	  $pack =~ s/_video//;
 	  if (!defined($optpacks{$pack}{'name'})) {
-	    $issues++;
-	    &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
+	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
+	      $issues++;
+	      &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
+	    }
 	  }
 	  $optpacks{$pack}{'log'} = 1;
 	}
@@ -175,7 +179,7 @@ sub processFile() {
 			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
 
-    if ($line !~ m/kdeinit/) {
+    if ($line !~ m/kdeinit/ && $prevline !~ m/kdeinit/) {
       $issues += &checkLine($line,$linecnt,
 			    'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
 			    'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
@@ -608,6 +612,7 @@ sub processFile() {
 	&printIssue($line,$linecnt,"Replace add_subdirectory($subdir) with macro_optional_add_subdirectory($subdir)");
       }
     }
+    $prevline = $line;
   }
 
   #look for "missing" stuff
