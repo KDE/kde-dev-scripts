@@ -74,7 +74,8 @@ while ($file = <$F>) {
     s!Qt::pointingHandCursor!Qt::PointingHandCursor!;
     s!Qt::forbiddenCursor!Qt::ForbiddenCursor!;
     s!Qt::whatsThisCursor!Qt::WhatsThisCursor!;
-
+   
+    s!\bQPen::PenStyle\b!Qt::PenStyle!g;
     s!QSlider::Below!QSlider::TicksBelow!;
     s!QSlider::Above!QSlider::TicksAbove!;
 
