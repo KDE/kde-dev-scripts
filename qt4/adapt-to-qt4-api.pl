@@ -128,6 +128,7 @@ while ($file = <$F>) {
 
     s!QMouseEvent::LeftButton!Qt::LeftButton!;
     s!QMouseEvent::RightButton!Qt::RightButton!;
+    s!QMouseEvent::MidButton!Qt::MidButton!;
 
     s!convertToAbs!makeAbsolute!;
     s!currentDirPath!currentPath!;
@@ -162,6 +163,7 @@ while ($file = <$F>) {
     s!SHIFT!Qt::SHIFT!g unless (/Qt::SHIFT/);
     s!LeftButton!Qt::LeftButton!g unless (/Qt::LeftButton/);
     s!RightButton!Qt::RightButton!g unless (/Qt::RightButton/);
+    s!MidButton!Qt::MidButton!g unless (/Qt::RightButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
     s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
    
