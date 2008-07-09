@@ -130,6 +130,8 @@ while ($file = <$F>) {
     s!QMouseEvent::RightButton!Qt::RightButton!;
     s!QMouseEvent::MidButton!Qt::MidButton!;
 
+    s!QWidget::NoFocus!Qt::NoFocus!g'
+
     s!convertToAbs!makeAbsolute!;
     s!currentDirPath!currentPath!;
     s!homeDirPath!homePath!;
