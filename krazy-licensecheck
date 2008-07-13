@@ -58,6 +58,6 @@ if ($krazyPath eq "") {
 
 my($licenseCheckerPath) = $krazyPath . "/lib/krazy2/krazy-plugins/c++/license";
 
-system("$licenseCheckerPath --verbose @ARGV");
+system("$licenseCheckerPath --krazy --verbose @ARGV");
 
 
