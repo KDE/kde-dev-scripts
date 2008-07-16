@@ -164,12 +164,9 @@ With arg, do it arg times."
        (progn
 	 (define-key c++-mode-map "\," 'insert-comma)
 	 (define-key c++-mode-map "\{" 'insert-curly-brace)
-	 ;; Add (setq magic-parens-mode nil) to your .emacs (before loading this file)
-	 ;; to disable the automatic spaces inside "( ... )" in C++ mode.
-	 (and (boundp 'magic-parens-mode) magic-parens-mode
-	      (define-key c++-mode-map "\(" 'insert-parens)
-	      (define-key c++-mode-map "\)" 'insert-parens2)
-	 )))
+	 (define-key c++-mode-map "\(" 'insert-parens)
+	 (define-key c++-mode-map "\)" 'insert-parens2)
+	 ))
   )
 
 (defun kde-c-mode-hook ()

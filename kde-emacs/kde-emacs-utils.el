@@ -488,9 +488,14 @@ This function does not do any hidden buffer changes."
     )
   )
 
+;; Add (setq magic-parens-mode nil) to your .emacs (before loading this file)
+;; to disable the automatic spaces inside "( ... )" in C++ mode.
+;; This can also be enabled/disabled per project using  magic-parens-mode: t  in .emacs-dirvars.
+
 ; Makes '(' insert '(' or ' ( ' where appropiate
 (defun insert-parens (arg) (interactive "*P")
-  (if (not (c-in-literal))
+  (if (and (not (c-in-literal))
+           (boundp 'magic-parens-mode) magic-parens-mode)
       (let ((n nil) (except nil))
         (save-excursion
           (setq n (or (progn (forward-char -2) (looking-at "\\bif"))
@@ -519,7 +524,8 @@ This function does not do any hidden buffer changes."
   )
 
 (defun insert-parens2 (arg) (interactive "*P")
-  (if (not (c-in-literal))
+  (if (and (not (c-in-literal))
+           (boundp 'magic-parens-mode) magic-parens-mode)
       (let ((remv nil) (nospac nil))
         (forward-char -2)
         (setq remv (looking-at "( ")) ; () -> we'll have to remove that space
