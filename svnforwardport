@@ -1,5 +1,5 @@
 #!/bin/sh
-# Backport the last change in HEAD, to a branch.
+# Forwardport the last change in a branch to HEAD
 # Usage: svnforwardport <files>
 #
 # This is a port of the "cvsbackport" script:
