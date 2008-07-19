@@ -24,6 +24,7 @@ install(PROGRAMS
   pruneemptydirs
   qtdoc
   svnbackport
+  svnforwardport
   svnchangesince
   svngettags
   svnlastlog
