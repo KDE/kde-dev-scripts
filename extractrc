@@ -21,6 +21,7 @@ i18n() calls so that xgettext can parse them.
 
 --context=name    : Give i18n calls a context name: i18nc("name", ...)
 --lines           : Include source line numbers in comments (deprecated, it is switched on by default now)
+--cstart=chars    : Start of to-EOL style comments in output, defaults to //
 --help|?          : Display this summary
 
 EOF
@@ -51,6 +52,7 @@ GetOptions ( "tag=s"       => \my @opt_extra_tags,
              "tag-group=s" => \my $opt_tag_group,
              "context=s"   => \my $opt_context,       # I18N context
              "lines"       => \my $opt_lines,
+             "cstart=s"    => \my $opt_cstart,
              "help|?"      => \&usage );
 
 unless( @ARGV )
@@ -67,7 +69,7 @@ die "Unknown tag group: '$opt_tag_group', should be one of " . TAG_GROUPS
 my $tags = TAG_GROUP->{$opt_tag_group};
 my $extra_tags  = join "", map "|" . quotemeta, @opt_extra_tags;
 my $text_string = qr/($tags$extra_tags)( [^>]*)?>/;    # Precompile regexp
-
+my $cstart = $opt_cstart || "//";
 
 ###########################################################################################
 #  Escape characters in string exactly like uic does.
@@ -161,9 +163,9 @@ for my $file_name ( @ARGV )
      {
        if ( not $context or $context ne "KDE::DoNotExtract" )
        {
-         print "//i18n: tag $tag\n";
-         print "//i18n: file $file_name line $.\n";
-         print "// xgettext: no-c-format\n" if $text =~ /%/o;
+         print "$cstart i18n: tag $tag\n";
+         print "$cstart i18n: file $file_name line $.\n";
+         print "$cstart xgettext: no-c-format\n" if $text =~ /%/o;
          if ( $context )
          {
            $context = escape_like_uic($context);
@@ -178,12 +180,12 @@ for my $file_name ( @ARGV )
        }
        else
        {
-         print "// Manually excluded message at $file_name line $.\n";
+         print "$cstart Manually excluded message at $file_name line $.\n";
        }
      }
      else
      {
-       print "// Skipped empty message at $file_name line $.\n";
+       print "$cstart Skipped empty message at $file_name line $.\n";
      }
 
      $string  =~ s/^.*<\/$text_string//o;
