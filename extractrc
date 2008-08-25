@@ -52,6 +52,7 @@ use constant ECTX_SPEC =>
   # Order of attributes determines their order in the extracted comment.
   "ui" => {
     "widget" => [10, ["class", "name"]],
+    "item" => [15, []],
     "property" => [20, ["name"]],
     "attribute" => [20, ["name"]],
   },
