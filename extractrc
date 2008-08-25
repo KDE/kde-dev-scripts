@@ -55,6 +55,17 @@ use constant ECTX_SPEC =>
     "property" => [20, ["name"]],
     "attribute" => [20, ["name"]],
   },
+  "rc" => {
+    "Menu" => [10, ["name"]],
+    "ToolBar" => [10, ["name"]],
+  },
+  "kcfg" => {
+    "group" => [10, ["name"]],
+    "entry" => [20, ["name"]],
+    "whatsthis" => [30, []],
+    "tooltip" => [30, []],
+    "label" => [30, []],
+  },
 };
 
 # Add attribute lists as hashes, for membership checks.
@@ -170,7 +181,7 @@ for my $file_name ( @ARGV )
      {
        # Check if this line contains context-worthy element.
        if (    $ectx_ext
-           and ( ($tag, $attr) = $string =~ /<$ectx_string/o )
+           and ( ($tag, $attr) = $string =~ /<$ectx_string/ ) # no /o here
            and exists ECTX_SPEC->{$ectx_ext}{$tag} )
        {
          my @atts;
@@ -225,7 +236,8 @@ for my $file_name ( @ARGV )
      {
        if ( not $context or $context ne "KDE::DoNotExtract" )
        {
-         print "$cstart i18n: file: $file_name:$.\n";
+         (my $norm_fname = $file_name) =~ s/^\.\///;
+         print "$cstart i18n: file: $norm_fname:$.\n";
          if ( @ectx ) {
            # Format element-context.
            my @tag_gr;
@@ -237,7 +249,8 @@ for my $file_name ( @ARGV )
                push @attr_gr, "$agr->[0]=$agr->[1]";
              }
              my $attr = join(", ", @attr_gr);
-             push @tag_gr, "$tgr->[1] ($attr)";
+             push @tag_gr, "$tgr->[1] ($attr)" if $attr;
+             push @tag_gr, "$tgr->[1]" if not $attr;
            }
            my $ectx_str = join ", ", @tag_gr;
            print "$cstart i18n: ectx: $ectx_str\n";
