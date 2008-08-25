@@ -188,7 +188,7 @@ for my $file_name ( @ARGV )
          my @atts;
          for my $ectx_att ( @{ECTX_SPEC->{$ectx_ext}{$tag}[1]} )
          {
-           if ( $attr =~ /\b$ectx_att\s*=\s*(["'])([^"']*?)\1/ )
+           if ( $attr and $attr =~ /\b$ectx_att\s*=\s*(["'])([^"']*?)\1/ )
            {
              my $aval = $2;
              push @atts, [$ectx_att, $aval];
