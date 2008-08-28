@@ -34,6 +34,7 @@ EOF
 use strict;
 use warnings;
 use Getopt::Long;
+use Data::Dumper;
 
 use constant TAG_GROUP => 
 {
@@ -44,6 +45,37 @@ use constant TAG_GROUP =>
 
 use constant TAG_GROUPS => join ", ", map "'$_'", sort keys %{&TAG_GROUP};
 
+# Specification to extract nice element-context for strings.
+use constant ECTX_SPEC =>
+{
+  # Data structure: extension => {tag => [ctxlevel, [attribute, ...]], ...}
+  # Order of attributes determines their order in the extracted comment.
+  "ui" => {
+    "widget" => [10, ["class", "name"]],
+    "item" => [15, []],
+    "property" => [20, ["name"]],
+    "attribute" => [20, ["name"]],
+  },
+  "rc" => {
+    "Menu" => [10, ["name"]],
+    "ToolBar" => [10, ["name"]],
+  },
+  "kcfg" => {
+    "group" => [10, ["name"]],
+    "entry" => [20, ["name"]],
+    "whatsthis" => [30, []],
+    "tooltip" => [30, []],
+    "label" => [30, []],
+  },
+};
+
+# Add attribute lists as hashes, for membership checks.
+for my $ext ( keys %{&ECTX_SPEC} ) {
+  for my $tag ( keys %{ECTX_SPEC->{$ext}} ) {
+    my $arr = ECTX_SPEC->{$ext}{$tag}[1];
+    ECTX_SPEC->{$ext}{$tag}[2] = {map {$_ => 1} @{$arr}};
+  }
+}
 
 ###########################################################################################
 # Add options here as necessary - perldoc Getopt::Long for details on GetOptions
@@ -70,6 +102,7 @@ my $tags = TAG_GROUP->{$opt_tag_group};
 my $extra_tags  = join "", map "|" . quotemeta, @opt_extra_tags;
 my $text_string = qr/($tags$extra_tags)( [^>]*)?>/;    # Precompile regexp
 my $cstart = $opt_cstart || "//";
+my $ectx_known_exts = join "|", keys %{&ECTX_SPEC};
 
 ###########################################################################################
 #  Escape characters in string exactly like uic does.
@@ -102,6 +135,15 @@ for my $file_name ( @ARGV )
     next;
   }
 
+  # Ready element-context extraction.
+  my $ectx_ext;
+  my $ectx_string;
+  if ( $file_name =~ /\.($ectx_known_exts)$/ ) {
+    $ectx_ext = $1;
+    my $ectx_tag_gr = join "|", keys %{ECTX_SPEC->{$ectx_ext}};
+    $ectx_string = qr/($ectx_tag_gr)( [^>]*)?>/; # precompile regexp
+  }
+
   my $string          = "";
   my $in_text         = 0;
   my $start_line_no   = 0;
@@ -109,6 +151,10 @@ for my $file_name ( @ARGV )
   my $tag = "";
   my $attr = "";
   my $context = "";
+
+  # Element-context data: [[level, tag, [[attribute, value], ...]], ...]
+  # such that subarrays are ordered increasing by level.
+  my @ectx = ();
 
   while ( <$fh> )
   {
@@ -134,6 +180,34 @@ for my $file_name ( @ARGV )
 
      unless ( $in_skipped_prop or $in_text )
      {
+       # Check if this line contains context-worthy element.
+       if (    $ectx_ext
+           and ( ($tag, $attr) = $string =~ /<$ectx_string/ ) # no /o here
+           and exists ECTX_SPEC->{$ectx_ext}{$tag} )
+       {
+         my @atts;
+         for my $ectx_att ( @{ECTX_SPEC->{$ectx_ext}{$tag}[1]} )
+         {
+           if ( $attr and $attr =~ /\b$ectx_att\s*=\s*(["'])([^"']*?)\1/ )
+           {
+             my $aval = $2;
+             push @atts, [$ectx_att, $aval];
+           }
+         }
+         # Kill all tags in element-context with level higer or equal to this,
+         # and add it to the end.
+         my $clevel = ECTX_SPEC->{$ectx_ext}{$tag}[0];
+         for ( my $i = 0; $i < @ectx; ++$i )
+         {
+           if ( $clevel <= $ectx[$i][0] )
+           {
+             @ectx = @ectx[0 .. ($i - 1)];
+             last;
+           }
+         }
+         push @ectx, [$clevel, $tag, [@atts]];
+       }
+
        if ( ($tag, $attr) = $string =~ /<$text_string/o )
        {
          my ($attr_comment) = $attr =~ /\w*comment=\"([^\"]*)\"/ if $attr;
@@ -163,8 +237,26 @@ for my $file_name ( @ARGV )
      {
        if ( not $context or $context ne "KDE::DoNotExtract" )
        {
-         print "$cstart i18n: tag $tag\n";
-         print "$cstart i18n: file $file_name line $.\n";
+         (my $norm_fname = $file_name) =~ s/^\.\///;
+         print "$cstart i18n: file: $norm_fname:$.\n";
+         if ( @ectx ) {
+           # Format element-context.
+           my @tag_gr;
+           for my $tgr (reverse @ectx)
+           {
+             my @attr_gr;
+             for my $agr ( @{$tgr->[2]} )
+             {
+               #push @attr_gr, "$agr->[0]=$agr->[1]";
+               push @attr_gr, "$agr->[1]"; # no real nead for attribute name
+             }
+             my $attr = join(", ", @attr_gr);
+             push @tag_gr, "$tgr->[1] ($attr)" if $attr;
+             push @tag_gr, "$tgr->[1]" if not $attr;
+           }
+           my $ectx_str = join ", ", @tag_gr;
+           print "$cstart i18n: ectx: $ectx_str\n";
+         }
          print "$cstart xgettext: no-c-format\n" if $text =~ /%/o;
          if ( $context )
          {
