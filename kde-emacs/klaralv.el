@@ -35,16 +35,16 @@
 ;; as in qtopia/qpeapplication, then insert the following code in your setup
 ;; (setq kdab-prefix-qpe nil)
 ;;
-;; If you are using Qt 4 rather than Qt 3, insert the following line into you setup:
-;; (setq kdab-qt-version 4)
+;; If you are using Qt 3 rather than Qt 4, insert the following line into you setup:
+;; (setq kdab-qt-version 3)
 ;; or in a .emacs-dirvars file:
-;; kdab-qt-version: 4
+;; kdab-qt-version: 3
 ;;
 ;; Finally, if you do not want header files to be inserted lower-cased when
 ;; not found locally, insert (kdab-lowercase-header-files nil)
 
 ;; ------------------------------ CONFIGURATION ------------------------------
-(defvar kdab-qt-version 3
+(defvar kdab-qt-version 4
   "Specify which header files to use")
 
 (defvar kdab-include-qpe nil
