@@ -56,6 +56,14 @@
 (defvar kdab-lowercase-header-files 't
   "Should header files be all lowercase, or would you prefer to use same case as class?")
 
+(defvar kdab-private-special-includes '()
+  "Override variable for special include specifications")
+
+(defvar kdab-suffix-for-private-headers "_p\\|_priv"
+  "Regular expression specifying the possible suffix to a file name for private includes.
+The default regular expression allows that a file named test.cpp may include test_p.h or test_priv.h.
+This is used when inserting headers, to ensure that no includes are inserted before the private header")
+
 ;; ------------------------------ Include Specifications ------------------------------ 
 ;; special case for include files
 ;; Please notify blackie@klaralvdalens-datakonsult.se with any modification to this variable!
@@ -294,10 +302,11 @@
     res))
 
 (defun kdab-get-special-include-list ()
-  (kdab-join-lists kdab-special-includes
-                   (kdab-join-lists (if (eq kdab-qt-version 3) kdab-qt3-special-includes 
-                                      (if (eq kdab-qt-version 4) (kdab-build-qt4-special-includes) '()))
-                                    (if kdab-include-qpe (kdab-build-qpe-special-incldues) '()))))
+  (kdab-join-lists kdab-private-special-includes
+                   (kdab-join-lists kdab-special-includes
+                                    (kdab-join-lists (if (eq kdab-qt-version 3) kdab-qt3-special-includes 
+                                                       (if (eq kdab-qt-version 4) (kdab-build-qt4-special-includes) '()))
+                                                     (if kdab-include-qpe (kdab-build-qpe-special-incldues) '())))))
 
 ;; Lookup class `cls' in kdab-special-includes and return the associate include file name
 (defun kdab-map-special (cls)
@@ -402,24 +411,42 @@
             (message (concat "commented in #include for " header))))
       
       (if (not (re-search-forward (concat "#include *[\"<][ \t]*" header "[ \t]*[\">]") nil t))
-          (progn
-            ; No include existed
-            (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
-	    (while (and (re-search-backward "^#include *[\"<]\\([^\">]+\\)[\">]" nil t)
-			(string-match ".*moc.*" (match-string 1))) 
-	      ; each iteration moves up until finding a #include which isn't a moc
-	      )
-            (if (not (looking-at "^#include *[\"<][^\">]+ *[\">]"))
-                (beginning-of-buffer)
-              (progn (end-of-line) (forward-char 1)))
-            
-            ;; Now insert the header
-            (insert (concat include-file "\n"))
-            (when show-message
-              (message (concat "inserted " include-file))))
+          (kdab-insert-header-from-end include-file show-message) ;; No include existed
         (when show-message
-              (message (concat "header file \"" header "\" is already included")))))))
+          (message (concat "header file \"" header "\" is already included")))))))
 
+;--------------------------------------------------------------------------------
+; Insert header file starting the search from behind. This is a helper function for 
+; kdab-insert-include-file
+; Historically kdab-insert-include-file added the include file at the end of the list
+; of include files, which had the unfortunate effect that it sometimes inserted the
+; include into #ifdef'ed sections.
+; So now we insert it at the top of the list. We need to go after the include for
+; the source files own header.
+;--------------------------------------------------------------------------------
+(defun kdab-insert-header-from-end (include-file show-message)
+  (let ((basename (file-name-nondirectory (file-name-sans-extension (buffer-file-name))))
+        found-own-include found-any-include)
+    (goto-char (point-max)) ; Using end-of-buffer makes point move, despite save-excursion
+    (setq found-own-include 
+          (re-search-backward (concat "^[ \t]*#[ \t]*include[ \t]*[\"<]" basename "\\(" 
+                                      kdab-suffix-for-private-headers "\\)?\\(.h\\)?[\">]") nil 't))
+    
+    (if found-own-include
+        (progn ; Found an include for my own header file
+          (next-line 1)
+          (beginning-of-line))
+      (progn ; Did not find a local include - we will then insert before first include
+        (beginning-of-buffer)
+        (setq found-any-include (re-search-forward "^[ \s]*#include[ \t]*[\"<]\\([^\">]+\\)[\">]" nil t))
+        (if found-any-include
+            (beginning-of-line) ;; OK we found some include
+          (beginning-of-buffer)))) ;; None found at all.
+
+    ;; Now insert the header
+    (insert (concat include-file "\n"))
+    (when show-message
+      (message (concat "inserted " include-file)))))
 
 
 ;----------------------------------------------------------------------------
