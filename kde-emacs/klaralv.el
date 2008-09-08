@@ -257,128 +257,9 @@
     (tzselect.h TZCombo TimeZoneSelector)
     ))
 
+; List of classes in Qt4 that don't start with a Q.
 (defvar kdab-qt4-classes
-  '(QtNsPlugin QClipboard QPixmap QPen QRgb QMessageBox
-               QRegion QImageReader QItemEditorCreator QTimeEdit QCloseEvent QPushButton
-               QAbstractScrollArea QTabBar QSlider QPicture QRadialGradient QStandardItemModel QStringListModel
-               QListWidget QPageSetupDialog QAccessibleApplication QHelpEvent QTextDocumentFragment QDragMoveEvent
-               QImageIOHandlerFactoryInterface QDropEvent QInputContextFactoryInterface QStyleHintReturnMask QWidget QTextTableCell
-               QPrintDialog QKeyEvent QDial QDrag QFont QIcon
-               QItemSelection QMenu QImageWriter QAbstractSlider QtGui QStyleOptionToolBox
-               QTableView QWidgetData QPrintEngine QWidgetItem QWidgetList QStyleOptionProgressBar
-               QScrollBar QPolygon QAccessibleFactoryInterface QProgressDialog QStyleOptionButton QClipboardEvent
-               QHideEvent QDragLeaveEvent QWhatsThisClickedEvent QColor QLineEdit QStyleOptionFocusRect
-               QFrame QImage QPrinter QLabel QMovie QStyleOptionTabWidgetFrame
-               QSound QStyle QMoveEvent QAccessibleBridge QStyleOptionHeader QFileOpenEvent
-               QGradientStop QMenuItem QAbstractPageSetupDialog QVBoxLayout QItemEditorFactory QTextObjectInterface
-               QIconEngineFactoryInterface QTreeView QStyleOptionTabBarBase QWhatsThisAction QListView QGradientStops
-               QRegExpValidator QAbstractSpinBox QTextFragment QStackedLayout QAccessibleInterface QCommonStyle
-               QIconEngine QDateEdit QLayoutIterator QPictureFormatInterface QTextTableFormat QResizeEvent
-               QFontMetrics QGradient QImageIOHandler QShortcut QAccessibleObject QTextBlockGroup
-               QStyleOptionSlider QApplication QTableWidgetItem QInputDialog QPainterPathStroker QVBoxWidget
-               QAccessiblePlugin QTextBrowser QStyleFactoryInterface QImageTextKeyLang QErrorMessage QTextFrameLayoutData
-               QHoverEvent QX11Info QScrollArea QDirModel QAbstractTextDocumentLayout QWindowsStyle
-               QStackedWidget QStyleOptionTitleBar QAbstractItemView QStylePainter QSplitter QStyleOptionViewItem
-               QAccessibleWidget QVFbHeader QAccessible QTextFrameFormat QGridLayout QButtonGroup
-               QFontInfo QMotifPlusStyle QProgressBar QLinearGradient QMacMime QContextMenuEvent
-               QStyleHintReturn QStyleOptionQ3ListViewItem QActionEvent QActionGroup QDockWidget QWidgetContainerPlugin
-               QWSUpdateEvent QStyleOptionMenuItem QVFbKeyData QAbstractItemDelegate QPolygonF QCheckBox
-               QIntValidator QColorGroup QTreeWidgetItem QGroupBox QCursorShape QTableWidgetSelectionRange
-               QCompactStyle QSplitterHandle QMenuBar QStyleOptionDockWidget QWindowsXPStyle QPixmapCache
-               QSpinBox QDoubleSpinBox QTextCursor QFontMetricsF QInputMethodEvent QShortcutEvent
-               QSizeGrip QInputContextFactory QLCDNumber QTextEdit QTextItem QTextLine
-               QTextList QToolButton QGridWidget QFontDatabase QTextFormat QListWidgetItem
-               QPlatinumStyle QAccessibleBridgeFactoryInterface QKeySequence QStyleOptionComplex QTableWidget QFontDialog
-               QTextInlineObject QStyleOptionFrame QComboBox QTextListFormat QHBoxLayout QColormap
-               QDragEnterEvent QStyleOptionQ3ListView QDragResponseEvent QValidator QStyleOptionToolButton QItemDelegate
-               QStyleOptionQ3DockWindow QTextDocument QWMatrix QTextLayout QTreeWidget QRadioButton
-               QSplashScreen QToolBarChangeEvent QTextCharFormat QToolBar QToolBox QToolTip
-               QDesktopWidget QDoubleValidator QShowEvent QTextObject QConicalGradient QTextOption
-               QDateTimeEdit QWidgetMapper QWindowsMime QStyleOption QLayoutItem QTextBlock
-               QTextImageFormat QTextFrame QPaintDevice QSizePolicy QTextTable QFocusEvent
-               QAction QFocusFrame QTextBlockFormat QHBoxWidget QHeaderView QPaintEngine
-               QWidgetPlugin QMainWindow QBitmap QAbstractUndoItem QSpacerItem QFileIconProvider
-               QColorDialog QDialog QDialogButtonBox QCDEStyle QCursor QTabWidget QItemSelectionModel
-               QFileDialog QInputEvent QItemSelectionRange QProxyModel QRubberBand QItemEditorCreatorBase
-               QMotifStyle QPainterPathPrivate QStatusTipEvent QAbstractButton QPictureIO QWheelEvent
-               QAbstractPrintDialog QBrushData QInputContext QMouseEvent QBoxLayout QLayout
-               QPainter QPalette QMatrix QIconSet QWidgetFactoryInterface QStyleOptionComboBox
-               QSessionManager QStyleOptionSpinBox QTabletEvent QStyleOptionTab QStatusBar QWhatsThis
-               QPaintEvent QStyleFactory QSGIStyle QIconDragEvent QSqlRelationalDelegate QTDSResult
-               QOCIResult QtSql QPSQLResult QSqlDriver QSqlDriverFactoryInterface QSqlTableModel
-               QIBaseDriver QSqlRelation QSqlRecord QSqlResult QSqlDatabase QIBaseResult
-               QSQLiteDriver QSqlDriverCreatorBase QSQLite2Driver QSqlError QSqlField QSqlIndex
-               QSqlQuery QODBCDriver QSQLiteResult QDB2Driver QSQLite2Result QSqlRelationalTableModel
-               QMYSQLDriver QODBCResult QSqlDriverCreator QDB2Result QSqlQueryModel QTDSDriver
-               QOCIDriver QPSQLDriver QMYSQLResult QDomProcessingInstruction QXmlContentHandler QXmlParseException
-               QXmlLexicalHandler QtXml QDomNodeList QDomElement QDomDocument QDomDocumentType
-               QDomAttr QDomNode QDomText QDomEntity QDomNotation QXmlDefaultHandler
-               QDomDocumentFragment QXmlDeclHandler QXmlAttributes QXmlEntityResolver QDomImplementation QXmlInputSource
-               QXmlLocator QXmlReader QDomNamedNodeMap QXmlDTDHandler QXmlErrorHandler QDomCharacterData
-               QDomEntityReference QXmlNamespaceSupport QXmlSimpleReader QDomCDATASection QDomComment QTS
-               QDir QMap QSet QUrl QPointF QSharedDataPointer
-               QStringMatcher QVariantMap QRegExp QVectorData QIODevice QReadLocker
-               QVariantComparisonHelper QSignal QThread QString QLatin1String QVector
-               QSingleCleanupHandler QtPluginInstanceFunction QBool QChar QDate QFile
-               QFlag QLine QList QPair QRect QSize
-               QTime QUuid Q_PID QPointer QAbstractEventDispatcher QCharRef
-               QStringListIterator QAbstractListModel QChildEvent QMutableSetIterator QFactoryInterface QGlobalStatic
-               Q_INT16 Q_INT32 Q_INT64 Q_LLONG QCache QDebug
-               QEvent QFlags Q_UINT8 Q_ULONG QMutableStringListIterator QLineF
-               QMutex QProcess QPoint QSignalEmitter QRectF QQueue
-               QSizeF QStack QTimer QTextCodecFactoryInterface Q_INT8 Q_LONG
-               QCleanupHandler QBasicAtomicPointer QtCore QByteRef QBitArray QVariantList
-               QSharedCleanupHandler QListData QMetaEnum QMetaType QModelIndexList QSocketNotifier
-               QDateTime QDataStream QStringList QObjectData QObjectList QForeachContainer
-               QtAlgorithms QLibraryInfo QSharedData QResource QByteArrayMatcher QMutableVectorIterator
-               QTypeInfo QVectorTypedData QSemaphore QThreadStorage QMetaProperty QVectorIterator
-               QTranslatorMessage QPersistentModelIndex QMutexLocker QLibrary QSignalMapper QTextDecoder
-               QMetaClassInfo QSetIterator QtMsgHandler QMapData QHashIterator QFixedPoint
-               QMultiMap QFileEngineHandler QHashDummyValue QBasicTimer QCoreApplication QFileInfo
-               QExplicitlySharedDataPointer QTimerEvent QNoImplicitBoolCast QMutableHashIterator QMutableMapIterator QEventLoop
-               QCustomEvent QGenericReturnArgument QHashData QHashNode QSysInfo QFileInfoListIterator
-               QByteArray QModelIndex QWaitCondition QVarLengthArray QMetaMember QTextEncoder
-               QLatin1Char QMimeData QMetaObject QForeachMemory QThreadStorageData QMetaResource
-               QTemporaryFile QTextCodec QListIterator QLinkedListData QFileInfoList QLinkedListNode
-               QNoDebug QReadWriteLock QTextStream QObjectCleanupHandler QFixedPointLong QtCleanUpFunction
-               QAtomic QBitRef QTextStreamFunction QGenericArgument QObjectUserData QVariant
-               QBuffer QLinkedList QArgument QMetaTypeId QtGlobal QTextOStream
-               QMutableListIterator QFileEngine QWriteLocker QBasicAtomic QTextStreamManipulator QStdWString
-               QLinkedListIterator Q_UINT16 Q_UINT32 Q_UINT64 Q_ULLONG QAbstractTableModel
-               QMapIterator QAtomicPointer QLocale QMutableLinkedListIterator QConstString QAbstractItemModel
-               QSettings QObject QTextIStream QReturnArgument QTranslator QPluginLoader
-               ActiveQt QFtp QTcpServer QTcpSocket QHttp QAbstractSocket
-               QIPv6Address QUdpSocket QHttpHeader QtNetwork QHttpResponseHeader QHttpRequestHeader
-               QHostInfo Q_IPV6ADDR QUrlInfo QHostAddress QMotif QtMotif
-               QMotifDialog QXtWidget QMotifWidget Q3DragObject Q3TabDialog Q3CanvasItemList
-               Q3DeepCopy Q3StrIVec Q3StrList Q3IntBucket Q3DropSite Q3PtrListStdIterator
-               Q3AsciiDictIterator Q3CanvasPixmapArray Q3ListBoxItem Q3ListBoxText Q3DockWindow Q3Dns
-               Q3Ftp Q3Url Q3SqlPropertyMap Q3ToolBar Q3HttpRequestHeader Q3SqlRecordInfo
-               Q3StringBucket Q3ImageDrag Q3Http Q3FileIconProvider Q3DockAreaLayout Q3CanvasRectangle
-               Q3ServerSocket Q3TableSelection Q3CanvasItem Q3CanvasLine Q3CanvasText Q3CanvasView
-               Q3StoredDrag Q3TextEditOptimPrivate Q3MultiLineEdit Q3ValueList Q3NetworkProtocolFactory Q3NetworkProtocol
-               Q3DnsSocket Q3CString Q3UriDrag Q3Action Q3ListViewItemIterator Q3Canvas
-               Q3IntCacheIterator Q3ValueListConstIterator Q3Button Q3GCache Q3Painter Q3TimeEdit
-               Q3DataBrowser Q3StyleSheet Q3Header Q3StrIList Q3MainWindow Q3WhatsThis
-               Q3NetworkOperation Q3SqlFieldInfoList Q3CanvasPolygon Q3FileDialog Q3DockArea Q3Picture
-               Q3SqlSelectCursor Q3MemArray Q3PtrListIterator Q3ComboTableItem Q3SortedList Q3CanvasPolygonalItem
-               Q3SocketDevice Q3HButtonGroup Q3PtrDictIterator Q3VButtonGroup Q3PolygonScanner Q3IconViewItem
-               Q3AsciiCacheIterator Q3PtrBucket Q3PointArray Q3ObjectDictionary Q3Shared Q3Signal
-               Q3SqlFieldInfo Q3TableItem Q3CheckTableItem Q3Socket Q3StrVec Q3SqlCursor
-               Q3DateTimeEdit Q3CheckListItem Q3ListView Q3Accel Q3Process Q3Cache
-               Q3GDict Q3GList Q3CanvasPixmap Q3Frame Q3LNode Q3SpinWidget
-               Q3FilePreview Q3Wizard Q3Table Q3ValueVector Q3SyntaxHighlighter Q3DataView
-               Q3DictIterator Q3DateEdit Q3CanvasSpline Q3CanvasSprite Q3ColorDrag Q3SimpleRichText
-               Q3ValueListIterator Qt3Support Q3ValueStack Q3WidgetStack Q3NetworkProtocolDict Q3HttpResponseHeader
-               Q3TextBrowser Q3ListBoxPixmap Q3GridView Q3SqlEditorFactory Q3CacheIterator Q3AsciiBucket
-               Q3EditorFactory Q3CanvasEllipse Q3MimeSourceFactory Q3PopupMenu Q3PaintDeviceMetrics Q3DateTimeEditBase
-               Q3HttpHeader Q3DataTable Q3ButtonGroup Q3ProgressDialog Q3Semaphore Q3ProgressBar
-               Q3NetworkProtocolFactoryBase Q3IconDrag Q3IconView Q3GroupBox Q3ListViewItem Q3IntDictIterator
-               Q3ActionGroup Q3ListBox Q3GVector Q3IconDragItem Q3RangeControl Q3StyleSheetItem
-               Q3StrListIterator Q3TextEdit Q3TextDrag Q3LocalFs Q3TextView Q3Workspace
-               Q3GListStdIterator Q3SqlForm Q3UrlOperator Q3ScrollView QGLContext QGLFormat
-               QGLWidget QGLColormap QtOpenGL 
-               QDesignerFormEditorInterface QDesignerCustomWidgetInterface QDesignerContainerExtension) )
+  '(ActiveQt) )
 
 ;; ------------------------------ SOURCE CODE ------------------------------
 
@@ -433,7 +314,10 @@
       (setq list (cdr list)))
     (if found
         (symbol-name found)
-      nil)  ; return value
+         ; not found: check if starts with 'Q'
+      (if (string-startsWith cls "Q")
+	  cls ; assume a Qt-4 forwarding header exists for the class
+	nil))  ; return value
     ))
         
 
@@ -465,11 +349,11 @@
                     ((and (string-match "^qdom" word) (eq kdab-qt-version 3)) "qdom.h")
                     ((and (string-match "^qxml" word) (eq kdab-qt-version 3)) "qxml.h")
                     ((and (string-match "^q" word) (eq kdab-qt-version 3)) (concat word ".h") )
+                    ((and (string-match "^q" word) (eq kdab-qt-version 4)) word-with-case )
                     (kdab-lowercase-header-files (concat word ".h" ))
                     (t (concat word-with-case ".h"))))
            header is-local override)
 
-      
       ;; decide on the header file.
       (if (functionp 'kdab-name-include-file)
           (setq override (kdab-name-include-file word-with-case)))
