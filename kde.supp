@@ -6,23 +6,6 @@
 #
 
 #
-# pthread errors
-#
-
-{
-    pthread_mutex_unlock
-    core:PThread
-    fun:__pthread_mutex_unlock
-}
-
-{
-    pthread_error/pthread_mutex_destroy
-    core:PThread
-    fun:pthread_error
-    fun:__pthread_mutex_destroy
-}
-
-#
 # ld.so errors
 #
 
@@ -152,4 +135,14 @@
     ssl3_get_message/libssl
     Memcheck:Cond
     fun:ssl3_get_message
+}
+
+#
+# libz errors
+#
+{
+    libz_compress2_deflate
+    Memcheck:Cond
+    fun:deflate
+    fun:compress2
 }
