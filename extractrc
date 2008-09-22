@@ -69,6 +69,12 @@ use constant ECTX_SPEC =>
   },
 };
 
+# The parts between the tags of the extensions will be copied
+# verbatim
+my %EXTENSION_VERBATIM_TAGS = (
+       "kcfg"               => [ "code" ],
+     );
+
 # Add attribute lists as hashes, for membership checks.
 for my $ext ( keys %{&ECTX_SPEC} ) {
   for my $tag ( keys %{ECTX_SPEC->{$ext}} ) {
@@ -291,5 +297,32 @@ for my $file_name ( @ARGV )
   close $fh or warn "Failed to close: '$file_name': $!";
 
   die "parsing error in $file_name" if $in_text;
-}
 
+  if ($ectx_ext && exists $EXTENSION_VERBATIM_TAGS{$ectx_ext})
+  {
+    unless ( open $fh, "<", $file_name )
+    {
+      # warn "Failed to open: '$file_name': $!";
+      next;
+    }
+
+    while ( <$fh> )
+    {
+      chomp;
+      $string .= "\n" . $_;
+
+      foreach $tag (@{ $EXTENSION_VERBATIM_TAGS{$ectx_ext} })
+      {
+        if ($string =~ /<$tag>(.*)<\/$tag>/s)
+        {
+          (my $norm_fname = $file_name) =~ s/^\.\///;
+          print "$cstart i18n: file: $norm_fname:$.\n";
+          print $1;
+          $string = ""
+        }
+      }
+    }
+
+    close $fh or warn "Failed to close: '$file_name': $!";
+  }
+}
