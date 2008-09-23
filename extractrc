@@ -315,9 +315,10 @@ for my $file_name ( @ARGV )
       {
         if ($string =~ /<$tag>(.*)<\/$tag>/s)
         {
+          my $matched = $1;
           (my $norm_fname = $file_name) =~ s/^\.\///;
           print "$cstart i18n: file: $norm_fname:$.\n";
-          print $1;
+          print $matched;
           $string = ""
         }
       }
