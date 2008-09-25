@@ -26,7 +26,7 @@
   "Specifies the current tab behavior. default will expand try to complete
 the symbol at point if at the end of something that looks like an indentifier else
 it will indent the current line if the pointer is at the beginning of the line it will
-be moved the the start of the indention. abbrev-indent behaves like default, but the 
+be moved to the start of the indention. abbrev-indent behaves like default, but the 
 cursor isn't moved to the beginning of the indention with tab is pressed when the cursor
 is at the beginning of the line. indent simply indents the line without trying to 
 complete the symbol"
