@@ -315,12 +315,18 @@ for my $file_name ( @ARGV )
       {
         if ($string =~ /<$tag>(.*)<\/$tag>/s)
         {
-          my $matched = $1;
+          # Add comment before any line that has an i18n substring in it.
+          my @matched = split /\n/, $1;
+          my $mlno = $.;
           (my $norm_fname = $file_name) =~ s/^\.\///;
-          print "$cstart i18n: file: $norm_fname:$.\n";
-          print $matched;
-          print "\n";
-          $string = ""
+          for my $mline (@matched) {
+            if ($mline =~ /i18n/) {
+              print "$cstart i18n: file: $norm_fname:$mlno\n";
+            }
+            print "$mline\n";
+            ++$mlno;
+          }
+          $string = "";
         }
       }
     }
