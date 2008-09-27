@@ -319,6 +319,7 @@ for my $file_name ( @ARGV )
           (my $norm_fname = $file_name) =~ s/^\.\///;
           print "$cstart i18n: file: $norm_fname:$.\n";
           print $matched;
+          print "\n";
           $string = ""
         }
       }
