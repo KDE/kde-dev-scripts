@@ -125,7 +125,8 @@ FILE_PATTERNS          = *.cpp \
                          *.h \
                          *.hh \
                          *.hxx \
-                         *.hpp
+                         *.hpp \
+                         *.dox
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
