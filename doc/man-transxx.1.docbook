@@ -39,7 +39,7 @@ msgstr strings, but otherwise text will be translated to
 
 <para>Running your software with the language <quote>xx</quote> will
 quickly show you any user visible strings that are not
-translateable.</para>
+translatable.</para>
 
 <para>This utility is part of the KDE Software Development Kit.</para> 
 

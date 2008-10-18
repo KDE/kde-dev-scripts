@@ -41,7 +41,7 @@ script saves time compared to re-running configure completely</para>
 the final <filename>/Makefile</filename> may be omitted).</para>
 
 <para>This script may be run from the toplevel directory (the one
-containing <filename>configure</filename> or from one of it's
+containing <filename>configure</filename>) or from one of it's
 subdirectories.</para>
 
 <para>If the source directory is different from the build directory
