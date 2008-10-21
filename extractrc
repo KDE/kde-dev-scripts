@@ -69,6 +69,15 @@ use constant ECTX_SPEC =>
   },
 };
 
+# Specification to exclude strings by trailing section of element-context.
+use constant ECTX_EXCLUDE =>
+[
+    # Data structure: [[tag, attribute, attrvalue], [...]]
+    # Empty ("") attribute means all elements with given tag,
+    # empty attrvalue means element with given tag and attribute of any value.
+    [["widget", "class", "KFontComboBox"], ["item", "", ""], ["property", "", ""]],
+];
+
 # The parts between the tags of the extensions will be copied
 # verbatim
 my %EXTENSION_VERBATIM_TAGS = (
@@ -241,7 +250,44 @@ for my $file_name ( @ARGV )
 
      if ( $text cmp "" )
      {
-       if ( not $context or $context ne "KDE::DoNotExtract" )
+       # See if the string should be excluded by trailing element-context.
+       my $exclude_by_ectx = 0;
+       my @rev_ectx = reverse @ectx;
+       for my $ectx_tail (@{&ECTX_EXCLUDE})
+       {
+         my @rev_ectx_tail = reverse @{$ectx_tail};
+         my $i = 0;
+         $exclude_by_ectx = 1;
+         while ($i < @rev_ectx and $i < @rev_ectx_tail)
+         {
+           my ($tag, $attr, $aval) = @{$rev_ectx_tail[$i]};
+           $exclude_by_ectx = $tag eq $rev_ectx[$i][1];
+           if ($attr)
+           {
+             for my $ectx_attr_aval (@{$rev_ectx[$i][2]})
+             {
+               if ($attr eq $ectx_attr_aval->[0])
+               {
+                 $exclude_by_ectx = $aval ? $aval eq $ectx_attr_aval->[1] : 1;
+                 last;
+               }
+             }
+           }
+           last if not $exclude_by_ectx;
+           ++$i;
+         }
+         last if $exclude_by_ectx;
+       }
+
+       if ( $context and $context eq "KDE::DoNotExtract" )
+       {
+         print "$cstart Manually excluded message at $file_name line $.\n";
+       }
+       elsif ( $exclude_by_ectx )
+       {
+         print "$cstart Automatically excluded message at $file_name line $.\n";
+       }
+       else
        {
          (my $norm_fname = $file_name) =~ s/^\.\///;
          print "$cstart i18n: file: $norm_fname:$.\n";
@@ -275,10 +321,6 @@ for my $file_name ( @ARGV )
            $text = escape_like_uic($text);
            print  qq|i18n("$text");\n|;
          }
-       }
-       else
-       {
-         print "$cstart Manually excluded message at $file_name line $.\n";
        }
      }
      else
