@@ -506,6 +506,11 @@ sub processFile() {
             'replace "kjsapi" with "${KDE4_KJSAPI_LIBS}"');
     }
 
+      $issues +=
+    &checkLine($line,$linecnt,
+            'target_link_libraries.*[[:space:]]kformulalib[\s/)]',
+            'replace "kformulalib" with "${KDE4_KFORMULA_LIBS}"');
+
 
     # kdebase variables
     if (! $in_kdelibs && ! $in_kdepimlibs && !$in_kdebase) {
