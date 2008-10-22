@@ -151,7 +151,7 @@ sub write_i18n
   $context ||= $opt_context;
 
   print "//i18n: tag $tag attribute $attr\n";
-  print "//i18n: file $file_name line $.\n";
+  print "//i18n: file: $file_name:$.\n";
   if ( $context )
   {
     print qq|i18nc("$context","$text");\n|;
