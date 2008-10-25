@@ -105,6 +105,10 @@ kdedoxygen.sh   Script that uses doxygen to generate the API documentation
 kdedoxyman.sh   Script that uses doxygen to generate the API documentation
                 in man page format from the KDE source code.
 
+kdedoxyqt.sh    Script that uses doxygen to generate the API documenation
+                in Qt assistant format (.qch) from the KDE source code.
+                Requires doxygen v1.5.7 or higher and qthelpgenerator.
+
 kdemangen.pl	Script to use the output from a KDE application's --author and
 		--help-all output to automatically generate a man page for the
 		application.
