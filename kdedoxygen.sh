@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# kdedoxyman.sh
+# kdedoxygen.sh
 # Copyright 2008 by Allen Winter <winter@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
