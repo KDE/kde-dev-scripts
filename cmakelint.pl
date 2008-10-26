@@ -508,7 +508,7 @@ sub processFile() {
 
       $issues +=
     &checkLine($line,$linecnt,
-            'target_link_libraries.*[[:space:]]kformulalib[\s/)]',
+            'target_link_libraries.*[[:space:]]kformula[\s/)]',
             'replace "kformulalib" with "${KDE4_KFORMULA_LIBS}"');
 
 
