@@ -180,6 +180,8 @@ With arg, do it arg times."
 ;;        If you don't have 5.30 comment out the following c-guess-basic-syntax
 ;;        and uncomment the one underneath.
 (cond
+ ((string-match "^5\\.31\\." c-version)
+  )
  ((string-match "^5\\.30\\." c-version)
   (defun c-guess-basic-syntax ()
   "Return the syntactic context of the current line.
