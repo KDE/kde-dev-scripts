@@ -272,7 +272,7 @@ This function does not do any hidden buffer changes."
               )
             )
           ))
-    (if (string-match "\\.h$" n)
+    (if (member (concat "." (file-name-extension n)) sourcepair-header-extensions)
         (progn
 	  (let ((mup (method-under-point))
 		(sig "")
