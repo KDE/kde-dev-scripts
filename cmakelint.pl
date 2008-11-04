@@ -510,19 +510,13 @@ sub processFile() {
             'target_link_libraries.*[[:space:]]kformula[\s/)]',
             'replace "kformula" with "${KDE4_KFORMULA_LIBS}"');
 
-
-    }
-
-
-
-    # kdebase variables
-    if (! $in_kdelibs && ! $in_kdepimlibs && !$in_kdebase) {
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]plasma[\s/)]',
                    'replace "plasma" with "${PLASMA_LIBS}"',
-		   'add macro_optional_find_package(Plasma) in CMakeLists.txt');
-   }
+                   'add macro_optional_find_package(Plasma) in CMakeLists.txt');
+
+    }
 
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
