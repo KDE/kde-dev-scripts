@@ -171,9 +171,13 @@ This function does not do any hidden buffer changes."
     (setq function (replace-match " " t t function)))
   (while (string-match "^ " function)  ; remove leading whitespace
     (setq function (replace-match "" t t function)))
+  ; remove default values. complex case: void foo(p=QString())
   (let ((startargs (string-match "(" function)))
-    (while (string-match " ?=[^,)]+" function startargs) ; remove default values
-      (setq function (replace-match " " t t function))))
+    (while (string-match " ?=[^,()]+" function startargs) ; part 1 (stop at '(')
+      (setq function (replace-match "" t t function)))
+    (while (string-match "([^()]*)" function (+ startargs 1))       ; part 2, remove "(...)"
+      (setq function (replace-match "" t t function))))
+
   (while (string-match " +," function) ; remove space before commas
     (setq function (replace-match "," t t function)))
   function ; the return value
