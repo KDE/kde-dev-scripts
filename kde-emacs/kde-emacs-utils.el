@@ -449,10 +449,15 @@ This function does not do any hidden buffer changes."
 (defun insert-kDebug ()
   (interactive)
   (if (and (boundp 'kdab-qt-version) (eq kdab-qt-version 4))
-      (insert "kDebug() << ")
-    (insert "kdDebug() << k_funcinfo "))
-  (insert "<< endl;")
-  (backward-char 8)
+    (progn ; KDE4 version
+      (insert "kDebug() << this << ;")
+      (backward-char 1)
+      )
+    (progn ; KDE3 version
+      (insert "kdDebug() << k_funcinfo "))
+      (insert "<< endl;")
+      (backward-char 8)
+      )
   )
 
 ; finds a string to be used in the header-protection function ( see below )
