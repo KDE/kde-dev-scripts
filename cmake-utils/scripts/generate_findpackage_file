@@ -9,7 +9,7 @@
 print("Name of package: ")
 package=gets.chomp
 
-print("pkgconfig package name [e.g. \"libxml-2.0\", leave empty to skip pkgconfig]: ")
+print("pkgconfig package name [e.g. \"libxml-2.0\", we can add check as \"glib-2.0>=2.10 gtk+-2.0\" leave empty to skip pkgconfig]: ")
 pkgconfig=gets.chomp
 
 print("Look for header (e.g. \"jpeglib.h\" or \"libxml/xpath.h\"): ")
