@@ -1,10 +1,10 @@
-
+folder_blue
 folder-blue
 
 folder_favorite
 folder-bookmarks
 
-
+folder_brown
 folder-brown
 
 folder_cyan_open
