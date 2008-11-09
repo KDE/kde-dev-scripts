@@ -257,7 +257,7 @@ for my $file_name ( @ARGV )
        {
          my @rev_ectx_tail = reverse @{$ectx_tail};
          my $i = 0;
-         $exclude_by_ectx = 1;
+         $exclude_by_ectx = (@rev_ectx > 0 and @rev_ectx_tail > 0);
          while ($i < @rev_ectx and $i < @rev_ectx_tail)
          {
            my ($tag, $attr, $aval) = @{$rev_ectx_tail[$i]};
