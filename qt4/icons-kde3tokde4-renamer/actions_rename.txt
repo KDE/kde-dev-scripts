@@ -73,6 +73,18 @@ run-build-file
 contexthelp
 help-contextual
 
+help
+help-contents
+
+lock
+system-lock-screen
+
+switchuser
+system-switch-user
+
+reload
+view-refresh
+
 identity
 user-identity
 
@@ -84,6 +96,39 @@ document-import
 
 fileexport
 document-export
+
+filenew
+document-new
+
+fileopen
+document-open
+
+fileprint
+document-print
+
+filequickprint
+document-print-preview
+
+file-revert
+document-revert
+
+filesave
+document-save
+
+filesaveas
+document-save-as
+
+revert
+document-revert
+
+run
+system-run
+
+spellcheck
+tools-check-spelling
+
+filequickprint
+document-print-preview
 
 redo
 edit-redo
@@ -316,6 +361,21 @@ text-sub
 text_super
 text-super
 
+text_block
+format-justify-fill
+
+text_bold
+format-text-bold
+
+text_italic
+format-text-italic
+
+text_strike
+format-text-strikethrough
+
+text_under
+format-text-underline
+
 rotate_left
 object-rotate-left
 
@@ -345,6 +405,30 @@ view-sidetree
 
 view_tree
 view-list-tree
+
+view_detailed
+fileview-detailed
+
+viewmag
+zoom-original
+
+viewmag+
+zoom-in
+
+viewmag-
+zoom-out
+
+viewmagfit
+zoom-fit-best
+
+view_multicolumn
+fileview-multicolumn
+
+view_text
+fileview-text
+
+window_nofullscreen
+view-restore
 
 close
 window-close
@@ -516,6 +600,9 @@ radio-button-widget
 
 frame
 frame-widget
+
+frameprint
+print-frame
 
 groupbox
 groupbox-widget
