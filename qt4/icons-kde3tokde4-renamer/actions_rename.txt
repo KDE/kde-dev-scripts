@@ -31,6 +31,33 @@ arrow-right-double
 2leftarrow
 arrow-left-double
 
+bottom
+go-bottom
+
+down
+go-down
+
+start
+go-first
+
+gohome
+go-home
+
+goto
+go-jump
+
+finish
+go-last
+
+forward
+go-next
+
+back
+go-previous
+
+top
+go-top
+
 ark_delete
 ark-delete
 
@@ -273,15 +300,6 @@ folder-new
 
 folder_open
 folder-open
-
-gohome
-go-home
-
-goto
-go-jump
-
-goto-page
-go-jump
 
 history_clear
 history-clear
@@ -666,18 +684,6 @@ dialog-error
 
 messagebox_warning
 dialog-warning
-
-3downarrow
-go-bottom
-
-3leftarrow
-go-first
-
-3rightarrow
-go-last
-
-3uparrow
-go-top
 
 edit_remove
 edit-remove
