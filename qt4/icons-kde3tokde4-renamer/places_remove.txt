@@ -2,7 +2,6 @@ blockdevice
 camera
 chardevice
 connect_to_network
-desktop
 exec
 exec_wine
 file-broken
@@ -21,7 +20,6 @@ ftp
 mycomp
 pipe
 www
-desktop
 file-broken
 network-local
 network-wired

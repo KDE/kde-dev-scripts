@@ -81,3 +81,6 @@ user-trash
 
 server
 network-server
+
+desktop
+user-desktop
