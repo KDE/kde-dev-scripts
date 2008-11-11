@@ -54,9 +54,9 @@ if not pkgconfig.empty?
    file.printf("# use pkg-config to get the directories and then use these values\n")
    file.printf("# in the FIND_PATH() and FIND_LIBRARY() calls\n")
    file.printf("if( NOT WIN32 )\n")
-   file.printf("  INCLUDE(FindPkgConfig)\n\n")
-   file.printf("  PKG_CHECK_MODULES(#{package.upcase} #{pkgconfig})\n\n")
-   file.printf("  SET(#{cmakeDefsName} ${#{cmakeFlagsName}})\n")
+   file.printf("  find_package(PkgConfig)\n\n")
+   file.printf("  pkg_check_modules(#{package.upcase} #{pkgconfig})\n\n")
+   file.printf("  set(#{cmakeDefsName} ${#{cmakeFlagsName}})\n")
    file.printf("endif( NOT WIN32 )\n\n")
 end
 
