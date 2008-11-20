@@ -29,7 +29,7 @@ install(PROGRAMS
   svnlastlog
   svnrevertlast
   wcgrep
-  ${INSTALL_TARGETS_DEFAULT_ARGS})
+  DESTINATION ${BIN_INSTALL_DIR})
 endif (UNIX)
 
 install( FILES kdesvn-buildrc.xml  DESTINATION  ${DATA_INSTALL_DIR}/katepart/syntax )
@@ -63,5 +63,5 @@ install(PROGRAMS
   kdemangen.pl 
   svnintegrate 
   kde_generate_export_header
-  ${INSTALL_TARGETS_DEFAULT_ARGS})
+  DESTINATION ${BIN_INSTALL_DIR})
  
