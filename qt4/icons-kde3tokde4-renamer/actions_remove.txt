@@ -307,12 +307,10 @@ transaction_export
 next
 options
 transaction_import
-file-find
 bookmark-folder
 sort_decrease
 oilpaint
 fileclose
-find
 unindent
 indent
 previous

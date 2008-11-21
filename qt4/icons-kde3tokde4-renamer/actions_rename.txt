@@ -34,6 +34,9 @@ arrow-left-double
 bottom
 go-bottom
 
+up
+go-up
+
 down
 go-down
 
@@ -189,6 +192,9 @@ dialog-ok
 
 filefind
 system-search
+
+find
+edit-find
 
 frame_edit
 frame-edit
