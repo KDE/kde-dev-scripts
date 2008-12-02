@@ -223,13 +223,13 @@ while ($file = <$F>) {
     s!Q3ListViewItem::AlignBottom!Qt::AlignBottom!g;
 
 
-    s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/ );
-    s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/ );
-    s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/ );
-    s!AlignHCenter!Qt::AlignHCenter!g unless (/Qt::AlignHCenter/ || /"Align/ );
-    s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/ );
-    s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/ );
-    s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/ );
+    s!AlignLeft!Qt::AlignLeft!g unless (/Qt::AlignLeft/ || /"Align/ || /AlignLeft\(.*\)/);
+    s!AlignRight!Qt::AlignRight!g unless (/Qt::AlignRight/ || /"Align/ || /AlignRight\(.*\)/);
+    s!AlignCenter!Qt::AlignCenter!g unless (/Qt::AlignCenter/ || /"Align/ || /AlignCenter\(.*\)/);
+    s!AlignHCenter!Qt::AlignHCenter!g unless (/Qt::AlignHCenter/ || /"Align/ || /AlignHCenter\(.*\)/);
+    s!AlignVCenter!Qt::AlignVCenter!g unless (/Qt::AlignVCenter/ || /"Align/ || /AlignVCenter\(.*\)/);
+    s!AlignTop!Qt::AlignTop!g unless (/Qt::AlignTop/ || /"Align/ || /AlignTop\(.*\)/);
+    s!AlignBottom!Qt::AlignBottom!g unless (/Qt::AlignBottom/ || /"Align/ || /AlignBottom\(.*\)/);
     
     s!QCursor::WaitCursor!Qt::waitCursor!g;
     s!QSplitter::Vertical!Qt::Vertical!g;
