@@ -113,6 +113,7 @@ while ($file = <$F>) {
     s!QMIN!qMin!g;
     s!\bQABS\b!qAbs!g;
 
+    s!QWidget::PaletteBase!Qt::PaletteBase!;
     s!Qt::ShiftButton!Qt::ShiftModifier!;
     s!ShiftButton!Qt::ShiftModifier!;
     s!Qt::ControlButton!Qt::ControlModifier!;
