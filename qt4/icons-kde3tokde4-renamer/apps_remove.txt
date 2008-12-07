@@ -65,7 +65,6 @@ LabPlot
 ledger
 mail_section
 megami
-modem
 mouse-capplet
 mycomp
 my_mac
@@ -73,7 +72,6 @@ openoffice1
 plan
 playing
 printer2
-printer
 printing_section
 printmgr
 quanta_be
@@ -81,7 +79,6 @@ running
 samba_client
 samba_server
 samba-server
-scanner
 schedule
 settings-sound
 shells_section
