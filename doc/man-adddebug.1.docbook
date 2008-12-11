@@ -11,12 +11,12 @@
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>addebug</command></refentrytitle>
+<refentrytitle><command>adddebug</command></refentrytitle>
 <manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>addebug</command></refname>
+<refname><command>adddebug</command></refname>
 <refpurpose>Modifies <filename>Makefile</filename>(s) to add debug info</refpurpose>
 </refnamediv>
 
