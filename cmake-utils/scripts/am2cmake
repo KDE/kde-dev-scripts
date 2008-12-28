@@ -922,7 +922,7 @@ class CMakeFile
          end
 
          if not buildTarget.kcfgs.empty?
-            file.printf("kde4_add_kcfg_files(%s)", srcsName)
+            file.printf("kde4_add_kcfg_files(%s", srcsName)
             buildTarget.kcfgs.each do |currentFile| 
                # if there are more than 3 files, print each of them on its own line
                file.printf("\n   ") if buildTarget.kcfgs.size>3
