@@ -145,6 +145,9 @@ while ($file = <$F>) {
 
     s!kinstance.h!kcomponentdata.h!;
 
+    #Remove this include
+    s!#include <dcopobject.h>!!;
+
     # kde3support
     s!#include <kstreamsocket.h>!#include <k3streamsocket.h>!;
     s!#include <ksocketbase.h>!#include <k3socketbase.h>!;
