@@ -147,6 +147,7 @@ while ($file = <$F>) {
 
     # kde3support
     s!#include <kstreamsocket.h>!#include <k3streamsocket.h>!;
+    s!#include <ksocketbase.h>!#include <k3socketbase.h>!;
     s!#include <kactivelabel.h>!#include <k3activelabel.h>!;
     s!#include <kdockwidget.h>!#include <k3dockwidget.h>!;
     s!#include <kmdichildarea.h>!#include <k3mdichildarea.h>!;
