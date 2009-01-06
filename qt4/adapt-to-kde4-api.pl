@@ -188,6 +188,7 @@ while ($file = <$F>) {
     s!#include <klistviewsearchline.h>!#include <k3listviewsearchline.h>!;
     s!\bKListView\b!K3ListView!g;
     s!\bKListViewSearchLine\b!K3ListViewSearchLine!g;
+    s!\bKListViewSearchLineWidget\b!K3ListViewSearchLineWidget!g;
     s!\bKListViewItem\b!K3ListViewItem!g;
     s!#include <kaboutapplication.h>!#include <k3aboutapplication.h>!;
     s!\bKAboutApplication\b!K3AboutApplication!g;
