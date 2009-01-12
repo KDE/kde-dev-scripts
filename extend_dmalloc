@@ -81,8 +81,8 @@ printf (gdb "echo \\n\n");
 # load in the shared libraries
 printf (gdb "sharedlibrary\n");
 
-# run the program to have _definitly_ the informations 
-# we need from the shared libraries. Unfortunatly gdb 4.18's
+# run the program to have _definitly_ the information
+# we need from the shared libraries. Unfortunately gdb 4.18's
 # version of sharedlibrary does nothing ;(
 printf (gdb "b main\n");
 printf (gdb "run\n");

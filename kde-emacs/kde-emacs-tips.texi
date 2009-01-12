@@ -141,7 +141,7 @@ blocks without actually changing the file. In this mode @kbd{C-c @@
 C-d} hides ifdef block and @kbd{C-c @@ C-s} shows it again.
 
 @sp 1
-@strong{Q.} @emph{How do I get more informations about the keybindings
+@strong{Q.} @emph{How do I get more information about the keybindings
 of the currently active modes?}
 
 @strong{A.} Type @kbd{M-x describe-mode}.
