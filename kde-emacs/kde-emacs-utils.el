@@ -146,6 +146,8 @@ This function does not do any hidden buffer changes."
 	(forward-char 1))
       (when (looking-at "/\\*") ; C-style comment, like /*! \reimp */
 	(re-search-forward "\\*/" nil t))
+      (when (looking-at "Q_") ; Qt macro like Q_SCRIPTABLE
+	(forward-sexp))
       (while (looking-at "[ \t]")
 	(forward-char 1))
       (setq function (buffer-substring (point) end))
