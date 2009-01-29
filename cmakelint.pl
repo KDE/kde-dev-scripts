@@ -127,17 +127,19 @@ sub processFile() {
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(compositing|pcre|boost|gpgme|x11|strigiqtdbusclient|xsltproc)_/ &&
+	if ($pack !~ m/^(compositing|pcre|gpgme|libical|sqlite|strigiqtdbusclient|xsltproc|qt_qtopengl|ggzconfig)_/ &&
+	    $pack !~ m/x11_.*_found/ &&
 	    $pack !~ m/true/i && $pack !~ m/false/i) {
+	  $pack =~ s/_xcb//;
 	  $pack =~ s/have_//;
 	  $pack =~ s/_found//;
 	  $pack =~ s/_video//;
 	  if (!defined($optpacks{$pack}{'name'})) {
-	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
+#	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
 	      $issues++;
 	      &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
 	    }
-	  }
+#	  }
 	  $optpacks{$pack}{'log'} = 1;
 	}
       }
@@ -283,7 +285,7 @@ sub processFile() {
 			  '\sFILES\sDESTINATION',
 			  'missing list of files between FILES and DESTINATION');
     $issues += &checkLine($line,$linecnt,
-			  'TARGETS[[:space:]]DESTINATION',
+			  '\sTARGETS\sDESTINATION',
 			  'missing list of files between TARGETS and DESTINATION');
 
     $issues += &checkLine($line,$linecnt,
@@ -299,7 +301,7 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  '-fexceptions',
 			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
-    if ($in !~ m+/(phonon|okular|kopete|kdevelop)/+) {
+    if ($in !~ m+/(phonon|okular|kopete|kdevelop|libkdegames)/+) {
       $issues +=
         &checkLine($line,$linecnt,
                    'set_target_properties.*PROPERTIES.*[[:space:]]VERSION[[:space:]][[:digit:]]',
@@ -545,6 +547,10 @@ sub processFile() {
 		   'replace "kcal" with "${KDE4_KCAL_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
+		   'replace "kholidays" with "${KDE4_KHOLIDAYS_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
 		   'replace "kimap" with "${KDE4_KIMAP_LIBS}"');
       $issues +=
@@ -589,7 +595,7 @@ sub processFile() {
                    'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
     }
 
-    if ($line !~ m+(Plasma|Nepomuk|ACL|Alsa|PCRE|Boost|Gpgme|Kttsmodule|KdeSubversion)+ && $in !~ m+/(examples|qtonly)/+) {
+    if ($line !~ m+(Flex|Plasma|Nepomuk|ACL|Alsa|PCRE|Boost|Libical|Sqlite|Gpgme|Expat|Kttsmodule|KdeSubversion)+ && $in !~ m+/(examples|qtonly)/+) {
       $issues +=
 	&checkLine($line,$linecnt,
 		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
@@ -641,10 +647,10 @@ sub processFile() {
     $issues++;
     &printIssue($line,$linecnt,"Missing macro_display_feature_log() command");
   }
-  if (!$top_of_module && $has_display_log == 1 && $in !~ m+/qtonly/+) {
-    $issues++;
-    &printIssue($line,$linecnt,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
-  }
+  #if (!$top_of_module && $has_display_log == 1 && $in !~ m+/qtonly/+) {
+  #  $issues++;
+  #  &printIssue($line,$linecnt,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
+  #}
   if ($nop != $ncp) {
     $issues++;
     &printIssue($line,$linecnt,"Mismatched parens");
