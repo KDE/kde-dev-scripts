@@ -45,7 +45,7 @@ done
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.2
+PROJECT_NUMBER         = 4.3
 OUTPUT_DIRECTORY       = apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -173,7 +173,7 @@ DISABLE_INDEX          = YES
 #---------------------------------------------------------------------------
 GENERATE_QHP           = YES
 QHP_NAMESPACE          = org.kde.www
-QHP_VIRTUAL_FOLDER     = KDE-4.2
+QHP_VIRTUAL_FOLDER     = KDE-4.3
 QHG_LOCATION           = qhelpgenerator
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor   
