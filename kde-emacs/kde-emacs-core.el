@@ -2740,7 +2740,7 @@ This function does not do any hidden buffer changes."
 		      (setq containing-sexp (car containing-sexp))
 		    ;; otherwise, ignore this element
 		    (setq containing-sexp nil))
-		;; ignore the bufpos if its been narrowed out by the
+		;; ignore the bufpos if it has been narrowed out by the
 		;; containing class or does not contain the indent point
 		(if (or (<= containing-sexp (point-min))
 			(>= containing-sexp indent-point))
@@ -3644,7 +3644,7 @@ This function does not do any hidden buffer changes."
 	       )))
 	   ;; CASE 17: statement catchall
 	   (t
-	    ;; we know its a statement, but we need to find out if it is
+	    ;; we know it is a statement, but we need to find out if it is
 	    ;; the first statement in a block
 	    (goto-char containing-sexp)
 	    (forward-char 1)

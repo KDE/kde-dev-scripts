@@ -247,7 +247,7 @@ sub remove_include ($$$)
 
   # ok, CPU time doesn't count so we do it the lazy way
   # we should remove the last occurence of the include in the
-  # file because in case its a duplicate removing the first
+  # file because in case it is a duplicate removing the first
   # one could make a difference. 
   my @revcontents = reverse @contents;
   @contents = ();
@@ -665,7 +665,7 @@ sub check_for_cmake_srcdir($)
   return 0 if !( -r "$dir/CMakeLists.txt");
   return 1 if !( -r "$dir/CMakeFiles");
 
-  # ok, now its either srcdir with srcdir==builddir, or its builddir,
+  # ok, now it is either srcdir with srcdir==builddir, or it is builddir,
   # which we don't want. 
 
   open(I, "<$dir/Makefile") || die "couldn't read $dir/Makefile";
