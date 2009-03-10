@@ -2,6 +2,12 @@
 [Desktop Entry]
 X-DocPath=kdesvn-build/index.html
 Name=KDE SVN Build
+Name[de]=KDE-SVN-Build
+Name[it]=Generazione di KDE da SVN
+Name[pt_BR]=Construtor SVN do KDE
+Name[sv]=Bygg KDE från SVN
+Name[uk]=Збирання KDE з SVN
+Name[zh_TW]=KDE SVN 編譯
 Categories=Qt;KDE;Development;
 Exec=kdialog --sorry "KDE SVN Build is a command-line only program. Please read the handbook at help:/kdesvn-build for more info."
 Terminal=true
