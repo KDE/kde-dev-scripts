@@ -153,7 +153,7 @@ for my $file_name ( @ARGV )
   # Ready element-context extraction.
   my $ectx_ext;
   my $ectx_string;
-  if ( $file_name =~ /\.($ectx_known_exts)$/ ) {
+  if ( $file_name =~ /\.($ectx_known_exts)(\.(in|cmake))?$/ ) {
     $ectx_ext = $1;
     my $ectx_tag_gr = join "|", keys %{ECTX_SPEC->{$ectx_ext}};
     $ectx_string = qr/($ectx_tag_gr)( [^>]*)?>/; # precompile regexp
