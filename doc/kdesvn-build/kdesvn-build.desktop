@@ -2,10 +2,12 @@
 [Desktop Entry]
 X-DocPath=kdesvn-build/index.html
 Name=KDE SVN Build
+Name[da]=KDE SVN-build
 Name[de]=KDE-SVN-Build
 Name[es]=Construcción SVN de KDE
 Name[it]=Generazione di KDE da SVN
 Name[pl]=Budowanie KDE z SVN-a
+Name[pt]=Compilação do SVN do KDE
 Name[pt_BR]=Construtor SVN do KDE
 Name[sv]=Bygg KDE från SVN
 Name[uk]=Збирання KDE з SVN
