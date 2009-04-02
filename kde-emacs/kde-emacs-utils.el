@@ -376,9 +376,13 @@ This function does not do any hidden buffer changes."
     (kde-comments-begin)
     (kde-skip-blank-lines)
     (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
-    (if (string-match "^#include.*moc.*" msubstr) ; TODO refine regexp
-	(progn 
-	  (forward-line -1)
+    ; TODO refine regexp
+    (if (string-match "^#include.*moc.*" msubstr)
+	(progn
+	  (while (string-match "^#include.*moc.*" msubstr)
+	    (forward-line -1)
+	    (setq msubstr (buffer-substring (point-at-bol) (point-at-eol)))
+	    )
 	  (end-of-line)
 	  (insert "\n"))
     ; else
