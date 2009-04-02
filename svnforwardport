@@ -51,7 +51,7 @@ for file in "$@" ; do
 
   echo "Switching to trunk..."
   svn switch "$TO_URL" "$FILE_PATH" || exit 1
-  patch "$FILE_PATH" "$TMPFILE"
+  patch "$FILE_PATH" "$TMPFILE" || exit 1
   rm -f "$TMPFILE"
   echo "Showing diff for $file..."
   svn diff "$FILE_PATH" | less
