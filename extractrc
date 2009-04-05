@@ -22,6 +22,7 @@ i18n() calls so that xgettext can parse them.
 --context=name    : Give i18n calls a context name: i18nc("name", ...)
 --lines           : Include source line numbers in comments (deprecated, it is switched on by default now)
 --cstart=chars    : Start of to-EOL style comments in output, defaults to //
+--ignore-no-input : Do not warn if there were no filenames specified
 --help|?          : Display this summary
 
 EOF
@@ -100,11 +101,12 @@ GetOptions ( "tag=s"       => \my @opt_extra_tags,
              "context=s"   => \my $opt_context,       # I18N context
              "lines"       => \my $opt_lines,
              "cstart=s"    => \my $opt_cstart,
+             "ignore-no-input" => \my $opt_ignore_no_input,
              "help|?"      => \&usage );
 
 unless( @ARGV )
 {
-  warn "No filename specified";
+  warn "No filename specified" unless $opt_ignore_no_input;
   exit;
 }
 
