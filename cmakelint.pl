@@ -590,6 +590,10 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]mailtransport[\s/)]',
                    'replace "mailtransport" with "${KDE4_MAILTRANSPORT_LIBS}"');
       $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]microblog[\s/)]',
+                   'replace "microblog" with "${KDE4_MICROBLOG_LIBS}"');
+      $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
 		   'replace "qgpgme" with "${KDE4_QGPGME_LIBS}"');
