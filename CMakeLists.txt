@@ -40,10 +40,8 @@ install(PROGRAMS
   cvslastchange 
   noncvslist 
   cvs-clean 
-  cvs2dist 
   cvsblame 
   colorsvn 
-  svn2dist 
   svn-clean 
   svnlastchange 
   svnversions 
