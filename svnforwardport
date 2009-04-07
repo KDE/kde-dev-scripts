@@ -4,7 +4,7 @@
 #
 # This is a port of the "cvsbackport" script:
 # Initial author: Dirk Mueller
-# Support for multiple command-line arguments: David Faure
+# Support for multiple command-line arguments, handling of patch rejects: David Faure
 # Ported to SVN: Till Gerken
 # Better usage, quote-safety: Matthew Woehlke
 #
@@ -38,6 +38,8 @@ TARGET_REMOTE=`echo $SRC_REMOTE | sed "s|branches/KDE/$BRANCH|trunk/KDE|"`
 echo "Forward porting from $BRANCH to trunk"
 TMPFILE="`mktemp svnforport.XXXXXX`" || exit 1
 
+patchok=1
+
 for file in "$@" ; do
 
   echo "Looking for last change to $file..."
@@ -51,19 +53,31 @@ for file in "$@" ; do
 
   echo "Switching to trunk..."
   svn switch "$TO_URL" "$FILE_PATH" || exit 1
-  patch "$FILE_PATH" "$TMPFILE" || exit 1
-  rm -f "$TMPFILE"
-  echo "Showing diff for $file..."
-  svn diff "$FILE_PATH" | less
-
+  if patch "$FILE_PATH" "$TMPFILE"; then
+    rm -f "$TMPFILE"
+    echo "Showing diff for $file..."
+    svn diff "$FILE_PATH" | less
+  else
+    rm -f "$TMPFILE"
+    patchok=0
+    break
+  fi
 done
 
-echo "Do you want to commit all changes? (y/n) [y]"
-read confirm
-if [ -z "$confirm" ] || [ "`echo $confirm | cut -c 1 | tr Y y`" = "y" ] ; then
-  svn ci "$@"
+if [ $patchok -eq 1 ]; then
+  echo "Do you want to commit all changes? (y/n) [y]"
+  read confirm
+  if [ -z "$confirm" ] || [ "`echo $confirm | cut -c 1 | tr Y y`" = "y" ] ; then
+    svn ci "$@"
+  else
+    echo "Aborted!" >&2
+  fi
 else
-  echo "Aborted!" >&2
+  echo -n "Patch failed! Press enter to revert changes and switch back to branch: "
+  read confirm
+  for file in "$@" ; do
+    svn revert "$file"
+  done
 fi
 
 echo "Switching back to branch..."
