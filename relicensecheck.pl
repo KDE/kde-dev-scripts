@@ -15,6 +15,7 @@ my @blacklist_revs;
 my %license_table = (
     'aacid'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'adawit'    => ['gplv23', 'lgplv23',                      '+eV' ],
+    'aseigo'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'asserhal'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'beaulen'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'bieker'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
