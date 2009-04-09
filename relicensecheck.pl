@@ -52,6 +52,7 @@ my %license_table = (
     'pdamsten'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'pino'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'pupeno'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'raabe'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'reiher'    => ['gplv23', 'lgplv23',                      '+eV' ],
     'robbilla'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'sanders'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
