@@ -464,7 +464,7 @@ sub processFile() {
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]phonon[\s/)]',
-		   'replace "phonon" with "${KDE4_PHONON_LIBS}"');
+		   'replace "phonon" with "${PHONON_LIBRARY}"');
 
       $issues +=
 	&checkLine($line,$linecnt,
