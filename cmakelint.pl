@@ -571,6 +571,10 @@ sub processFile() {
 		   'replace "kpimidentities" with "${KDE4_KPIMIDENTITIES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kpimtextedit[\s/)]',
+		   'replace "kpimtextedit" with "${KDE4_KPIMTEXTEDIT_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
 		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
       $issues +=
