@@ -151,7 +151,7 @@ sub dummy_call_infix {
     for my $cmnt (@cmnts) {
         print qq|$cstart $cmnt\n|;
     }
-    if ($text) {
+    if ($text ne "") {
         $text = escape_like_uic($text);
         if ($ctxt) {
             $ctxt = escape_like_uic($ctxt);
