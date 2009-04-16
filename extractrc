@@ -151,9 +151,9 @@ sub dummy_call_infix {
     for my $cmnt (@cmnts) {
         print qq|$cstart $cmnt\n|;
     }
-    if ($text ne "") {
+    if (defined $text) {
         $text = escape_like_uic($text);
-        if ($ctxt) {
+        if (defined $ctxt) {
             $ctxt = escape_like_uic($ctxt);
             print qq|i18nc("$ctxt", "$text")$stend\n|;
         } else {
@@ -395,7 +395,7 @@ for my $file_name ( @ARGV )
             # Assume verbatim code is in language given by --language.
             # Therefore format only comment, and write code line as-is.
             if ($mline =~ /i18n/) {
-              $dummy_call->("", "", ("i18n: file: $norm_fname:$mlno"));
+              $dummy_call->(undef, undef, ("i18n: file: $norm_fname:$mlno"));
             }
             print "$mline\n";
             ++$mlno;
