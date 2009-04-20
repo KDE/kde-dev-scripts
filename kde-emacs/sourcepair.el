@@ -109,7 +109,7 @@
 
 ;;; Code:
 
-(defcustom sourcepair-source-extensions '( ".cpp" ".cxx" ".cc" ".C" ".c" ".CC" ".c++")
+(defcustom sourcepair-source-extensions '( ".cpp" ".CPP" ".cxx" ".CXX" ".cc" ".CC" ".c" ".C" ".c++" ".C++")
   "*List of recognized extensions for source files.
 
 This variable is used by `sourcepair-load'.  The value should be a list
@@ -120,7 +120,7 @@ value is ( \".cpp\" \".cxx\" \".cc\" \".C\" \".c\" ), and you are looking at
 `sourcepair-source-path'."
 :type '(repeat string))
 
-(defcustom sourcepair-header-extensions '( ".h" ".hpp" ".hh" ".H" ".hxx" )
+(defcustom sourcepair-header-extensions '( ".h" ".H" ".hpp" ".HPP" ".hh" ".HH" ".hxx" ".HXX")
   "*List of recognized extensions for header files.
 
 This variable is used by `sourcepair-load'.  The value should be a list
