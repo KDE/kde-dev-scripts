@@ -109,8 +109,8 @@ while ($file = <$F>) {
     s!Q_UINT64!quint64!g;
     s!Q_LLONG!qint64!g;
     s!Q_ULLONG!quint64!g;
-    s!QMAX!qMax!g;
-    s!QMIN!qMin!g;
+    s!\bQMAX\b!qMax!g;
+    s!\bQMIN\b!qMin!g;
     s!\bQABS\b!qAbs!g;
 
     s!QWidget::PaletteBase!Qt::PaletteBase!;
@@ -123,7 +123,7 @@ while ($file = <$F>) {
     s!Qt::MetaButton!Qt::MetaModifier!;
     s!MetaButton!Qt::MetaModifier!;
     s!Qt::Keypad!Qt::KeypadModifier!;
-    s!Keypad!Qt::KeypadModifier!;
+    s!\bKeypad\b!Qt::KeypadModifier!;
     s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
     s!KeyButtonMask!Qt::KeyboardModifierMask!;
 
@@ -145,7 +145,7 @@ while ($file = <$F>) {
     s!QDir::DefaultSort!QDir::NoSort!;
     s!simplifyWhiteSpace!simplified!g;
     s!stripWhiteSpace!trimmed!g;
-    s!ucs2!utf16!g;
+    s!\bucs2\b!utf16!g;
     s!leftJustify!leftJustified!g;
     s!rightJustify!rightJustified!g;
     s!fromUcs2!fromUtf16!g;
@@ -161,14 +161,14 @@ while ($file = <$F>) {
     s!\bWFlags\b!Qt::WFlags! unless (/Qt::WFlags/);
     s!WStyle_!Qt::WStyle_!g unless (/Qt::WStyle_/);
     s!WType_!Qt::WType_!g unless (/Qt::WType_/);
-    s!Key_!Qt::Key_!g unless (/Qt::Key_/);
-    s!CTRL!Qt::CTRL!g unless (/Qt::CTRL/ || /_CTRL/ );
-    s!SHIFT!Qt::SHIFT!g unless (/Qt::SHIFT/);
-    s!LeftButton!Qt::LeftButton!g unless (/Qt::LeftButton/);
-    s!RightButton!Qt::RightButton!g unless (/Qt::RightButton/);
-    s!MidButton!Qt::MidButton!g unless (/Qt::MidButton/);
+    s!\bKey_!Qt::Key_!g unless (/Qt::Key_/);
+    s!\bCTRL\b!Qt::CTRL!g unless (/Qt::CTRL/ || /_CTRL/ );
+    s!\bSHIFT\b!Qt::SHIFT!g unless (/Qt::SHIFT/);
+    s!\bLeftButton\b!Qt::LeftButton!g unless (/Qt::LeftButton/);
+    s!\bRightButton\b!Qt::RightButton!g unless (/Qt::RightButton/);
+    s!\bMidButton\b!Qt::MidButton!g unless (/Qt::MidButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
-    s!TabFocus!Qt::TabFocus!g unless (/Qt::TabFocus/);
+    s!\bTabFocus\b!Qt::TabFocus!g unless (/Qt::TabFocus/);
    
 
     s!QStyle::Style_Enabled!QStyle::State_Enabled!g;
@@ -188,7 +188,7 @@ while ($file = <$F>) {
     s!QLabel::AlignTop!Qt::AlignTop!g;
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
 
-    s!SolidPattern!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
+    s!\bSolidPattern\b!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
     s!Dense1Pattern!Qt::Dense1Pattern!g unless ( /Qt::Dense1Pattern/ );
     s!Dense2Pattern!Qt::Dense2Pattern!g unless ( /Qt::Dense2Pattern/ );
     s!Dense3Pattern!Qt::Dense3Pattern!g unless ( /Qt::Dense3Pattern/ );
@@ -196,13 +196,13 @@ while ($file = <$F>) {
     s!Dense5Pattern!Qt::Dense5Pattern!g unless ( /Qt::Dense5Pattern/ );
     s!Dense6Pattern!Qt::Dense6Pattern!g unless ( /Qt::Dense6Pattern/ );
     s!Dense7Pattern!Qt::Dense7Pattern!g unless ( /Qt::Dense7Pattern/ );
-    s!HorPattern!Qt::HorPattern!g unless ( /Qt::HorPattern/ );
-    s!VerPattern!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
-    s!CrossPattern!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
-    s!BDiagPattern!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
-    s!FDiagPattern!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );     
-    s!DiagCrossPattern!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
-    s!SolidLine!Qt::SolidLine!g unless ( /Qt::SolidLine/ );
+    s!\bHorPattern\b!Qt::HorPattern!g unless ( /Qt::HorPattern/ );
+    s!\bVerPattern\b!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
+    s!\bCrossPattern\b!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
+    s!\bBDiagPattern\b!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
+    s!\bFDiagPattern\b!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );     
+    s!\bDiagCrossPattern\b!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
+    s!\bSolidLine\b!Qt::SolidLine!g unless ( /Qt::SolidLine/ );
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
     s!QButton::NoChange!QCheckBox::NoChange!g;
