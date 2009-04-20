@@ -159,8 +159,8 @@ while ($file = <$F>) {
     # we are then missing the following safer replacements:
     s!QWidget::WFlags!Qt::WFlags!;
     s!\bWFlags\b!Qt::WFlags! unless (/Qt::WFlags/);
-    s!WStyle_!Qt::WStyle_!g unless (/Qt::WStyle_/);
-    s!WType_!Qt::WType_!g unless (/Qt::WType_/);
+    s!\bWStyle_!Qt::WStyle_!g unless (/Qt::WStyle_/);
+    s!\bWType_!Qt::WType_!g unless (/Qt::WType_/);
     s!\bKey_!Qt::Key_!g unless (/Qt::Key_/);
     s!\bCTRL\b!Qt::CTRL!g unless (/Qt::CTRL/ || /_CTRL/ );
     s!\bSHIFT\b!Qt::SHIFT!g unless (/Qt::SHIFT/);
@@ -187,6 +187,7 @@ while ($file = <$F>) {
     s!QLabel::AlignVCenter!Qt::AlignVCenter!g;
     s!QLabel::AlignTop!Qt::AlignTop!g;
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
+    s!\bAlignmentFlags\b!Qt::Alignment!g unless (/Qt::Alignment/);
 
     s!\bSolidPattern\b!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
     s!Dense1Pattern!Qt::Dense1Pattern!g unless ( /Qt::Dense1Pattern/ );
@@ -259,7 +260,7 @@ while ($file = <$F>) {
     s!class QWidgetList;!typedef QList<QWidget *> QWidgetList;!;
 
     # this changes usage of QObjectList, since queryList returns QObjectList and not a pointer in qt4.
-    s!QObjectList\s*\*!QObjectList! if (/queryList/);
+    s!QObjectList\s*\*!QObjectList ! if (/queryList/);
 
     # this changes QStringList::split (QT3_SUPPORT) to QString::split (Qt4)
     # but it's a bit broken, e.g. with split(',') or split(" ",tr("foo"))

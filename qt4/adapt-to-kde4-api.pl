@@ -343,10 +343,13 @@ while ($file = <$F>) {
 
     s!KApplication::addCmdLineOptions!KCmdLineArgs::addStdCmdLineOptions!;
 
-    s!kdDebug!kDebug!g;
-    s!kdWarning!kWarning!g;
-    s!kdError!kError!g;
-    s!kdFatal!kFatal!g;
+    if (/kdDebug/ || /kdWarning/ || /kdError/ || /kdFatal/) {
+        s!kdDebug!kDebug!g;
+        s!kdWarning!kWarning!g;
+        s!kdError!kError!g;
+        s!kdFatal!kFatal!g;
+        s/\s*<< endl//;
+    }
     s!kdBacktrace!kBacktrace!g;
     s!kdClearDebugConfig!kClearDebugConfig!g;
     s!kndDebug!kDebugDevNull!g;
