@@ -202,6 +202,7 @@ for my $file_name ( @ARGV )
   my $tag = "";
   my $attr = "";
   my $context = "";
+  my $notr = "";
 
   # Element-context data: [[level, tag, [[attribute, value], ...]], ...]
   # such that subarrays are ordered increasing by level.
@@ -231,6 +232,7 @@ for my $file_name ( @ARGV )
      }
 
      $context = $opt_context unless $in_text;
+     $notr = "" unless $in_text;
 
      unless ( $in_skipped_prop or $in_text )
      {
@@ -270,6 +272,9 @@ for my $file_name ( @ARGV )
          $context = $attr_context if $attr_context;
          # It is unlikely that both attributes 'context' and 'comment'
          # will be present, but if so happens, 'context' has priority.
+
+         my ($attr_notr) = $attr =~ /\bnotr=\"([^\"]*)\"/ if $attr;
+         $notr = $attr_notr if $attr_notr;
 
          $string        =~ s/^.*<$text_string//so;
          $in_text       =  1;
@@ -318,7 +323,7 @@ for my $file_name ( @ARGV )
          last if $exclude_by_ectx;
        }
 
-       if ( $context and $context eq "KDE::DoNotExtract" )
+       if (($context and $context eq "KDE::DoNotExtract") or ($notr eq "true"))
        {
          push @comments, "Manually excluded message at $file_name line $.";
        }
