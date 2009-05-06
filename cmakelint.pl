@@ -521,6 +521,11 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]plasma[\s/)]',
                    'replace "plasma" with "${KDE4_PLASMA_LIBS}"');
 
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]knotificationitem-1[\s/)]',
+                   'replace "knotificationitem-1" with "${KNOTIFICATIONITEM_LIBRARIES}"');
+
     }
 
     # kdepimlibs variables
