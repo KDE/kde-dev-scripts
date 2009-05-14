@@ -313,6 +313,9 @@ apps.each do |app|
                     print "  -> Copying #{lang}'s over ..\n"
                     pofolder = "l10n-kde4/#{lang}/messages/#{appdata["mainmodule"]}-#{appdata["submodule"]}"
                     `svn co #{svnroot}/#{pofolder} #{dest}`
+                    if FileTest.exist?( dest )
+                      topmakefile << "add_subdirectory( #{lang} )\n"
+                    end
                     next if !FileTest.exist?( dest )
 				
                 elsif appdata["custompo"]
@@ -324,6 +327,7 @@ apps.each do |app|
 	   		                valid=true
                     	  if !FileTest.exist?( dest )
                             Dir.mkdir( dest )
+                            topmakefile << "add_subdirectory( #{lang} )\n"
                     	  end
                     	  print "\n  -> Copying #{lang}'s #{sp}.po over ..  "
                     	  `mv l10n/#{sp}.po #{dest}`
@@ -337,6 +341,7 @@ apps.each do |app|
                     
                     if !FileTest.exist?( dest )
                         Dir.mkdir( dest )
+                        topmakefile << "add_subdirectory( #{lang} )\n"
                     end
 
                     print "  -> Copying #{lang}'s #{dg}.po over ..  "
@@ -348,7 +353,6 @@ apps.each do |app|
                 makefile << "file(GLOB _po_files *.po)\n"
                 makefile << "GETTEXT_PROCESS_PO_FILES( #{lang} ALL INSTALL_DESTINATION ${LOCALE_INSTALL_DIR} ${_po_files} )\n"
                 makefile.close()
-                topmakefile << "add_subdirectory( #{lang} )\n"
             end
         end
         topmakefile.close()
