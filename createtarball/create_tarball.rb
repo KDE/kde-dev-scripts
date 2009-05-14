@@ -315,21 +315,21 @@ apps.each do |app|
                     `svn co #{svnroot}/#{pofolder} #{dest}`
                     next if !FileTest.exist?( dest )
 				
-		elsif appdata["custompo"]
-		    valid = false
+                elsif appdata["custompo"]
+		                valid = false
                     for sp in appdata["custompo"].split(/,/)
-		    	pofilename = "l10n-kde4/#{lang}/messages/#{appdata["mainmodule"]}-#{appdata["submodule"]}/#{sp}.po"
-                    	`svn cat #{svnroot}/#{pofilename} 2> /dev/null | tee l10n/#{sp}.po`
-                    	if not FileTest.size( "l10n/#{sp}.po" ) == 0
-	   		    valid=true
-                    	    if !FileTest.exist?( dest )
-				Dir.mkdir( dest )
-                    	     end
-                    	    print "\n  -> Copying #{lang}'s #{sp}.po over ..  "
-                    	    `mv l10n/#{sp}.po #{dest}`
-			end
-		     end
-		     next if not valid
+		    	              pofilename = "l10n-kde4/#{lang}/messages/#{appdata["mainmodule"]}-#{appdata["submodule"]}/#{sp}.po"
+                    	  `svn cat #{svnroot}/#{pofilename} 2> /dev/null | tee l10n/#{sp}.po`
+                    	  if not FileTest.size( "l10n/#{sp}.po" ) == 0
+	   		                valid=true
+                    	  if !FileTest.exist?( dest )
+                            Dir.mkdir( dest )
+                    	  end
+                    	  print "\n  -> Copying #{lang}'s #{sp}.po over ..  "
+                    	  `mv l10n/#{sp}.po #{dest}`
+			              end
+                end
+		            next if not valid
                 else
                     pofilename = "l10n-kde4/#{lang}/messages/#{appdata["mainmodule"]}-#{appdata["submodule"]}/#{dg}.po"
                     `svn cat #{svnroot}/#{pofilename} 2> /dev/null | tee l10n/#{dg}.po`
