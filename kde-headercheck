@@ -27,4 +27,5 @@ VPATH=$(KDEINCDIR)
 	echo "#include <$<>" > $(subst /,_, $@)
 
 check: $(OBJECTS)
-	@rm -f $(patsubst /,_, $(SOURCES)) $(patsubst /,_, $(OBJECTS))
+	@rm -f $(patsubst /,_, $(SOURCES))
+	@rm -f $(patsubst /,_, $(OBJECTS))
