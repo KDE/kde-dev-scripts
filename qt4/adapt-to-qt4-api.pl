@@ -201,11 +201,12 @@ while ($file = <$F>) {
     s!\bVerPattern\b!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
     s!\bCrossPattern\b!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
     s!\bBDiagPattern\b!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
-    s!\bFDiagPattern\b!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );     
+    s!\bFDiagPattern\b!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );
     s!\bDiagCrossPattern\b!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
     s!\bSolidLine\b!Qt::SolidLine!g unless ( /Qt::SolidLine/ );
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
+    s!\bNoBrush\b!Qt::NoBrush!g unless (/Qt::NoBrush/);
     s!QButton::NoChange!QCheckBox::NoChange!g;
 
     s!QObject::AlignLeft!Qt::AlignLeft!g;

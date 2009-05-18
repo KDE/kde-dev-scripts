@@ -126,6 +126,8 @@ This is used when inserting headers, to ensure that no includes are inserted bef
     (unistd.h unlink sleep usleep)
     (iostream cout cerr)
     (ctype.h isalnum isalpha isascii isblank iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit)
+    (string.h strcpy strlen memcpy strerror)
+    (stdlib.h atoi atol)
     )
     "List of special include files which do not follow the normal scheme")
 
