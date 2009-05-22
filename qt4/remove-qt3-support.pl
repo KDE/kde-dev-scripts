@@ -95,7 +95,7 @@ while ($file = <$F>) {
         s!Qt::ControlButton!Qt::ControlModifier!;
         s!Qt::AltButton!Qt::AltModifier!;
         s!Qt::MetaButton!Qt::MetaModifier!;
-        s!Qt::Keypad!Qt::KeypadModifier!;
+        s!Qt::Keypad\b!Qt::KeypadModifier!;
         s!Qt::KeyButtonMask!Qt::KeyboardModifierMask!;
         s!convertToAbs!makeAbsolute!;
         s!currentDirPath!currentPath!;
