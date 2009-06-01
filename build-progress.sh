@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This method gives some kind of status message in the title bar of Konsole,
 # xterm, etc.. Thanks have to go to Malte Starostik
