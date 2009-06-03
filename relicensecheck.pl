@@ -15,6 +15,7 @@ my @blacklist_revs;
 my %license_table = (
     'aacid'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'adawit'    => ['gplv23', 'lgplv23',                      '+eV' ],
+    'amth'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'aseigo'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'asserhal'  => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'beaulen'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -87,7 +88,6 @@ my %license_table = (
     'ahartmetz' => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'alexmerry' => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'amantia'   => ['gplv23', 'lgplv23'                      ],
-    'amth'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'annma'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'apaku'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'arendjr'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
