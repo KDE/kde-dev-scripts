@@ -97,7 +97,7 @@ if test -z "$MAKE"; then
         MAKE=/usr/bin/make
     fi
 fi
-LANGUAGE=C $MAKE "${args[@]}"
+LANG=C $MAKE "${args[@]}"
 retval=$?
 echo "makeobj[0]: Leaving directory \`$PWD'"
 exit $retval
