@@ -21,7 +21,9 @@ while ($file = <$F>) {
 	s!#include <q3vbox.h>!!;
 	s!#include <q3hbox.h>!!;
 	s!#include <Q3VBox>!!;
+	s!#include <Qt3Support/Q3VBox>!!;
 	s!#include <Q3HBox>!!;
+	s!#include <Qt3Support/Q3HBox>!!;
 	s!\bQ3VBox\b!KVBox!g;
 	s!\bQ3HBox\b!KHBox!g;
     
