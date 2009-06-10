@@ -123,7 +123,11 @@ while ($file = <$F>) {
     s!#include <qwhatsthis.h>!#include <QWhatsThis>!;
     s!#include <qwidgetstack.h>!#include <Q3WidgetStack>!;
     s!#include <qxml.h>!#include <QtXml>!;
-
+    s!#include <qtranslator.h>!#include <QTranslator>!;
+    s!#include <qstatusbar.h>!#include <QStatusBar>!;
+    s!#include <qaction.h>!#include <QAction>!;
+    s!#include <qcolor.h>!#include <QColor>!;
+    s!#include <qmenubar.h>!#include <QMenuBar>!;
 
     $modified ||= $orig ne $_;
     $_;
