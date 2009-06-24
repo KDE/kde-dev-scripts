@@ -20,7 +20,7 @@ usage() {
   exit
 }
 
-DEF_BRANCH=4.2
+DEF_BRANCH=4.3
 BRANCH=$DEF_BRANCH
 
 while getopts 'b:-:h' opt ; do
