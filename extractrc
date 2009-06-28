@@ -80,6 +80,8 @@ use constant ECTX_EXCLUDE =>
     # Empty ("") attribute means all elements with given tag,
     # empty attrvalue means element with given tag and attribute of any value.
     [["widget", "class", "KFontComboBox"], ["item", "", ""], ["property", "", ""]],
+    [["widget", "class", "KPushButton"], ["attribute", "name", "buttonGroup"]],
+    [["widget", "class", "QRadioButton"], ["attribute", "name", "buttonGroup"]],
 ];
 
 # The parts between the tags of the extensions will be copied
