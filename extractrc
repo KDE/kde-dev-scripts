@@ -307,9 +307,10 @@ for my $file_name ( @ARGV )
          while ($i < @rev_ectx and $i < @rev_ectx_tail)
          {
            my ($tag, $attr, $aval) = @{$rev_ectx_tail[$i]};
-           $exclude_by_ectx = $tag eq $rev_ectx[$i][1];
-           if ($attr)
+           $exclude_by_ectx = (not $tag or ($tag eq $rev_ectx[$i][1]));
+           if ($exclude_by_ectx and $attr)
            {
+             $exclude_by_ectx = 0;
              for my $ectx_attr_aval (@{$rev_ectx[$i][2]})
              {
                if ($attr eq $ectx_attr_aval->[0])
