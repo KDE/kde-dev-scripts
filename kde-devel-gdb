@@ -388,4 +388,10 @@ document printqtime
   Usage: printqtime mytime
 end
 
+# You are at f(g(h(i(), j(k(l())...) and you want to enter f: type fs <enter> <enter> <enter>
+# fs=finish+step
+define fs
+       finish
+       step
+end
 
