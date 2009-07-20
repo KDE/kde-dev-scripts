@@ -1,5 +1,5 @@
 # Util function for script to convert kde3 to kde4
-# laurent Montel <montel@kde.org> 2005-2006-2007 GPL
+# laurent Montel <montel@kde.org> 2005-2006-2007-2008-2009 GPL
 
 package functionUtilkde;
 use strict;
