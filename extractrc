@@ -279,8 +279,11 @@ for my $file_name ( @ARGV )
          $notr = $attr_notr if $attr_notr;
 
          $string        =~ s/^.*<$text_string//so;
-         $in_text       =  1;
-         $start_line_no =  $.;
+         if ( $string cmp "" )
+         {
+           $in_text       =  1;
+           $start_line_no =  $.;
+         }
        }
        else
        {
