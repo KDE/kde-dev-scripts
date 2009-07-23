@@ -279,7 +279,7 @@ for my $file_name ( @ARGV )
          $notr = $attr_notr if $attr_notr;
 
          $string        =~ s/^.*<$text_string//so;
-         if ( $string cmp "" )
+         if ( not $attr or $attr !~ /\/ *$/ )
          {
            $in_text       =  1;
            $start_line_no =  $.;
