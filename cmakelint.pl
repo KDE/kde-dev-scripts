@@ -523,8 +523,9 @@ sub processFile() {
 
       $issues +=
         &checkLine($line,$linecnt,
-                   'target_link_libraries.*[[:space:]]knotificationitem-1[\s/)]',
-                   'replace "knotificationitem-1" with "${KNOTIFICATIONITEM_LIBRARIES}"');
+                   'target_link_libraries.*[[:space:]]kunitconversion[\s/)]',
+                   'replace "kunitconversion" with "${KDE4_KUNITCONVERSION_LIBS}"');
+
 
     }
 
