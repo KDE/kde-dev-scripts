@@ -5,12 +5,25 @@
 
 use strict;
 
-my %ruletable;
-my %blacklist;
-my %whitelist;
-my @blacklist_revs;
-
-# licensing table.
+### Please add your SVN account name in *alphabetical* order to the list
+### below, then answer the following questions:
+###
+### 1. Include 'gplv23' if you are okay with contributions you've made under
+###    GPLv2 being relicensed as GPLv2 or GPLv3.
+###
+### 2. Include 'lgplv23' if you are okay with contributions you've made under
+###    LGPLv2 being relicensed as LGPLv2 or LGPLv3.
+###
+### 3. Include 'gplv2+' if you are okay with contributions you've made under
+###    GPLv2 being relicensed as GPLv2 or later.
+###
+### 4. Include 'lgplv2+' if you are okay with contributions you've made under
+###    LGPLv2 being relicensed as LGPLv2 or later.
+###
+### 5. Include '+eV' if you are okay with the KDE e.V. deciding on a future
+###    licensing change to your code if necessary.
+###
+### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
 
 my %license_table = (
     'aacid'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -227,6 +240,11 @@ my %license_table = (
     # Do not add anything here. Use the first half of the table.
 );
 
+my %ruletable;
+my %blacklist;
+my %whitelist;
+my @blacklist_revs;
+
 foreach my $who (keys %license_table) {
     foreach my $license(@{$license_table{$who}}) {
         $ruletable{$license}->{$who} = 1;
@@ -304,4 +322,4 @@ if ($#allowed_list >= 0) {
     print "\nRelicensing allowed: ". join(' ', @allowed_list) . "\n";
 }
 
-print "\ndo not forget to check copyright headers and for patches committed in the name of others!\n";
+print "\nDo not forget to check copyright headers and for patches committed in the name of others!\n";
