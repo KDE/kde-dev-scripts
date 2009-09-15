@@ -234,7 +234,7 @@ apps.each do |app|
     if appdata["translations"] != "no"
         puts "-> Fetching l10n docs for #{appdata["submodule"]}/#{app}..."
 
-        i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs`
+        i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs`.split
         i18nlangsCleaned = []
         for lang in i18nlangs
             l = lang.chomp
@@ -254,7 +254,7 @@ apps.each do |app|
         for lang in i18nlangs
             lang.chomp!
 
-            for dg in appdata["addDocs"]
+            for dg in appdata["addDocs"].split
                 dg.chomp!
                 `rm -rf #{dg}`
                 docdirname = "l10n-kde4/#{lang}/docs/#{appdata["mainmodule"]}-#{appdata["submodule"]}/#{dg}"
@@ -307,7 +307,7 @@ apps.each do |app|
             lang.chomp!
             dest = "po/#{lang}"
 
-            for dg in appdata["addPo"]
+            for dg in appdata["addPo"].split
                 dg.chomp!
                 if appdata["wholeModule"]
                     print "  -> Copying #{lang}'s over ..\n"
