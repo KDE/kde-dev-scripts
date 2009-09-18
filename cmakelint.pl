@@ -579,7 +579,7 @@ sub processFile() {
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kontactinterface[\s/)]',
-		   'replace "kmime" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
+		   'replace "kontactinterface" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
