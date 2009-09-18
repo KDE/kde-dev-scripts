@@ -122,26 +122,31 @@ sub processFile() {
     }
 
     if ($in !~ m+kjsembed/qtonly/CMakeLists.txt+) {
-      if ($line =~ m/macro_optional_find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i){
+      if ($line =~ m/macro_optional_find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
+	  $line =~ m/find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
+	  $line =~ m/find_program\s*\(\s*([a-zA-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
 	$pack = "libusb" if ($pack eq "usb");
 	$pack = "mysql_embedded" if ($pack eq "mysql");
-	$optpacks{$pack}{'name'} = $pack;
-	$optpacks{$pack}{'log'} = 0;
+	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2)/) {
+	  $optpacks{$pack}{'name'} = $pack;
+	  $optpacks{$pack}{'log'} = 0;
+	}
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(compositing|pcre|gpgme|libical|sqlite|strigiqtdbusclient|xsltproc|qt_qtopengl|ggzconfig)_/ &&
+	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc|qt_qtopengl|ggzconfig)_/ &&
 	    $pack !~ m/x11_.*_found/ &&
 	    $pack !~ m/true/i && $pack !~ m/false/i) {
 	  $pack =~ s/_xcb//;
 	  $pack =~ s/have_//;
 	  $pack =~ s/_found//;
 	  $pack =~ s/_video//;
+	  $pack =~ s/shared_mime_info/sharedmimeinfo/;
 	  if (!defined($optpacks{$pack}{'name'})) {
 #	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
 	      $issues++;
-	      &printIssue($line,$linecnt,"macro_log_feature($pack) used without macro_optional_find_package()");
+	      &printIssue($line,$linecnt,"macro_log_feature($pack) used without a corresponding find_package");
 	    }
 #	  }
 	  $optpacks{$pack}{'log'} = 1;
@@ -534,90 +539,94 @@ sub processFile() {
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]akonadi-kde[\s/)]',
-		   'replace "akonadi-kde" with "${KDE4_AKONADI_LIBS}"');
+		   'replace "akonadi-kde" with "${KDEPIMLIBS_AKONADI_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]akonadi-kmime[\s/)]',
-		   'replace "akonadi-kmime" with "${KDE4_AKONADI_KMIME_LIBS}"');
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KMIME_LIBS}"');
       $issues += 
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
-		   'replace "gpgmepp" with "${KDE4_GPGMEPP_LIBS}"');
+		   'replace "gpgmepp" with "${KDEPIMLIBS_GPGMEPP_LIBS}"');
       $issues += 
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kabc[\s/)]',
-		   'replace "kabc" with "${KDE4_KABC_LIBS}"');
+		   'replace "kabc" with "${KDEPIMLIBS_KABC_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kblog[\s/)]',
-		   'replace "kblog" with "${KDE4_KBLOG_LIBS}"');
+		   'replace "kblog" with "${KDEPIMLIBS_KBLOG_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
-		   'replace "kcal" with "${KDE4_KCAL_LIBS}"');
+		   'replace "kcal" with "${KDEPIMLIBS_KCAL_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
-		   'replace "kholidays" with "${KDE4_KHOLIDAYS_LIBS}"');
+		   'replace "kholidays" with "${KDEPIMLIBS_KHOLIDAYS_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
-		   'replace "kimap" with "${KDE4_KIMAP_LIBS}"');
+		   'replace "kimap" with "${KDEPIMLIBS_KIMAP_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]kldap[\s/)]',
-                   'replace "kldap" with "${KDE4_KLDAP_LIBS}"');
+                   'replace "kldap" with "${KDEPIMLIBS_KLDAP_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
-		   'replace "kmime" with "${KDE4_KMIME_LIBS}"');
+		   'replace "kmime" with "${KDEPIMLIBS_KMIME_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kontactinterface[\s/)]',
+		   'replace "kmime" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
-		   'replace "kpimidentities" with "${KDE4_KPIMIDENTITIES_LIBS}"');
+		   'replace "kpimidentities" with "${KDEPIMLIBS_KPIMIDENTITIES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimtextedit[\s/)]',
-		   'replace "kpimtextedit" with "${KDE4_KPIMTEXTEDIT_LIBS}"');
+		   'replace "kpimtextedit" with "${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
-		   'replace "kpimutils" with "${KDE4_KPIMUTILS_LIBS}"');
+		   'replace "kpimutils" with "${KDEPIMLIBS_KPIMUTILS_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kresources[\s/)]',
-		   'replace "kresources" with "${KDE4_KRESOURCES_LIBS}"');
+		   'replace "kresources" with "${KDEPIMLIBS_KRESOURCES_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
-		   'replace "ktnef" with "${KDE4_KTNEF_LIBS}"');
+		   'replace "ktnef" with "${KDEPIMLIBS_KTNEF_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kxmlrpcclient[\s/)]',
-		   'replace "kxmlrpcclient" with "${KDE4_KXMLRPCCLIENT_LIBS}"');
+		   'replace "kxmlrpcclient" with "${KDEPIMLIBS_KXMLRPCCLIENT_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]mailtransport[\s/)]',
-                   'replace "mailtransport" with "${KDE4_MAILTRANSPORT_LIBS}"');
+                   'replace "mailtransport" with "${KDEPIMLIBS_MAILTRANSPORT_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]microblog[\s/)]',
-                   'replace "microblog" with "${KDE4_MICROBLOG_LIBS}"');
+                   'replace "microblog" with "${KDEPIMLIBS_MICROBLOG_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
-		   'replace "qgpgme" with "${KDE4_QGPGME_LIBS}"');
+		   'replace "qgpgme" with "${KDEPIMLIBS_QGPGME_LIBS}"');
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
-                   'replace "syndication" with "${KDE4_SYNDICATION_LIBS}"');
+                   'replace "syndication" with "${KDEPIMLIBS_SYNDICATION_LIBS}"');
     }
 
-    if ($line !~ m+(Flex|Plasma|Nepomuk|ACL|Alsa|PCRE|Boost|Libical|Sqlite|Gpgme|Expat|Kttsmodule|KdeSubversion)+ && $in !~ m+/(examples|qtonly)/+) {
+    if ($line !~ m+(Qt4|IOKit|KdeSubversion|KDE4|KDE4Internal|KDEWIN32|KdepimLibs|kdevplatform|Carbon|Gpgme)+ && $in !~ m+/(examples|qtonly)/+) {
       $issues +=
-	&checkLine($line,$linecnt,
-		   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\s*\)',
-		   'Use the REQUIRED keyword with find_package()');
+       &checkLine($line,$linecnt,
+                   '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\sREQUIRED\s*\)',
+                  'Do not use the REQUIRED keyword with find_package()');
     }
 
     my($subdir);
