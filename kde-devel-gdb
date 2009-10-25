@@ -19,13 +19,13 @@ set print static-members off
 #set print object
 
 define printqstring
-    printqstringdata $arg0.d
+    printqstringdata ($arg0).d
 end
 document printqstring
   Prints the contents of a QString
 end
 define printq4string
-    printq4stringdata $arg0.d
+    printq4stringdata ($arg0).d
 end
 document printq4string
   Prints the contents of a Qt QString
@@ -33,7 +33,7 @@ end
 
 define printqstringdata
     set $i=0
-    set $d = (QStringData *)$arg0
+    set $d = (QStringData *)($arg0)
     while $i < $d->len
         printf "%c", (char)($d->unicode[$i++].ucs & 0xff)
     end
@@ -113,15 +113,15 @@ document printq4string_utf8
 end
 
 define printqcstring
-    print $arg0.shd.data
-    print $arg0.shd.len
+    print ($arg0).shd.data
+    print ($arg0).shd.len
 end
 document printqcstring
   Prints the contents of a QCString (char * data, then length)
 end
 
 define printq4bytearray
-    print $arg0->d->data
+    print ($arg0)->d->data
 end
 document printq4bytearray
   Prints the contents of a Qt4 QByteArray (when it contains a string)
@@ -320,7 +320,7 @@ document printqstringlist
 end
 
 define printqregion
-    printqmemarray $arg0.rects() QRect
+    printqmemarray ($arg0).rects() QRect
 end
 document printqregion
   Prints the rectangles that make up a QRegion. Needs a running process.
