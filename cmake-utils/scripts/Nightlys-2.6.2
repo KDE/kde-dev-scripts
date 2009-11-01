@@ -1,38 +1,40 @@
 #!/bin/sh
 
-# this file is not supposed to be used as is, but should just serve as an example
-# Alex
-
-
 # point to the directory where KDECTestNightly.cmake is located (in svn: kdesdk/cmake/modules/ )
 export KDECTESTNIGHTLY_DIR=/home/alex/src/kde4-svn/KDE\ dir/kdesdk/cmake/modules/
 
 
-# which ctest/cmake to use:
 CTEST=/opt/cmake-2.6.2-Linux-i386/bin/ctest
-
-# where to install stuff:
 INSTALL_ROOT=/home/alex/Dashboards/installs/2.6.2
-
-# suffix for the build name on cdash:
 SUFFIX=cmake-2.6.2
 
-# set CMAKE_PREFIX_PATH so everything necessary will be found:
-export CMAKE_PREFIX_PATH=/opt/qt-4.5/qt/
+
+#export CMAKE_PREFIX_PATH=/opt/qt-4.5/qt/
+export CMAKE_PREFIX_PATH=/opt/kde-qt
 export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/opt/shared-mime-info
 
-# build and install kdesupport
+$CTEST -V -VV -S ~/src/kde4-svn/kdesupport/automoc/Automoc4Nightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX
+
 $CTEST -V -VV -S ~/src/kde4-svn/kdesupport/KDESupportNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdesupport,DO_INSTALL=TRUE
 
-# now add the kdesupport install dir to CMAKE_PREFIX_PATH, so the newly installed kdesupport will be found
 export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$INSTALL_ROOT/kdesupport
 
-# build and install kdelibs
 $CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdelibs/KDELibsNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdelibs,DO_INSTALL=TRUE
 
-# add the kdelibs install dir to CMAKE_PREFIX_PATH so the newly installed kdelibs will be found:
 export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$INSTALL_ROOT/kdelibs
 
-# build kdepimlibs, but don't install it:
-$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdepimlibs/KDEPIMLibsNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdepimlibs
+$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdepimlibs/KDEPIMLibsNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdepimlibs,DO_INSTALL=TRUE
+
+
+export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$INSTALL_ROOT/kdepimlibs
+
+$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdebase/KDEBaseNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdebase,DO_INSTALL=TRUE
+
+export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$INSTALL_ROOT/kdebase
+
+$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdepim/KDEPIMNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdepim
+
+$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdeexamples/KDEExamplesNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdeexamples
+
+$CTEST -V -VV -S ~/src/kde4-svn/KDE\ dir/kdeutils/KDEUtilsNightly.cmake,KDE_CTEST_BUILD_SUFFIX=$SUFFIX,CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/kdeutils
 
