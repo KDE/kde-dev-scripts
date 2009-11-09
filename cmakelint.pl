@@ -531,6 +531,11 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]kunitconversion[\s/)]',
                    'replace "kunitconversion" with "${KDE4_KUNITCONVERSION_LIBS}"');
 
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kdewebkit[\s/)]',
+                   'replace "kdewebkit" with "${KDE4_KDEWEBKIT_LIBS}"');
+
 
     }
 
