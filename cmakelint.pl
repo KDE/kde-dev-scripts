@@ -447,6 +447,11 @@ sub processFile() {
 		   'replace "knewstuff2" with "${KDE4_KNEWSTUFF2_LIBS}"');
 
       $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]knewstuff3[\s/)]',
+                   'replace "knewstuff3" with "${KDE4_KNEWSTUFF3_LIBS}"');
+
+      $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]knotifyconfig[\s/)]',
 		   'replace "knotifyconfig" with "${KDE4_KNOTIFYCONFIG_LIBS}"');
