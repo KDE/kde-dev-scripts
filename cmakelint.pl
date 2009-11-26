@@ -394,6 +394,12 @@ sub processFile() {
                  'target_link_libraries.*[[:space:]]QtXmlPatterns[\s/)]',
                  'replace "QtXmlPatterns" with "${QT_QTXMLPATTERNS_LIBRARY}"');
 
+    $issues +=
+      &checkLine($line,$linecnt,
+                 'target_link_libraries.*[[:space:]]QtMultimedia[\s/)]',
+                 'replace "QtMultimedia" with "${QT_QTMULTIMEDIA_LIBRARY}"');
+
+
     # kdegames variables
     if (! $in_kdegames) {
       $issues +=
