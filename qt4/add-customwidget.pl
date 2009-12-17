@@ -6,7 +6,6 @@
 
 use File::Basename;
 use lib dirname( $0 );
-use MDK::Common;
 use functionUtilkde; 
 my $numberArgument = @ARGV;
 "@ARGV" =~ /-h/ || ( $numberArgument ne 3 ) and die "usage: add-customwidget.pl <file> <name of custom widget> <include file for custom widget> \n";
