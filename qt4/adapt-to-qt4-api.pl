@@ -31,6 +31,9 @@ while ($file = <$F>) {
     next if functionUtilkde::excludeFile( $file);
     my @necessaryIncludes = ();
 
+    my $is_ui_file = 0;
+    $is_ui_file = 1 if ( $newFile =~ /\.ui$/ );
+
     if (functionUtilkde::substInFile {
 
     if ( $_ =~ /Q3StyleSheet::escape/ ) {
@@ -189,24 +192,27 @@ while ($file = <$F>) {
     s!QLabel::AlignBottom!Qt::AlignBottom!g;
     s!\bAlignmentFlags\b!Qt::Alignment!g unless (/Qt::Alignment/);
 
-    s!\bSolidPattern\b!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
-    s!Dense1Pattern!Qt::Dense1Pattern!g unless ( /Qt::Dense1Pattern/ );
-    s!Dense2Pattern!Qt::Dense2Pattern!g unless ( /Qt::Dense2Pattern/ );
-    s!Dense3Pattern!Qt::Dense3Pattern!g unless ( /Qt::Dense3Pattern/ );
-    s!Dense4Pattern!Qt::Dense4Pattern!g unless ( /Qt::Dense4Pattern/ );
-    s!Dense5Pattern!Qt::Dense5Pattern!g unless ( /Qt::Dense5Pattern/ );
-    s!Dense6Pattern!Qt::Dense6Pattern!g unless ( /Qt::Dense6Pattern/ );
-    s!Dense7Pattern!Qt::Dense7Pattern!g unless ( /Qt::Dense7Pattern/ );
-    s!\bHorPattern\b!Qt::HorPattern!g unless ( /Qt::HorPattern/ );
-    s!\bVerPattern\b!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
-    s!\bCrossPattern\b!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
-    s!\bBDiagPattern\b!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
-    s!\bFDiagPattern\b!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );
-    s!\bDiagCrossPattern\b!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
+    if (!$is_ui_file) { # uic/cpp/cppwriteinitialization.cpp prepends Qt:: automatically
+        s!\bSolidPattern\b!Qt::SolidPattern!g unless ( /Qt::SolidPattern/ );
+        s!Dense1Pattern!Qt::Dense1Pattern!g unless ( /Qt::Dense1Pattern/ );
+        s!Dense2Pattern!Qt::Dense2Pattern!g unless ( /Qt::Dense2Pattern/ );
+        s!Dense3Pattern!Qt::Dense3Pattern!g unless ( /Qt::Dense3Pattern/ );
+        s!Dense4Pattern!Qt::Dense4Pattern!g unless ( /Qt::Dense4Pattern/ );
+        s!Dense5Pattern!Qt::Dense5Pattern!g unless ( /Qt::Dense5Pattern/ );
+        s!Dense6Pattern!Qt::Dense6Pattern!g unless ( /Qt::Dense6Pattern/ );
+        s!Dense7Pattern!Qt::Dense7Pattern!g unless ( /Qt::Dense7Pattern/ );
+        s!\bHorPattern\b!Qt::HorPattern!g unless ( /Qt::HorPattern/ );
+        s!\bVerPattern\b!Qt::VerPattern!g unless ( /Qt::VerPattern/ );
+        s!\bCrossPattern\b!Qt::CrossPattern!g unless ( /Qt::CrossPattern/ );
+        s!\bBDiagPattern\b!Qt::BDiagPattern!g unless ( /Qt::BDiagPattern/ );
+        s!\bFDiagPattern\b!Qt::FDiagPattern!g unless ( /Qt::FDiagPattern/ );
+        s!\bDiagCrossPattern\b!Qt::DiagCrossPattern!g unless ( /Qt::DiagCrossPattern/ );
+        s!\bNoBrush\b!Qt::NoBrush!g unless (/Qt::NoBrush/);
+    }
+
     s!\bSolidLine\b!Qt::SolidLine!g unless ( /Qt::SolidLine/ );
 
     s!QBrush::NoBrush!Qt::NoBrush!g;
-    s!\bNoBrush\b!Qt::NoBrush!g unless (/Qt::NoBrush/);
     s!QButton::NoChange!QCheckBox::NoChange!g;
 
     s!QObject::AlignLeft!Qt::AlignLeft!g;
