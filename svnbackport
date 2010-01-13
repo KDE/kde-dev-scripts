@@ -15,7 +15,7 @@
 #REPOSITORY=https://svn.kde.org/home/kde
 
 usage() {
-  echo "Usage: $0 [-b <branch>] <file> [<file> ...]"
+  echo "Usage: $(basename $0) [-b <branch>] <file> [<file> ...]"
   echo "  default branch is $DEF_BRANCH"
   exit
 }
@@ -23,9 +23,10 @@ usage() {
 DEF_BRANCH=4.4
 BRANCH=$DEF_BRANCH
 
-while getopts 'b:-:h' opt ; do
+while getopts 'b:r:-:h' opt ; do
   case $opt in
     b) BRANCH="$OPTARG";;
+    r) REV="-r $OPTARG";;
     *) usage;; # -h, --help will also trip this
   esac
 done
@@ -47,7 +48,7 @@ patchok=1
 for file in "$@" ; do
 
   echo "Looking for last change to $file..."
-  svnlastchange -ws "$file" > $TMPFILE || exit 1
+  svnlastchange -ws $REV "$file" > $TMPFILE || exit 1
   echo "Browsing last change to $file..."
   less "$TMPFILE"
 
