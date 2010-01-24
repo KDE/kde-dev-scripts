@@ -82,6 +82,16 @@
 }
 
 {
+   write(buf)/libc/libICE(variant)
+   Memcheck:Param
+   write(buf)
+   obj:/lib/libpthread-*.so
+   obj:/usr/lib/libICE.so.*
+   fun:_IceWrite
+   fun:IceFlush
+}
+
+{
    write(buf)/libc/libX11
    Memcheck:Param
    write(buf)
@@ -174,7 +184,22 @@
    fun:deflate
 }
 
+# Leakcheck suppressions
+{
+   dlopen_worker_malloc
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:dl_open_worker
+}
 
+{
+   dlopen_worker_calloc
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:dl_open_worker
+}
 
 # Helgrind suppressions
 {
