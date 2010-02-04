@@ -143,7 +143,7 @@ EXCLUDE_PATTERNS       = */.svn/* \
                          *unload.* \
                          */test/* \
                          */tests/* \
-                         *_p.h *_p.cpp
+                         *_p.cpp
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
