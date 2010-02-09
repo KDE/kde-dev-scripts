@@ -222,7 +222,10 @@ apps.each do |app|
         `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodule"]}/#{app} #{app}-tmp`
     end
     Dir.chdir( app + "-tmp" )
-    `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodule"]}/doc/#{app} doc`
+
+    if appdata["docs"] != "no"
+        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodule"]}/doc/#{app} doc`
+    end
 
     # Move them to the toplevel
     `/bin/mv * ..`
