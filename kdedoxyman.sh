@@ -24,6 +24,7 @@
 #  -d <dir>: install the generated man pages to this directory
 #
 
+ulimit -c unlimited
 usage="`basename $0` -d <dir>"
 
 install_dir="";
@@ -50,7 +51,7 @@ fi
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.3
+PROJECT_NUMBER         = 4.5
 OUTPUT_DIRECTORY       = $install_dir
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
