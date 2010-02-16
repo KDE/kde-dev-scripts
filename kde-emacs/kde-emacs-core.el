@@ -156,7 +156,7 @@ With arg, do it arg times."
   ;; access specifiers
   ;; This breaks in the font-lock-fontify engine in xemacs-21.5.28... no solution known yet.
   ;; TODO use the const variable kde-access-labels here. Couldn't figure out the syntax.
-  (font-lock-add-keywords nil '(("\\<\\(signals\\|Q_SIGNALS\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+\\(slots\\|Q_SLOTS\\)\\)?\\)\\>:" . font-lock-reference-face)))
+  ;(font-lock-add-keywords nil '(("\\<\\(signals\\|Q_SIGNALS\\|k_dcop\\|\\(public\\|protected\\|private\\)\\([     ]+\\(slots\\|Q_SLOTS\\)\\)?\\)\\>:" . font-lock-reference-face)))
 
   ;; Add (setq magic-keys-mode nil) to your .emacs (before loading this file)
   ;; to disable the magic keys in C++ mode.
