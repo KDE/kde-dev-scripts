@@ -82,6 +82,7 @@ use constant ECTX_EXCLUDE =>
     [["widget", "class", "KFontComboBox"], ["item", "", ""], ["property", "", ""]],
     [["widget", "class", "KPushButton"], ["attribute", "name", "buttonGroup"]],
     [["widget", "class", "QRadioButton"], ["attribute", "name", "buttonGroup"]],
+    [["widget", "class", "KTimeZoneWidget"], ["property", "name", "text"]],
 ];
 
 # The parts between the tags of the extensions will be copied
