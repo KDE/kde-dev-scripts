@@ -9,16 +9,16 @@ use strict;
 ### below, then answer the following questions:
 ###
 ### 1. Include 'gplv23' if you are okay with contributions you've made under
-###    GPLv2 being relicensed as GPLv2 or GPLv3.
+###    "GPLv2" being relicensed as "GPLv2 or GPLv3".
 ###
 ### 2. Include 'lgplv23' if you are okay with contributions you've made under
-###    LGPLv2 being relicensed as LGPLv2 or LGPLv3.
+###    "LGPLv2" being relicensed as "LGPLv2 or LGPLv3".
 ###
 ### 3. Include 'gplv2+' if you are okay with contributions you've made under
-###    GPLv2 being relicensed as GPLv2 or later.
+###    "GPLv2" being relicensed as "GPLv2 or later".
 ###
 ### 4. Include 'lgplv2+' if you are okay with contributions you've made under
-###    LGPLv2 being relicensed as LGPLv2 or later.
+###    "LGPLv2" being relicensed as "LGPLv2 or later".
 ###
 ### 5. Include '+eV' if you are okay with the KDE e.V. deciding on a future
 ###    licensing change to your code if necessary.
