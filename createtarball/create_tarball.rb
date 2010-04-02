@@ -214,6 +214,11 @@ apps.each do |app|
     end
     appdata = appdata.merge(temp)
 
+    if !appdata["customlang"]
+        temp = { "customlang" => [] }
+    end
+    appdata = appdata.merge(temp)
+
     # Preparing
     puts "-> Fetching " + appdata["mainmodule"] + "/" + appdata["submodulepath"] + app + " into " + appdata["folder"] + "..."
     # Remove old folder, if exists
@@ -248,7 +253,7 @@ apps.each do |app|
         i18nlangsCleaned = []
         for lang in i18nlangs
             l = lang.chomp
-            if (l != "x-test")
+            if (l != "x-test") && (appdata["customlang"].empty? || appdata["customlang"].include?(l))
                 i18nlangsCleaned += [l];
             end
         end
