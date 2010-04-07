@@ -15,7 +15,7 @@
 #REPOSITORY=https://svn.kde.org/home/kde
 
 usage() {
-  echo "Usage: $(basename $0) [-b <branch>] <file> [<file> ...]"
+  echo "Usage: $(basename $0) [-b <branch>] [-r <revision number>] <file> [<file> ...]"
   echo "  default branch is $DEF_BRANCH"
   exit
 }
