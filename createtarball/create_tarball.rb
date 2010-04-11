@@ -39,6 +39,9 @@ opts = OptionParser.new do |opts|
   opts.on_tail("-h", "--help", "Show this usage statement") do |h|
     options.help = true
   end
+  opts.on("-r", "--revision REV", "Use a specific revision of the repository") do |r|
+    options.rev = r
+  end
 end
 
 begin
@@ -220,7 +223,14 @@ apps.each do |app|
     appdata = appdata.merge(temp)
 
     # Preparing
-    puts "-> Fetching " + appdata["mainmodule"] + "/" + appdata["submodulepath"] + app + " into " + appdata["folder"] + "..."
+    rev = ""
+    revString = ""
+    if (options.rev)
+      rev = "-r " + options.rev
+      revString = " Rev " + options.rev
+    end
+
+    puts "-> Fetching " + appdata["mainmodule"] + "/" + appdata["submodulepath"] + app + revString + " into " + appdata["folder"] + "..."
     # Remove old folder, if exists
     `rm -rf #{appdata["folder"]} 2> /dev/null`
     `rm -rf #{appdata["folder"]}.tar.bz2 2> /dev/null`
@@ -229,14 +239,14 @@ apps.each do |app|
 
     # Do the main checkouts.
     if appdata["wholeModule"]
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]} #{app}-tmp`
+        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]} #{rev} #{app}-tmp`
     else
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}#{app} #{app}-tmp`
+        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}#{app} #{rev} #{app}-tmp`
     end
     Dir.chdir( app + "-tmp" )
 
     if appdata["docs"] != "no"
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}doc/#{app} doc`
+        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}doc/#{app} #{rev} doc`
     end
 
     # Move them to the toplevel
@@ -247,9 +257,9 @@ apps.each do |app|
     `rm -rf #{app}-tmp`
 
     if appdata["translations"] != "no"
-        puts "-> Fetching l10n docs for #{appdata["submodulepath"]}#{app}..."
+        puts "-> Fetching l10n docs for #{appdata["submodulepath"]}#{app} #{revString}..."
 
-        i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs`.split
+        i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs #{rev}`.split
         i18nlangsCleaned = []
         for lang in i18nlangs
             l = lang.chomp
@@ -275,7 +285,7 @@ apps.each do |app|
                 docdirname = "l10n-kde4/#{lang}/docs/#{appdata["l10nmodule"]}/#{dg}"
                 if ( appdata["docs"] != "no" )
                     puts "  -> Checking if #{lang} has translated documentation...\n"
-                    `svn co -q #{svnroot}/#{docdirname} > /dev/null 2>&1`
+                    `svn co -q #{rev} #{svnroot}/#{docdirname} > /dev/null 2>&1`
                 end
                 next unless FileTest.exists?( dg + '/index.docbook' )
 
@@ -337,7 +347,7 @@ apps.each do |app|
 		                valid = false
                     for sp in appdata["custompo"].split(/,/)
 		    	              pofilename = "l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{sp}.po"
-                    	  `svn cat #{svnroot}/#{pofilename} 2> /dev/null | tee l10n/#{sp}.po`
+                    	  `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{sp}.po`
                     	  if not FileTest.size( "l10n/#{sp}.po" ) == 0
 	   		                valid=true
                     	  if !FileTest.exist?( dest )
@@ -351,7 +361,7 @@ apps.each do |app|
 		            next if not valid
                 else
                     pofilename = "l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{dg}.po"
-                    `svn cat #{svnroot}/#{pofilename} 2> /dev/null | tee l10n/#{dg}.po`
+                    `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{dg}.po`
                     next if FileTest.size( "l10n/#{dg}.po" ) == 0
                     
                     if !FileTest.exist?( dest )
