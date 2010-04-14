@@ -388,8 +388,8 @@ apps.each do |app|
         `echo "find_package(Msgfmt REQUIRED)" >> CMakeLists.txt`
         `echo "find_package(Gettext REQUIRED)" >> CMakeLists.txt`
         `echo "add_subdirectory( po )" >> CMakeLists.txt`
-        `echo "add_subdirectory( doc-translations )" >> CMakeLists.txt`
-        if FileTest.exist?( "doc" )
+        if appdata["docs"] != "no"
+            `echo "add_subdirectory( doc-translations )" >> CMakeLists.txt`
             `echo "add_subdirectory( doc )" >> CMakeLists.txt`
         end
     end
