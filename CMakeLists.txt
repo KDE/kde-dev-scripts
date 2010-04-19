@@ -62,5 +62,6 @@ install(PROGRAMS
   kdemangen.pl 
   svnintegrate 
   kde_generate_export_header
+  kde-systemsettings-tree.py
   DESTINATION ${BIN_INSTALL_DIR})
  
