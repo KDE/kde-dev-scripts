@@ -182,6 +182,11 @@ cvslastreferenced Goes through the whole history of a file to find all modificat
                 when a function has been removed/modified/added to a file if a
                 recent cvs annotate doesn't reference it anymore. 
 
+l10n-get       This script is meant to help KDE software developers (having programs in
+               trunk branch of KDE SVN) to automate some trivial tasks, such as gathering
+               the po files and the documentation for all languages, check the existence
+               of a certain file etc.
+
 wcgrep Useful for grep'ing in a subversion working copy.
 
 === KDE BUILD SCRIPTS
