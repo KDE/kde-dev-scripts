@@ -700,6 +700,7 @@ This function does not do any hidden buffer changes."
       (setq objext "\.o"))
     (if (string-match "\.cpp$" f) (setq f (replace-match objext t t f)))
     (if (string-match "\.cc$" f) (setq f (replace-match objext t t f)))
+    (if (string-match "\.c$" f) (setq f (replace-match objext t t f)))
     (compile (concat kde-emacs-make " " f)))
   )
 
