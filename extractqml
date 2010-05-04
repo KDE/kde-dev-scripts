@@ -1,0 +1,101 @@
+#! /usr/bin/env perl
+
+# Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+# based on extractrc by:
+# Copyright (c) 2004 Richard Evans <rich@ridas.com>
+
+sub usage
+{
+  warn <<"EOF";
+
+extractqml [flags] filenames
+
+This script extracts messages from QML files writes on standard output
+(usually redirected to rc.cpp) the equivalent i18n() calls so that
+xgettext can parse them.
+
+--ignore-no-input : Do not warn if there were no filenames specified
+--help|?          : Display this summary
+
+EOF
+
+  exit;
+}
+
+###########################################################################################
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Data::Dumper;
+
+###########################################################################################
+# Add options here as necessary - perldoc Getopt::Long for details on GetOptions
+
+GetOptions ( "ignore-no-input" => \my $opt_ignore_no_input,
+             "help|?"      => \&usage );
+
+unless( @ARGV )
+{
+  warn "No filename specified" unless $opt_ignore_no_input;
+  exit;
+}
+
+###########################################################################################
+
+for my $file_name ( @ARGV )
+{
+  my $fh;
+
+  unless ( open $fh, "<", $file_name )
+  {
+    # warn "Failed to open: '$file_name': $!";
+    next;
+  }
+
+  while ( <$fh> )
+  {
+     # single string
+     if ( $_ =~ /KDE.i18n\s*\(\s*\"([^\\\"]*)\"\s*\)/ )
+     {
+       print qq|i18n(\"$1\");\n|;
+     }
+     # single string with arguments
+     elsif ( $_ =~ /KDE.i18na\s*\(\s*\"([^\\\"]*)\"\s*,\s*\[([^\\\]]*)\]\s*\)/ )
+     {
+       print qq|i18n(\"$1\", $2 );\n|;
+     }
+     # string with context
+     elsif ( $_ =~ /KDE.i18nc\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*\)/ )
+     {
+       print qq|i18nc(\"$1\", \"$2\");\n|;
+     }
+     # string with context and arguments
+     elsif ( $_ =~ /KDE.i18nca\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\[([^\\\]]*)\]\s*\)/ )
+     {
+       print qq|i18nc(\"$1\", \"$2\", $3);\n|;
+     }
+     # plural
+     elsif ( $_ =~ /KDE.i18np\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\)/ )
+     {
+       print qq|i18np(\"$1\", \"$2\", $3);\n|;
+     }
+     # plural with arguments
+     elsif ( $_ =~ /KDE.i18npa\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*,\s*\[([^\\\]]*)\]\s*\)/ )
+     {
+       print qq|i18np(\"$1\", \"$2\", $3, $4);\n|;
+     }
+     # context and plural
+     elsif ( $_ =~ /KDE.i18ncp\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\)/ )
+     {
+       print qq|i18ncp(\"$1\", \"$2\", \"$3\", $4);\n|;
+     }
+     # context, plural and arguments
+     elsif ( $_ =~ /KDE.i18ncpa\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\,\s*\[([^\\\]]*)\]\s*/ )
+     {
+       print qq|i18ncp(\"$1\", \"$2\", \"$3\", $4, $5);\n|;
+     }
+  }
+
+  close $fh or warn "Failed to close: '$file_name': $!";
+}

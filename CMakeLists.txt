@@ -48,7 +48,8 @@ install(PROGRAMS
   svnversions 
   kdesvn-build 
   extractrc 
-  extractattr 
+  extractattr
+  extractqml 
   zonetab2pot.py 
   fixkdeincludes 
   fixuifiles 
