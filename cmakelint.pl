@@ -3,7 +3,7 @@
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
 # Copyright (C) 2006-2009 by Allen Winter <winter@kde.org>                    #
-# Copyright (C) 2008 by Laurent Montel <montel@kde.org>                       #
+# Copyright (C) 2008-2010 by Laurent Montel <montel@kde.org>                  #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
 # it under the terms of the GNU General Public License as published by        #
@@ -547,6 +547,25 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]kdewebkit[\s/)]',
                    'replace "kdewebkit" with "${KDE4_KDEWEBKIT_LIBS}"');
 
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kprintutils[\s/)]',
+                   'replace "kprintutils" with "${KDE4_KPRINTUTILS_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kcmutils[\s/)]',
+                   'replace "kcmutils" with "${KDE4_KCMUTILS_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kemoticons[\s/)]',
+                   'replace "kemoticons" with "${KDE4_KEMOTICONS_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kidletime[\s/)]',
+                   'replace "kidletime" with "${KDE4_KIDLETIME_LIBS}"');
 
     }
 
