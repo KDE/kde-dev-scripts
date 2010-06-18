@@ -55,46 +55,13 @@ for my $file_name ( @ARGV )
 
   while ( <$fh> )
   {
-     # single string
-     if ( $_ =~ /KDE.i18n\s*\(\s*\"([^\\\"]*)\"\s*\)/ )
-     {
-       print qq|i18n(\"$1\");\n|;
-     }
-     # single string with arguments
-     elsif ( $_ =~ /KDE.i18na\s*\(\s*\"([^\\\"]*)\"\s*,\s*\[([^\\\]]*)\]\s*\)/ )
-     {
-       print qq|i18n(\"$1\", $2 );\n|;
-     }
-     # string with context
-     elsif ( $_ =~ /KDE.i18nc\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*\)/ )
-     {
-       print qq|i18nc(\"$1\", \"$2\");\n|;
-     }
-     # string with context and arguments
-     elsif ( $_ =~ /KDE.i18nca\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\[([^\\\]]*)\]\s*\)/ )
-     {
-       print qq|i18nc(\"$1\", \"$2\", $3);\n|;
-     }
-     # plural
-     elsif ( $_ =~ /KDE.i18np\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\)/ )
-     {
-       print qq|i18np(\"$1\", \"$2\", $3);\n|;
-     }
-     # plural with arguments
-     elsif ( $_ =~ /KDE.i18npa\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*,\s*\[([^\\\]]*)\]\s*\)/ )
-     {
-       print qq|i18np(\"$1\", \"$2\", $3, $4);\n|;
-     }
-     # context and plural
-     elsif ( $_ =~ /KDE.i18ncp\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\)/ )
-     {
-       print qq|i18ncp(\"$1\", \"$2\", \"$3\", $4);\n|;
-     }
-     # context, plural and arguments
-     elsif ( $_ =~ /KDE.i18ncpa\s*\(\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*\"([^\\\"]*)\"\s*,\s*([^\s\)]*)\s*\,\s*\[([^\\\]]*)\]\s*/ )
-     {
-       print qq|i18ncp(\"$1\", \"$2\", \"$3\", $4, $5);\n|;
-     }
+    # check for lines like:
+    #        vvvv
+    #    KDE.i18n( "single message" )
+    #              ^^^^^^^^^^^^^^^^
+    # match the first expression to know the function (i18n, i18nc, i18np, i18ncp)
+    # match the second expression to know the arguments for that function
+    print if s/.* KDE. ( i18nc?p? ) \s* \( \s* ([^\\\)]* [^\s\)]) \s* \) .*/$1($2);/x;
   }
 
   close $fh or warn "Failed to close: '$file_name': $!";
