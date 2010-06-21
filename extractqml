@@ -43,6 +43,27 @@ unless( @ARGV )
 
 ###########################################################################################
 
+# We check for lines like:
+#
+#        vvvv
+#    KDE.i18n( "single message", 2, test, "another string" )
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# match the first expression to know the function (i18n, i18nc, i18np, i18ncp)
+# match the second expression to know the arguments for that function
+#
+# NOTE: this is a "hackish" solution that works if the function calls we
+# want to # match are regular enough.  If more complicated patterns start to
+# happen maybe we need to find another solution.
+
+my $double_string = qr/ (?: \" (?: \\ \" | .)* \") /x;
+my $single_string = qr/ (?: ' (?: \\ ' | .)* ') /x;
+my $string = qr/ (?: $double_string | $single_string) /x;
+my $simple_expression = qr/ [^,\)]* [^,\s\)] /x;
+my $arguments = qr/ $string (?: \s* , \s* (?: $string | $simple_expression ) )* /x;
+
+my $match_i18n = qr/ KDE \. ( i18nc?p? ) \s* \( \s* ( $arguments ) \s* \) /x;
+
+
 for my $file_name ( @ARGV )
 {
   my $fh;
@@ -53,15 +74,11 @@ for my $file_name ( @ARGV )
     next;
   }
 
-  while ( <$fh> )
-  {
-    # check for lines like:
-    #        vvvv
-    #    KDE.i18n( "single message" )
-    #              ^^^^^^^^^^^^^^^^
-    # match the first expression to know the function (i18n, i18nc, i18np, i18ncp)
-    # match the second expression to know the arguments for that function
-    print if s/.* KDE. ( i18nc?p? ) \s* \( \s* ([^\\\)]* [^\s\)]) \s* \) .*/$1($2);/x;
+  # Trick to read the entire file contents
+  my $contents = do { local $/; <$fh> };
+
+  while ( $contents =~ m/$match_i18n/gx ) {
+    print "$1($2);\n";
   }
 
   close $fh or warn "Failed to close: '$file_name': $!";
