@@ -1,11 +1,10 @@
 #!/usr/bin/perl
-# Copyright (C) 2006 Thomas Zander <zander@kde.org>
+# Copyright (C) 2006-2010 Thomas Zander <zander@kde.org>
 $COMMAND = "unsercmake";
-$VERSION = "$COMMAND 0.14";
+$VERSION = "$COMMAND 0.32";
 # This script allows you to build a target library including dependency checking, but it
 # limits the dependency checking to the current dir and its subdirs meaning a lot of
 # unwanted steps are skipped.
-# This script assumes the presence of cmake 2.4.3 or greater and the Makefiles it created.
 
 
 # user settings...
@@ -19,7 +18,7 @@ $VERSION = "$COMMAND 0.14";
 $buildDirType = "";
 
 ##########################
-# Copyright (c) 2006 Thomas Zander <zander@kde.org>
+# Copyright (c) 2006-2010 Thomas Zander <zander@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -219,13 +218,16 @@ foreach $lib (@maketargets) {
         if(defined $just_print) {
             next;
         }
+        foreach $h (@actualTargets) {
+            if($h=~/(\b$lib\_automoc)/) {
+                system ("make $jobs $verbose $1");
+                last;
+            }
+        }
+
         my $rc = system ("make $jobs $verbose $lib/fast");
         if(!(defined $keep_going) && $rc != 0) {
             exit 1;
-        }
-        if($doInstall == 1 && $rc == 0) {
-            # install libs
-            &install("$builddir/$locations{$lib}/cmake_install.cmake", 1);
         }
     }
     elsif(! defined $quiet) {
@@ -241,7 +243,13 @@ if($doInstall == 1) {
         print "\n";
     }
     if(! defined $just_print) {
-        &install("$builddir/cmake_install.cmake", 0);
+        @output=`(cd $builddir && make install/fast)`;
+        my $line;
+        foreach $line (@output) {
+            if ($line=~/^-- (Installing: .*)$/) {
+                print "$1\n";
+            }
+        }
     }
 }
 
@@ -451,107 +459,3 @@ sub checkTargetAvail() {
     return 0;
 }
 
-
-sub install() {
-    my $inputFile=shift(@_);
-    my $limitToLibs=shift(@_);
-
-    my @subdirs;
-    open FILE, "$inputFile";
-    foreach $line (<FILE>) {
-        if($limitToLibs == 0 && $line=~/^INCLUDE\(\"(.*)\"\)/) {
-            push @subdirs, $1;
-        }
-        elsif($line=~/^FILE\(INSTALL DESTINATION \"(.*)\" TYPE (SHARED_LIBRARY|EXECUTABLE|FILE|MODULE)(.+?)FILES \"(.*)\"\)$/) {
-            my $dest=$1;
-            my $type=$2;
-            my $options=$3;
-            my $input=$4;
-            if($limitToLibs==1 && !($type eq "SHARED_LIBRARY" || $type eq "MODULE")) {
-                next;
-            }
-            $input=~/.*\/(.*)/;
-            $filename=$1;
-            if($type eq "FILE" && $options=~/RENAME \"(.*)\"/) {
-                $filename = $1;
-            }
-            #print " a: '$dest', b: $type, c: '$options', d: '$filename'\n";
-            my $copy=0;
-
-            if($filename=~/\.so$/) { # cmake may be lying to us in this case about the source path
-                my @sourceInfo = stat "$input";
-                if (@sourceInfo == 0) {
-                    # in this case cmake moved the .so to the [build]/lib/ dir. Which sucks as we don't know what the build dir is!
-                    my $testPath = $input;
-                    while (1) {
-                        $testPath=~/(.*)\/.*/; # aka 'cd ..'
-                        $testPath = $1;
-                        if ($testPath eq "") { last; }
-                        if (-f "$testPath/lib/$filename") {
-                            # found it!
-                            $input = "$testPath/lib/$filename";
-                            last;
-                        }
-                    }
-                }
-            }
-
-            my @destInfo = stat "$dest/$filename";
-            if(@destInfo == 0) {
-                #print "dest not exist\n";
-                $copy=1;
-            }
-            else {
-                my @sourceInfo = stat "$input";
-                if(@destInfo[7] != @sourceInfo[7]) { # filesize
-                    #print "different size\n";
-                    $copy=1;
-                }
-                elsif(abs(@destInfo[9] - @sourceInfo[9]) > 2) { # mtime
-                    #print "different date\n";
-                    $copy=1;
-                }
-            }
-            if($copy == 1) {
-                system("install -d $dest"); # create dir
-                my $doSymlinks=0;
-                my $ver="";
-                my $sover;
-                if($type eq "SHARED_LIBRARY") {
-                    if($options=~/VERSION ([\d\.]+)/) { # do symlinks since its got versions.
-                        $ver=".$1";
-                        $doSymlinks=1;
-                        $options=~/SOVERSION ([\d\.]+)/;
-                        $sover=".$1";
-                    }
-                }
-                system "install -d $dest" || die "Can not create dir '$dest'";
-                unlink "$dest/$filename$ver";
-                system "cp", "--preserve=timestamps,mode", "$input", "$dest/$filename$ver";
-                if($type eq "EXECUTABLE") {
-                    chmod 0755, "$dest/$filename";
-                }
-                #print "    cp $input $dest/$filename$ver\n";
-                if($doSymlinks) {
-                    if(!-l "$dest/$filename$sover") {
-                        unlink("$dest/$filename$sover"); #if its a normal file
-                        symlink "$filename$ver", "$dest/$filename$sover";
-                    }
-                    if(!-l "$dest/$filename") {
-                        unlink("$dest/$filename"); #if its a normal file
-                        symlink "$filename$sover", "$dest/$filename";
-                    }
-                }
-                if($limitToLibs == 1) {
-                    print "Installing";
-                }
-                print "  $dest/$filename$ver\n";
-            }
-        }
-    }
-    close FILE;
-
-    foreach $subdir (@subdirs) {
-        &install($subdir, $limitToLibs);
-    }
-}
