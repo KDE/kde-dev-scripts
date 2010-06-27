@@ -33,7 +33,7 @@ install(PROGRAMS
   DESTINATION ${BIN_INSTALL_DIR})
 endif (UNIX)
 
-install( FILES kdesvn-buildrc.xml  DESTINATION  ${DATA_INSTALL_DIR}/katepart/syntax )
+install( FILES kdesrc-buildrc.xml  DESTINATION  ${DATA_INSTALL_DIR}/katepart/syntax )
 install(PROGRAMS 
   create_makefile 
   makeobj 
@@ -46,7 +46,7 @@ install(PROGRAMS
   svn-clean 
   svnlastchange 
   svnversions 
-  kdesvn-build 
+  kdesrc-build 
   extractrc 
   extractattr
   extractqml 
