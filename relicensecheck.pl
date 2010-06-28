@@ -27,6 +27,7 @@ use strict;
 
 my %license_table = (
     'aacid'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'abryant'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'adawit'    => ['gplv23', 'lgplv23',                      '+eV' ],
     'alund'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'amth'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
