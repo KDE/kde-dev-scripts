@@ -91,7 +91,6 @@ end
 
 ############# START #############
 
-svnroot    = "#{svnbase}/trunk"
 kde_version  = `svn ls svn://anonsvn.kde.org/home/kde/tags/KDE | sort | tail -n1 | cut -d "/" -f1`.chomp
 #kde_version = '4.0.4'
 
@@ -236,6 +235,13 @@ apps.each do |app|
     `rm -rf #{appdata["folder"]}.tar.bz2 2> /dev/null`
     Dir.mkdir( appdata["folder"] )
     Dir.chdir( appdata["folder"] )
+
+    if appdata["mainmodule"][0,5] == "trunk" || appdata["mainmodule"][0,8] == "branches" 
+        svnroot = "#{svnbase}/"
+    else
+        #trunk is assumed for all mainmodules that don't start with "trunk" or "branches"
+	svnroot = "#{svnbase}/trunk/"
+    end
 
     # Do the main checkouts.
     if appdata["wholeModule"]
