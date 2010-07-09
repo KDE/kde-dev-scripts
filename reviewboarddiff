@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# Generates reviewboard compatible diffs from git-svn repositories.
+#
+# GPL v3, Aurélien Gâteau <agateau@kde.org>
+import sys
+from subprocess import *
+USAGE="""
+Prints a reviewboard-compatible diff from a git-svn repository on stdout.
+
+Usage: reviewboarddiff <git-diff-args>
+
+Examples:
+    reviewboarddiff HEAD  : generates diff for uncommitted changes
+    reviewboarddiff HEAD^ : generates diff for latest commit
+    reviewboarddiff HEAD~3: generates diff for 3 latest commits
+"""
+
+def run(*args):
+    process = Popen(args, stdout=PIPE)
+    out, err = process.communicate()
+    if process.returncode != 0:
+        print >>sys.stderr, "Command '%s' failed:" % " ".join(args)
+        print >>sys.stderr, err
+        sys.exit(1)
+    return out.rstrip()
+
+def add_suffix(line, suffix):
+    return line.rstrip() + suffix + "\n"
+
+def generate_diff(diff_args):
+    wc_suffix = "  (working copy)"
+    new_suffix = "  (revision 0)"
+
+    rev_list = run("git", "rev-list", "--date-order", "--max-count=1", "git-svn")
+    rev = run("git", "svn", "find-rev", rev_list)
+    rev_suffix = "  (revision %s)" % rev
+
+    out = Popen(["git", "diff", "--no-prefix"] + diff_args, stdout=PIPE).stdout
+
+    while True:
+        line = out.readline()
+        if not line:
+            break
+
+        """
+        git outputs new files as
+        --- /dev/null
+        +++ /new/file
+
+        while svn prefers:
+
+        --- /new/file  (revision 0)
+        +++ /new/file  (working copy)
+
+        We skip the "--- /dev/null" line, read the next line (+++ /new/file)
+        and recreate "--- /new/file" from it
+        """
+        if line.startswith("--- /dev/null"):
+            line = out.readline()
+            null_line = add_suffix(line.replace("+++", "---"), new_suffix)
+            sys.stdout.write(null_line)
+
+        # Add suffixes
+        if line.startswith("---"):
+            line = add_suffix(line, rev_suffix)
+        elif line.startswith("+++"):
+            line = add_suffix(line, wc_suffix)
+
+        sys.stdout.write(line)
+
+    return 0
+
+def main(argv):
+    if len(argv) == 1:
+        print USAGE
+        return -1
+    return generate_diff(argv[1:])
+
+if __name__=="__main__":
+    sys.exit(main(sys.argv))
+# vi: ts=4 sw=4 et
