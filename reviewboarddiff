@@ -3,9 +3,10 @@
 #
 # Generates reviewboard compatible diffs from git-svn repositories.
 #
-# GPL v3, Aurélien Gâteau <agateau@kde.org>
-# Based on a shell script I found on the internet, please add your name if you
-# recognize your code.
+# Licence: GPL v3
+# Author: Aurélien Gâteau <agateau@kde.org>
+#
+# Based on a shell script by Riccardo Iaconelli <riccardo@kde.org>
 import sys
 from subprocess import *
 USAGE="""
