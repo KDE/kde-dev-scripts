@@ -18,6 +18,7 @@ options = OpenStruct.new
 options.help  = false
 options.https = false
 options.ask   = true
+options.translations = true
 
 opts = OptionParser.new do |opts|
   opts.on("-u", "--user USERNAME", "svn account") do |u|
@@ -41,6 +42,9 @@ opts = OptionParser.new do |opts|
   end
   opts.on("-r", "--revision REV", "Use a specific revision of the repository") do |r|
     options.rev = r
+  end
+  opts.on("-t", "--no-translations", "Don't include translations") do |t|
+    options.translations = false
   end
 end
 
@@ -262,7 +266,7 @@ apps.each do |app|
     `find -name ".svn" | xargs rm -rf`
     `rm -rf #{app}-tmp`
 
-    if appdata["translations"] != "no"
+    if appdata["translations"] != "no" && options.translations
         puts "-> Fetching l10n docs for #{appdata["submodulepath"]}#{app} #{revString}..."
 
         i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs #{rev}`.split
@@ -396,8 +400,12 @@ apps.each do |app|
         `echo "add_subdirectory( po )" >> CMakeLists.txt`
         if appdata["docs"] != "no"
             `echo "add_subdirectory( doc-translations )" >> CMakeLists.txt`
-            `echo "add_subdirectory( doc )" >> CMakeLists.txt`
         end
+    end
+
+    # add doc generation to compilation
+    if appdata["docs"] != "no"
+        `echo "add_subdirectory( doc )" >> CMakeLists.txt`
     end
 
     # Remove cruft 
