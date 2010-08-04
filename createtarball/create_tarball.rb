@@ -416,7 +416,7 @@ apps.each do |app|
 
     print "-> Compressing ..  "
     Dir.chdir( ".." ) # root folder
-    `tar -jcf #{appdata["folder"]}.tar.bz2 #{appdata["folder"]}`
+    `tar -jcf #{appdata["folder"]}.tar.bz2 --group=root --owner=root  #{appdata["folder"]}`
     #`rm -rf #{appdata["folder"]}`
     puts " done."
 end 
