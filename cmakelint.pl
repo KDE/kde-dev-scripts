@@ -598,11 +598,11 @@ sub processFile() {
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kcalcore[\s/)]',
-		   'replace "kcal" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
+		   'replace "kcalcore" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
-		   'replace "kcal" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+		   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
