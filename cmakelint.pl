@@ -124,18 +124,19 @@ sub processFile() {
     if ($in !~ m+kjsembed/qtonly/CMakeLists.txt+) {
       if ($line =~ m/macro_optional_find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
 	  $line =~ m/find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
-	  $line =~ m/find_program\s*\(\s*([a-zA-Z0-9_]*).*\)/i) {
+	  $line =~ m/find_program\s*\(\s*([a-zA-Z0-9_]*).*\)/i ||
+	  $line =~ m/find_path\s*\(\s*([a-zA-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
 	$pack = "libusb" if ($pack eq "usb");
 	$pack = "mysql_embedded" if ($pack eq "mysql");
-	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2)/) {
+	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2|kdesubversion)/) {
 	  $optpacks{$pack}{'name'} = $pack;
 	  $optpacks{$pack}{'log'} = 0;
 	}
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc|qt_qtopengl|ggzconfig)_/ &&
+	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
 	    $pack !~ m/x11_.*_found/ &&
 	    $pack !~ m/true/i && $pack !~ m/false/i) {
 	  $pack =~ s/_xcb//;
