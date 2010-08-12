@@ -11,6 +11,9 @@
 # Disable printing of static members. Qt has too many, it clutters the output
 set print static-members off
 
+# Remember history over restarts
+set history save
+
 # Show the real classname of object instances - e.g. (Kded *) 0x8073440 instead of (class QObject *) 0x8073440
 # Turned it off again, because it breaks too often: 
 # (gdb) p this->_autoFree
