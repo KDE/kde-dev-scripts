@@ -216,7 +216,11 @@ for my $file_name ( @ARGV )
 
   while ( <$fh> )
   {
-     last if $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml|<!--|<ui version=)/;
+     if ( $. == 1 and $_ !~ /^(?:<!DOCTYPE|<\?xml|<!--|<ui version=)/ )
+     {
+	     print STDERR "Warning: $file_name does not have a recognised first line and texts won't be extracted\n";
+	     last;
+     }
 
      chomp;
 
