@@ -1,6 +1,6 @@
 
 
-add_subdirectory(kdesvn-build)
+add_subdirectory(kdesrc-build)
 
 ########### install files ###############
 
