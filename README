@@ -190,7 +190,7 @@ build-progress.sh Displays the progress of kde-build, times needed to complete e
 		step. And sets the titlebar of the terminal to the directory that
 		make is processing 
 
-kdesvn-build	Updates and recompiles a local Subversion tree.
+kdesrc-build	Updates and recompiles a local KDE source tree.
 
 === OTHERS
 
