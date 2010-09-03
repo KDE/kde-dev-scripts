@@ -45,6 +45,10 @@ if ( test "$install_dir" = "" ) then
   echo "must specify the installation directory with the -d option. Exiting..."
   exit 1
 fi
+if ( test ! -w "$install_dir" ) then
+  echo "sorry, you do not have write access to the specified installation directory. Exiting..."
+  exit 1
+fi
 
 ( cat <<EOF ) | doxygen -
 #---------------------------------------------------------------------------
@@ -55,7 +59,6 @@ PROJECT_NUMBER         = 4.6
 OUTPUT_DIRECTORY       = $install_dir
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
-USE_WINDOWS_ENCODING   = NO
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
 ABBREVIATE_BRIEF       = "The \$name class" \
@@ -77,7 +80,6 @@ STRIP_FROM_INC_PATH    =
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = NO
 MULTILINE_CPP_IS_BRIEF = NO
-DETAILS_AT_TOP         = NO
 INHERIT_DOCS           = YES
 SEPARATE_MEMBER_PAGES  = NO
 TAB_SIZE               = 8
