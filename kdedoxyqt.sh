@@ -177,7 +177,7 @@ DISABLE_INDEX          = YES
 # configuration options related to the qhp output
 #---------------------------------------------------------------------------
 GENERATE_QHP           = YES
-QHP_NAMESPACE          = org.kde.www
+QHP_NAMESPACE          = org.kde.$virtual_folder
 QHP_VIRTUAL_FOLDER     = $virtual_folder
 QHG_LOCATION           = qhelpgenerator
 #---------------------------------------------------------------------------
