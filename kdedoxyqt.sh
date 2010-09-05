@@ -27,11 +27,15 @@ if ( test $V -lt 157 ) then
   exit 1
 fi
 
-usage="`basename $0`"
+usage="`basename $0` [-n <project_name>] [-x <project_version>]"
 
-while getopts ":d:" options; do
+project_name="KDE"
+project_version="4.6"
+while getopts "hn:x:" options; do
   case $options in
-    h ) echo $usage;;
+    h ) echo $usage; exit 0;;
+    n ) project_name="$OPTARG";;
+    x ) project_version="$OPTARG";;
     \? ) echo $usage
          exit 1;;
     * ) echo $usage
@@ -40,12 +44,14 @@ while getopts ":d:" options; do
   esac
 done
 
+virtual_folder="$project_name"-"$project_version"
+
 ( cat <<EOF ) | doxygen -
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.6
+PROJECT_NAME           = $project_name
+PROJECT_NUMBER         = $project_version
 OUTPUT_DIRECTORY       = apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -172,7 +178,7 @@ DISABLE_INDEX          = YES
 #---------------------------------------------------------------------------
 GENERATE_QHP           = YES
 QHP_NAMESPACE          = org.kde.www
-QHP_VIRTUAL_FOLDER     = KDE-4.6
+QHP_VIRTUAL_FOLDER     = $virtual_folder
 QHG_LOCATION           = qhelpgenerator
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor   
