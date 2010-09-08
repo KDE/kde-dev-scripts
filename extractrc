@@ -85,10 +85,11 @@ use constant ECTX_EXCLUDE =>
     [["widget", "class", "KTimeZoneWidget"], ["property", "name", "text"]],
 ];
 
-# The parts between the tags of the extensions will be copied
-# verbatim
+# The parts between the tags of the extensions will be copied verbatim
+# Same data structure as in ECTX_EXCLUDE, but per extension.
 my %EXTENSION_VERBATIM_TAGS = (
-       "kcfg"               => [ "code" ],
+       "kcfg" => [["code", "", ""], ["default", "code", "true"],
+                  ["min", "code", "true"], ["max", "code", "true"]],
      );
 
 # Add attribute lists as hashes, for membership checks.
@@ -395,9 +396,18 @@ for my $file_name ( @ARGV )
       chomp;
       $string .= "\n" . $_;
 
-      foreach $tag (@{ $EXTENSION_VERBATIM_TAGS{$ectx_ext} })
+      for my $elspec (@{ $EXTENSION_VERBATIM_TAGS{$ectx_ext} })
       {
-        if ($string =~ /<$tag>(.*)<\/$tag>/s)
+        my ($tag, $attr, $aval) = @{$elspec};
+        my $rx;
+        if ($attr and $aval) {
+            $rx = qr/<$tag[^<]*$attr=["']$aval["'][^<]*>(.*)<\/$tag>/s
+        } elsif ($attr) {
+            $rx = qr/<$tag[^<]*$attr=[^<]*>(.*)<\/$tag>/s
+        } else {
+            $rx = qr/<$tag>(.*)<\/$tag>/s
+        }
+        if ($string =~ $rx)
         {
           # Add comment before any line that has an i18n substring in it.
           my @matched = split /\n/, $1;
