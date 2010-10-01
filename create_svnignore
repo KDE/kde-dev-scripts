@@ -8,7 +8,7 @@ addignore() {
 	   svn pg svn:ignore . | sed -e "s, *,," | grep -v '^$' > svnignore.tmp
 	   addedsomething=0
 	fi
-	if ! grep -q "^$1\$" svnignore.tmp; then
+	if ! grep -x -F -q "$1" svnignore.tmp; then
 	  echo "$1" >> svnignore.tmp && echo "added $1 to svn:ignore"
 	  sort -u -o svnignore.tmp svnignore.tmp
 	  addedsomething=1
