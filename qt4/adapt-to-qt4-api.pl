@@ -32,7 +32,7 @@ while ($file = <$F>) {
     my @necessaryIncludes = ();
 
     my $is_ui_file = 0;
-    $is_ui_file = 1 if ( $newFile =~ /\.ui$/ );
+    $is_ui_file = 1 if ( $file =~ /\.ui$/ );
 
     if (functionUtilkde::substInFile {
 

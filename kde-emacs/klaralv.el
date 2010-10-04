@@ -120,7 +120,7 @@ This is used when inserting headers, to ensure that no includes are inserted bef
 
     ; Useful fake entries
     (kapplication.h kapp)
-    (klocale.h i18n I18N_NOOP)
+    (klocale.h i18n i18nc i18ncp i18np I18N_NOOP)
     (kstandarddirs.h locate locateLocal)
     (stdlib.h getenv)
     (unistd.h unlink sleep usleep)
