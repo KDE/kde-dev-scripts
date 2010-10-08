@@ -3,6 +3,7 @@
 X-DocPath=kdesrc-build/index.html
 Name=KDE Source Builder
 Name[ca]=Compilació del codi font del KDE
+Name[ca@valencia]=Compilació del codi font del KDE
 Name[da]=KDE Source Builder
 Name[de]=KDE-Source-Builder
 Name[en_GB]=KDE Source Builder
@@ -22,6 +23,7 @@ Name[zh_CN]=KDE 源码构建器
 Name[zh_TW]=KDE 源碼編譯器
 Comment=Builds the KDE Platform and associated software from its source code. A command-line only program.
 Comment[ca]=Construeix la plataforma del KDE i el programari associat des del seu codi font. Un programa que només és per la línia d'ordres.
+Comment[ca@valencia]=Construeix la plataforma del KDE i el programari associat des del seu codi font. Un programa que només és per la línia d'ordes.
 Comment[da]=Bygger KDE Platform og tilknyttet software fra kildekode. Et program kun til kommandolinjen.
 Comment[de]=Erstellt KDE und dazugehörige Software aus den Quelltexten. Es ist ein reines Befehlszeilenprogramm.
 Comment[en_GB]=Builds the KDE Platform and associated software from its source code. A command-line only program.
