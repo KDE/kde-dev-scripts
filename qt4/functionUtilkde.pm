@@ -10,6 +10,8 @@ sub diffFile
 		system("svn diff $listFileDiff");
 	} elsif (-d "CVS") {
 		system("cvs diff -up $listFileDiff");
+	} elsif (-d ".git") {
+                system("git diff $listFileDiff");
 	}
 	warn "files to commit: $listFileDiff\n";
 }
