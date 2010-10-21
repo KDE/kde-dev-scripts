@@ -37,7 +37,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.10';
+my($Version) = '1.11';
 
 my($help) = '';
 my($version) = '';
@@ -408,6 +408,11 @@ sub processFile() {
                    'target_link_libraries.*[[:space:]]kdegames[\s/)]',
                    'replace "kdegames" with "${KDEGAMES_LIBRARY}"');
     }
+
+    $issues +=
+      &checkLine($line,$linecnt,
+		 'install.*\([[:space:]]FILES[[:space:]].*\.desktop\s*DESTINATION\s*\${XDG_APPS_INSTALL_DIR}[\s/)]',
+		 'replace "FILES" with "PROGRAMS"');
 
     # kdelibs variables
     if (! $in_kdelibs) {
