@@ -84,8 +84,11 @@ sub addIncludeInFile
    open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
    my $str = join '', <F>;
    if( $str !~ /#include <$includefile>/ ) {
-    $str =~ s!(#include <.*#include <[^
-]*)!\1\n#include <$includefile>!smig;
+    # Add the include after all others
+    if (!($str =~ s!(#include <.*#include <[^\n]*)!$1\n#include <$includefile>!smig)) {
+       # This failed, maybe there is only one include
+       $str =~ s!(#include <[^\n]*)!$1\n#include <$includefile>!smig;
+    }
     seek F, 0, 0;
     print F $str;
     truncate F, tell(F);
