@@ -31,6 +31,15 @@ foreach my $file (@ARGV) {
             die "Expected $factory, got $factory2" if ($factory ne $factory2);
             $_ = "K_EXPORT_PLUGIN($factory($catalogname))\n";
         }
+        # All in one call, like K_EXPORT_COMPONENT_FACTORY(spreadsheetshape, KGenericFactory<TableShapePlugin>("TableShape"))
+        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*KGenericFactory<(\w*)>\(\s*(\"\w*\")\s*\)\s*\)/) {
+            my $libname_ignored = $1;
+            my $plugin = $2;
+            my $factory = $plugin . "Factory";
+            my $catalogname = $3;
+            $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n";
+            $_ .= "K_EXPORT_PLUGIN($factory($catalogname))\n";
+        }
     } $file;
 }
 functionUtilkde::diffFile( "@ARGV" );
