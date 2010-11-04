@@ -33,7 +33,7 @@ foreach my $file (@ARGV) {
             $_ = "K_EXPORT_PLUGIN($factory($catalogname))\n";
         }
         # All in one call, like K_EXPORT_COMPONENT_FACTORY(spreadsheetshape, KGenericFactory<TableShapePlugin>("TableShape"))
-        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*KGenericFactory<(\w*)>\(\s*(\"[^\"]*\")\s*\)\s*\)/) {
+        if (/K_EXPORT_COMPONENT_FACTORY\s*\(\s*(\w*),\s*KGenericFactory\s*<(\w*)>\s*\(\s*(\"[^\"]*\")\s*\)\s*\)/) {
             my $libname_ignored = $1;
             my $plugin = $2;
             my $factory = $plugin . "Factory";
