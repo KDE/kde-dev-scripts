@@ -14,6 +14,7 @@ my $factory;
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         s!kgenericfactory\.h!kpluginfactory.h!g;
+        s!<KGenericFactory>!<KPluginFactory>!g;
         if (/typedef KGenericFactory<(.*)>\s*(.*);/) {
             $plugin = $1;
             $factory = $2;
