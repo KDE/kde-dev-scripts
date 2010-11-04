@@ -50,6 +50,20 @@ foreach my $file (@ARGV) {
         functionUtilkde::substInFile {
             s/QStringList/QVariantList/ if (/${plugin}::$plugin/);
         } $file;
+        my $header = $file;
+        $header =~ s/\.cpp$/.h/;
+        $header =~ s/\.cc$/.h/;
+        my $headerChanged = 0;
+        functionUtilkde::substInFile {
+            if (/${plugin}\(/) {
+                if (s/QStringList/QVariantList/) {
+                    $headerChanged = 1;
+                }
+            }
+        } $header;
+        if ($headerChanged) {
+            functionUtilkde::addIncludeInFile( $header, "QVariantList");
+        }
     }
 }
 functionUtilkde::diffFile( "@ARGV" );
