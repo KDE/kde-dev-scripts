@@ -25,6 +25,13 @@ foreach my $file (@ARGV) {
             }
             $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n";
         }
+        # Factory without arguments
+        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*([^\(\)]*)(?:\(\))?\s*\)/) {
+            my $libname_ignored = $1;
+            my $factory2 = $2;
+            die "Expected $factory, got $factory2" if (defined $factory && $factory ne $factory2);
+            $_ = "K_EXPORT_PLUGIN($factory2)\n";
+        }
         if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*(\w*)\(\s*([^\)]*)\s*\)\s*\)/) {
             my $libname_ignored = $1;
             my $factory2 = $2;
