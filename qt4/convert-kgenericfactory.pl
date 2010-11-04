@@ -33,7 +33,7 @@ foreach my $file (@ARGV) {
             $_ = "K_EXPORT_PLUGIN($factory($catalogname))\n";
         }
         # All in one call, like K_EXPORT_COMPONENT_FACTORY(spreadsheetshape, KGenericFactory<TableShapePlugin>("TableShape"))
-        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*KGenericFactory<(\w*)>\(\s*(\"\w*\")\s*\)\s*\)/) {
+        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*KGenericFactory<(\w*)>\(\s*(\"[^\"]*\")\s*\)\s*\)/) {
             my $libname_ignored = $1;
             my $plugin = $2;
             my $factory = $plugin . "Factory";
@@ -41,6 +41,15 @@ foreach my $file (@ARGV) {
             $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n";
             $_ .= "K_EXPORT_PLUGIN($factory($catalogname))\n";
         }
+
+        # Incremental fixing... can be removed later
+        $plugin = $1 if (/registerPlugin<(.*)>/);
     } $file;
+    # Now that we know the plugin name, fix its constructor signature, if by chance it's in the same file
+    if (defined $plugin) {
+        functionUtilkde::substInFile {
+            s/QStringList/QVariantList/ if (/${plugin}::$plugin/);
+        } $file;
+    }
 }
 functionUtilkde::diffFile( "@ARGV" );
