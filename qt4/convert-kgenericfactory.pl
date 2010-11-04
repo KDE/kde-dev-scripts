@@ -25,7 +25,7 @@ foreach my $file (@ARGV) {
             }
             $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n";
         }
-        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*(\w*)\(\s*(\"\w*\")\s*\)\s*\)/) {
+        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*(\w*)\(\s*([^\)]*)\s*\)\s*\)/) {
             my $libname_ignored = $1;
             my $factory2 = $2;
             my $catalogname = $3;
@@ -44,6 +44,7 @@ foreach my $file (@ARGV) {
 
         # Incremental fixing... can be removed later
         $plugin = $1 if (/registerPlugin<(.*)>/);
+        $factory = $1 if (/K_PLUGIN_FACTORY\((\w*),/);
     } $file;
     # Now that we know the plugin name, fix its constructor signature, if by chance it's in the same file
     if (defined $plugin) {
