@@ -38,15 +38,27 @@ while test $# -gt 0 ; do
     esac
 done
 
-if test "$dir" = "." && test ! -f CMakeLists.txt && test ! -f Makefile && test -f ../CMakeLists.txt; then
-   cd ..
-fi
+cd "$dir"
+dir=.
+cwd=$PWD
+# No CMakeList and no Makefile (and no .pro file either)? Maybe we need to go up then.
+while test ! -f CMakeLists.txt && test ! -f Makefile; do
+    if test "`ls -1 *.pro 2>/dev/null`" && test -n "`ls -1 ../*.pro 2>/dev/null`"; then
+        break;
+    fi
+    dir="$dir/`basename $PWD`"
+    cd ..
+    if test "$PWD" = "/"; then
+        cd "$cwd"
+        break
+    fi
+done
 
-if test ! -f $dir/$file; then
+if test ! -f $file; then
   if test -n "$OBJ_SUBDIR"; then
     dir=$PWD
     subdir=.
-    while test ! -f $dir/$OBJ_SUBDIR/$file; do
+    while test ! -f $OBJ_SUBDIR/$file; do
        subdir=`basename $dir`"/$subdir"
        dir=`dirname $dir`
        if test "$dir" = "/"; then
@@ -56,25 +68,22 @@ if test ! -f $dir/$file; then
          exit 1
        fi
     done
-    cd $dir/$OBJ_SUBDIR/$subdir
+    cd $OBJ_SUBDIR/$subdir
   else
     if test -n "$OBJ_REPLACEMENT"; then
       pwd=`echo $PWD | sed -e "$OBJ_REPLACEMENT"`
-      if test ! -f $pwd/$dir/$file; then
+      if test ! -f $pwd/$file; then
          # No objdir found. But if "make" will work in srcdir, then go ahead; might be a non-kde project.
-         test -f $dir/GNUmakefile && file=GNUmakefile
-         test -f $dir/makefile && file=makefile
-         test -f $dir/$file || file=""
-         if test -z "$file"; then
+         test -f $pwd/GNUmakefile && file=GNUmakefile
+         test -f $pwd/makefile && file=makefile
+         if ! test -f "$pwd/$file"; then
            echo "no objdir found. Tried $pwd"
            exit 1
          fi
       fi
-      cd $pwd/$dir
+      cd $pwd
     fi
   fi
-else
-  cd $dir
 fi
 
 echo "makeobj[0]: Entering directory \`$PWD'"
