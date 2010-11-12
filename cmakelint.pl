@@ -524,6 +524,12 @@ sub processFile() {
                    'replace "nepomukquery" with "${NEPOMUK_QUERY_LIBRARIES}"');
 
       $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]nepomukutils[\s/)]',
+                   'replace "nepomukutils" with "${NEPOMUK_UTILS_LIBRARIES}"');
+
+
+      $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmetadata[\s/)]',
 		   'replace "kmetadata" with "${KDE4_KMETADATA_LIBS}"');
