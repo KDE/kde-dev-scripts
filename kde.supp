@@ -201,6 +201,13 @@
    fun:dl_open_worker
 }
 
+{
+   fontconfig_init
+   Memcheck:Leak
+   ...
+   fun:FcInit
+}
+
 # Helgrind suppressions
 {
    QMutex_false_race
