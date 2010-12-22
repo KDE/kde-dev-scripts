@@ -214,7 +214,11 @@ apps.each do |app|
     appdata = appdata.merge(temp)
 
     if appdata["submodule"] && appdata["submodule"].length > 0
-        temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["mainmodule"] + "-" + appdata["submodule"] }
+        if appdata["mainmodule"] == "extragear" || appdata["mainmodule"] == "playground" 
+          temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["mainmodule"] + "-" + appdata["submodule"] }
+        else
+          temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["submodule"] }
+        end
     else
         temp = { "submodulepath" => "", "l10nmodule" => appdata["mainmodule"] }
     end
