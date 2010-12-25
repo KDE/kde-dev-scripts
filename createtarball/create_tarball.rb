@@ -293,7 +293,7 @@ apps.each do |app|
         for lang in i18nlangs
             lang.chomp!
 
-            for dg in appdata["addDocs"].split
+            for dg in appdata["addDocs"]
                 dg.chomp!
                 `rm -rf #{dg}`
                 docdirname = "l10n-kde4/#{lang}/docs/#{appdata["l10nmodule"]}/#{dg}"
