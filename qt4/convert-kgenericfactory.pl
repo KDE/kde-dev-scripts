@@ -10,11 +10,14 @@ use functionUtilkde;
 
 my $plugin;
 my $factory;
+my $looking_for_plugin = 0;
 
 foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         s!kgenericfactory\.h!kpluginfactory.h!g;
         s!<KGenericFactory>!<KPluginFactory>!g;
+        s!kparts/factory.h!kpluginfactory.h!g;
+        s!<KParts/Factory>!<KPluginFactory>!g;
         if (/typedef KGenericFactory<(.*)>\s*(.*);/) {
             $plugin = $1;
             $factory = $2;
@@ -24,6 +27,20 @@ foreach my $file (@ARGV) {
                 print STDERR "  (see koffice/libs/main/KoDocInfoPropsFactory.cpp for an example)\n";
             }
             $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n";
+        }
+        if (/([A-Za-z_]*)::createPartObject/) {
+            $factory = $1;
+            $looking_for_plugin = 1;  # the "new FooPart" must be somewhere nearby
+        }
+        if ($looking_for_plugin && /\s*new \s*([A-Za-z]+)/) {
+            $plugin = $1;
+            $looking_for_plugin = 0;
+            $_ = "K_PLUGIN_FACTORY($factory, registerPlugin<$plugin>();)\n" .
+                 "K_EXPORT_PLUGIN($factory(\"TODO_componentName\", \"TODO_catalogName\"))\n" .
+                 "// TODO: remove createPartObject method, and the factory class\n" . $_;
+        }
+        if (/:\s*public\s*KParts::Factory/) {
+            $_ = "// TODO: remove factory class\n" . $_;
         }
         # Factory without arguments
         if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*([^\(\)]*)(?:\(\))?\s*\)/) {
@@ -56,7 +73,12 @@ foreach my $file (@ARGV) {
     # Now that we know the plugin name, fix its constructor signature, if by chance it's in the same file
     if (defined $plugin) {
         functionUtilkde::substInFile {
-            s/QStringList/QVariantList/ if (/${plugin}::$plugin/);
+            if (/${plugin}::$plugin/) {
+                if (s/QStringList/QVariantList/) {
+                } elsif (/(.*)\((QWidget\s*\*\s*[^ ,]*\s*,\s*QObject\s*\*\s*\w*)\)(.*)/) {
+                    $_ = "$1($2, const QVariantList&)$3\n";
+                }
+            }
         } $file;
         my $header = $file;
         $header =~ s/\.cpp$/.h/;
@@ -65,6 +87,9 @@ foreach my $file (@ARGV) {
         functionUtilkde::substInFile {
             if (/${plugin}\(/) {
                 if (s/QStringList/QVariantList/) {
+                    $headerChanged = 1;
+                } elsif (/(.*)\((QWidget\s*\*\s*[^ ,]*\s*,\s*QObject\s*\*\s*\w*[^,\)]*)\)(.*)/) {
+                    $_ = "$1($2, const QVariantList&)$3\n";
                     $headerChanged = 1;
                 }
             }
