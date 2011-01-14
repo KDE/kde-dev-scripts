@@ -346,7 +346,7 @@ apps.each do |app|
             lang.chomp!
             dest = "po/#{lang}"
 
-            for dg in appdata["addPo"].split
+            for dg in appdata["addPo"]
                 dg.chomp!
                 if appdata["wholeModule"]
                     print "  -> Copying #{lang}'s over ..\n"
