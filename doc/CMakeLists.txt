@@ -1,7 +1,5 @@
 
 
-add_subdirectory(kdesrc-build)
-
 ########### install files ###############
 
 kde4_create_manpage(man-adddebug.1.docbook 1 INSTALL_DESTINATION ${MAN_INSTALL_DIR})

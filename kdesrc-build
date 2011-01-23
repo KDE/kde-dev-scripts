@@ -67,7 +67,7 @@ use constant {
     };
 }
 
-my $versionNum = '1.12.1';
+my $versionNum = '1.12.1-DEPRECATED_BY_GIT';
 
 # Some global variables
 # Remember kids, global variables are evil!  I only get to do this
@@ -7331,6 +7331,34 @@ eval
     $color = 'r[' if $result;
 
     info "${color}Script finished processing at g[$time]" unless pretending;
+
+    note " b[r[*y[*r[*] ATTENTION PLEASE";
+    note " b[y[*r[*y[*] kdesrc-build has migrated to git.kde.org! This location will cease to work soon!";
+    note " b[r[*y[*r[*]";
+
+    note <<EOF;
+If you intend to keep using the latest version of kdesrc-build, you should update your
+~/.kdesrc-buildrc to add the "kdesrc-build" repository on git.kde.org.
+
+For example, if you're already using module-sets for KDE git modules, you can simply add
+g[kdesrc-build] to the end of an existing g[use-modules] command. Otherwise, something like
+this is perfect for the end of your existing $rcfile:
+
+b[module kdesrc-build
+    repository git://anongit.kde.org/kdesrc-build
+end module]
+
+The final step is to ensure that you update your \$PATH environment variable to use the
+version from git.kde.org.
+
+This version of kdesrc-build will be removed from Subversion by approximately 2011-02-07
+(Feb. 7th). This will not remove your current kdesrc-build, but it will no longer update
+from Subversion either, so you lose feature updates and bugfixes.
+EOF
+
+    if ($0 eq path_to_prog('kdesrc-build')) {
+        note "\t(... it looks like you do run kdesrc-build from PATH, $0)";
+    }
 };
 
 if ($@)
