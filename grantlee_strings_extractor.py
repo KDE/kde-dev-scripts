@@ -370,7 +370,7 @@ class TranslationOutputter:
                   self.get_plain_strings(token)
               if token.token_type == TOKEN_BLOCK:
                   self.get_contextual_strings(token)
-        self.createOutput(os.path.relpath(template_file.name), self.translatable_strings, outputfile)
+        self.createOutput(template_file.name, self.translatable_strings, outputfile)
 
     def createOutput(self, template_filename, translatable_strings, outputfile):
 
