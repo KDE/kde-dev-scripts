@@ -116,6 +116,8 @@ sub handle_start {
     #print STDERR "component identifier=$value\n";
     if ( (!$searchComponent or ($value eq $searchComponent)) ) {
       $curComponent = $value;
+      $curModule = "";
+      $curProject = "";
 
       if ($curComponent eq "kdesupport" ||
 	  $curComponent eq "kdereview" ||
@@ -131,6 +133,7 @@ sub handle_start {
 
   if ( $curComponent && $element eq "module" ) {
     my $value = $attrs{"identifier"};
+    $curProject = "";
     if ( !$moduleless ) {
       if ( !$searchModule or ($value eq $searchModule) ) {
 	$curModule = $value;
@@ -193,7 +196,7 @@ sub handle_end {
     if ( $curProtocol ) {
       my $guy;
       if ( !$curProject ) {
-	if ( !$curModule) {
+	if ($moduleless or !$curModule) {
 	  $guy = $curComponent;
 	  #print STDERR "component $guy\n";
 	} else {
@@ -201,7 +204,14 @@ sub handle_end {
 	  #print STDERR "module $guy\n";
 	}
       } else {
-	$guy = "$curComponent/$curModule/$curProject";
+	if ($moduleless) {
+	  $guy = "$curComponent/$curProject";
+	} else {
+	  if (!$curModule) {
+	    print STDERR "ERROR: component $curComponent project $curProject, no module!\n";
+	  }
+	  $guy = "$curComponent/$curModule/$curProject";
+	}
 	#print STDERR "project $guy\n";
       }
       $output{$guy}{'name'} = $guy;
