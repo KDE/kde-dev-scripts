@@ -197,11 +197,11 @@ sub handle_end {
 	  $guy = $curComponent;
 	  #print STDERR "component $guy\n";
 	} else {
-	  $guy = $curModule;
+	  $guy = "$curComponent/$curModule";
 	  #print STDERR "module $guy\n";
 	}
       } else {
-	$guy = $curProject;
+	$guy = "$curComponent/$curModule/$curProject";
 	#print STDERR "project $guy\n";
       }
       $output{$guy}{'name'} = $guy;
