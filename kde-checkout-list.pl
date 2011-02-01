@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+# -*- cperl-indent-level: 2 -*-
 ###############################################################################
 # Parses the KDE Projects XML Database and prints project protocol-url lines  #
 # for each project in the specified component/module.                         #
@@ -46,16 +47,7 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
                 'all' => \$allmatches));
 
 &Help() if ($help);
-if (!$searchComponent) { &Help(); exit 0; }
-$moduleless = 1 if ($searchComponent eq "kdesupport" ||
-		    $searchComponent eq "kdereview" ||
-                    $searchComponent eq "calligra" ||
-		    $searchComponent eq "koffice");
-if (!$searchModule && !$moduleless) {
-  print "Must provide a search module for component \"$searchComponent\".\n";
-  print "Run $Prog --help for more info\n";
-  exit 0;
-}
+
 if ($searchProtocol ne "git" &&
     $searchProtocol ne "http" &&
     $searchProtocol ne "ssh" &&
@@ -71,6 +63,7 @@ my $curModule = "";
 my $curProject = "";
 my $curProtocol = "";
 my $curActive = 1;
+my $skipModule = 0;
 my $inRepo = 0;
 my $inProtocol = 0;
 my $inActive = 0;
@@ -118,53 +111,52 @@ sub handle_start {
   # little hash onto the element stack
   push( @element_stack, { element=>$element, line=>$line });
 
-  if ( %attrs ) {
-    while ( my( $key, $value ) = each( %attrs )) {
-      if ( $element eq "component" ) {
-	if ($key eq "identifier" && $value eq $searchComponent ) {
-	  $curComponent = $value;
-	  last;
-	}
-      }
+  if ( $element eq "component" ) {
+    my $value = $attrs{"identifier"};
+    #print STDERR "component identifier=$value\n";
+    if ( (!$searchComponent or ($value eq $searchComponent)) ) {
+      $curComponent = $value;
 
-      if ( !$moduleless ) {
-	if ( $curComponent && $element eq "module" ) {
-	  if ( $key eq "identifier" && $value eq $searchModule ) {
-	    $curModule = $value;
-	    last;
-	  }
-	}
-	if ( $curComponent && $curModule && $element eq "project" ) {
-	  if ( $key eq "identifier" ) {
-	    $curProject = $value;
-	    last;
-	  }
-	}
+      if ($curComponent eq "kdesupport" ||
+	  $curComponent eq "kdereview" ||
+	  $curComponent eq "calligra" ||
+	  $curComponent eq "koffice") {
+	($moduleless) = 1;
       } else {
-	if ( $curComponent && $element eq "module" ) {
-	  if ( $key eq "identifier" ) {
-	    $curModule = $curProject = $value;
-	    last;
-	  }
-	}
-	if ( $curComponent && $curModule && $element eq "project" ) {
-	  if ( $key eq "identifier" ) {
-	    $curProject = $value;
-	    last;
-	  }
-	}
+	($moduleless) = 0;
       }
-
-      if ( $inRepo && $element eq "url" ) {
-	if ( $key eq "protocol" && $value eq $searchProtocol ) {
-	  $inProtocol = 1;
-	  last;
-	}
-      }
+      #print STDERR "BEGIN component $curComponent. moduleless=$moduleless\n";
     }
   }
 
-  if ( $element eq "repo" ) {
+  if ( $curComponent && $element eq "module" ) {
+    my $value = $attrs{"identifier"};
+    if ( !$moduleless ) {
+      if ( !$searchModule or ($value eq $searchModule) ) {
+	$curModule = $value;
+	#print STDERR "BEGIN module $curModule\n";
+	$skipModule = 0;
+      } else {
+	$skipModule = 1;
+      }
+    } else {
+      $curModule = $curProject = $value;
+    }
+  }
+
+  if ( $curComponent && $curModule && $element eq "project" ) {
+    $curProject = $attrs{"identifier"};
+    #print STDERR "BEGIN project $curProject\n";
+  }
+
+  if ( $inRepo && $element eq "url" ) {
+    my $value = $attrs{"protocol"};
+    if ( $value eq $searchProtocol ) {
+      $inProtocol = 1;
+    }
+  }
+
+  if ( $element eq "repo" && !$skipModule ) {
     $inRepo = 1;
     $curActive = 1; # assume all repos are active by default
   }
@@ -185,12 +177,15 @@ sub handle_end {
   my $element_record = pop( @element_stack );
 
   if ( $element eq "component" && $curComponent ) {
+    #print "END of component $curComponent\n";
     $curComponent = "";
   }
   if ( $element eq "module" && $curComponent && $curModule ) {
+    #print "END of module $curModule\n";
     $curModule = "";
   }
   if ( $element eq "project" && $curComponent && $curModule && $curProject ) {
+    #print "END of project $curProject\n";
     $curProject = "";
   }
   if ( $element eq "repo" && $curComponent && $inRepo ) {
@@ -200,11 +195,14 @@ sub handle_end {
       if ( !$curProject ) {
 	if ( !$curModule) {
 	  $guy = $curComponent;
+	  #print STDERR "component $guy\n";
 	} else {
 	  $guy = $curModule;
+	  #print STDERR "module $guy\n";
 	}
       } else {
 	$guy = $curProject;
+	#print STDERR "project $guy\n";
       }
       $output{$guy}{'name'} = $guy;
       $output{$guy}{'protocol'} = $curProtocol;
