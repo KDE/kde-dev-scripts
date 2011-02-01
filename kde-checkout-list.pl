@@ -3,7 +3,9 @@
 ###############################################################################
 # Parses the KDE Projects XML Database and prints project protocol-url lines  #
 # for each project in the specified component/module.                         #
+#                                                                             #
 # Copyright (C) 2011 by Allen Winter <winter@kde.org>                         #
+# Copyright (C) 2011 by David Faure <faure@kde.org>                           #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
 # it under the terms of the GNU General Public License as published by        #
@@ -29,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.20';
+my($Version) = '0.80';
 
 my($help) = '';
 my($version) = '';
@@ -38,13 +40,16 @@ my($searchModule) = '';
 my($searchProtocol) = "git";
 my($allmatches) = 0;
 my($moduleless) = 0;
+my($doClone) = 0;
 
 exit 1
 if (!GetOptions('help' => \$help, 'version' => \$version,
 		'component=s' => \$searchComponent,
 		'module=s' => \$searchModule,
 		'protocol=s' => \$searchProtocol,
-                'all' => \$allmatches));
+                'all' => \$allmatches,
+		'clone' => \$doClone
+	       ));
 
 &Help() if ($help);
 
@@ -61,11 +66,11 @@ if ($searchProtocol ne "git" &&
 my $curComponent = "";
 my $curModule = "";
 my $curProject = "";
-my $curProtocol = "";
+my $curUrl = "";
 my $curActive = 1;
 my $skipModule = 0;
 my $inRepo = 0;
-my $inProtocol = 0;
+my $inUrl = 0;
 my $inActive = 0;
 
 my @element_stack;		# remember which elements are open
@@ -95,7 +100,17 @@ $parser->parse( $projects );
 my($proj);
 foreach $proj (sort keys %output) {
   if ( $output{$proj}{'active'} || $allmatches ) {
-    print "$output{$proj}{'name'} $output{$proj}{'protocol'}\n";
+    my $subdir = $output{$proj}{'name'};
+    my $url = $output{$proj}{'url'};
+    print "$subdir $url\n";
+
+    if ( $doClone ) {
+      if ( ! -d "$subdir" ) {
+	system( "git clone $url $subdir" ); # error handling? don't want to abort though
+      } else {
+	system( "cd $subdir && git pull" );
+      }
+    }
   }
 }
 
@@ -155,7 +170,7 @@ sub handle_start {
   if ( $inRepo && $element eq "url" ) {
     my $value = $attrs{"protocol"};
     if ( $value eq $searchProtocol ) {
-      $inProtocol = 1;
+      $inUrl = 1;
     }
   }
 
@@ -193,7 +208,7 @@ sub handle_end {
   }
   if ( $element eq "repo" && $curComponent && $inRepo ) {
     $inRepo = 0;
-    if ( $curProtocol ) {
+    if ( $curUrl ) {
       my $guy;
       if ( !$curProject ) {
 	if ($moduleless or !$curModule) {
@@ -215,12 +230,12 @@ sub handle_end {
 	#print STDERR "project $guy\n";
       }
       $output{$guy}{'name'} = $guy;
-      $output{$guy}{'protocol'} = $curProtocol;
+      $output{$guy}{'url'} = $curUrl;
       $output{$guy}{'active'} = $curActive;
     }
   }
   if ( $element eq "url" && $inRepo ) {
-    $inProtocol = 0;
+    $inUrl = 0;
   }
   if ( $element eq "active" && $inRepo && $curComponent && $curModule && $curProject && $inRepo ) {
     $inActive = 0;
@@ -232,8 +247,8 @@ sub char_handler
   my ($p, $data) = @_;
 
   $data =~ s/\n/\n\t/g;
-  if ( $inProtocol ) {
-    $curProtocol = $data;
+  if ( $inUrl ) {
+    $curUrl = $data;
   }
   if ( $inActive ) {
     $curActive = !( $data =~ m/false/i || $data =~ m/off/i );
@@ -248,11 +263,15 @@ sub Help {
   print "for each project in the specified component/module.\n\n";
   print "  --help        display help message and exit\n";
   print "  --version     display version information and exit\n";
-  print "  --component   search for projects within this component (required)\n";
-  print "  --module      search for projects within this module\n";
+  print "  --component   search for projects within this component\n";
+  print "  --module      search for projects within this module (requires --component)\n";
   print "  --protocol    print the URI for the specified protocol (default=\"git\")\n";
   print "                possible values are \"git\", \"http\", \"ssh\" or \"tarball\"\n";
   print "  --all         print all projects, not just active-only projects\n";
+  print "\n";
+  print "  --clone       actually do a git clone or pull of every repo found\n";
+  print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
+# TODO print" --prune       remove old git checkouts that are not listed anymore\n";
   print "\n";
   print "Examples:\n\n";
   print "To print the active projects in extragear network with git protocol:\n";
