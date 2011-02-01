@@ -41,6 +41,7 @@ my($searchProtocol) = "git";
 my($allmatches) = 0;
 my($moduleless) = 0;
 my($doClone) = 0;
+my($gitSuffix) = 0;
 
 exit 1
 if (!GetOptions('help' => \$help, 'version' => \$version,
@@ -48,7 +49,8 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
 		'module=s' => \$searchModule,
 		'protocol=s' => \$searchProtocol,
                 'all' => \$allmatches,
-		'clone' => \$doClone
+		'clone' => \$doClone,
+		'gitsuffix' => \$gitSuffix
 	       ));
 
 &Help() if ($help);
@@ -105,6 +107,7 @@ foreach $proj (sort keys %output) {
     print "$subdir $url\n";
 
     if ( $doClone ) {
+      $subdir = $subdir . "-git" if ($gitSuffix);
       if ( ! -d "$subdir" ) {
 	system( "git clone $url $subdir" ); # error handling? don't want to abort though
       } else {
@@ -271,6 +274,7 @@ sub Help {
   print "\n";
   print "  --clone       actually do a git clone or pull of every repo found\n";
   print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
+  print "  --gitsuffix       append '-git' to the directory name when cloning.\n";
 # TODO print" --prune       remove old git checkouts that are not listed anymore\n";
   print "\n";
   print "Examples:\n\n";
