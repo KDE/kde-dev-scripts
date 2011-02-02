@@ -166,6 +166,8 @@ sub handle_start {
   # little hash onto the element stack
   push( @element_stack, { element=>$element, line=>$line });
 
+  #print STDERR "-- $element\n";
+
   if ( $element eq "component" ) {
     my $value = $attrs{"identifier"};
     #print STDERR "component identifier=$value\n";
@@ -173,6 +175,7 @@ sub handle_start {
       $curComponent = $value;
       $curModule = "";
       $curProject = "";
+      $inRepo = 0;
 
       #print STDERR "BEGIN component $curComponent.\n";
     }
@@ -187,6 +190,7 @@ sub handle_start {
       $skipModule = 0;
     } else {
       $skipModule = 1;
+      #print STDERR "SKIP module $value\n";
     }
   }
 
@@ -198,7 +202,7 @@ sub handle_start {
     #print STDERR "BEGIN project $curProject\n";
   }
 
-  if (!$skipModule) {
+  if ($curComponent && !$skipModule) {
     if ( $element eq "path" ) {
       $inPath = 1;
     } elsif ( $element eq "repo" ) {
@@ -236,8 +240,10 @@ sub handle_end {
   if ( $element eq "project" && $curComponent && $curModule && $curProject ) {
     #print "END of project $curProject\n";
     $curProject = "";
+    $curUrl = "";
   }
   if ( $element eq "repo" && $curComponent && $inRepo ) {
+    #print STDERR "repo in $curPath: $curUrl\n";
     $inRepo = 0;
     if ( $curUrl && $curPath ) {
       my $subdir = $curPath;
