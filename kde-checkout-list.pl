@@ -39,7 +39,6 @@ my($searchComponent) = '';
 my($searchModule) = '';
 my($searchProtocol) = "git";
 my($allmatches) = 0;
-my($moduleless) = 0;
 my($doClone) = 0;
 my($gitSuffix) = 0;
 
@@ -137,36 +136,27 @@ sub handle_start {
       $curModule = "";
       $curProject = "";
 
-      if ($curComponent eq "kdesupport" ||
-	  $curComponent eq "kdereview" ||
-	  $curComponent eq "calligra" ||
-	  $curComponent eq "koffice") {
-	($moduleless) = 1;
-      } else {
-	($moduleless) = 0;
-      }
-      #print STDERR "BEGIN component $curComponent. moduleless=$moduleless\n";
+      #print STDERR "BEGIN component $curComponent.\n";
     }
   }
 
   if ( $curComponent && $element eq "module" ) {
     my $value = $attrs{"identifier"};
     $curProject = "";
-    if ( !$moduleless ) {
-      if ( !$searchModule or ($value eq $searchModule) ) {
-	$curModule = $value;
-	#print STDERR "BEGIN module $curModule\n";
-	$skipModule = 0;
-      } else {
-	$skipModule = 1;
-      }
+    if ( !$searchModule or ($value eq $searchModule) ) {
+      $curModule = $value;
+      #print STDERR "BEGIN module $curModule\n";
+      $skipModule = 0;
     } else {
-      $curModule = $curProject = $value;
+      $skipModule = 1;
     }
   }
 
-  if ( $curComponent && $curModule && $element eq "project" ) {
+  if ( $curComponent && $element eq "project" ) {
     $curProject = $attrs{"identifier"};
+    if (!$curModule) {
+      print STDERR "project without a module! $curProject\n";
+    }
     #print STDERR "BEGIN project $curProject\n";
   }
 
@@ -214,7 +204,7 @@ sub handle_end {
     if ( $curUrl ) {
       my $guy;
       if ( !$curProject ) {
-	if ($moduleless or !$curModule) {
+	if (!$curModule) {
 	  $guy = $curComponent;
 	  #print STDERR "component $guy\n";
 	} else {
@@ -222,14 +212,14 @@ sub handle_end {
 	  #print STDERR "module $guy\n";
 	}
       } else {
-	if ($moduleless) {
-	  $guy = "$curComponent/$curProject";
-	} else {
+	#if ($moduleless) {
+	#  $guy = "$curComponent/$curProject";
+	#} else {
 	  if (!$curModule) {
 	    print STDERR "ERROR: component $curComponent project $curProject, no module!\n";
 	  }
 	  $guy = "$curComponent/$curModule/$curProject";
-	}
+	#}
 	#print STDERR "project $guy\n";
       }
       $output{$guy}{'name'} = $guy;
