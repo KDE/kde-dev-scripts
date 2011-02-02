@@ -133,6 +133,7 @@ if ( $doPrune ) {
   while (my $line = <$F>) {
     chomp $line;
     $line =~ s,/\.git,,;
+    $line =~ s,^\./,,;
     if ( not exists $output{$line} ) {
       print STDERR "Deleting old git checkout: $line\n";
       system( "rm -rf \"$line\"" );
