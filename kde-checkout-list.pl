@@ -81,7 +81,8 @@ my $inUrl = 0;
 my $inActive = 0;
 
 my @element_stack;		# remember which elements are open
-my %output;
+my %output;         # project name -> project data
+my %projectByPath;  # project path -> project name
 
 my $projects = get("http://projects.kde.org/kde_projects.xml");
 die "Failed to download kde_projects.xml" unless defined $projects;
@@ -137,7 +138,7 @@ if ( $doPrune ) {
     chomp $line;
     $line =~ s,/\.git,,;
     $line =~ s,^\./,,;
-    if ( not exists $output{$line} ) {
+    if ( not exists $projectByPath{$line} ) {
       print STDERR "Deleting old git checkout: $line\n";
       runCommand( "rm -rf \"$line\"" );
     }
@@ -246,6 +247,7 @@ sub handle_end {
       $output{$subdir}{'path'} = $curPath;
       $output{$subdir}{'url'} = $curUrl;
       $output{$subdir}{'active'} = $curActive;
+      $projectByPath{$curPath} = $subdir;
     } else {
       if (!$curUrl) {
 	print STDERR "ERROR: repo without url! $curComponent $curModule $curProject $curPath\n";
