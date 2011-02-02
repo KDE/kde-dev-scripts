@@ -67,10 +67,12 @@ if ($searchProtocol ne "git" &&
 my $curComponent = "";
 my $curModule = "";
 my $curProject = "";
+my $curPath = "";
 my $curUrl = "";
 my $curActive = 1;
 my $skipModule = 0;
 my $inRepo = 0;
+my $inPath = 0;
 my $inUrl = 0;
 my $inActive = 0;
 
@@ -101,7 +103,7 @@ $parser->parse( $projects );
 my($proj);
 foreach $proj (sort keys %output) {
   if ( $output{$proj}{'active'} || $allmatches ) {
-    my $subdir = $output{$proj}{'name'};
+    my $subdir = $proj;    #was:  $output{$proj}{'path'};
     my $url = $output{$proj}{'url'};
     print "$subdir $url\n";
 
@@ -160,21 +162,21 @@ sub handle_start {
     #print STDERR "BEGIN project $curProject\n";
   }
 
-  if ( $inRepo && $element eq "url" ) {
-    my $value = $attrs{"protocol"};
-    if ( $value eq $searchProtocol ) {
-      $inUrl = 1;
+  if (!$skipModule) {
+    if ( $element eq "path" ) {
+      $inPath = 1;
+    } elsif ( $element eq "repo" ) {
+      $inRepo = 1;
+      $curActive = 1; # assume all repos are active by default
+    } elsif ( $inRepo && $element eq "url" ) {
+      my $value = $attrs{"protocol"};
+      if ( $value eq $searchProtocol ) {
+	$inUrl = 1;
+      }
+    } elsif ( $inRepo && $element eq "active" ) {
+      $inActive = 1;
     }
   }
-
-  if ( $element eq "repo" && !$skipModule ) {
-    $inRepo = 1;
-    $curActive = 1; # assume all repos are active by default
-  }
-  if ( $inRepo && $element eq "active" ) {
-    $inActive = 1;
-  }
-
 }
 
 # process an end-of-element event
@@ -201,36 +203,23 @@ sub handle_end {
   }
   if ( $element eq "repo" && $curComponent && $inRepo ) {
     $inRepo = 0;
-    if ( $curUrl ) {
-      my $guy;
-      if ( !$curProject ) {
-	if (!$curModule) {
-	  $guy = $curComponent;
-	  #print STDERR "component $guy\n";
-	} else {
-	  $guy = "$curComponent/$curModule";
-	  #print STDERR "module $guy\n";
-	}
-      } else {
-	#if ($moduleless) {
-	#  $guy = "$curComponent/$curProject";
-	#} else {
-	  if (!$curModule) {
-	    print STDERR "ERROR: component $curComponent project $curProject, no module!\n";
-	  }
-	  $guy = "$curComponent/$curModule/$curProject";
-	#}
-	#print STDERR "project $guy\n";
+    if ( $curUrl && $curPath ) {
+      #$output{$curPath}{'path'} = $curPath;
+      $output{$curPath}{'url'} = $curUrl;
+      $output{$curPath}{'active'} = $curActive;
+    } else {
+      if (!$curUrl) {
+	print STDERR "ERROR: repo without url! $curComponent $curModule $curProject $curPath\n";
+      } elsif (!$curPath) {
+	print STDERR "ERROR: repo without path! $curComponent $curModule $curProject $curUrl\n";
       }
-      $output{$guy}{'name'} = $guy;
-      $output{$guy}{'url'} = $curUrl;
-      $output{$guy}{'active'} = $curActive;
     }
   }
-  if ( $element eq "url" && $inRepo ) {
+  if ( $element eq "path" ) {
+    $inPath = 0;
+  } elsif ( $element eq "url" ) {
     $inUrl = 0;
-  }
-  if ( $element eq "active" && $inRepo && $curComponent && $curModule && $curProject && $inRepo ) {
+  } elsif ( $element eq "active" ) {
     $inActive = 0;
   }
 }
@@ -240,10 +229,11 @@ sub char_handler
   my ($p, $data) = @_;
 
   $data =~ s/\n/\n\t/g;
-  if ( $inUrl ) {
+  if ( $inPath ) {
+    $curPath = $data;
+  } elsif ( $inUrl ) {
     $curUrl = $data;
-  }
-  if ( $inActive ) {
+  } elsif ( $inActive ) {
     $curActive = !( $data =~ m/false/i || $data =~ m/off/i );
   }
 
