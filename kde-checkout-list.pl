@@ -105,12 +105,11 @@ $parser->parse( $projects );
 my($proj);
 foreach $proj (sort keys %output) {
   if ( $output{$proj}{'active'} || $allmatches ) {
-    my $subdir = $proj;    #was:  $output{$proj}{'path'};
+    my $subdir = $output{$proj}{'path'};
     my $url = $output{$proj}{'url'};
     print "$subdir $url\n";
 
     if ( $doClone ) {
-      $subdir = $subdir . "-git" if ($gitSuffix && -d "$subdir/.svn");
       if ( ! -d "$subdir" ) {
 	system( "git clone $url $subdir" ); # error handling? don't want to abort though
       } else {
@@ -227,9 +226,13 @@ sub handle_end {
   if ( $element eq "repo" && $curComponent && $inRepo ) {
     $inRepo = 0;
     if ( $curUrl && $curPath ) {
-      #$output{$curPath}{'path'} = $curPath;
-      $output{$curPath}{'url'} = $curUrl;
-      $output{$curPath}{'active'} = $curActive;
+      my $subdir = $curPath;
+      $curPath .= "-git" if ($gitSuffix && -d "$curPath/.svn");
+      # $subdir is the logical name (extragear/network/konversation)
+      # while $curPath is the physical path (extragear/network/konversation-git)
+      $output{$subdir}{'path'} = $curPath;
+      $output{$subdir}{'url'} = $curUrl;
+      $output{$subdir}{'active'} = $curActive;
     } else {
       if (!$curUrl) {
 	print STDERR "ERROR: repo without url! $curComponent $curModule $curProject $curPath\n";
