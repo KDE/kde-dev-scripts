@@ -41,6 +41,7 @@ my($searchProtocol) = "git";
 my($allmatches) = 0;
 my($doClone) = 0;
 my($doPrune) = 0;
+my($dryRun) = 0;
 my($gitSuffix) = 0;
 
 exit 1
@@ -51,6 +52,7 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
                 'all' => \$allmatches,
 		'clone' => \$doClone,
 		'prune' => \$doPrune,
+		'dry-run' => \$dryRun,
 		'gitsuffix' => \$gitSuffix
 	       ));
 
@@ -110,11 +112,13 @@ foreach $proj (sort keys %output) {
     print "$subdir $url\n";
 
     if ( $doClone ) {
+      my $command;
       if ( ! -d "$subdir" ) {
-	system( "git clone $url $subdir" ); # error handling? don't want to abort though
+	$command = "git clone $url $subdir";
       } else {
-	system( "cd $subdir && git config remote.origin.url $url && git pull --ff" );
+	$command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
       }
+      &runCommand( $command );
     }
   }
 }
@@ -135,8 +139,17 @@ if ( $doPrune ) {
     $line =~ s,^\./,,;
     if ( not exists $output{$line} ) {
       print STDERR "Deleting old git checkout: $line\n";
-      system( "rm -rf \"$line\"" );
+      runCommand( "rm -rf \"$line\"" );
     }
+  }
+}
+
+sub runCommand {
+  my ( $command ) = @_;
+  if ( $dryRun ) {
+    print STDERR "$command\n";
+  } else {
+    system( $command ); # error handling? don't want to abort though
   }
 }
 
@@ -176,7 +189,7 @@ sub handle_start {
     }
   }
 
-  if ( $curComponent && $element eq "project" ) {
+  if ( $curComponent && !$skipModule && $element eq "project" ) {
     $curProject = $attrs{"identifier"};
     if (!$curModule) {
       print STDERR "project without a module! $curProject\n";
@@ -282,6 +295,7 @@ sub Help {
   print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
   print "  --gitsuffix   append '-git' to the directory name when cloning, if a svn dir exists.\n";
   print "  --prune       remove old git checkouts that are not listed anymore\n";
+  print "  --dry-run     show git and prune commands but don't execute them.\n";
   print "\n";
   print "Examples:\n\n";
   print "To print the active projects in extragear network with git protocol:\n";
