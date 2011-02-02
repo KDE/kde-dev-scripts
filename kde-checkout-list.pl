@@ -40,6 +40,7 @@ my($searchModule) = '';
 my($searchProtocol) = "git";
 my($allmatches) = 0;
 my($doClone) = 0;
+my($doPrune) = 0;
 my($gitSuffix) = 0;
 
 exit 1
@@ -49,6 +50,7 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
 		'protocol=s' => \$searchProtocol,
                 'all' => \$allmatches,
 		'clone' => \$doClone,
+		'prune' => \$doPrune,
 		'gitsuffix' => \$gitSuffix
 	       ));
 
@@ -114,6 +116,26 @@ foreach $proj (sort keys %output) {
       } else {
 	system( "cd $subdir && git config remote.origin.url $url && git pull --ff" );
       }
+    }
+  }
+}
+
+# wipe out old checkouts, if requested
+if ( $doPrune ) {
+  my $startDir = ".";
+  if ( $searchComponent ) {
+    $startDir = $searchComponent;
+    if ( $searchModule ) {
+      $startDir .= "/$searchModule";
+    }
+  }
+  open(my $F, "find $startDir -name .git |");
+  while (my $line = <$F>) {
+    chomp $line;
+    $line =~ s,/\.git,,;
+    if ( not exists $output{$line} ) {
+      print STDERR "Deleting old git checkout: $line\n";
+      system( "rm -rf \"$line\"" );
     }
   }
 }
@@ -254,8 +276,8 @@ sub Help {
   print "\n";
   print "  --clone       actually do a git clone or pull of every repo found\n";
   print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
-  print "  --gitsuffix       append '-git' to the directory name when cloning, if a svn dir exists.\n";
-# TODO print" --prune       remove old git checkouts that are not listed anymore\n";
+  print "  --gitsuffix   append '-git' to the directory name when cloning, if a svn dir exists.\n";
+  print "  --prune       remove old git checkouts that are not listed anymore\n";
   print "\n";
   print "Examples:\n\n";
   print "To print the active projects in extragear network with git protocol:\n";
