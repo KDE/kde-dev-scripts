@@ -107,11 +107,11 @@ foreach $proj (sort keys %output) {
     print "$subdir $url\n";
 
     if ( $doClone ) {
-      $subdir = $subdir . "-git" if ($gitSuffix);
+      $subdir = $subdir . "-git" if ($gitSuffix && -d "$subdir/.svn");
       if ( ! -d "$subdir" ) {
 	system( "git clone $url $subdir" ); # error handling? don't want to abort though
       } else {
-	system( "cd $subdir && git pull" );
+	system( "cd $subdir && git config remote.origin.url $url && git pull --ff" );
       }
     }
   }
@@ -274,7 +274,7 @@ sub Help {
   print "\n";
   print "  --clone       actually do a git clone or pull of every repo found\n";
   print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
-  print "  --gitsuffix       append '-git' to the directory name when cloning.\n";
+  print "  --gitsuffix       append '-git' to the directory name when cloning, if a svn dir exists.\n";
 # TODO print" --prune       remove old git checkouts that are not listed anymore\n";
   print "\n";
   print "Examples:\n\n";
