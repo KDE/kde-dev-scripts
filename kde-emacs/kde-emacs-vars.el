@@ -81,6 +81,12 @@
   :group 'kde-devel
   :type 'boolean)
 
+(defcustom kde-emacs-delete-trailing-whitespace 't
+  "Set this variable to true to automatically delete trailing whitespace when a buffer is loaded from a file or when it is written. On GNU
+Emacs, it is worth seeing delete-trailing-whitespace function."
+  :group 'kde-devel
+  :type 'boolean)
+
 (defcustom kde-emacs-make "make"
   "Specifies the make command which KDE Emacs will use"
   :group 'kde-devel

@@ -173,8 +173,12 @@ With arg, do it arg times."
   (font-lock-mode)
   (c-set-style kde-c-style))
 
-(add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
-(add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
+(and (user-variable-p 'kde-emacs-delete-trailing-whitespace)
+     kde-emacs-delete-trailing-whitespace
+     (progn
+       (add-hook 'find-file-hooks 'agulbra-c++-clean-out-spaces)
+       (add-hook 'write-file-hooks 'agulbra-c++-clean-out-spaces)
+       ))
 
 (add-hook 'c++-mode-hook 'kde-c++-mode-hook)
 (add-hook 'c-mode-hook 'kde-c-mode-hook)
