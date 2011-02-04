@@ -43,10 +43,10 @@ file.write("\
 \n\
 #ifndef %(FOO_EXPORT)s\n\
 # if defined(MAKE_%(LIBNAME)s_LIB)\n\
-   /* We are building this library */ \n\
+   /* We are building this library */\n\
 #  define %(FOO_EXPORT)s KDE_EXPORT\n\
 # else\n\
-   /* We are using this library */ \n\
+   /* We are using this library */\n\
 #  define %(FOO_EXPORT)s KDE_IMPORT\n\
 # endif\n\
 #endif\n\
