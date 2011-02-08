@@ -55,6 +55,8 @@
 (require 'klaralv)
 (require 'kde-emacs-utils)
 (require 'dirvars)
+(require 'git)
+(require 'git-blame)
 
 ;; load this only if semantic package is present
 (when (featurep 'semantic)
