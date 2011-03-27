@@ -55,7 +55,7 @@ fi
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.6
+PROJECT_NUMBER         = 4.7
 OUTPUT_DIRECTORY       = $install_dir
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English

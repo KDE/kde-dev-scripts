@@ -30,7 +30,7 @@ fi
 usage="`basename $0` [-n <project_name>] [-x <project_version>]"
 
 project_name="KDE"
-project_version="4.6"
+project_version="4.7"
 while getopts "hn:x:" options; do
   case $options in
     h ) echo $usage; exit 0;;
