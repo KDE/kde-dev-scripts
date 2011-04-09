@@ -202,14 +202,14 @@ apps.each do |app|
     if appdata["addPo"] && appdata["addPo"].length > 0
         temp = { "addPo" =>  (appdata["addPo"]+" "+app).split(" ") }
     else
-        temp = { "addPo" =>  app }
+        temp = { "addPo" =>  [app] }
     end
     appdata = appdata.merge(temp)
 
     if appdata["addDocs"] && appdata["addDocs"].length > 0
         temp = { "addDocs" =>  (appdata["addDocs"]+" "+app).split(" ") }
     else
-        temp = { "addDocs" =>  app }
+        temp = { "addDocs" =>  [app] }
     end
     appdata = appdata.merge(temp)
 
