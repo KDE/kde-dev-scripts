@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Simple Source metrics for C++
-# Taj Sun Apr 26 03:31:00 EST 1998
+# Started by Taj Sun Apr 26 03:31:00 EST 1998
 # $Id$
 
 use strict;
@@ -20,7 +20,7 @@ our $blockstart = 0;
 our $blockmin = -1;
 our $blockmax = 0;
 our @blenlist = ();
-our @extensions = ( ".cpp", ".cc", ".C", ".c", ".h", ".tcc" );
+our @extensions = ( ".cpp", ".cc", ".c", ".cxx", ".c++", ".h", ".hh", ".hpp", ".hxx", ".tcc" );
 
 sub processFile
 {
@@ -130,9 +130,10 @@ sub buildFileList {
     }
     else {
       foreach my $extension (@extensions) {
-        if( substr( $file, length( $file ) - length( $extension ) ) eq $extension ) {
-	  push @cxxList, $file;
-	}
+        # Case-insensitive "endsWith"
+        if( uc( substr( $file, length( $file ) - length( $extension ) ) ) eq uc ( $extension ) ) {
+           push @cxxList, $file;
+        }
       }
     }
   }
