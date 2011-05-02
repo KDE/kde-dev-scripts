@@ -21,6 +21,7 @@ our $blockmin = -1;
 our $blockmax = 0;
 our @blenlist = ();
 our @extensions = ( ".cpp", ".cc", ".c", ".cxx", ".c++", ".h", ".hh", ".hpp", ".hxx", ".tcc" );
+our %byExt = ();
 
 sub processFile
 {
@@ -132,6 +133,7 @@ sub buildFileList {
       foreach my $extension (@extensions) {
         # Case-insensitive "endsWith"
         if( uc( substr( $file, length( $file ) - length( $extension ) ) ) eq uc ( $extension ) ) {
+           $byExt{$extension} += 1;
            push @cxxList, $file;
         }
       }
@@ -209,6 +211,11 @@ print<<EOF;
 Strings:\t$bigstrcount
 \tSize (bytes):\ttotal: $bigstrsize\taverage: $bigstravglen
 EOF
+
+print "Counts by file extension:\n";
+foreach my $ext (keys %byExt) {
+  print "\t$ext\t" . $byExt{$ext} . "\n";
+}
 
 exit;
 
