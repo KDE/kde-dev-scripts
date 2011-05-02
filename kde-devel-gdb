@@ -15,11 +15,7 @@ set print static-members off
 set history save
 
 # Show the real classname of object instances - e.g. (Kded *) 0x8073440 instead of (class QObject *) 0x8073440
-# Turned it off again, because it breaks too often: 
-# (gdb) p this->_autoFree
-# Cannot access memory at address 0x0
-# Without it: $5 = 0 '\0'
-#set print object
+set print object
 
 define printqstring
     printqstringdata ($arg0).d
