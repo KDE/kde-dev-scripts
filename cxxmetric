@@ -33,7 +33,7 @@ sub processFile
 	our $strsize = 0;
 
 	open( SOURCE, "$file" ) || 
-		die "cxxmetric.pl: Couldn't read from $file.\n";
+		die "cxxmetric: Couldn't read from $file.\n";
 
 	while( <SOURCE> ) {
 		$total++;
@@ -219,6 +219,6 @@ format STDOUT_TOP =
 .
 
 format STDOUT =
-@######	@######	@######	@######	@######	@######	@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+@######	@######	@######	@######	@######	@######	@*
 $total, $code, $comment, $blank, our $strcount, our $stravglen, $file
 .
