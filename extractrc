@@ -275,12 +275,14 @@ for my $file_name ( @ARGV )
 
        if ( ($tag, $attr) = $string =~ /<$text_string/o )
        {
-         my ($attr_comment) = $attr =~ /\w*comment=\"([^\"]*)\"/ if $attr;
+         my ($attr_comment) = $attr =~ /\bcomment=\"([^\"]*)\"/ if $attr;
          $context = $attr_comment if $attr_comment;
-         my ($attr_context) = $attr =~ /\w*context=\"([^\"]*)\"/ if $attr;
+         my ($attr_context) = $attr =~ /\bcontext=\"([^\"]*)\"/ if $attr;
          $context = $attr_context if $attr_context;
          # It is unlikely that both attributes 'context' and 'comment'
          # will be present, but if so happens, 'context' has priority.
+         my ($attr_extracomment) = $attr =~ /\bextracomment=\"([^\"]*)\"/ if $attr;
+         push @comments, "i18n: $attr_extracomment" if $attr_extracomment;
 
          my ($attr_notr) = $attr =~ /\bnotr=\"([^\"]*)\"/ if $attr;
          $notr = $attr_notr if $attr_notr;
@@ -294,6 +296,7 @@ for my $file_name ( @ARGV )
        }
        else
        {
+         @comments = ();
          $string = "";
        }
      }
