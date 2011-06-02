@@ -133,14 +133,24 @@ my $language = $opt_language || "C++";
 my $ectx_known_exts = join "|", keys %{&ECTX_SPEC};
 
 ###########################################################################################
-#  Escape characters in string exactly like uic does.
-sub escape_like_uic ($) {
+
+# Unescape basic XML entities.
+sub unescape_xml ($) {
     my $text = shift;
 
     $text =~ s/&lt;/</g;
     $text =~ s/&gt;/>/g;
     $text =~ s/&amp;/&/g;
     $text =~ s/&quot;/"/g;
+
+    return $text;
+}
+
+# Convert uic to C escaping.
+sub escape_uic_to_c ($) {
+    my $text = shift;
+
+    $text = unescape_xml($text);
 
     $text =~ s/\\/\\\\/g; # escape \
     $text =~ s/\"/\\\"/g; # escape "
@@ -158,9 +168,9 @@ sub dummy_call_infix {
         print qq|$cstart $cmnt\n|;
     }
     if (defined $text) {
-        $text = escape_like_uic($text);
+        $text = escape_uic_to_c($text);
         if (defined $ctxt) {
-            $ctxt = escape_like_uic($ctxt);
+            $ctxt = escape_uic_to_c($ctxt);
             print qq|i18nc("$ctxt", "$text")$stend\n|;
         } else {
             print qq|i18n("$text")$stend\n|;
@@ -428,6 +438,7 @@ for my $file_name ( @ARGV )
             if ($mline =~ /i18n/) {
               $dummy_call->(undef, undef, ("i18n: file: $norm_fname:$mlno"));
             }
+            $mline = unescape_xml($mline);
             print "$mline\n";
             ++$mlno;
           }
