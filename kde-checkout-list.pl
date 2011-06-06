@@ -64,9 +64,15 @@ if ($searchProtocol ne "git" &&
     $searchProtocol ne "tarball") {
   print "Invalid protocol \"$searchProtocol\" specified.\n";
   print "Run $Prog --help for more info\n";
-  exit 0;
+  exit 1;
 }
 &Version() if ($version);
+
+if ($searchModule && !$searchComponent) {
+  print "Module specified, but not in which component. Please use --component kde for instance.\n";
+  print "Run $Prog --help for more info\n";
+  exit 1;
+}
 
 my $curComponent = "";
 my $curModule = "";
