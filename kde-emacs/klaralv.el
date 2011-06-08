@@ -43,6 +43,8 @@
 ;; Finally, if you do not want header files to be inserted lower-cased when
 ;; not found locally, insert (kdab-lowercase-header-files nil)
 
+(require 'kdab-qstring)
+
 ;; ------------------------------ CONFIGURATION ------------------------------
 (defvar kdab-qt-version 4
   "Specify which header files to use")

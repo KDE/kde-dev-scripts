@@ -49,3 +49,5 @@
 
 (defun string-simplified (str)
   (replace-in-string (replace-in-string str "^[ \t\n]+" "") "[ \t\n]+$" ""))
+
+(provide 'kdab-qstring)
