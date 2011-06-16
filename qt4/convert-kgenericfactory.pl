@@ -16,9 +16,11 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         s!kgenericfactory\.h!kpluginfactory.h!g;
         s!<KGenericFactory>!<KPluginFactory>!g;
+        s!<KParts/GenericFactory>!<KPluginFactory>!g;
         s!kparts/factory.h!kpluginfactory.h!g;
+        s!kparts/genericfactory.h!kpluginfactory.h!g;
         s!<KParts/Factory>!<KPluginFactory>!g;
-        if (/typedef KGenericFactory<(.*)>\s*(.*);/) {
+        if (/typedef KGenericFactory<(.*)>\s*(.*);/ || /typedef KParts::GenericFactory<(.*)>\s*(.*);/) {
             $plugin = $1;
             $factory = $2;
             # Ignore ",BaseClassForParentArg" in $plugin
