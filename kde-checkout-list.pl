@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.80';
+my($Version) = '0.90';
 
 my($help) = '';
 my($version) = '';
@@ -43,6 +43,7 @@ my($doClone) = 0;
 my($doPrune) = 0;
 my($dryRun) = 0;
 my($gitSuffix) = 0;
+my($branch) = '';
 
 exit 1
 if (!GetOptions('help' => \$help, 'version' => \$version,
@@ -53,7 +54,8 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
 		'clone' => \$doClone,
 		'prune' => \$doPrune,
 		'dry-run' => \$dryRun,
-		'gitsuffix' => \$gitSuffix
+		'gitsuffix' => \$gitSuffix,
+		'branch=s' => \$branch
 	       ));
 
 &Help() if ($help);
@@ -72,6 +74,13 @@ if ($searchModule && !$searchComponent) {
   print "Module specified, but not in which component. Please use --component kde for instance.\n";
   print "Run $Prog --help for more info\n";
   exit 1;
+}
+
+my $kdebranch='';
+my $kdedash='';
+if ($branch) {
+  $kdebranch = "KDE/" . $branch;
+  $kdedash = "kde-" . $branch;
 }
 
 my $curComponent = "";
@@ -111,7 +120,7 @@ my $parser = XML::Parser->new( Handlers =>
 $parser->parse( $projects );
 
 # print results
-my($proj);
+my($proj,$ret);
 foreach $proj (sort keys %output) {
   if ( $output{$proj}{'active'} || $allmatches ) {
     my $subdir = $output{$proj}{'path'};
@@ -121,11 +130,47 @@ foreach $proj (sort keys %output) {
     if ( $doClone ) {
       my $command;
       if ( ! -d "$subdir" ) {
-	$command = "git clone $url $subdir";
+#modules without the "KDE/" in the branchname are:
+#  kdeedu, kdepim*, kdeplasma-addons
+# kdebase/kate => only KDE/4.7 and above
+# kdeexamples => No branches
+# superbuild => No branches
+
+	if ( $branch ) {
+	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
+	  if ( $subdir =~ m+/marble+) {
+	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdedash";
+	  } elsif ( $subdir =~ m+/kde(pim|edu|plasma-addons)+ ||
+	       $subdir =~ m+/okular+ ||
+	       $subdir =~ m+/mobipocket+ ) {
+	    $command = "git clone $url $subdir && cd $subdir && git checkout $branch";
+	  } else {
+	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
+	  }
+	} else {
+	  $command = "git clone $url $subdir";
+	}
       } else {
-	$command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
+	if ($branch) {
+	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
+	  if ( $subdir =~ m+/marble+) {
+	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdedash && git pull --ff";
+	  } elsif ( $subdir =~ m+/kde(pim|edu|plasma-addons)+ ||
+	       $subdir =~ m+/okular+ ||
+	       $subdir =~ m+/mobipocket+ ) {
+	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $branch && git pull --ff";
+	  } else {
+	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
+	  }
+	} else {
+	  $command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
+	}
       }
-      &runCommand( $command );
+      $ret = &runCommand( $command );
+      if ($ret) {
+	runCommand("rm -rf $subdir");
+	printf "REMOVING CLONE DUE TO GIT FAILURE\n";
+      }
     }
   }
 }
@@ -135,6 +180,10 @@ if ( $doPrune ) {
   my $startDir = ".";
   if ( $searchComponent ) {
     $startDir = $searchComponent;
+    if ($branch) {
+      my $foo = $searchComponent . "-" . $branch;
+      $startDir =~ s+$searchComponent+$foo+;
+    }
     if ( $searchModule ) {
       $startDir .= "/$searchModule";
     }
@@ -153,11 +202,14 @@ if ( $doPrune ) {
 
 sub runCommand {
   my ( $command ) = @_;
+  my $ret = 0;
   if ( $dryRun ) {
     print STDERR "$command\n";
   } else {
-    system( $command ); # error handling? don't want to abort though
+    $ret = system( $command );
+    $ret = $ret >> 8;
   }
+  return $ret;
 }
 
 # process a start-of-element event: print message about element
@@ -252,6 +304,10 @@ sub handle_end {
     #print STDERR "repo in $curPath: $curUrl\n";
     $inRepo = 0;
     if ( $curUrl && $curPath ) {
+      if ($branch) {
+        my $foo = $curComponent . "-" . $branch;
+        $curPath =~ s+$curComponent+$foo+;
+      }
       my $subdir = $curPath;
       $curPath .= "-git" if ($gitSuffix && -d "$curPath/.svn");
       # $subdir is the logical name (extragear/network/konversation)
@@ -301,6 +357,7 @@ sub Help {
   print "  --version     display version information and exit\n";
   print "  --component   search for projects within this component\n";
   print "  --module      search for projects within this module (requires --component)\n";
+  print "  --branch      git checkout the specified branch, i.e. 4.6\n";
   print "  --protocol    print the URI for the specified protocol (default=\"git\")\n";
   print "                possible values are \"git\", \"http\", \"ssh\" or \"tarball\"\n";
   print "  --all         print all projects, not just active-only projects\n";
