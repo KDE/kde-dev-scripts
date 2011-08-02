@@ -139,13 +139,13 @@ foreach $proj (sort keys %output) {
 	if ( $branch ) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
 	  if ( $subdir =~ m+/marble+) {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdedash";
+	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdedash origin/$kdedash";
 	  } elsif ( $subdir =~ m+/kde(pim|edu|plasma-addons)+ ||
 	       $subdir =~ m+/okular+ ||
 	       $subdir =~ m+/mobipocket+ ) {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout $branch";
+	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $branch origin/$branch";
 	  } else {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
+	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
 	  }
 	} else {
 	  $command = "git clone $url $subdir";
