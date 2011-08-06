@@ -5,7 +5,7 @@
 
 use strict;
 
-### Please add your SVN account name in *alphabetical* order to the list
+### Please add your KDE (svn/git) account name in *alphabetical* order to the list
 ### below, then answer the following questions:
 ###
 ### 1. Include 'gplv23' if you are okay with contributions you've made under
@@ -266,15 +266,71 @@ foreach my $who (keys %license_table) {
     }
 }
 
+# Read kde-common/accounts for email->name mapping.
+
+my $configfile = $ENV{HOME}. "/.config/KDE/relicensecheck.conf";
+
+open(CONFIG, $configfile) or die "Please write the path to kde-common/accounts in $configfile";
+my $accountfile;
+while (<CONFIG>) {
+    if (not /^#/) {
+        chomp;
+        $accountfile = $_;
+    }
+}
+close CONFIG;
+defined $accountfile or die "Please write the path to kde-common/accounts in $configfile";
+
+my %authors = ();
+if ($accountfile) {
+    open(ACCOUNTS, $accountfile) || die "Account file not found: $accountfile";
+    while (<ACCOUNTS>) {
+        # The format is nick name email.
+        if (/([^\s]*)\s+([^\s].*[^\s])\s+([^\s]+)/) {
+            $authors{$3} = "$1";
+        }
+        #elsif (/([^\s]*)\s+([^\s]*)/) {
+        #    $authors{$1} = $2;
+        #}
+        else {
+            die "Couldn't parse $_";
+        }
+    }
+}
+
+sub resolveEmail($) {
+    my ($email) = @_;
+
+    my $resolved = $authors{$email};
+    if (not defined $resolved) {
+        print STDERR "Could not find $email in $accountfile\n";
+        exit 1;
+    }
+    return $resolved;
+}
+
 my $file = $ARGV[0] || "";
 
 die "need existing file: $file" if (! -r $file);
 
-open(IN, "-|") || exec 'svn', 'log', '-q', $file;
+my $svn = (-d ".svn");
+
+if ($svn) {
+    open(IN, "-|") || exec 'svn', 'log', '-q', $file;
+} else {
+    # Format the git output to match the format of svn log.
+    open(IN, "-|") || exec 'git', 'log', '--abbrev-commit', '--pretty=format:r%h | %ae ', $file;
+}
 while(<IN>) {
 
-    if (/^r(\d+) \| (\S+) /)  {
+    if (/^r(\S+) \| (\S+) /)  {
         my ($rev, $author) = ($1, $2);
+        #print STDERR "rev=$rev author=$author\n";
+
+        if (not $svn) {
+            # Resolve email to account name
+            $author = resolveEmail($author);
+        }
 
         next if ($author eq "scripty" or $author eq "(no");
 
@@ -294,12 +350,29 @@ close(IN);
 my %loc_author = ();
 
 if (-f $file) {
-    open(IN, "-|") || exec 'svn', 'ann', '-x', '-w', $file;
-    while(<IN>) {
-        my ($author) = (split)[1];
-        $loc_author{$author}++;
+    if ($svn) {
+        open(IN, "-|") || exec 'svn', 'ann', '-x', '-w', $file;
+        while(<IN>) {
+            my ($author) = (split)[1];
+            $loc_author{$author}++;
+        }
+        close(IN);
+    } else {
+        open(IN, "-|") || exec 'git', 'blame', '-w', '-e', $file;
+        while(<IN>) {
+            # The format is:
+            # b061712b kdecore/klockfile.cpp      (<faure@kde.org>   [...]
+            if (m/^(\S+) (\S+) +\(<([^>]+)>/) {
+                my ($author) = $3;
+                next if ($author eq 'not.committed.yet');
+                $author = resolveEmail($author);
+                $loc_author{$author}++;
+            } else {
+                print STDERR "Parse error on git blame output: $_";
+            }
+        }
+        close(IN);
     }
-    close(IN);
 }
 
 if (defined (keys %blacklist)) {
@@ -310,7 +383,7 @@ if (defined (keys %blacklist)) {
     foreach my $license(keys %blacklist) {
         print "- $license:\n";
         foreach my $who(keys %{$blacklist{$license}}) {
-            $stat{$license} += length(@{$blacklist{$license}->{$who}});
+            $stat{$license} += scalar(@{$blacklist{$license}->{$who}});
             printf "%9s (%4d LOC): %s \n", $who, $loc_author{$who} || 0, join(",", @{$blacklist{$license}->{$who}});
         }
         print "\n";
