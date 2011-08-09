@@ -358,7 +358,7 @@ if (-f $file) {
         }
         close(IN);
     } else {
-        open(IN, "-|") || exec 'git', 'blame', '-w', '-e', $file;
+        open(IN, "-|") || exec 'git', 'blame', '-f', '-w', '-e', $file;
         while(<IN>) {
             # The format is:
             # b061712b kdecore/klockfile.cpp      (<faure@kde.org>   [...]
