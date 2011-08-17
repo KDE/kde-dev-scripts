@@ -16,6 +16,7 @@ while (<STDIN>) {
     chomp;
     if (defined($hash{$_})) {
 	# Entry already seen, output one of the old addresses
+	print STDERR "Already seen " . $_ . "  " . $hash{$_} . "\n";
 	$sizes[$i++] = $hash{$_};
 	next;
     }
@@ -24,7 +25,7 @@ while (<STDIN>) {
     print "    \"$2\\0\"\n" if (!$1);
     print "    I18N_NOOP(\"$2\")\"\\0\"\n" if ($1);
     $hash{$_} = $counter;
-    $hash{""} = $counter + length $2 if ($i == 0);
+    $hash{""} = $counter + length $2 if ($i == 0); # make the empty string point to the first \0
     $sizes[$i++] = $counter;
 
     $counter += 1 + length $2;
