@@ -45,7 +45,7 @@ foreach my $file (@ARGV) {
             $_ = "// TODO: remove factory class\n" . $_;
         }
         # Factory without arguments
-        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*([^\(\)]*)(?:\(\))?\s*\)/) {
+        if (/K_EXPORT_COMPONENT_FACTORY\(\s*(\w*),\s*([^\(\)]*?)(?:\(\))?\s*\)/) {
             my $libname_ignored = $1;
             my $factory2 = $2;
             die "Expected $factory, got $factory2" if (defined $factory && $factory ne $factory2);
