@@ -13,6 +13,7 @@ set print static-members off
 
 # Remember history over restarts
 set history save
+set history filename ~/.gdb_history
 
 # Show the real classname of object instances - e.g. (Kded *) 0x8073440 instead of (class QObject *) 0x8073440
 set print object
