@@ -137,24 +137,14 @@ foreach $proj (sort keys %output) {
 
 	if ( $branch ) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  if ( $subdir =~ m+/okular+ ||
-	       $subdir =~ m+/mobipocket+ ) {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $branch origin/$branch";
-	  } else {
 	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
-	  }
 	} else {
 	  $command = "git clone $url $subdir";
 	}
       } else {
 	if ($branch) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  if ( $subdir =~ m+/okular+ ||
-	       $subdir =~ m+/mobipocket+ ) {
-	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $branch && git pull --ff";
-	  } else {
 	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
-	  }
 	} else {
 	  $command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
 	}
