@@ -131,16 +131,14 @@ foreach $proj (sort keys %output) {
       my $command;
       if ( ! -d "$subdir" ) {
 #modules without the "KDE/" in the branchname are:
-#  kdeedu, kdepim*, kdeplasma-addons, kdeutils
+#  kdepim*, kdeplasma-addons, kdeutils
 # kdebase/kate => only KDE/4.7 and above
 # kdeexamples => No branches
 # superbuild => No branches
 
 	if ( $branch ) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  if ( $subdir =~ m+/marble+) {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdedash origin/$kdedash";
-	  } elsif ( $subdir =~ m+/kde(pim|edu|utils|plasma-addons)+ ||
+	  if ( $subdir =~ m+/kde(pim|utils|plasma-addons)+ ||
 	       $subdir =~ m+/okular+ ||
 	       $subdir =~ m+/mobipocket+ ) {
 	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $branch origin/$branch";
@@ -153,9 +151,7 @@ foreach $proj (sort keys %output) {
       } else {
 	if ($branch) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  if ( $subdir =~ m+/marble+) {
-	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdedash && git pull --ff";
-	  } elsif ( $subdir =~ m+/kde(pim|edu|utils|plasma-addons)+ ||
+	  if ( $subdir =~ m+/kde(pim|utils|plasma-addons)+ ||
 	       $subdir =~ m+/okular+ ||
 	       $subdir =~ m+/mobipocket+ ) {
 	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $branch && git pull --ff";
