@@ -118,7 +118,8 @@ value is ( \".cpp\" \".cxx\" \".cc\" \".C\" \".c\" ), and you are looking at
 \"foo.h\", `sourcepair-load' will look for \"foo.cpp\", \"foo.cxx\",
 \"foo.cc\" or \"foo.c\" in that order in the directories specified by
 `sourcepair-source-path'."
-:type '(repeat string))
+:type '(repeat string)
+:group 'sourcepair)
 
 (defcustom sourcepair-header-extensions '( ".h" ".H" ".hpp" ".HPP" ".Hpp" ".hh" ".HH" ".hxx" ".HXX")
   "*List of recognized extensions for header files.
@@ -128,7 +129,8 @@ containing the recognized extensions for header files.  For example: if the
 value is (\".h\" \".hpp\" \".hh\" ), and you are looking at \"foo.cpp\",
 `sourcepair-load' will look for \"foo.h\", \"foo.hpp\" or \"foo.hh\" in that
 order in the directories specified by `sourcepair-header-path'."
-:type '(repeat string))
+:type '(repeat string)
+:group 'sourcepair)
 
 (defcustom sourcepair-private-header-suffixes '( "_p" "_impl" )
   "*List of recognized suffixes for 'private' header files.
@@ -141,7 +143,8 @@ Foo_p.h.  If you set this variable to include (\"_p\") and you are looking
 at \"Foo_p.h\" or \"Foo.h\", `sourcepair-load' will load the file \"Foo.cpp\".
 
 "
-:type '(repeat-string))
+:type '(repeat-string)
+:group 'sourcepair)
 
 (defcustom sourcepair-source-path       '( "." )
   "*List of directories to search for corresponding source file.
@@ -154,14 +157,16 @@ example, if you specified `sourcepair-source-path' as ( \".\" \"../*\" )
 `sourcepair-load' will look for source files first in the current directory,
 and then in the parent directory, and then in any subdirectories of the parent
 directory."
-:type '(repeat string))
+:type '(repeat string)
+:group 'sourcepair)
 
 (defcustom sourcepair-header-path       '( "." )
   "*List of directories to search for corresponding header file.
 
 This is similar to `sourcepair-source-path' except for header files.  See the
 documentation for `sourcepair-source-path' for more info."
-:type '(repeat string))
+:type '(repeat string)
+:group 'sourcepair)
 
 (defcustom sourcepair-recurse-ignore    '( "CVS" )
   "*List of directories to ignore when recursively searching subdirectories.
@@ -170,7 +175,8 @@ This variable is used by `sourcepair-load'.  The value should be a list
 containing the names of directories to ignore when `sourcepair-load' is
 recursively searching subdirectories for header or source files.  By default
 this is set to ( \"CVS\" )"
-:type '(repeat string))
+:type '(repeat string)
+:group 'sourcepair)
 
 (defun sourcepair-header-file-p (filename)
   "Return t if argument is a C/C++ header file, nil otherwise
