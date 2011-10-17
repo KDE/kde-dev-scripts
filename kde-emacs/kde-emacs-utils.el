@@ -704,13 +704,15 @@ This function does not do any hidden buffer changes."
     (compile (concat kde-emacs-make " " f)))
   )
 
-;; pc-like textmarking
-(when kde-use-pc-select
-  (progn
-    (load "pc-select")
-    (if (eq kde-emacs-type 'xemacs)
-       (funcall 'pc-select-mode)
-      (funcall 'pc-selection-mode))))
+;; pc-like textmarking, deprecated in GNU Emacs 24+.
+(when (not (and (eq kde-emacs-type 'emacs)
+                (>= emacs-major-version 24)))
+  (when kde-use-pc-select
+    (progn
+      (load "pc-select")
+      (if (eq kde-emacs-type 'xemacs)
+          (funcall 'pc-select-mode)
+        (funcall 'pc-selection-mode)))))
 
 
 ; Move in other window

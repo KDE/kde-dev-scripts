@@ -105,7 +105,7 @@ Emacs, it is worth seeing delete-trailing-whitespace function."
   :type 'string)
 
 (defcustom kde-use-pc-select 't
-  "Set this to nil if you really hate PC Select Mode..."
+  "Set this to nil if you really hate PC Select Mode. Does not have any effect on GNU Emacs 24+ (shift-select-mode, enabled by default, should be used instead)."
   :group 'kde-devel
   :type 'boolean)
 
