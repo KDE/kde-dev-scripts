@@ -66,11 +66,6 @@
   :version "0.1"
   :type 'string)
 
-(defcustom kde-cvs-root (concat (getenv "HOME") "/cvs/kde")
-  "*Root Directory of KDE CVS Respiratory"
-  :group 'kde-devel
-  :type 'string)
-
 (defcustom magic-keys-mode 't
   "Set this variable to true to have some special keybindings. E.g. bind ',' to a function which inserts ', ' when appropriate..."
   :group 'kde-devel
