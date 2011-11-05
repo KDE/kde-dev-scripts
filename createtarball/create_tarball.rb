@@ -213,6 +213,8 @@ apps.each do |app|
     end
     appdata = appdata.merge(temp)
 
+    tmpl10nmodule = appdata["l10nmodule"]
+
     if appdata["submodule"] && appdata["submodule"].length > 0
         if appdata["mainmodule"] == "extragear" || appdata["mainmodule"] == "playground" 
           temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["mainmodule"] + "-" + appdata["submodule"] }
@@ -223,6 +225,12 @@ apps.each do |app|
         temp = { "submodulepath" => "", "l10nmodule" => appdata["mainmodule"] }
     end
     appdata = appdata.merge(temp)
+
+    # if l10nmodule is specified in the config file, then use it
+    if tmpl10nmodule
+      temp = { "l10nmodule" => [tmpl10nmodule] }
+      appdata = appdata.merge(temp)
+    end
 
     if !appdata["customlang"]
         temp = { "customlang" => [] }
@@ -251,6 +259,11 @@ apps.each do |app|
 	svnroot = "#{svnbase}/trunk/"
     end
 
+    if !appdata["l10npath"]
+        temp = { "l10npath" => "." }
+        appdata = appdata.merge(temp)
+    end
+
     # Do the main checkouts.
     if appdata["wholeModule"]
         `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]} #{rev} #{app}-tmp`
@@ -260,7 +273,12 @@ apps.each do |app|
     Dir.chdir( app + "-tmp" )
 
     if appdata["docs"] != "no"
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}doc/#{app} #{rev} doc`
+        if !appdata["docpath"]
+            temp = { "docpath" => "doc/#{app}" }
+            appdata = appdata.merge(temp)
+        end
+
+        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}/#{appdata["docpath"]} #{rev} doc`
     end
 
     # Move them to the toplevel
@@ -273,7 +291,7 @@ apps.each do |app|
     if appdata["translations"] != "no" && options.translations
         puts "-> Fetching l10n docs for #{appdata["submodulepath"]}#{app} #{revString}..."
 
-        i18nlangs = `svn cat #{svnroot}/l10n-kde4/subdirs #{rev}`.split
+        i18nlangs = `svn cat #{svnroot}/#{appdata["l10npath"]}/l10n-kde4/subdirs #{rev}`.split
         i18nlangsCleaned = []
         for lang in i18nlangs
             l = lang.chomp
@@ -296,7 +314,7 @@ apps.each do |app|
             for dg in appdata["addDocs"]
                 dg.chomp!
                 `rm -rf #{dg}`
-                docdirname = "l10n-kde4/#{lang}/docs/#{appdata["l10nmodule"]}/#{dg}"
+                docdirname = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/docs/#{appdata["l10nmodule"]}/#{dg}"
                 if ( appdata["docs"] != "no" )
                     puts "  -> Checking if #{lang} has translated documentation...\n"
                     `svn co -q #{rev} #{svnroot}/#{docdirname} > /dev/null 2>&1`
@@ -350,7 +368,7 @@ apps.each do |app|
                 dg.chomp!
                 if appdata["wholeModule"]
                     print "  -> Copying #{lang}'s over ..\n"
-                    pofolder = "l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}"
+                    pofolder = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}"
                     `svn co #{svnroot}/#{pofolder} #{dest}`
                     if FileTest.exist?( dest )
                       topmakefile << "add_subdirectory( #{lang} )\n"
@@ -360,7 +378,7 @@ apps.each do |app|
                 elsif appdata["custompo"]
 		                valid = false
                     for sp in appdata["custompo"].split(/,/)
-		    	              pofilename = "l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{sp}.po"
+		    	              pofilename = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{sp}.po"
                     	  `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{sp}.po`
                     	  if not FileTest.size( "l10n/#{sp}.po" ) == 0
 	   		                valid=true
@@ -374,7 +392,7 @@ apps.each do |app|
                 end
 		            next if not valid
                 else
-                    pofilename = "l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{dg}.po"
+                    pofilename = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{dg}.po"
                     `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{dg}.po`
                     next if FileTest.size( "l10n/#{dg}.po" ) == 0
                     
