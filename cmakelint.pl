@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
-# Copyright (C) 2006-2010 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2006-2011 by Allen Winter <winter@kde.org>                    #
 # Copyright (C) 2008-2010 by Laurent Montel <montel@kde.org>                  #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -37,7 +37,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.11';
+my($Version) = '1.12';
 
 my($help) = '';
 my($version) = '';
@@ -620,6 +620,10 @@ sub processFile() {
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
 		   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kalarmcal[\s/)]',
+		   'replace "kcalutils" with "${KDEPIMLIBS_KALARMCAL_LIBS}"');
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
