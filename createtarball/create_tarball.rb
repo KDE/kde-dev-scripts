@@ -228,7 +228,7 @@ apps.each do |app|
 
     # if l10nmodule is specified in the config file, then use it
     if tmpl10nmodule
-      temp = { "l10nmodule" => [tmpl10nmodule] }
+      temp = { "l10nmodule" => tmpl10nmodule }
       appdata = appdata.merge(temp)
     end
 
