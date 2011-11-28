@@ -305,7 +305,7 @@ sub resolveEmail($) {
     my $resolved = $authors{$email};
     if (not defined $resolved) {
         print STDERR "Could not find $email in $accountfile\n";
-        exit 1;
+        return $email;
     }
     return $resolved;
 }
