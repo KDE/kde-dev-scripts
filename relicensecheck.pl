@@ -391,7 +391,7 @@ if (defined (keys %blacklist)) {
     my %stat;
 
     foreach my $license(keys %blacklist) {
-        print "- $license:\n";
+        print "- $license: ". join(' ', (keys %{$blacklist{$license}})) . "\n";
         foreach my $who(keys %{$blacklist{$license}}) {
             next if $loc_author{$who} == 0;
             $stat{$license} += scalar(@{$blacklist{$license}->{$who}});
