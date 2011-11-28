@@ -393,7 +393,7 @@ if (defined (keys %blacklist)) {
     foreach my $license(keys %blacklist) {
         print "- $license: ". join(' ', (keys %{$blacklist{$license}})) . "\n";
         foreach my $who(keys %{$blacklist{$license}}) {
-            next if $loc_author{$who} == 0;
+            next if not defined $loc_author{$who};
             $stat{$license} += scalar(@{$blacklist{$license}->{$who}});
             printf "%9s (%4d LOC): %s \n", $who, $loc_author{$who} || 0, join(",", @{$blacklist{$license}->{$who}});
         }
