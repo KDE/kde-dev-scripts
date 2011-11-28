@@ -256,6 +256,12 @@ my %license_table = (
     # Do not add anything here. Use the first half of the table.
 );
 
+my %secondary_mail_addresses = (
+    'aleixpol@kde.org' => 'apol',
+    'devel@the-user.org' => 'schmidt-domine',
+    'git@the-user.org' => 'schmidt-domine',
+);
+
 my %ruletable;
 my %blacklist;
 my %whitelist;
@@ -303,6 +309,9 @@ sub resolveEmail($) {
     my ($email) = @_;
 
     my $resolved = $authors{$email};
+    if (not defined $resolved) {
+        $resolved = $secondary_mail_addresses{$email};
+    }
     if (not defined $resolved) {
         print STDERR "Could not find $email in $accountfile\n";
         return $email;
