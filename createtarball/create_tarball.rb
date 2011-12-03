@@ -245,7 +245,15 @@ apps.each do |app|
       revString = " Rev " + options.rev
     end
 
-    puts "-> Fetching " + appdata["mainmodule"] + "/" + appdata["submodulepath"] + app + revString + " into " + appdata["folder"] + "..."
+    if appdata["gitModule"]
+        if !appdata["gitTag"]
+            temp = { "gitTag" => "HEAD" }
+            appdata = appdata.merge(temp)
+        end
+        puts "-> Fetching git://anongit.kde.org/" + app + ".git " +  appdata["gitTag"] + " into " + appdata["folder"] + "..."
+    else
+        puts "-> Fetching " + appdata["mainmodule"] + "/" + appdata["submodulepath"] + app + revString + " into " + appdata["folder"] + "..."
+    end
     # Remove old folder, if exists
     `rm -rf #{appdata["folder"]} 2> /dev/null`
     `rm -rf #{appdata["folder"]}.tar.bz2 2> /dev/null`
@@ -265,29 +273,34 @@ apps.each do |app|
     end
 
     # Do the main checkouts.
-    if appdata["wholeModule"]
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]} #{rev} #{app}-tmp`
+    if appdata["gitModule"]
+        `mkdir #{app}`
+        `git archive --remote git://anongit.kde.org/#{app}.git #{appdata["gitTag"]} | tar -x`
     else
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}#{app} #{rev} #{app}-tmp`
-    end
-    Dir.chdir( app + "-tmp" )
+        if appdata["wholeModule"]
+            `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]} #{rev} #{app}-tmp`
+        else
+            `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}#{app} #{rev} #{app}-tmp`
+        end
+        Dir.chdir( app + "-tmp" )
 
-    if appdata["docs"] != "no"
-        if !appdata["docpath"]
-            temp = { "docpath" => "doc/#{app}" }
-            appdata = appdata.merge(temp)
+        if appdata["docs"] != "no"
+            if !appdata["docpath"]
+                temp = { "docpath" => "doc/#{app}" }
+                appdata = appdata.merge(temp)
+            end
+            `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}/#{appdata["docpath"]} #{rev} doc`
         end
 
-        `svn co #{svnroot}/#{appdata["mainmodule"]}/#{appdata["submodulepath"]}/#{appdata["docpath"]} #{rev} doc`
+        # Move them to the toplevel
+        `/bin/mv * ..`
+        Dir.chdir( ".." )
+
+        `find -name ".svn" | xargs rm -rf`
+        `rm -rf #{app}-tmp`
     end
 
-    # Move them to the toplevel
-    `/bin/mv * ..`
-    Dir.chdir( ".." )
-
-    `find -name ".svn" | xargs rm -rf`
-    `rm -rf #{app}-tmp`
-
+    # translations
     if appdata["translations"] != "no" && options.translations
         puts "-> Fetching l10n docs for #{appdata["submodulepath"]}#{app} #{revString}..."
 
@@ -426,7 +439,7 @@ apps.each do |app|
     end
 
     # add doc generation to compilation
-    if appdata["docs"] != "no"
+    if (appdata["docs"] != "no") && (!appdata["gitModule"])
         `echo "add_subdirectory( doc )" >> CMakeLists.txt`
     end
 
