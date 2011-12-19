@@ -79,7 +79,7 @@
 ;; Some example bindings, feel free to customize :)
 (define-key global-map [(meta up)] 'scroll-other-up)
 (define-key global-map [(meta down)] 'scroll-other-down)
-(define-key global-map [(control j)] 'goto-line)
+(global-set-key [(control j)] 'goto-line)
 (global-set-key [(control %)] 'match-paren) ;;for all buffers :)
 
 (if (featurep 'igrep)
@@ -118,20 +118,39 @@
   )
 
 (define-key global-map [(shift button3)] 'mouse-function-menu)
-(define-key global-map [(shift f4)] 'makeclean)
-(define-key global-map [(f4)] 'make)
-(define-key global-map [(f5)] 'makeinstall)
-(define-key global-map [(shift f5)] 'makeinstallexec) ; TODO replace with run-current-program
-(define-key global-map [(shift f6)] 'makethisfile)
-(if kde-emacs-newline-semicolon 
+(if kde-emacs-newline-semicolon
     (define-key c++-mode-map "\;" 'insert-semicolon))
-(define-key c++-mode-map [(f6)] 'kde-switch-cpp-h)
-(define-key c-mode-map [(f6)] 'kde-switch-cpp-h)
-(define-key c++-mode-map [(f7)] 'switch-to-function-def)
-(define-key c-mode-map [(f7)] 'switch-to-function-def)
-(define-key c++-mode-map [(f9)] 'agulbra-make-member)
-(define-key c-mode-map [(f9)] 'agulbra-make-member)
-(define-key global-map [(meta n)] 'next-error)
+
+(if kde-emacs-use-qtcreator-shortcuts
+  (progn
+    ;(define-key global-map [(shift f4)] 'makeclean)
+    (define-key global-map [(control b)] 'make)
+    (define-key global-map [(control B)] 'makeinstall)
+    ;(define-key global-map [(shift f5)] 'makeinstallexec) ; TODO replace with run-current-program
+    (define-key global-map [(shift f6)] 'makethisfile)
+    (define-key c++-mode-map [(f4)] 'kde-switch-cpp-h)
+    (define-key c-mode-map [(f4)] 'kde-switch-cpp-h)
+    (define-key c++-mode-map [(shift f2)] 'switch-to-function-def)
+    (define-key c-mode-map [(shift f2)] 'switch-to-function-def)
+    (define-key c++-mode-map [(control shift f2)] 'agulbra-make-member)
+    (define-key c-mode-map [(control shift f2)] 'agulbra-make-member)
+    (define-key global-map [(f6)] 'next-error)
+  )
+; else
+  (progn ; Historic default keybindings
+    (define-key global-map [(shift f4)] 'makeclean)
+    (define-key global-map [(f4)] 'make)
+    (define-key global-map [(f5)] 'makeinstall)
+    (define-key global-map [(shift f5)] 'makeinstallexec) ; TODO replace with run-current-program
+    (define-key c++-mode-map [(f6)] 'kde-switch-cpp-h)
+    (define-key c-mode-map [(f6)] 'kde-switch-cpp-h)
+    (define-key c++-mode-map [(f7)] 'switch-to-function-def)
+    (define-key c-mode-map [(f7)] 'switch-to-function-def)
+    (define-key c++-mode-map [(f9)] 'agulbra-make-member)
+    (define-key c-mode-map [(f9)] 'agulbra-make-member)
+    (define-key global-map [(meta n)] 'next-error)
+  )
+)
 
 ; kde-emacs-headers:
 (define-key c++-mode-map [(f10)] 'kdab-insert-header)
