@@ -12,6 +12,7 @@
 require 'optparse'
 require 'ostruct'
 require 'find'
+require 'fileutils'
 
 # check command line parameters
 options = OpenStruct.new
@@ -274,7 +275,6 @@ apps.each do |app|
 
     # Do the main checkouts.
     if appdata["gitModule"]
-        `mkdir #{app}`
         `git archive --remote git://anongit.kde.org/#{app}.git #{appdata["gitTag"]} | tar -x`
     else
         if appdata["wholeModule"]
@@ -330,17 +330,31 @@ apps.each do |app|
                 docdirname = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/docs/#{appdata["l10nmodule"]}/#{dg}"
                 if ( appdata["docs"] != "no" )
                     puts "  -> Checking if #{lang} has translated documentation...\n"
-                    `svn co -q #{rev} #{svnroot}/#{docdirname} > /dev/null 2>&1`
+                    if dg.include? "/"
+                        `svn co -q #{rev} #{svnroot}/#{docdirname} #{dg} > /dev/null 2>&1`
+                    else
+                        `svn co -q #{rev} #{svnroot}/#{docdirname} > /dev/null 2>&1`
+                    end
                 end
                 next unless FileTest.exists?( dg + '/index.docbook' )
 
                 print "    -> Copying #{lang}'s #{dg} documentation over...  "
-                Dir.mkdir( "../doc-translations/#{lang}_#{dg}/" )
-                `cp -R #{dg}/ ../doc-translations/#{lang}_#{dg}/#{dg}`
+                if dg.include? "/"
+                    FileUtils.mkdir_p( "../doc-translations/#{lang}_#{dg}/#{dg}" )
+                    `cp -R #{dg}/* ../doc-translations/#{lang}_#{dg}/#{dg}`
+                else
+                    Dir.mkdir( "../doc-translations/#{lang}_#{dg}/" )
+                    `cp -R #{dg}/ ../doc-translations/#{lang}_#{dg}/#{dg}`
+                end
                 topmakefile << "add_subdirectory( #{lang}_#{dg}/#{dg} )\n"
 
                 makefile = File.new( "../doc-translations/#{lang}_#{dg}/#{dg}/CMakeLists.txt", File::CREAT | File::RDWR | File::TRUNC )
-                makefile << "kde4_create_handbook( index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/#{lang}/)\n"
+                if dg.include? "/"
+                    makefile << "kde4_create_handbook( index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/#{lang}/ SUBDIR #{dg})\n"
+                else
+                    makefile << "kde4_create_handbook( index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/#{lang}/)\n"
+                end
+                l10nroot=Dir.getwd
                 Dir.chdir( "../doc-translations/#{lang}_#{dg}/#{dg}")
                 `find -name ".svn" | xargs rm -rf`
                 Find.find( "." ) do |path|
@@ -356,7 +370,7 @@ apps.each do |app|
                         end
                     end
                 end
-                Dir.chdir( "../../../l10n")
+                Dir.chdir( l10nroot )
                 makefile.close()
 
                 puts( "done.\n" )
