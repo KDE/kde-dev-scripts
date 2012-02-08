@@ -6,6 +6,8 @@ use File::Find;
 
 my $qmake_mode=0;
 $qmake_mode = 1 if (`ls -1 *.pro 2>/dev/null`);
+# qmake-like naming also applied to kde frameworks 5, i.e. anything using cmake-automoc
+$qmake_mode = 1 if (defined $ARGV[0] && $ARGV[0] eq '-cmake');
 
 my %dir2files=();
 my $cppExt=" cpp cc cxx C c++ ";
