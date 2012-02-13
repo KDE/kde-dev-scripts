@@ -47,7 +47,6 @@ install(PROGRAMS
   svnversions 
   extractrc 
   extractattr
-  extractqml 
   zonetab2pot.py 
   fixkdeincludes 
   fixuifiles 
