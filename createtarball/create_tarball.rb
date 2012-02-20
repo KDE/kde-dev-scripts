@@ -220,7 +220,7 @@ apps.each do |app|
         if appdata["mainmodule"] == "extragear" || appdata["mainmodule"] == "playground" 
           temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["mainmodule"] + "-" + appdata["submodule"] }
         else
-          temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["submodule"] }
+          temp = { "submodulepath" => appdata["submodule"] + "/", "l10nmodule" => appdata["mainmodule"] }
         end
     else
         temp = { "submodulepath" => "", "l10nmodule" => appdata["mainmodule"] }
@@ -401,23 +401,23 @@ apps.each do |app|
                       topmakefile << "add_subdirectory( #{lang} )\n"
                     end
                     next if !FileTest.exist?( dest )
-				
+
                 elsif appdata["custompo"]
-		                valid = false
+                    valid = false
                     for sp in appdata["custompo"].split(/,/)
-		    	              pofilename = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{sp}.po"
-                    	  `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{sp}.po`
-                    	  if not FileTest.size( "l10n/#{sp}.po" ) == 0
-	   		                valid=true
-                    	  if !FileTest.exist?( dest )
-                            Dir.mkdir( dest )
-                            topmakefile << "add_subdirectory( #{lang} )\n"
-                    	  end
-                    	  print "\n  -> Copying #{lang}'s #{sp}.po over ..  "
-                    	  `mv l10n/#{sp}.po #{dest}`
-			              end
-                end
-		            next if not valid
+                        pofilename = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{sp}.po"
+                        `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{sp}.po`
+                        if not FileTest.size( "l10n/#{sp}.po" ) == 0
+                            valid=true
+                            if !FileTest.exist?( dest )
+                                Dir.mkdir( dest )
+                                topmakefile << "add_subdirectory( #{lang} )\n"
+                            end
+                            print "\n  -> Copying #{lang}'s #{sp}.po over ..  "
+                            `mv l10n/#{sp}.po #{dest}`
+                        end
+                    end
+                    next if not valid
                 else
                     pofilename = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/messages/#{appdata["l10nmodule"]}/#{dg}.po"
                     `svn cat #{svnroot}/#{pofilename} #{rev} 2> /dev/null | tee l10n/#{dg}.po`
