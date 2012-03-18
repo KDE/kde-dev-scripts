@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # kdedoxygen.sh
-# Copyright 2008,2010 by Allen Winter <winter@kde.org>
+# Copyright 2008,2010,2012 by Allen Winter <winter@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ done
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.7
+PROJECT_NUMBER         = 4.8
 OUTPUT_DIRECTORY       = apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English

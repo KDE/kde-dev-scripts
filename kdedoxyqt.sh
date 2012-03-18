@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # kdedoxyqt.sh
-# Copyright 2008,2010 by Allen Winter <winter@kde.org>
+# Copyright 2008,2010,2012 by Allen Winter <winter@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ fi
 usage="`basename $0` [-n <project_name>] [-x <project_version>]"
 
 project_name="KDE"
-project_version="4.7"
+project_version="4.8"
 while getopts "hn:x:" options; do
   case $options in
     h ) echo $usage; exit 0;;
