@@ -84,6 +84,7 @@ use constant ECTX_EXCLUDE =>
     [["widget", "class", "QRadioButton"], ["attribute", "name", "buttonGroup"]],
     [["widget", "class", "QToolButton"], ["attribute", "name", "buttonGroup"]],
     [["widget", "class", "QCheckBox"], ["attribute", "name", "buttonGroup"]],
+    [["widget", "class", "QPushButton"], ["attribute", "name", "buttonGroup"]],
     [["widget", "class", "KTimeZoneWidget"], ["property", "name", "text"]],
 ];
 
