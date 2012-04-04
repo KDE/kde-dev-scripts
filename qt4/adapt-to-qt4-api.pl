@@ -81,7 +81,7 @@ while ($file = <$F>) {
     s!QSlider::Horizontal!Qt::Horizontal!g; 
     s!QScrollBar::Vertical!Qt::Vertical!g;
     s!QSlider::Vertical!Qt::Vertical!g;
-
+    s!QWidget::WheelFocus!Qt::WheelFocus!g;
 
     s!\bQPen::PenStyle\b!Qt::PenStyle!g;
     s!QSlider::Below!QSlider::TicksBelow!;
@@ -148,7 +148,10 @@ while ($file = <$F>) {
     s!QDir::DefaultSort!QDir::NoSort!;
     s!simplifyWhiteSpace!simplified!g;
     s!stripWhiteSpace!trimmed!g;
-    s!\bucs2\b!utf16!g;
+
+    if ( $_ =~ /(\.ucs2|\-\>ucs2)/ ) {
+      s!\bucs2\b!utf16!g;
+    }
     s!leftJustify!leftJustified!g;
     s!rightJustify!rightJustified!g;
     s!fromUcs2!fromUtf16!g;
@@ -268,60 +271,6 @@ while ($file = <$F>) {
 
     # this changes usage of QObjectList, since queryList returns QObjectList and not a pointer in qt4.
     s!QObjectList\s*\*!QObjectList ! if (/queryList/);
-
-    # this changes QStringList::split (QT3_SUPPORT) to QString::split (Qt4)
-    # but it's a bit broken, e.g. with split(',') or split(" ",tr("foo"))
-    # or someCall(QStringList::split("/", path), parent)
-    if (0) {
-    if (my ($blank, $prefix, $contenu) = m!^(\s*.*)(QStringList::split.*)\((.*)\s*\);$!) {
-	#warn "blank : $blank, prefix : $prefix, contenu : $contenu \n";
-	if ( my ($firstelement, $secondelement, $thirdelement) = m!.*?\(\s*(.*),\s*(.*),\s*(.*)\);\s*$!) {
-	    #warn "three elements: first: $firstelement second: $secondelement third: $thirdelement \n";
-	    my $argument = $prefix;
-	    # Remove space before argument
-	    $secondelement =~ s/ //g;	
-	    $thirdelement =~ s/ //g;
-					
-	    $secondelement = addQStringElement( $secondelement );
-	    if ( $blank =~ /insertStringList/ ) {
-		$thirdelement =~ s/\)//g;
-		if ( $thirdelement =~ /true/ ) {
-		    #QString::KeepEmptyParts
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::KeepEmptyParts" . "));\n" ;
-		} elsif ( $thirdelement =~ /false/ ) {
-		    #QString::SkipEmptyParts
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::SkipEmptyParts" . "));\n" ;
-		}
-		# different element
-		else {
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", $thirdelement" . "));\n" ;
-		}	
-	    } else {
-		if ( $thirdelement =~ /true/ ) {
-		    #QString::KeepEmptyParts
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::KeepEmptyParts" . ");\n" ;	
-		} elsif ( $thirdelement =~ /false/ ) {
-		    #QString::SkipEmptyParts
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", QString::SkipEmptyParts" . ");\n" ;
-		}
-		# different element
-		else {
-		    $_ = $blank . $secondelement . ".split( " . $firstelement . ", $thirdelement" . ");\n" ;
-		}
-	    }
-
-	} elsif ( my ($firstelement, $secondelement) = m!.*?\(\s*(.*),\s*(.*)\);\s*$!) {
-	    # warn "two elements: first: $firstelement second: $secondelement \n";
-	    my $argument = $prefix;
-	    # Remove space after argument
-	    $secondelement =~ s/\s+$//;
-	    $secondelement = addQStringElement( $secondelement );
-	    if ($firstelement !~ /QRegExp/ ) { # What to do about QRegExp?
-		$_ = $blank . $secondelement . ".split( " . $firstelement . " );\n" ;
-	    }
-    	}
-    }
-    }
 
     } $file) { push(@files,$file); }
 
