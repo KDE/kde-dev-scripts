@@ -453,7 +453,6 @@ apps.each do |app|
     end
 
     datafolder = appdata["l10ndata"]
-    datafolder.chomp!
     if datafolder
         if !FileTest.exists?( "l10ndata_temp" )
             puts "-> Fetching l10n data from #{datafolder} #{revString}..."
