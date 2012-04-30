@@ -452,6 +452,51 @@ apps.each do |app|
         end
     end
 
+    datafolder = appdata["l10ndata"]
+    datafolder.chomp!
+    if datafolder
+        if !FileTest.exists?( "l10ndata_temp" )
+            puts "-> Fetching l10n data from #{datafolder} #{revString}..."
+
+            i18nlangs = `svn cat #{svnroot}/#{appdata["l10npath"]}/l10n-kde4/subdirs #{rev}`.split
+            i18nlangsCleaned = []
+            for lang in i18nlangs
+                l = lang.chomp
+                if (l != "x-test") && (appdata["customlang"].empty? || appdata["customlang"].include?(l))
+                    i18nlangsCleaned += [l];
+                end
+            end
+            i18nlangs = i18nlangsCleaned
+            
+            Dir.mkdir( "l10ndata" )
+            topmakefile = File.new( "l10ndata/CMakeLists.txt", File::CREAT | File::RDWR | File::TRUNC )
+
+            # data
+            for lang in i18nlangs
+                lang.chomp!
+                
+                docdirname = "#{appdata["l10npath"]}/l10n-kde4/#{lang}/data/#{datafolder}"
+                puts "  -> Checking if #{lang} has localized data...\n"
+                `rm -rf l10ndata_temp`
+                `svn co -q #{rev} #{svnroot}/#{docdirname} l10ndata_temp 2> /dev/null 2>&1`
+                next unless FileTest.exists?( 'l10ndata_temp/CMakeLists.txt' )
+                
+                topmakefile << "add_subdirectory( #{lang} )\n"
+
+                print "  -> Copying #{lang}'s data over ..  "
+                `mv l10ndata_temp l10ndata/#{lang}`
+                
+                puts( "done.\n" )
+            end
+            topmakefile.close()
+            
+            # add data to compilation.
+            `echo "add_subdirectory( l10ndata )" >> CMakeLists.txt`
+        else
+            puts "l10ndata_temp folder exists in source, could not add l10ndata"
+        end
+    end
+    
     # add doc generation to compilation
     if (appdata["docs"] != "no") && (!appdata["gitModule"])
         `echo "add_subdirectory( doc )" >> CMakeLists.txt`
