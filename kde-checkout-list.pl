@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.90';
+my($Version) = '0.91';
 
 my($help) = '';
 my($version) = '';
@@ -171,14 +171,16 @@ if ( $doPrune ) {
       $startDir .= "/$searchModule";
     }
   }
-  open(my $F, "find $startDir -name .git |");
-  while (my $line = <$F>) {
-    chomp $line;
-    $line =~ s,/\.git,,;
-    $line =~ s,^\./,,;
-    if ( not exists $projectByPath{$line} ) {
-      print STDERR "Deleting old git checkout: $line\n";
-      runCommand( "rm -rf \"$line\"" );
+  if ( -d $startDir ) {
+    open(my $F, "find $startDir -name .git |");
+    while (my $line = <$F>) {
+      chomp $line;
+      $line =~ s,/\.git,,;
+      $line =~ s,^\./,,;
+      if ( not exists $projectByPath{$line} ) {
+        print STDERR "Deleting old git checkout: $line\n";
+        runCommand( "rm -rf \"$line\"" );
+      }
     }
   }
 }
