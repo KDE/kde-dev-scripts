@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.92';
+my($Version) = '0.93';
 
 my($help) = '';
 my($version) = '';
@@ -139,23 +139,39 @@ foreach $proj (sort keys %output) {
 
 	if ( $branch ) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
+	  $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
 	} else {
 	  $command = "git clone $url $subdir";
 	}
       } else {
 	if ($branch) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	    $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
+	  $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
 	} else {
 	  $command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
 	}
       }
       $ret = &runCommand( $command );
       if ($ret) {
-	runCommand("rm -rf $subdir");
-	printf "REMOVING CLONE DUE TO GIT FAILURE\n";
-	exit 1 if ($quitOnError);
+        #check if there is a branch by this name in the repo. If not, then no error.
+        my($ohno) = 1;
+        if (-d "$subdir/.git" && $branch) {
+          $ret = &runCommand( "cd $subdir && git checkout $kdebranch" );
+          if ($ret) {
+            $ohno = 0;
+          }
+        }
+        printf "REMOVING CLONE DUE TO GIT FAILURE\n";
+        runCommand("rm -rf $subdir");
+        if ($ohno) {
+          if ($quitOnError) {
+            printf "Exiting due to quit-on-error option\n";
+          } else {
+            printf "Continuing anyway\n"
+          }
+        } else {
+          printf "FYI: $subdir does not have a branch called $kdebranch. Continuing normally\n"
+        }
       }
     }
   }
