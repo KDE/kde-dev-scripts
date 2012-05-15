@@ -4,7 +4,7 @@
 # Parses the KDE Projects XML Database and prints project protocol-url lines  #
 # for each project in the specified component/module.                         #
 #                                                                             #
-# Copyright (C) 2011 by Allen Winter <winter@kde.org>                         #
+# Copyright (C) 2011,2012 by Allen Winter <winter@kde.org>                    #
 # Copyright (C) 2011 by David Faure <faure@kde.org>                           #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.91';
+my($Version) = '0.92';
 
 my($help) = '';
 my($version) = '';
@@ -42,6 +42,7 @@ my($allmatches) = 0;
 my($doClone) = 0;
 my($doPrune) = 0;
 my($dryRun) = 0;
+my($quitOnError) = 0;
 my($gitSuffix) = 0;
 my($branch) = '';
 
@@ -54,6 +55,7 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
 		'clone' => \$doClone,
 		'prune' => \$doPrune,
 		'dry-run' => \$dryRun,
+		'quit-on-error' => \$quitOnError,
 		'gitsuffix' => \$gitSuffix,
 		'branch=s' => \$branch
 	       ));
@@ -153,6 +155,7 @@ foreach $proj (sort keys %output) {
       if ($ret) {
 	runCommand("rm -rf $subdir");
 	printf "REMOVING CLONE DUE TO GIT FAILURE\n";
+	exit 1 if ($quitOnError);
       }
     }
   }
