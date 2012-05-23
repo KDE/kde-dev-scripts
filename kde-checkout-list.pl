@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.93';
+my($Version) = '0.94';
 
 my($help) = '';
 my($version) = '';
@@ -39,6 +39,7 @@ my($searchComponent) = '';
 my($searchModule) = '';
 my($searchProtocol) = "git";
 my($allmatches) = 0;
+my($printDesc) = 0;
 my($doClone) = 0;
 my($doPrune) = 0;
 my($dryRun) = 0;
@@ -52,6 +53,7 @@ if (!GetOptions('help' => \$help, 'version' => \$version,
 		'module=s' => \$searchModule,
 		'protocol=s' => \$searchProtocol,
                 'all' => \$allmatches,
+                'desc' => \$printDesc,
 		'clone' => \$doClone,
 		'prune' => \$doPrune,
 		'dry-run' => \$dryRun,
@@ -91,11 +93,13 @@ my $curProject = "";
 my $curPath = "";
 my $curUrl = "";
 my $curActive = 1;
+my $curDesc = "";
 my $skipModule = 0;
 my $inRepo = 0;
 my $inPath = 0;
 my $inUrl = 0;
 my $inActive = 0;
+my $inDesc = 0;
 
 my @element_stack;		# remember which elements are open
 my %output;         # project name -> project data
@@ -127,7 +131,15 @@ foreach $proj (sort keys %output) {
   if ( $output{$proj}{'active'} || $allmatches ) {
     my $subdir = $output{$proj}{'path'};
     my $url = $output{$proj}{'url'};
-    print "$subdir $url\n";
+    my $desc = "";
+    if ( defined($output{$proj}{'desc'}) ) {
+      $desc = $output{$proj}{'desc'};
+    }
+    if ( !$printDesc ) {
+      print "$subdir $url\n";
+    } else {
+      print "$subdir $url $desc\n";
+    }
 
     if ( $doClone ) {
       my $command;
@@ -277,6 +289,8 @@ sub handle_start {
       }
     } elsif ( $inRepo && $element eq "active" ) {
       $inActive = 1;
+    } elsif ( $element eq "description" ) {
+      $inDesc = 1;
     }
   }
 }
@@ -319,6 +333,8 @@ sub handle_end {
       $output{$subdir}{'path'} = $curPath;
       $output{$subdir}{'url'} = $curUrl;
       $output{$subdir}{'active'} = $curActive;
+      $output{$subdir}{'desc'} = $curDesc;
+      $curDesc = "";
       $projectByPath{$curPath} = $subdir;
     } else {
       if (!$curUrl) {
@@ -334,6 +350,8 @@ sub handle_end {
     $inUrl = 0;
   } elsif ( $element eq "active" ) {
     $inActive = 0;
+  } elsif ( $element eq "description" ) {
+    $inDesc = 0;
   }
 }
 
@@ -348,6 +366,10 @@ sub char_handler
     $curUrl = $data;
   } elsif ( $inActive ) {
     $curActive = !( $data =~ m/false/i || $data =~ m/off/i );
+  } elsif ( $inDesc && !$curDesc ) {
+    if ( $data !~ m/^\s*$/ ) {
+      $curDesc = $data;
+    }
   }
 
 }  # End of default_handler
@@ -365,6 +387,7 @@ sub Help {
   print "  --protocol    print the URI for the specified protocol (default=\"git\")\n";
   print "                possible values are \"git\", \"http\", \"ssh\" or \"tarball\"\n";
   print "  --all         print all projects, not just active-only projects\n";
+  print "  --desc        print the project description too\n";
   print "\n";
   print "  --clone       actually do a git clone or pull of every repo found\n";
   print "      Note: this is meant for servers like lxr/ebn rather than for developers.\n";
