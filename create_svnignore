@@ -74,6 +74,8 @@ handledir() {
         		addignore Makefile
         		addignore .obj
         		addignore .moc
+        		addignore "*.moc"
+        		addignore "moc_*.cpp"
         		addignore .ui
         		for f in `ls -1 *.pro`; do
         		   if fgrep -q debug_and_release $f; then
