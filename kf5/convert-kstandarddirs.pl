@@ -37,7 +37,6 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
-        s/KGlobal::dirs\(\)->saveLocation/KStandardDirs::saveLocation/;
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my $resource = $1;
             my $fileName = $2;
@@ -99,8 +98,10 @@ foreach my $file (@ARGV) {
                 }
             }
         }
-        if (/KStandardDirs::saveLocation\(\s*\"(.*)\"\s*\)/) {
+        if (/KGlobal::dirs\(\)->saveLocation\(\s*\"([^\"]*)\"(,\s*[^\)]*)?\s*\)/) {
             my $resource = $1;
+            my $suffix = $2;
+            #print STDERR "resource=$resource suffix=$suffix\n";
             my $loc;
             my $add = "";
             if (defined $easyResource{$resource}) {
@@ -111,8 +112,15 @@ foreach my $file (@ARGV) {
             } elsif (defined $xdgconfResource{$resource}) {
                 $loc = "QStandardPaths::ConfigLocation";
                 $add = " + QLatin1String(\"$otherResource{$resource}\/\")";
+            } else {
+                print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
             }
-            s/KStandardDirs::saveLocation\(\s*\"$resource\"\s*\)/QStandardPaths::writableLocation($loc)$add/;
+            if ($suffix) {
+                $suffix =~ s/,\s*//;
+                $add .= " + '/' + $suffix";
+                #print STDERR "loc=$loc add=$add\n";
+            }
+            s/KGlobal::dirs\(\)->saveLocation\(.*\)/QStandardPaths::writableLocation($loc)$add/ if ($loc);
         }
     } $file;
     functionUtilkde::addIncludeInFile($file, "config-prefix.h") if ($addconfigprefix);
