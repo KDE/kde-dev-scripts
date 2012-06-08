@@ -13,13 +13,16 @@ my %easyResource = (
    "appdata" =>   "QStandardPaths::DataLocation",
    "config" =>   "QStandardPaths::ConfigLocation",
    "xdgdata-apps" =>   "QStandardPaths::ApplicationsLocation",
-   "cache" =>   "QStandardPaths::CacheLocation"
+   "cache" =>   "QStandardPaths::CacheLocation",
+   "socket" =>   "QStandardPaths::RuntimeLocation"
 );
 
 my %otherResource = (
    "services" => "kde5/services",
    "xdgdata-icon" => "icons",
    "icon" => "icons",
+   "locale" => "locale",
+   "wallpaper" => "wallpapers",
    "xdgdata-mime" => "mime"
 );
 
@@ -33,7 +36,7 @@ foreach my $file (@ARGV) {
     my $addconfigprefix = 0;
 
     functionUtilkde::substInFile {
-        s/KGlobal::dirs\(\)->findResource/KStandardDirs::locate/;
+        s/KGlobal::dirs\(\)->findResource\b/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
@@ -121,6 +124,27 @@ foreach my $file (@ARGV) {
                 #print STDERR "loc=$loc add=$add\n";
             }
             s/KGlobal::dirs\(\)->saveLocation\(.*\)/QStandardPaths::writableLocation($loc)$add/ if ($loc);
+        }
+        if (/KGlobal::dirs\(\)->resourceDirs\(\s*\"([^\"]*)\"\s*\)/) {
+            my $resource = $1;
+            my $loc;
+            my $add;
+            if (defined $easyResource{$resource}) {
+                $loc = $easyResource{$resource};
+            } elsif (defined $otherResource{$resource}) {
+                $loc = "QStandardPaths::GenericDataLocation";
+                $add = "QLatin1String(\"$otherResource{$resource}\/\")";
+            } elsif (defined $xdgconfResource{$resource}) {
+                $loc = "QStandardPaths::ConfigLocation";
+                $add = "QLatin1String(\"$otherResource{$resource}\/\")";
+            } else {
+                print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
+            }
+            if ($add) {
+                s/KGlobal::dirs\(\)->resourceDirs\(.*\)/QStandardPaths::locateAll($loc, $add, QStandardPaths::LocateDirectory)/;
+            } elsif ($loc) {
+                s/KGlobal::dirs\(\)->resourceDirs\(.*\)/QStandardPaths::standardLocations($loc) \/* WARNING: no more trailing slashes *\//;
+            }
         }
     } $file;
     functionUtilkde::addIncludeInFile($file, "config-prefix.h") if ($addconfigprefix);
