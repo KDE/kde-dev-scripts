@@ -114,14 +114,14 @@ foreach my $file (@ARGV) {
                 $add = " + QLatin1String(\"$otherResource{$resource}\/\")";
             } elsif (defined $xdgconfResource{$resource}) {
                 $loc = "QStandardPaths::ConfigLocation";
-                $add = " + QLatin1String(\"$otherResource{$resource}\/\")";
+                $add = " + QLatin1String(\"$xdgconfResource{$resource}\/\")";
             } else {
                 print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
             }
             if ($suffix) {
                 $suffix =~ s/,\s*//;
-                $add .= " + '/' + $suffix";
-                #print STDERR "loc=$loc add=$add\n";
+                $add .= " + '/' + $suffix" unless $suffix eq "QString(" || $suffix eq "\"\"";
+                #print STDERR "loc=$loc suffix=$suffix add=$add\n";
             }
             s/KGlobal::dirs\(\)->saveLocation\(.*\)/QStandardPaths::writableLocation($loc)$add/ if ($loc);
         }
@@ -133,10 +133,10 @@ foreach my $file (@ARGV) {
                 $loc = $easyResource{$resource};
             } elsif (defined $otherResource{$resource}) {
                 $loc = "QStandardPaths::GenericDataLocation";
-                $add = "QLatin1String(\"$otherResource{$resource}\/\")";
+                $add = "QLatin1String(\"$otherResource{$resource}\")";
             } elsif (defined $xdgconfResource{$resource}) {
                 $loc = "QStandardPaths::ConfigLocation";
-                $add = "QLatin1String(\"$otherResource{$resource}\/\")";
+                $add = "QLatin1String(\"$xdgconfResource{$resource}\")";
             } else {
                 print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
             }
