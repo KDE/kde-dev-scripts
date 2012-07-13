@@ -218,6 +218,9 @@
 }
 
 # Helgrind suppressions
+# Most of them (apart from the first one) are probably real,
+# but they're deep inside Qt, and usually not what we want to see
+# when debugging a threading issue in a KDE application.
 {
    QMutex_false_race
    Helgrind:Race
@@ -230,4 +233,27 @@
    fun:start_thread
    fun:clone
 }
+{
+   qt_thread_data_race
+   Helgrind:Race
+   fun:_ZL15set_thread_dataP11QThreadData
+   fun:_ZN14QThreadPrivate5startEPv
+}
+{
+   timerId_race_in_qt4
+   Helgrind:Race
+   fun:_ZN31QAbstractEventDispatcherPrivate14releaseTimerIdEi
+}
+{
+   timerId_race_in_qt4_2
+   Helgrind:Race
+   fun:_ZN31QAbstractEventDispatcherPrivate15allocateTimerIdEv
+}
+{
+   QPointer_race_in_qt4
+   Helgrind:Race
+   fun:_ZNK5QHashIP7QObjectPS1_E7isEmptyEv
+   fun:_ZN11QMetaObject11removeGuardEPP7QObject
+}
+
 
