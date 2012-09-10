@@ -150,8 +150,9 @@ sub write_i18n
   
   $context ||= $opt_context;
 
+  (my $norm_fname = $file_name) =~ s/^\.\///;
   print "//i18n: tag $tag attribute $attr\n";
-  print "//i18n: file: $file_name:$.\n";
+  print "//i18n: file: $norm_fname:$.\n";
   if ( $context )
   {
     print qq|i18nc("$context","$text");\n|;
