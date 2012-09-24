@@ -213,6 +213,7 @@ for my $file_name ( @ARGV )
   }
 
   my $string          = "";
+  my $origstring      = "";
   my $in_text         = 0;
   my $start_line_no   = 0;
   my $in_skipped_prop = 0;
@@ -239,6 +240,7 @@ for my $file_name ( @ARGV )
      chomp;
 
      $string .= "\n" . $_;
+     $origstring = $string;
      
      # 'database', 'associations', 'populationText' and 'styleSheet' properties contain strings that shouldn't be translated
 
@@ -299,7 +301,13 @@ for my $file_name ( @ARGV )
          my ($attr_notr) = $attr =~ /\bnotr=\"([^\"]*)\"/ if $attr;
          $notr = $attr_notr if $attr_notr;
 
+         my $nongreedystring = $string;
          $string        =~ s/^.*<$text_string//so;
+         $nongreedystring  =~ s/^.*?<$text_string//so;
+         if ($string cmp $nongreedystring)
+         {
+            print STDERR "Warning: Line $origstring in file $file_name has more than one tag to extract on the same line, that is not supported by extractrc\n";
+         }
          if ( not $attr or $attr !~ /\/ *$/ )
          {
            $in_text       =  1;
