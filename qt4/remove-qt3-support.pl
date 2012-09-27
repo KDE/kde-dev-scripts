@@ -160,6 +160,7 @@ while ($file = <$F>) {
 		s!mirror!mirrored!;
 		s!setMaxValue!setMaximum!;
                 s!setLineStep!setSingleStep!;
+		s!convertToImage!toImage!;
 
 	    $modified ||= $orig ne $_;
 	    $_;
