@@ -156,6 +156,10 @@ while ($file = <$F>) {
 		#qtabwidget.h
 		s!setTabIconSet!setTabIcon!;
 		s!tabIconSet!tabIcon!;
+		s!smoothScale!scaled!;
+		s!mirror!mirrored!;
+		s!setMaxValue!setMaximum!;
+
 
 	    $modified ||= $orig ne $_;
 	    $_;
