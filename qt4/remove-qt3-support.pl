@@ -159,7 +159,7 @@ while ($file = <$F>) {
 		s!smoothScale!scaled!;
 		s!mirror!mirrored!;
 		s!setMaxValue!setMaximum!;
-
+                s!setLineStep!setSingleStep!;
 
 	    $modified ||= $orig ne $_;
 	    $_;
