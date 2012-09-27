@@ -161,6 +161,9 @@ while ($file = <$F>) {
 		s!setMaxValue!setMaximum!;
                 s!setLineStep!setSingleStep!;
 		s!convertToImage!toImage!;
+		s!QCheckBox::Off!Qt::Unchecked!;
+		s!QCheckBox::NoChange!Qt::PartiallyChecked!;
+		s!QCheckBox::On!Qt::Checked!;
 
 	    $modified ||= $orig ne $_;
 	    $_;
