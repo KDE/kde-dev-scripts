@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
-# Copyright (C) 2006-2011 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2006-2012 by Allen Winter <winter@kde.org>                    #
 # Copyright (C) 2008-2010 by Laurent Montel <montel@kde.org>                  #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -24,9 +24,6 @@
 # A program to check KDE CMakeLists.txt files for common errors.
 #
 
-# This program needs a rewrite.. it assumes that each CMake command is
-# all on 1 line.  So stuff can easily fall through the cracks -- Allen
-
 # Program options:
 #   --help:          display help message and exit
 #   --version:       display version information and exit
@@ -37,7 +34,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.12';
+my($Version) = '1.20';
 
 my($help) = '';
 my($version) = '';
@@ -60,7 +57,7 @@ exit $tot_issues;
 sub processFile() {
   my($in) = @_;
   print "Processing $in:\n";
-  open(IN,"$in") || die "Couldn't open $in";
+  open(IN,"<$in") || die "Couldn't open $in";
 
   my($apath) = abs_path($in);
   my($in_kdelibs)=0;
@@ -88,8 +85,8 @@ sub processFile() {
   $top_of_project=1 if ($apath =~ m+/kde(libs|pimlibs|base|accessibility|addons|admin|artwork|bindings|edu|games|graphics|multimedia|network|pim|sdk|toys|utils|develop|devplatform|webdev|plasma-addons)/[a-zA-Z_1-9]*/CMakeLists.txt+);
   $top_of_project=0 if ($apath =~ m+/(cmake|pics)/+);
 
-  my(@lines) = <IN>;
-  my($line,$pline);
+  my(@lines);
+  my($line,$nextline);
   my($linecnt)=0;
   my($issues)=0;
   my(@ch,$c);
@@ -99,20 +96,29 @@ sub processFile() {
 
   #look for "bad" stuff
   my($prevline)="";
-  foreach $line (@lines) {
+  while ( $line = <IN> ) {
     $linecnt++;
     chomp($line);
-    #pline is used for paren/brace matching only
-    $pline = $line;
-    $pline =~ s/".*"//g;
-    $pline =~ s/#.*$//;
 
     $line =~ s/#.*$//; #remove comments
 
-    next if (! $line);                   #skip empty lines
-    next if ($line =~ m/^[[:space:]]$/); #skip blank lines
+    if ( $line !~ m/\)\s*$/ || $line =~ m/"\s*$/ ) {
+      $nextline = <IN>;
+      if (defined($nextline)) {
+	$nextline =~ s/#.*$//; #remove comments
+	$linecnt++;
+	chomp($nextline);
+	$line .= $nextline;
+      }
+      redo unless eof(IN);
+    }
 
-    @ch = split(//,$pline);
+    next if (! $line);           #skip empty lines
+    next if ($line =~ m/^\s*$/); #skip blank lines
+
+    push(@lines, $line);
+
+    @ch = split(//,$line);
     $nob = $ncb = 0;
     foreach $c (@ch) {
       $nop++ if ($c eq '(');
@@ -732,30 +738,38 @@ sub processFile() {
   }
   if (! $has_project && $top_of_project && $in_exec) {
     $issues++;
-    &printIssue($line,$linecnt,"Missing a PROJECT() command");
+    &printIssue("",-1,"Missing a PROJECT() command");
   }
   if ($top_of_module && $has_display_log == 0) {
     $issues++;
-    &printIssue($line,$linecnt,"Missing macro_display_feature_log() command");
+    &printIssue("",-1,"Missing macro_display_feature_log() command");
   }
   #if (!$top_of_module && $has_display_log == 1 && $in !~ m+/qtonly/+) {
   #  $issues++;
-  #  &printIssue($line,$linecnt,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
+  #  &printIssue("",-1,"Do not put macro_display_feature_log() in a subdir CMakeLists.txt");
   #}
-  if ($nop != $ncp) {
+  if ($nop > $ncp) {
     $issues++;
-    &printIssue($line,$linecnt,"Mismatched parens");
+    &printIssue("",-1,"Mismatched parens (too many open parens $nop to $ncp)");
   }
-  if ($nob != $ncb) {
+  if ($nop < $ncp) {
     $issues++;
-    &printIssue($line,$linecnt,"Mismatched braces");
+    &printIssue("",-1,"Mismatched parens (too many close parens $nop to $ncp)");
+  }
+  if ($nob > $ncb) {
+    $issues++;
+    &printIssue("",-1,"Mismatched braces (too many open braces $nob to $ncb)");
+  }
+  if ($nob < $ncb) {
+    $issues++;
+    &printIssue("",-1,"Mismatched braces (too many close braces $nob to $ncb)");
   }
 
   #missing macro_log_feature()
   foreach $pack ( keys %optpacks ) {
     if ($optpacks{$pack}{'log'} == 0) {
       $issues++;
-      &printIssue("","","Missing macro_log_feature($pack)");
+      &printIssue("",-1,"Missing macro_log_feature($pack)");
     }
   }
 
