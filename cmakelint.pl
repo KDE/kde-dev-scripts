@@ -34,7 +34,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.20';
+my($Version) = '1.21';
 
 my($help) = '';
 my($version) = '';
@@ -197,7 +197,7 @@ sub processFile() {
 			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
 			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
 
-    if ($line !~ m/kdeinit/ && $prevline !~ m/kdeinit/) {
+    if ($line !~ m/^\s*[Ss][Ee][Tt]\s*\(/) {
       $issues += &checkLine($line,$linecnt,
 			    'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
 			    'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
@@ -598,94 +598,152 @@ sub processFile() {
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]akonadi-kde[\s/)]',
 		   'replace "akonadi-kde" with "${KDEPIMLIBS_AKONADI_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-calendar[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-contact[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CONTACT_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-kabc[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KABC_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-kcal[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KCAL_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]akonadi-kmime[\s/)]',
 		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KMIME_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-notes[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_NOTES_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]akonadi-socialutils[\s/)]',
+		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_SOCIALUTILS_LIBS}"');
+
       $issues += 
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
 		   'replace "gpgmepp" with "${KDEPIMLIBS_GPGMEPP_LIBS}"');
+
       $issues += 
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kabc[\s/)]',
 		   'replace "kabc" with "${KDEPIMLIBS_KABC_LIBS}"');
-      $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kblog[\s/)]',
-		   'replace "kblog" with "${KDEPIMLIBS_KBLOG_LIBS}"');
-      $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
-		   'replace "kcal" with "${KDEPIMLIBS_KCAL_LIBS}"');
-      $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcalcore[\s/)]',
-		   'replace "kcalcore" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
-      $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
-		   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kalarmcal[\s/)]',
 		   'replace "kcalutils" with "${KDEPIMLIBS_KALARMCAL_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kblog[\s/)]',
+		   'replace "kblog" with "${KDEPIMLIBS_KBLOG_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
+		   'replace "kcal" with "${KDEPIMLIBS_KCAL_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kcalcore[\s/)]',
+		   'replace "kcalcore" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
+
+      $issues +=
+	&checkLine($line,$linecnt,
+		   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
+		   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
 		   'replace "kholidays" with "${KDEPIMLIBS_KHOLIDAYS_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
 		   'replace "kimap" with "${KDEPIMLIBS_KIMAP_LIBS}"');
+
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]kldap[\s/)]',
                    'replace "kldap" with "${KDEPIMLIBS_KLDAP_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kmbox[\s/)]',
+                   'replace "kldap" with "${KDEPIMLIBS_KMBOX_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
 		   'replace "kmime" with "${KDEPIMLIBS_KMIME_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kontactinterface[\s/)]',
 		   'replace "kontactinterface" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
 		   'replace "kpimidentities" with "${KDEPIMLIBS_KPIMIDENTITIES_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimtextedit[\s/)]',
 		   'replace "kpimtextedit" with "${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
 		   'replace "kpimutils" with "${KDEPIMLIBS_KPIMUTILS_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kresources[\s/)]',
 		   'replace "kresources" with "${KDEPIMLIBS_KRESOURCES_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
 		   'replace "ktnef" with "${KDEPIMLIBS_KTNEF_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]kxmlrpcclient[\s/)]',
 		   'replace "kxmlrpcclient" with "${KDEPIMLIBS_KXMLRPCCLIENT_LIBS}"');
+
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]mailtransport[\s/)]',
                    'replace "mailtransport" with "${KDEPIMLIBS_MAILTRANSPORT_LIBS}"');
+
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]microblog[\s/)]',
                    'replace "microblog" with "${KDEPIMLIBS_MICROBLOG_LIBS}"');
+
       $issues +=
 	&checkLine($line,$linecnt,
 		   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
 		   'replace "qgpgme" with "${KDEPIMLIBS_QGPGME_LIBS}"');
+
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]syndication[\s/)]',
