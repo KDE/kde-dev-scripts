@@ -34,7 +34,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.21';
+my($Version) = '1.30';
 
 my($help) = '';
 my($version) = '';
@@ -135,12 +135,13 @@ sub processFile() {
 	$pack = lc($1);
 	$pack = "libusb" if ($pack eq "usb");
 	$pack = "mysql_embedded" if ($pack eq "mysql");
-	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2|kdesubversion)/) {
+	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2|kdesubversion|git_executable)/) {
 	  $optpacks{$pack}{'name'} = $pack;
 	  $optpacks{$pack}{'log'} = 0;
 	}
       }
-      if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
+      if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i ||
+	  $line =~ m/set_package_properties\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
 	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
 	    $pack !~ m/x11_.*_found/ &&
@@ -317,7 +318,7 @@ sub processFile() {
     $issues += &checkLine($line,$linecnt,
 			  '-fexceptions',
 			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
-    if ($in !~ m+/(phonon|okular|kopete|kdevelop|libkdegames)/+) {
+    if ($in !~ m+/(phonon|okular|kopete|kdevelop|libkdegames|kdgantt2)/+) {
       $issues +=
         &checkLine($line,$linecnt,
                    'set_target_properties.*PROPERTIES.*[[:space:]]VERSION[[:space:]][[:digit:]]',
@@ -687,7 +688,7 @@ sub processFile() {
       $issues +=
         &checkLine($line,$linecnt,
                    'target_link_libraries.*[[:space:]]kmbox[\s/)]',
-                   'replace "kldap" with "${KDEPIMLIBS_KMBOX_LIBS}"');
+                   'replace "kmbox" with "${KDEPIMLIBS_KMBOX_LIBS}"');
 
       $issues +=
 	&checkLine($line,$linecnt,
@@ -780,6 +781,7 @@ sub processFile() {
   #look for "missing" stuff
   my($in_exec)=0;
   my($has_project)=0;
+  my($mlf)=0;
   my($has_display_log)=0;
   foreach $line (@lines) {
     chomp($line);
@@ -790,6 +792,9 @@ sub processFile() {
     if ($line =~ m/[Pp][Rr][Oo][Jj][Ee][Cc][Tt]/) {
       $has_project=1;
     }
+    if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i) {
+      $mlf++;
+    }
     if ($line =~ m/macro_display_feature_log/i) {
       $has_display_log=1;
     }
@@ -798,7 +803,7 @@ sub processFile() {
     $issues++;
     &printIssue("",-1,"Missing a PROJECT() command");
   }
-  if ($top_of_module && $has_display_log == 0) {
+  if ($top_of_module && $mlf > 0 && $has_display_log == 0) {
     $issues++;
     &printIssue("",-1,"Missing macro_display_feature_log() command");
   }
