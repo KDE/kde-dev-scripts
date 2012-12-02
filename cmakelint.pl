@@ -143,7 +143,7 @@ sub processFile() {
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i ||
 	  $line =~ m/set_package_properties\(\s*([A-Z0-9_]*).*\)/i) {
 	$pack = lc($1);
-	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
+	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc_executable|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
 	    $pack !~ m/x11_.*_found/ &&
 	    $pack !~ m/true/i && $pack !~ m/false/i) {
 	  $pack =~ s/_xcb//;
@@ -151,6 +151,9 @@ sub processFile() {
 	  $pack =~ s/_found//;
 	  $pack =~ s/_video//;
 	  $pack =~ s/shared_mime_info/sharedmimeinfo/;
+	  if($pack eq "xsltproc_executable") {
+	    $pack = "libxslt";
+	  }
 	  if (!defined($optpacks{$pack}{'name'})) {
 #	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
 	      $issues++;
