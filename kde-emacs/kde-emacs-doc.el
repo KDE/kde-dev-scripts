@@ -52,10 +52,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
  
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301  USA"
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."
   "GNU LGPL license header.")
 
 (defvar GPL "This program is free software; you can redistribute it and/or
@@ -69,16 +67,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301, USA."
+along with this program.  If not, see <http://www.gnu.org/licenses/>."
   "GNU GPL license header.")
 
 (defvar FDL "Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1
+under the terms of the GNU Free Documentation License, Version 1.2
 or any later version published by the Free Software Foundation;
-with the Invariant Sections being LIST THEIR TITLES, with the
-Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. 
 A copy of the license is included in the section entitled \"GNU
 Free Documentation License\"."
   "GNU FDL license header.")
