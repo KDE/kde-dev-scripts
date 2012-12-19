@@ -17,6 +17,7 @@ endif()
 ########### install files ###############
 if (UNIX)
 #shell program
+add_subdirectory( doc )
 install(PROGRAMS
   adddebug
   build-progress.sh
