@@ -163,7 +163,7 @@ FILTER_SOURCE_FILES    = NO
 # configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
 ALPHABETICAL_INDEX     = NO
-COLS_IN_ALPHA_INDEX    = 5
+COLS_IN_ALPHA_INDEX    = 1
 IGNORE_PREFIX          = 
 #---------------------------------------------------------------------------
 # do NOT generate any formats other than man
