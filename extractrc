@@ -27,6 +27,7 @@ i18n() calls so that xgettext can parse them.
                     C++ (default), Python
 --ignore-no-input : Do not warn if there were no filenames specified
 --help|?          : Display this summary
+--no-unescape-xml : Don't do xml unescaping
 
 EOF
 
@@ -113,6 +114,7 @@ GetOptions ( "tag=s"       => \my @opt_extra_tags,
              "cstart=s"    => \my $opt_cstart,
              "language=s"  => \my $opt_language,
              "ignore-no-input" => \my $opt_ignore_no_input,
+             "no-unescape-xml" => \my $opt_no_unescape_xml,
              "help|?"      => \&usage );
 
 unless( @ARGV )
@@ -139,10 +141,12 @@ my $ectx_known_exts = join "|", keys %{&ECTX_SPEC};
 sub unescape_xml ($) {
     my $text = shift;
 
-    $text =~ s/&lt;/</g;
-    $text =~ s/&gt;/>/g;
-    $text =~ s/&amp;/&/g;
-    $text =~ s/&quot;/"/g;
+    if (not $opt_no_unescape_xml) {
+        $text =~ s/&lt;/</g;
+        $text =~ s/&gt;/>/g;
+        $text =~ s/&amp;/&/g;
+        $text =~ s/&quot;/"/g;
+    }
 
     return $text;
 }
