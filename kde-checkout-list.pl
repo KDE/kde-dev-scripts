@@ -143,7 +143,9 @@ foreach $proj (sort keys %output) {
 
     if ( $doClone ) {
       my $command;
+      my $newCheckout = 0;
       if ( ! -d "$subdir" ) {
+        $newCheckout = 1;
 #modules without the "KDE/" in the branchname are:
 # kdebase/kate => only KDE/4.7 and above
 # kdeexamples => No branches
@@ -173,8 +175,10 @@ foreach $proj (sort keys %output) {
             $ohno = 0;
           }
         }
-        printf "REMOVING CLONE DUE TO GIT FAILURE\n";
-        runCommand("rm -rf $subdir");
+        if ($newCheckout) {
+            printf "REMOVING CLONE DUE TO GIT FAILURE\n";
+            runCommand("rm -rf $subdir");
+        }
         if ($ohno) {
           if ($quitOnError) {
             printf "Exiting due to quit-on-error option\n";
