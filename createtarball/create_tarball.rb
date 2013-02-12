@@ -512,5 +512,8 @@ apps.each do |app|
     `tar -jcf #{appdata["folder"]}.tar.bz2 --group=root --owner=root  #{appdata["folder"]}`
     #`rm -rf #{appdata["folder"]}`
     puts " done."
+    puts ""
+    print "md5sum: ", `md5sum #{appdata["folder"]}.tar.bz2`
+    print "sha256sum: ", `sha256sum #{appdata["folder"]}.tar.bz2`
 end 
 
