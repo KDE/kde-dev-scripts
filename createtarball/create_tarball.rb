@@ -257,7 +257,7 @@ apps.each do |app|
     end
     # Remove old folder, if exists
     `rm -rf #{appdata["folder"]} 2> /dev/null`
-    `rm -rf #{appdata["folder"]}.tar.bz2 2> /dev/null`
+    `rm -f #{appdata["folder"]}.tar.xz 2> /dev/null`
     Dir.mkdir( appdata["folder"] )
     Dir.chdir( appdata["folder"] )
 
@@ -509,11 +509,11 @@ apps.each do |app|
 
     print "-> Compressing ..  "
     Dir.chdir( ".." ) # root folder
-    `tar -jcf #{appdata["folder"]}.tar.bz2 --group=root --owner=root  #{appdata["folder"]}`
+    `tar -Jcf #{appdata["folder"]}.tar.xz --group=root --owner=root  #{appdata["folder"]}`
     #`rm -rf #{appdata["folder"]}`
     puts " done."
     puts ""
-    print "md5sum: ", `md5sum #{appdata["folder"]}.tar.bz2`
-    print "sha256sum: ", `sha256sum #{appdata["folder"]}.tar.bz2`
+    print "md5sum: ", `md5sum #{appdata["folder"]}.tar.xz`
+    print "sha256sum: ", `sha256sum #{appdata["folder"]}.tar.xz`
 end 
 
