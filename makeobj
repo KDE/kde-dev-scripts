@@ -6,7 +6,7 @@
 # (C) Stephan Kulow
 
 # Variable replacement code by Allen Winter <allen.winter@kdab.com>
-# Copyright (c) 2011 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+# Copyright (c) 2011,2013 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
 # You may need to set OBJ_REPLACEMENT variable to get it to work.
 # In the variable use the sed syntax to switch directories, for example
@@ -25,7 +25,7 @@
 
 function findup() {
   parg="$1"
-  _git=""
+  _hit=""
   spwd=$PWD
   if test -z "$parg"; then return 1; fi
 
@@ -36,19 +36,20 @@ function findup() {
      return 1
    fi
   done
-  _git=$PWD/$parg
+  _hit=$PWD/$parg
   cd $spwd
 }
 
 function gitbranch() {
   findup .git
-  if test -n "$_git"; then
-    _gitbranch=`sed -e 's,.*/,,' $_git/HEAD`
+  if test -n "$_hit"; then
+    _gitbranch=`sed -e 's,.*/,,' $_hit/HEAD`
   fi
 }
 
 function svnbranch() {
-  if test -d ".svn"; then
+  findup .svn
+  if test -n "$_hit"; then
     _root=`svn info . | grep "Repository Root:" | awk '{print $3}'`
     _baseurl=`svn info . | grep URL: | awk '{print $2}' | sed -e s,$_root/,,`
     _svnbranch=`echo $_baseurl | awk -F/ '{print $1}'`
