@@ -222,9 +222,20 @@
 # but they're deep inside Qt, and usually not what we want to see
 # when debugging a threading issue in a KDE application.
 {
-   QMutex_false_race
+   QMutex_unlock_false_race
    Helgrind:Race
    fun:_ZN6QMutex6unlockEv
+}
+{
+   # Qt4 qmutex_p.h, see maximumSpinTime declared as "volatile qint64"...
+   QMutex_lockInternal_real_race
+   Helgrind:Race
+   fun:_ZN6QMutex12lockInternalEv
+}
+{
+   QMutex_lock_false_race
+   Helgrind:Race
+   fun:_ZN6QMutex6lockEv
 }
 {
    deallocate_stack
@@ -245,7 +256,7 @@
    fun:_ZN31QAbstractEventDispatcherPrivate14releaseTimerIdEi
 }
 {
-   timerId_race_in_qt4_2
+   timerId_second_race_in_qt4
    Helgrind:Race
    fun:_ZN31QAbstractEventDispatcherPrivate15allocateTimerIdEv
 }
@@ -256,4 +267,42 @@
    fun:_ZN11QMetaObject11removeGuardEPP7QObject
 }
 
+# Helgrind suppressions for atomic operations.
+# This is because helgrind cannot tell that they are atomic operations, on x86. The machine code is exactly the same.
+{
+   QBasicAtomicPointer_load
+   Helgrind:Race
+   # catch load and loadAcquire
+   fun:_ZNK19QBasicAtomicPointer*load*
+}
+{
+   QBasicAtomicPointer_store
+   Helgrind:Race
+   # catch store and storeRelease
+   fun:_ZN19QBasicAtomicPointer*store*
+}
+{
+   QBasicAtomicInt_load_in_qt5
+   Helgrind:Race
+   # catch load and loadAcquire
+   fun:_ZNK19QBasicAtomicInteger*load*
+}
+{
+   QBasicAtomicInt_store_in_qt5
+   Helgrind:Race
+   # catch store and storeRelease
+   fun:_ZN19QBasicAtomicInteger*store*
+}
 
+# Additional helgrind suppressions: these are actual atomic operations,
+# but if they conflict with a suppressed store(), helgrind will warn anyway -- https://bugs.kde.org/show_bug.cgi?id=317381
+{
+   QBasicAtomicOps_fetchAndStore
+   Helgrind:Race
+   fun:_ZN15QBasicAtomicOps*fetchAndStore*
+}
+{
+   QBasicAtomicOps_testAndSet
+   Helgrind:Race
+   fun:_ZN15QBasicAtomicOps*testAndSet*
+}
