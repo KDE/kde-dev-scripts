@@ -1,0 +1,8 @@
+am2cmake: converts Makefile.am's to CMakeLists.txt
+
+generate_findpackage_file: generate a cmake FindFoo.cmake file by asking
+some questions and filling out the rest
+
+gencmake: tries to automatically generate CMakeLists.txt by looking at the directory contents
+
+Alex
