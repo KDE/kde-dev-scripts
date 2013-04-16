@@ -1,0 +1,6 @@
+scripts/: helper scripts for working with cmake
+samples/: here you can find samples for using cmake for building KDE 3 apps
+nightly-support/: this is for files which are useful for running Nightly builds of KDE (and maybe also other cmake-based projects9
+
+Alex
+

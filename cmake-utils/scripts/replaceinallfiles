@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+Orig="original Makefile.am contents follow"
+Repl=""
+
+require 'ftools'
+
+hits=0
+Dir["**/CMakeLists.txt"].each do |file|
+   printf("file: %s\n", file)
+   fileContents=IO.readlines(file)
+   newFile=File.new(file, "w+")
+   fileContents.each do |line|
+      if line.include?(Orig)
+         hits=hits+1
+         break
+#         next
+         line[Orig]=Repl
+      end
+      newFile.printf("%s", line)
+   end
+end
+printf("%d replacements made\n", hits)
