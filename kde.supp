@@ -235,7 +235,7 @@
 {
    QMutex_lock_false_race
    Helgrind:Race
-   fun:_ZN6QMutex6lockEv
+   fun:_ZN6QMutex4lockEv
 }
 {
    deallocate_stack
