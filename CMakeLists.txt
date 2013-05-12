@@ -46,6 +46,7 @@ install(PROGRAMS
   svnlastlog
   svnrevertlast
   wcgrep
+  draw_lib_dependencies
   DESTINATION ${BIN_INSTALL_DIR})
 endif (UNIX)
 
