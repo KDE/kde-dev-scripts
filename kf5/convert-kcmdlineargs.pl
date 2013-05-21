@@ -24,9 +24,9 @@ foreach my $file (@ARGV) {
             $_ .= "    parser->addHelpOption(INSERT_DESCRIPTION_HERE);\n";
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
-        } elsif (defined $opt && /(.*)$opt.add\s*\("([^\"]*)"\)/) { # short option
-            $short = "\"$1\", ";
-        } elsif (defined $opt && /(.*)$opt.add\s*\("([^\"]*)", ki18n\((.*)\)(?:,\s*([^\)]*))?\)/) {
+        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
+            $short = "\"$2\" << ";
+        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*ki18n\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
             my $prefix = $1; # e.g. indent
             my $name = $2;
             my $description = $3;
@@ -43,7 +43,7 @@ foreach my $file (@ARGV) {
             }
             $_ = "${prefix}parser->addOption(QCommandLineOption(QStringList() << $short\"$name\", QCoreApplication::translate($context, $description)$trail));\n";
             $short = "";
-        } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\)/) {
+        } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
             $args = $1;
             $_ = "";
         } else {
@@ -54,10 +54,11 @@ foreach my $file (@ARGV) {
                 s/${args}\->getOption/parser->argument/;
                 s/${args}\->isSet/parser->isSet/;
                 s/${args}\->count/parser->remainingArguments().count/;
+                s/${args}\->usage\s*\(\)/parser->showHelp()/;
                 if (/arguments?\(\"(\w*)/ || /isSet\(\"(\w*)/) {
                     my $optionName = $1;
                     if (defined $negatedOptions{"no$optionName"}) {
-                        s/$/\/\/ TODO: negate check/;
+                        s/$/\/\/ TODO: negate check (and ensure nobody passes the no-op --$optionName argument)/;
                         s/$optionName/no$optionName/g;
                     }
                 }
