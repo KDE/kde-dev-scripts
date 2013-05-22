@@ -25,6 +25,7 @@ foreach my $file (@ARGV) {
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
+            $_ = "";
             $short = "\"$2\" << ";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*ki18n\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
             my $prefix = $1; # e.g. indent
@@ -55,6 +56,7 @@ foreach my $file (@ARGV) {
                 s/${args}\->isSet/parser->isSet/;
                 s/${args}\->count/parser->remainingArguments().count/;
                 s/${args}\->usage\s*\(\)/parser->showHelp()/;
+                s/KCmdLineArgs::usage\s*\(\)/parser->showHelp()/;
                 if (/arguments?\(\"(\w*)/ || /isSet\(\"(\w*)/) {
                     my $optionName = $1;
                     if (defined $negatedOptions{"no$optionName"}) {
