@@ -7,6 +7,11 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
+my $use_tr;
+
+# Set $use_tr to generate code that uses QCoreApplication::translate
+# If it's not set, i18n will be used.
+#$use_tr = 1;
 
 foreach my $file (@ARGV) {
     my $context = "\"main\"";
@@ -20,18 +25,20 @@ foreach my $file (@ARGV) {
             $opt = $1;
             s/KCmdLineOptions /QCommandLineParser \*/;
             s/$opt/parser = new QCommandLineParser/;
-            $_ .= "    parser->addVersionOption(INSERT_VERSION_NUMBER_HERE);\n";
+            $_ .= "    app.setApplicationVersion(INSERT_VERSION_HERE);\n";
+            $_ .= "    parser->addVersionOption();\n";
             $_ .= "    parser->addHelpOption(INSERT_DESCRIPTION_HERE);\n";
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
             $_ = "";
             $short = "\"$2\" << ";
-        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*ki18n\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
+        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*k(i18nc?)\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
             my $prefix = $1; # e.g. indent
             my $name = $2;
-            my $description = $3;
-            my $defaultValue = $4;
+            my $i18n = $3;
+            my $description = $4;
+            my $defaultValue = $5;
             my $trail = "";
             if ($name =~ /(\w*) <(.*)>/) { # "stylesheet <xsl>"
                 $name = $1;
@@ -42,7 +49,8 @@ foreach my $file (@ARGV) {
             } elsif ($name =~ /^no/) { # negative option, e.g. --nosignal
                 $negatedOptions{$name} = 1;
             }
-            $_ = "${prefix}parser->addOption(QCommandLineOption(QStringList() << $short\"$name\", QCoreApplication::translate($context, $description)$trail));\n";
+            my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
+            $_ = "${prefix}parser->addOption(QCommandLineOption(QStringList() << $short\"$name\", $translate$trail));\n";
             $short = "";
         } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
             $args = $1;
