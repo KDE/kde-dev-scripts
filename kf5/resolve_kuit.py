@@ -1,10 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Resolve KUIT markup in i18n strings into plain or rich text.
+# Resolve KUIT markup in i18n strings into plain or rich text,
+# or switch them to xi18n calls.
 #
 # Usage:
 #   resolve_kuit.py [OPTIONS] FILE_OR_DIRECTORY...
+#
+# By default, KUIT markup is resolved into plain or rich text.
+# To switch strings containing any KUIT markup to xi18n calls instead,
+# use -x option; to switch all strings to xi18n calls, use -X option.
+# For non-code files (.ui, .rc, etc.) -x behaves same like -X,
+# since there is no way to specify by string whether it is to be
+# passed through i18n or xi18n call at runtime. Instead this is specified
+# on the top level (per file, but normally for all such files in a project),
+# as described in the "Connecting Calls to Catalogs" section
+# of the ki18n Programmer's Guide.
 #
 # Files are modified in-place. Modified file paths are written to stdout.
 # If an argument is a directory, files from it are recursivelly collected.
@@ -32,7 +43,7 @@
 # Markup inside the element text is expected to be XML-escaped (&lt;, etc.),
 # i.e. the element text is first unescaped before resolution.
 #
-# In PO files (resolution type 'po'), i18n strings are detected 
+# In PO files (resolution type 'po'), i18n strings are detected
 # according to PO format.
 # To process PO files, the Pology library must be ready for use.
 # In msgstr fields, KUIT markup transformations for given language
@@ -52,7 +63,7 @@
 # also resolved) and current original fields match after resolution,
 # the message is unfuzzied.
 #
-# For a given i18n string, the decision of whether to convert KUIT markup
+# For a given i18n string, the decision of whether to resolve KUIT markup
 # into plain or Qt rich text is made based on the context marker,
 # as described in KUIT documentation at
 # http://techbase.kde.org/Development/Tutorials/Localization/i18n_Semantics .
@@ -60,12 +71,14 @@
 # by repeating the -f option. E.g. -f @info:progress=rich would override
 # the default resolution into plain text for @info:progress i18n strings.
 #
-# NOTE: If <html> tags are added on rich text (see top_tag_res variable),
+# NOTE: [INTERNAL]
+# If <html> tags are added on rich text(see top_tag_res variable),
 # then resolution must not be run over already resolved files.
 # Context markers will remain but format modifiers will be removed from them,
 # which may cause further modification in the second run.
 #
-# NOTE: If <numid> tags are simply removed (see numid_tag_res variable),
+# NOTE: [INTERNAL]
+# If <numid> tags are simply removed (see numid_tag_res variable),
 # a warning is issued on each removal to do something manually with
 # its associated argument, e.g. wrap it in QString::number().
 # It is probably best to look for <numid> tags and handle their arguments
@@ -88,6 +101,16 @@ def main ():
                     "C-like i18n calls are looked for in all files, "
                     "except in PO files which are specially treated. "
                     "WARNING: Do not run twice over same files.")
+    opars.add_option(
+        "-x",
+        dest="switch_to_xi18n", action="store_const", default=0, const=1,
+        help="Instead of resolving markup, switch i18n calls having "
+             "some markup to xi18n calls.")
+    opars.add_option(
+        "-X",
+        dest="switch_to_xi18n", action="store_const", default=0, const=2,
+        help="Instead of resolving markup, switch all i18n calls "
+             "to xi18n calls.")
     opars.add_option(
         "-f",
         dest="formats", action="append", default=[],
@@ -207,11 +230,13 @@ def main ():
     _kuit_spec.interface_wrap = options.interface_wrap
 
     # Set C-call resolving options.
+    _ccall_options.switch_to_xi18n = options.switch_to_xi18n
     if options.quotes:
         squotes = list(reversed(sorted(options.quotes))) # longest first
         _ccall_options.quotes[:] = squotes
 
     # Set XML resolving options.
+    _xml_options.switch_to_xi18n = options.switch_to_xi18n
     if options.add_xml_texttags:
         tags = options.add_xml_texttags.split(",")
         _xml_options.text_tags.update(tags)
@@ -220,6 +245,7 @@ def main ():
         _xml_options.ctxt_attrs[:0] = attrs # higher priority
 
     # Set PO resolving options.
+    _po_options.switch_to_xi18n = options.switch_to_xi18n
     _po_options.msgfmt_wrap = options.msgfmt_wrap
     _po_options.post_merge = options.post_merge
 
@@ -446,6 +472,7 @@ def resolve_ccall (fstr, path):
         report("%s: >>>>> start >>>>>" % path)
 
     langdata = get_language_data("en_US")
+    toxi18n = _ccall_options.switch_to_xi18n
 
     segs = []
     p1 = 0
@@ -455,10 +482,8 @@ def resolve_ccall (fstr, path):
             segs.append(fstr[p1:])
             break
         p2, p3 = m.span()
-        segs.append(fstr[p1:p3])
         callname = m.group(1)
         callspec = _ccall_options.calls.get(callname)
-        cseg = None
         if callspec:
             ictxt, itext, iplural, total = callspec
             p1a = p3
@@ -490,15 +515,24 @@ def resolve_ccall (fstr, path):
                 csegs = []
                 lno = lno_to(fstr, p3)
                 mctxt = argspecs[ictxt][0] if ictxt >= 0 else None
+                res_callname = None
                 for iarg, (msarg, quote, outs) in enumerate(argspecs):
                     if iarg != ictxt:
                         ret = resolve_kuit(mctxt, msarg, quote,
-                                           langdata, path, lno)
-                        res_mctxt, res_msarg = ret
+                                           langdata, path, lno,
+                                           toxi18n=toxi18n)
+                        res_mctxt, res_msarg, xi18n = ret
+                        if xi18n and not res_callname:
+                            if callname.startswith("i"):
+                                res_callname = "x" + callname
+                            elif callname.startswith("k"):
+                                res_callname = "kx" + callname[1:]
                         res_sarg = _unmask(res_msarg, outs)
                         csegs.append(res_sarg)
                     else:
                         csegs.append("")
+                if not res_callname:
+                    res_callname = callname
                 if ictxt >= 0:
                     outs_ctxt = argspecs[ictxt][2]
                     res_ctxt = _unmask(res_mctxt, outs_ctxt)
@@ -507,6 +541,9 @@ def resolve_ccall (fstr, path):
                     report("%s:%d: res-segs=%s"
                            % (path, lno_to(fstr, p3),
                               "".join("{%s}" % s for s in csegs)))
+                segs.append(fstr[p1:p2])
+                segs.append(res_callname)
+                segs.append(fstr[p2 + len(callname):p3])
                 segs.append("".join(csegs))
                 p3 = p1a
             elif all_strings and end_call:
@@ -515,10 +552,14 @@ def resolve_ccall (fstr, path):
                 warning("%s:%d: Too little string arguments to call "
                         "(expected %d, got %d)."
                         % (path, lno_to(fstr, p3), total, len(argspecs)))
+                segs.append(fstr[p1:p3])
                 p3 = p1a
             else:
                 if showparse:
                     report("%s:%d: not-literal-call" % (path, lno_to(fstr, p3)))
+                segs.append(fstr[p1:p3])
+        else:
+            segs.append(fstr[p1:p3])
         p1 = p3
     res_fstr = "".join(segs)
     if showparse:
@@ -686,6 +727,7 @@ def resolve_xml (fstr, path):
 
     _init_xml_regexes()
     langdata = get_language_data("en_US")
+    toxi18n = _xml_options.switch_to_xi18n
 
     segs = []
     p1 = 0
@@ -709,8 +751,9 @@ def resolve_xml (fstr, path):
                 report("%s:%d: ctxt-text={%s}{%s}" % (path, lno, ectxt, etext))
             else:
                 report("%s:%d: text={%s}" % (path, lno, etext))
-        ret = resolve_kuit(ctxt, text, None, langdata, path, lno)
-        res_ctxt, res_text = ret
+        ret = resolve_kuit(ctxt, text, None, langdata, path, lno,
+                           toxi18n=toxi18n)
+        res_ctxt, res_text = ret[:2]
         res_etext = escape_xml(res_text, noesc=noesc_text)
         if ctxt is not None:
             res_ectxt = escape_xml(res_ctxt, noesc=noesc_ctxt)
@@ -749,6 +792,7 @@ def resolve_po (path):
         raise StandardError(
             "%s: Cannot determine language of PO file." % path)
     langdata_trn = get_language_data(lang)
+    toxi18n = _po_options.switch_to_xi18n
 
     seen_keys = set()
     for ind, msg in enumerate(cat):
@@ -758,31 +802,36 @@ def resolve_po (path):
         if msg.msgid_previous is not None:
             has_previous = True
             ret = resolve_kuit(ctxt_prev, msg.msgid_previous, None,
-                               langdata_src, path, msg.refline)
+                               langdata_src, path, msg.refline,
+                               toxi18n=toxi18n)
             msg.msgid_previous = ret[1]
             if ctxt_prev is not None:
                 msg.msgctxt_previous = ret[0]
             if msg.msgid_plural_previous is not None:
                 ret = resolve_kuit(ctxt_prev, msg.msgid_plural_previous, None,
-                                   langdata_src, path, msg.refline)
+                                   langdata_src, path, msg.refline,
+                                   toxi18n=toxi18n)
                 msg.msgid_plural_previous = ret[1]
         ctxt = msg.msgctxt
         if not _po_options.post_merge:
             # Original fields.
             ret = resolve_kuit(ctxt, msg.msgid, None,
-                               langdata_src, path, msg.refline)
+                               langdata_src, path, msg.refline,
+                               toxi18n=toxi18n)
             msg.msgid = ret[1]
             if ctxt is not None:
                 msg.msgctxt = ret[0]
             if msg.msgid_plural is not None:
                 ret = resolve_kuit(ctxt, msg.msgid_plural, None,
-                                   langdata_src, path, msg.refline)
+                                   langdata_src, path, msg.refline,
+                                   toxi18n=toxi18n)
                 msg.msgid_plural = ret[1]
         # Translation fields.
         ctxt_trn = ctxt if (not msg.fuzzy or not has_previous) else ctxt_prev
         for i in range(len(msg.msgstr)):
             ret = resolve_kuit(ctxt_trn, msg.msgstr[i], None,
-                               langdata_trn, path, msg.refline)
+                               langdata_trn, path, msg.refline,
+                               toxi18n=toxi18n)
             msg.msgstr[i] = ret[1]
             if msg.msgid.endswith("\n") and not msg.msgstr[i].endswith("\n"):
                 msg.msgstr[i] += "\n"
@@ -1271,19 +1320,38 @@ _cmarker_to_format = {
 _top_tag_rx = re.compile(r"<\s*(qt|html)\b[^>]*>(.*)<\s*/\s*qt\s*>",
                          re.U | re.S | re.I)
 
-def resolve_kuit (ctxt, text, quote, langdata, path, lno):
+def resolve_kuit (ctxt, text, quote, langdata, path, lno, toxi18n=0):
 
-    fmt_exp, res_ctxt, has_cmarker = format_from_cmarker(ctxt, quote)
-    if fmt_exp and fmt_exp not in _known_formats:
-        warning("%s:%d: Unknown explicit format modifier '%s'."
-                % (path, lno, fmt_exp))
-        return ctxt, text
-    fmt = fmt_exp or format_from_tags(text, quote) or "plain"
+    xi18n = False
+
+    fmt_cm, fmt_rc, res_ctxt, has_cmarker = format_from_cmarker(ctxt, quote)
+    if fmt_cm and fmt_cm not in _known_formats:
+        warning("%s:%d: Unknown format modifier '%s' in context marker. "
+                "The string will not be resolved until this is fixed."
+                % (path, lno, fmt_cm))
+        return ctxt, text, xi18n
+    if toxi18n in (1, 2) and fmt_cm != fmt_rc and not path.endswith(".po"):
+        warning("%s:%d: Manual format modifier '%s' does not match "
+                "the implicit format modifier '%s' based on context marker. "
+                "Manual format modifiers are no longer supported, "
+                "replace them with another format selection method."
+                % (path, lno, fmt_cm, fmt_rc))
+        # Recover original context with modifier still inside.
+        res_ctxt = ctxt
+    fmt = fmt_cm or format_from_tags(text, quote) or "plain"
 
     ret = _resolve_kuit_r(text, quote, fmt, langdata, path, lno)
     res_text, has_any_kuit_tag, has_any_html_tag, has_top_tag = ret
 
-    if fmt_exp != "rich" and not has_any_html_tag:
+    if (toxi18n == 1 and has_any_kuit_tag) or toxi18n == 2:
+        if has_any_html_tag:
+            warning("%s:%d: Mixed KUIT and HTML tags. "
+                    "This should be changed to all-KUIT tags."
+                    % (path, lno))
+        xi18n = True
+        return res_ctxt, text, xi18n
+
+    if fmt_cm != "rich" and not has_any_html_tag:
         ret = resolve_entities(res_text, path, lno)
         res_text, any_entity_resolved = ret
     else:
@@ -1292,9 +1360,9 @@ def resolve_kuit (ctxt, text, quote, langdata, path, lno):
     if not has_cmarker and not has_any_kuit_tag and not any_entity_resolved:
         # In this case the resolution should have been no-op,
         # so return the original input just in case.
-        return ctxt, text
+        return ctxt, text, xi18n
 
-    if has_top_tag or fmt_exp == "rich":
+    if has_top_tag or fmt_cm == "rich":
         # What to do with top tag in rich text.
         # 0 - As in KUIT processing in kdecore. But this would cause
         #     <html> tags to appear in otherwise plain text which happens
@@ -1322,10 +1390,10 @@ def resolve_kuit (ctxt, text, quote, langdata, path, lno):
         elif top_tag_res == 2:
             pass
         else:
-            raise StandardError("Unknown top tag resolution choice '%d'."
-                                % top_tag_res)
+            raise StandardError(
+                "Unknown top tag resolution choice '%d'." % top_tag_res)
 
-    return res_ctxt, res_text
+    return res_ctxt, res_text, xi18n
 
 
 _element_rx = re.compile(r"<\s*(\w+)(?:([^>]*)>(.*?)<\s*/\s*\1|\s*/)\s*>",
@@ -1413,7 +1481,7 @@ def _resolve_kuit_r (text, quote, fmt, langdata, path, lno):
             if numid_tag_res == 0:
                 if not path.endswith((".po", ".pot")):
                     warning("%s:%d: A '%s' tag has been removed, do something "
-                            "manually with any of its associated argument "
+                            "manually with the affected argument "
                             "(e.g. wrap it in QString::number())."
                             % (path, lno, tag))
                 res_span = res_etext
@@ -1437,8 +1505,9 @@ def _resolve_kuit_r (text, quote, fmt, langdata, path, lno):
                         p1b += 1
                 res_span = "".join(nisegs)
             else:
-                raise StandardError("Unknown '%s' tag resolution choice '%d'."
-                                    % ("numid", numid_tag_res))
+                raise StandardError(
+                    "Unknown '%s' tag resolution choice '%d'."
+                    % ("numid", numid_tag_res))
         elif tag in _html_tags:
             has_any_html_tag = True
             if tag.lower() in ("qt", "html"):
@@ -1502,6 +1571,7 @@ _cmarker_rx = re.compile(r"@(\w+):?(\w+)?/?(\w+)?", re.U | re.S)
 def format_from_cmarker (ctxt, quote):
 
     fmt = None
+    fmt_rc = None
     res_ctxt = ctxt
     has_cmarker = False
     if ctxt is not None:
@@ -1512,15 +1582,16 @@ def format_from_cmarker (ctxt, quote):
         if m:
             has_cmarker = True
             role, cue, fmt = m.groups()
+            if role and cue: # implicit format by role and cue
+                fmt_rc = _cmarker_to_format.get("@%s:%s" % (role, cue))
+            if not fmt_rc: # implicit format by role alone
+                fmt_rc = _cmarker_to_format.get("@%s" % role)
             if fmt: # explicit format modifier
                 p2 = ctxt.find("/", p1)
                 res_ctxt = ctxt[:p2] + ctxt[p2 + 1 + len(fmt):]
-            else: # format by role and cue
-                if role and cue:
-                    fmt = _cmarker_to_format.get("@%s:%s" % (role, cue))
-                if not fmt: # format by role alone
-                    fmt = _cmarker_to_format.get("@%s" % role)
-    return fmt, res_ctxt, has_cmarker
+            else:
+                fmt = fmt_rc
+    return fmt, fmt_rc, res_ctxt, has_cmarker
 
 
 _opentag_rx = re.compile(r"<\s*(\w+)[^>]*>", re.U | re.S)
