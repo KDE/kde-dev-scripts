@@ -16,5 +16,5 @@ foreach my $file (@ARGV) {
 			}
     } $file;
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );
 

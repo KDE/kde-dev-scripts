@@ -8,7 +8,7 @@ use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
-open(my $F, q(find -name "*" |));
+open(my $F, "-|", qw(find . -type f));
 my $file;
 while ($file = <$F>) {
  	chomp $file;
@@ -169,10 +169,10 @@ while ($file = <$F>) {
 	    $_;
 	} <$FILE>;
 	if ($modified) {
-	    open (my $OUT, ">$file");
+	    open (my $OUT, ">", $file);
 	    print $OUT @l;
 	}
 
     }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );
 

@@ -19,15 +19,16 @@ use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
-open(my $F, q(find -name "*" | grep -v '\.svn/' |));
+open(my $F, "-|", qw(find . -type f));
 my $file;
 while ($file = <$F>) {
+    next if $file =~ /\.svn/;
     chomp $file;
     next if functionUtilkde::excludeFile( $file);
 
     my $modified;
     my @necessaryIncludes = ();
-    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
+    open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
       my $orig = $_;
       my ($spaces, $trailer, $object, $call, $ws, $parent, $params);
@@ -99,7 +100,7 @@ while ($file = <$F>) {
 
     if ($modified) {
       print "Modified: $file\n";
-      open (my $OUT, ">$file");
+      open (my $OUT, ">", $file);
       print $OUT @l;
       close $OUT;
     }

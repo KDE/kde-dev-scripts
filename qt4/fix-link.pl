@@ -9,7 +9,7 @@ use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
-open(my $F, q(find -name "CMakeLists.txt" |));
+open(my $F, "-|", qw(find . -name CMakeLists.txt));
 my $file;
 my $warning;
 while ($file = <$F>) {
@@ -175,7 +175,7 @@ while ($file = <$F>) {
     } <$FILE>;
 
     if ($modified) {
-	open (my $OUT, ">$file");
+	open (my $OUT, ">", $file);
 	print $OUT @l;
     }
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Shell script for creating a ChangeLog file from SVN
 #
@@ -11,12 +11,13 @@ if test -z "$PARAM"; then
     PARAM=".";
 fi;
 
-CURRENT=`dirname $0`;
+CURRENT=`dirname "$0"`;
 
 echo "Fetching committers...";
 svn cat svn://anonsvn.kde.org/home/kde/trunk/kde-common/accounts > /tmp/accounts.$PPID
 
 echo "Creating changelog...";
-svn log -v --xml $1 | python $CURRENT/svn2log.py --users=/tmp/accounts.$PPID --users-charset=UTF8
+PYTHON=${PYTHON:-python}
+svn log -v --xml $1 | ${PYTHON} $CURRENT/svn2log.py --users=/tmp/accounts.$PPID --users-charset=UTF8
 
 rm /tmp/accounts.$PPID

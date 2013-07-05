@@ -15,7 +15,7 @@ FOUND=`find |grep -v "^\.$"| grep -v CVS| grep -v "\.[ls]\?o$"|grep -v "~$"|grep
 
 ask_for_adding() {
 echo
-read -p "Add file $file to SVN ? (y/n) " answer rest
+read "answer?Add file $file to SVN ? (y/n) " rest
 #if [ "$answer" != "y" ]; then echo $file; fi
 if [ "$answer" = "y" ]; then svn add $file; fi
 }

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #Alexander Neundorf <neundorf@kde.org>
 #copyright 2002, GPL
 
@@ -15,7 +15,7 @@ FOUND=`find |grep -v "^\.$"| grep -v CVS| grep -v "\.[ls]\?o$"|grep -v "~$"|grep
 
 ask_for_adding() {
 echo
-read -p "Add file $file to cvs ? (y/n) " answer rest
+read answer"?Add file $file to cvs ? (y/n) " rest
 #if [ "$answer" != "y" ]; then echo $file; fi
 if [ "$answer" == "y" ]; then cvs add $file; fi
 }

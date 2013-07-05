@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Copyright 2013 Dominik Seichter <domseichter@googlemail.com>
 # 
 # This program is free software; you can redistribute it and/or
@@ -12,26 +14,36 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#!/bin/bash
  
 # This is the maximum depth to which dependencies are resolved
 MAXDEPTH=14
+
+TMPFILE=
+READELFTMPFILE=
+LDDTMPFILE=
+
+cleanup() {
+	for _v in TMPFILE READELFTMPFILE LDDTMPFILE; do
+		[ -n "${$_v}" ] && rm -f -- "${$_v}"
+	done
+}
+
+trap EXIT cleanup
  
 # analyze a given file on its
 # dependecies using ldd and write
 # the results to a given temporary file
 #
 # Usage: analyze [OUTPUTFILE] [INPUTFILE]
-function analyze
+analyze()
 {
-    local OUT=$1
-    local IN=$2
-    local NAME=$(basename $IN)
+    local OUT="$1"
+    local IN="$2"
+    local NAME=$(basename "$IN")
  
     for i in $LIST
     do
-        if [ "$i" == "$NAME" ];
+        if [ X"$i" == X"$NAME" ];
         then
             # This file was already parsed
             return
@@ -40,7 +52,7 @@ function analyze
     # Put the file in the list of all files
     LIST="$LIST $NAME"
  
-    DEPTH=$[$DEPTH + 1]
+    DEPTH=$(($DEPTH + 1))
     if [ $DEPTH -ge $MAXDEPTH ];
         then
         echo "MAXDEPTH of $MAXDEPTH reached at file $IN."
@@ -50,53 +62,48 @@ function analyze
  
     echo "Parsing file:              $IN"
  
-    $READELF $IN &> $READELFTMPFILE
+    $READELF "$IN" > "$READELFTMPFILE" 2>&1
     ELFRET=$?
  
     if [ $ELFRET != 0 ];
         then
         echo "ERROR: ELF reader returned error code $RET"
         echo "ERROR:"
-        cat $TMPFILE
+        cat -v -- "$TMPFILE"
         echo "Aborting..."
-        rm $TMPFILE
-        rm $READELFTMPFILE
-        rm $LDDTMPFILE
         exit 1
     fi
  
-    DEPENDENCIES=$(cat $READELFTMPFILE | grep NEEDED | awk '{if (substr($NF,1,1) == "[") print substr($NF, 2, length($NF) - 2); else print $NF}')
+    DEPENDENCIES=$(cat "$READELFTMPFILE" | grep NEEDED | awk '{if (substr($NF,1,1) == "[") print substr($NF, 2, length($NF) - 2); else print $NF}')
  
     for DEP in $DEPENDENCIES;
     do
         if [ -n "$DEP" ];
         then
  
-            ldd $IN &> $LDDTMPFILE
+            # XXX Change ldd to something more secure?
+            ldd "$IN" > "$LDDTMPFILE" 2>&1
             LDDRET=$?
  
             if [ $LDDRET != 0 ];
                 then
                 echo "ERROR: ldd returned error code $RET"
                 echo "ERROR:"
-                cat $TMPFILE
+                cat -v -- "$TMPFILE"
                 echo "Aborting..."
-                rm $TMPFILE
-                rm $READELFTMPFILE
-                rm $LDDTMPFILE
                 exit 1
             fi
  
-            DEPPATH=$(grep $DEP $LDDTMPFILE | awk '{print $3}')
+            DEPPATH=$(grep -- "$DEP" "$LDDTMPFILE" | awk '{print $3}')
             if [ -n "$DEPPATH" ];
             then
-                echo -e "  \"$NAME\" -> \"$DEP\";" >> $OUT
-                analyze $OUT $DEPPATH
+                echo "  \"$NAME\" -> \"$DEP\";" >> $OUT
+                analyze "$OUT" "$DEPPATH"
             fi
         fi
     done
  
-    DEPTH=$[$DEPTH - 1]
+    DEPTH=$(($DEPTH - 1))
 }
  
 ########################################
@@ -117,14 +124,14 @@ if [ $# != 2 ];
 fi
  
 DEPTH=0
-INPUT=$1
-OUTPUT=$2
-TMPFILE=$(mktemp -t)
-LDDTMPFILE=$(mktemp -t)
-READELFTMPFILE=$(mktemp -t)
+INPUT="$1"
+OUTPUT="$2"
+TMPFILE="$(mktemp -t)"
+LDDTMPFILE="$(mktemp -t)"
+READELFTMPFILE="$(mktemp -t)"
 LIST=""
  
-if [ ! -e $INPUT ];
+if [ ! -e "$INPUT" ];
     then
     echo "ERROR: File not found: $INPUT"
     echo "Aborting..."
@@ -151,15 +158,12 @@ echo "Analyzing dependencies of: $INPUT"
 echo "Creating output as:        $OUTPUT"
 echo ""
  
-echo "digraph DependencyTree {" > $TMPFILE
-echo "  \"$(basename $INPUT)\" [shape=box];" >> $TMPFILE
-analyze $TMPFILE "$INPUT"
-echo "}" >> $TMPFILE
+echo "digraph DependencyTree {" > "$TMPFILE"
+echo "  \"$(basename $INPUT)\" [shape=box];" >> "$TMPFILE"
+analyze "$TMPFILE" "$INPUT"
+echo "}" >> "$TMPFILE"
  
 #cat $TMPFILE # output generated dotfile for debugging purposses
-dot -Tpng $TMPFILE -o$OUTPUT
- 
-rm $LDDTMPFILE
-rm $TMPFILE
+dot -Tpng "$TMPFILE" "-o$OUTPUT"
  
 exit 0

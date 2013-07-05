@@ -21,4 +21,4 @@ foreach my $file (@ARGV) {
     } $file;
     functionUtilkde::removeIncludeInFile( $file, "kstringhandler.h");
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );

@@ -101,4 +101,4 @@ foreach my $file (@ARGV) {
         }
     }
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );

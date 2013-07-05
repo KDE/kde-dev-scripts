@@ -22,7 +22,7 @@ sub addQStringElement
     return $result;
 }
 
-open(my $F, q(find -name "*" |));
+open(my $F, "-|", qw(find . -type f));
 my $file;
 my $warning;
 my @files = ();

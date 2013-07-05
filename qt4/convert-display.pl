@@ -16,4 +16,4 @@ foreach my $file (@ARGV) {
     } $file;
 	functionUtilkde::addIncludeInFile( $file, "QX11Info");
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );

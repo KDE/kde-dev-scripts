@@ -5,15 +5,14 @@ package functionUtilkde;
 use strict;
 sub diffFile
 {
-	my $listFileDiff = join (" ", @_);
 	if (-d ".svn") {
-		system("svn diff $listFileDiff");
+		system(qw(svn diff), $@);
 	} elsif (-d "CVS") {
-		system("cvs diff -up $listFileDiff");
+		system(qw(cvs diff -up), $@);
 	} elsif (-d ".git") {
-                system("git diff $listFileDiff");
+                system(qw(git diff), $@);
 	}
-	warn "files to commit: $listFileDiff\n";
+	warn "files to commit: $@\n";
 }
 
 sub excludeFile

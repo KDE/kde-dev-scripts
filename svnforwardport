@@ -19,7 +19,7 @@ usage() {
   exit
 }
 
-while getopts '-:h' opt ; do
+while getopts 'h' opt ; do
   case $opt in
     *) usage;; # -h, --help will also trip this
   esac

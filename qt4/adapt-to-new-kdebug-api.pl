@@ -10,7 +10,7 @@ use lib dirname( $0 );
 use functionUtilkde;
 use strict;
 
-open(my $F, q(find -name "*" |));
+open(my $F, "-|", qw(find . -type f));
 my $file;
 my $warning;
 my @files = ();

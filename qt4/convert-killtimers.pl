@@ -6,7 +6,7 @@
 use File::Basename;
 use lib dirname( $0 );
 use functionUtilkde;
-open(my $F, q(find -name "*" |));
+open(my $F, "-|", qw(find . -type f));
 my $file;
 while ($file = <$F>) {
  	chomp $file;
@@ -26,7 +26,7 @@ while ($file = <$F>) {
 	
 	if ($modified) {
 		my $OUT;
-	    open ($OUT, ">$file");
+	    open ($OUT, ">", $file);
 	    print $OUT @l;
 		close ($OUT);
 		# necessary to gave complete url

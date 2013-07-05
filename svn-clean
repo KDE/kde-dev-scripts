@@ -95,7 +95,7 @@ delete $ENV{'TERM'};
 #print($heading."\n") unless $quiet;
 
 foreach my $dir (@files) {
-  open SVN, "svn status --no-ignore \"".$dir."\"|";
+  open SVN, "-|", qw(svn status --no-ignore), $dir;
   while (<SVN>) {
     /^[I?] +(.*)$/ or next;
     my $file = $1;

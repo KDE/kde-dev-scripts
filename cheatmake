@@ -68,7 +68,7 @@ case $1 in
       # separately from the rest of the "-o target" lines (for libs and binaries)
       # (For libs and bins another way would be to grep for "linking")
       # The "ls" is for sorting by date
-      $UNSERMAKE -n | perl -e 'while(<>) { if (/by libtool/) { s/.*> //; print; } if (m/-o ([^ ]*)/ && $1!~/\.o$/) { print "$1\n"; } }' | xargs --no-run-if-empty ls -t -1
+      $UNSERMAKE -n | perl -e 'while(<>) { if (/by libtool/) { s/.*> //; print; } if (m/-o ([^ ]*)/ && $1!~/\.o$/) { print "$1\n"; } }' | xargs -r ls -t -1
     fi
     ;;
   why )

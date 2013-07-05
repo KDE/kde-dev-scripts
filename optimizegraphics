@@ -70,7 +70,7 @@ else # do it recursively
     # OptiPNG pass
     if [ "${optipng_tool}" != "/bin/true" ] ; then
         find . -name "*.png" -print0 | \
-            xargs -t -0 --no-run-if-empty --max-args=1 --max-procs=$thread_count \
+            xargs -t0r -n 1 -P $thread_count \
                 "${optipng_tool}" -quiet -preserve -o6
     else
         echo "Skipping OptiPNG optimizations for PNG file type"
@@ -79,7 +79,7 @@ else # do it recursively
     # AdvanceCOMP pass
     if [ "${advancecomp_tool}" != "/bin/true" ] ; then
         find . \( -name "*.svgz" -o -name '*.mng' -o -name '*.png' \) -print0 | \
-            xargs -t -0 --no-run-if-empty --max-args=1 --max-procs=$thread_count \
+            xargs -t0r -n 1 -P $thread_count \
                 "${advancecomp_tool}" -q -z -4
     else
         echo "Skipping AdvanceCOMP optimizations for SVGZ, MNG, PNG file types"
@@ -88,7 +88,7 @@ else # do it recursively
     # PNGout pass
     if [ "${pngout_tool}" != "/bin/true" ] ; then
         find . -name "*.png" -print0 | \
-            xargs -t -0 --no-run-if-empty --max-args=1 --max-procs=$thread_count \
+            xargs -t0r -n 1 -P $thread_count \
                 "${pngout_tool}" -q -ks
     else
         echo "Skipping PNGout optimizations for PNG file type"

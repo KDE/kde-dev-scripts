@@ -28,7 +28,7 @@ foreach my $file (@ARGV) {
 
     my $modified;
     my @necessaryIncludes = ();
-    open(my $FILE, $file) or warn "We can't open file $file:$!\n";
+    open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
       my $orig = $_;
       if ( m![\.>]find\s*\(! ) {
@@ -64,7 +64,7 @@ foreach my $file (@ARGV) {
 
     if ($modified) {
       print "Modified: $file\n";
-      open (my $OUT, ">$file");
+      open (my $OUT, ">", $file);
       print $OUT @l;
       close $OUT;
     }

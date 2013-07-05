@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # apply kdelibs coding style to all c, cpp and header files in and below the current directory 
 # 

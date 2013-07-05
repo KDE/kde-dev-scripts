@@ -14,4 +14,4 @@ foreach my $file (@ARGV) {
 	s!KKeyChooser!KShortcutsEditor!g;
     } $file;
 }
-functionUtilkde::diffFile( "@ARGV" );
+functionUtilkde::diffFile( @ARGV );
