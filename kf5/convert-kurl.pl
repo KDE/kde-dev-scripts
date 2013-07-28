@@ -22,11 +22,13 @@ foreach my $file (@ARGV) {
         my $orig = $_;
 
         # kdelibs: QUrlPathInfo pathInfo(url);
-        if (/QUrlPathInfo (\w*)\(\s*(\w*)\s*\)/) {
+        if (/QUrlPathInfo (\w*)\(\s*([\.\-\>_\w]*)\s*\)/) {
             # Record info->url association
             $infoVar = $1;
             $urlVar = $2;
             #print STDERR "infoVar=$infoVar urlVar=$urlVar\n";
+        } elsif (/^}/) {  # end of method
+            undef $infoVar;
         }
         # kdelibs: pathInfo.adjustPath(QUrlPathInfo::StripTrailingSlash);
         #    => url = url.adjusted(QUrl::StripTrailingSlash);
@@ -35,7 +37,7 @@ foreach my $file (@ARGV) {
         }
         # kdelibs: QUrlPathInfo::adjustPath(url, QUrlPathInfo::StripTrailingSlash);
         #    => url = url.adjusted(QUrl::StripTrailingSlash);
-        s/QUrlPathInfo::adjustPath\(\s*(\w*)\s*QUrlPathInfo::StripTrailingSlash\s*\)/$1 = $1\.adjusted(QUrl::StripTrailingSlash)/;
+        s/QUrlPathInfo::adjustPath\(\s*(\w*)\s*,\s*QUrlPathInfo::StripTrailingSlash\s*\)/$1 = $1\.adjusted(QUrl::StripTrailingSlash)/;
         # KDE4 code: url.adjustPath(KUrl::RemoveTrailingSlash);
         #     => url = url.adjusted(QUrl::StripTrailingSlash);
         if (/(\w*).adjustPath\(\s*KUrl::RemoveTrailingSlash\s*\)/) {
@@ -43,11 +45,28 @@ foreach my $file (@ARGV) {
             s/adjustPath\(\s*KUrl::RemoveTrailingSlash\s*/$urlvar = $urlvar\.adjusted(QUrl::StripTrailingSlash)/;
         }
 
-        # kdelibs: QUrlPathInfo(url).directory() -> url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()
-        s/QUrlPathInfo\(\s*(\w*)\s*\)\.directory\(\)/$1\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()/g;
-        # kdelibs: QUrlPathInfo(url).directoryUrl() -> url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash)
-        s/QUrlPathInfo\(\s*(\w*)\s*\)\.directoryUrl\(\)/$1\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash)/g;
+        # kdelibs: QUrlPathInfo(url1).url(QUrlPathInfo::StripTrailingSlash);
+        s/QUrlPathInfo\(\s*([\.\-\>_\w]*)\s*\)\.url\(QUrlPathInfo::StripTrailingSlash\)/$1\.adjusted(QUrl::StripTrailingSlash)/g;
 
+        # kdelibs: QUrlPathInfo(url).directory()
+        s/QUrlPathInfo\(\s*([\.\-\>_\w]*)\s*\)\.directory\(\)/$1\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()/g;
+        # kdelibs: QUrlPathInfo(url).fileName()
+        s/QUrlPathInfo\(\s*([\.\-\>_\w]*)\s*\)\.fileName\(\)/$1\.fileName()/g;
+        # kdelibs: QUrlPathInfo(url).directoryUrl() -> url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash)
+        s/QUrlPathInfo\(\s*([\.\-\>_\w]*)\s*\)\.directoryUrl\(\)/$1\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash)/g;
+
+        # pathInfo.fileName()
+        if (defined $infoVar && /$infoVar\.fileName\(\)/) {
+            s/$infoVar\.fileName\(\)/$urlVar\.fileName()/g;
+        }
+        # pathInfo.directory()
+        if (defined $infoVar && /$infoVar\.directory\(\)/) {
+            s/$infoVar\.directory\(\)/$urlVar\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()/g;
+        }
+        # pathInfo.localPath(QUrlPathInfo::StripTrailingSlash)
+        if (defined $infoVar && /$infoVar\.localPath\(QUrlPathInfo::StripTrailingSlash\)/) {
+            s/$infoVar\.localPath\(QUrlPathInfo::StripTrailingSlash\)/$urlVar\.adjusted(QUrl::StripTrailingSlash).toLocalFile()/g;
+        }
 
         $modified ||= $orig ne $_;
         $_;
