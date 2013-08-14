@@ -78,5 +78,6 @@ install(PROGRAMS
   svnintegrate
   kde_generate_export_header
   kde-systemsettings-tree.py
+  reviewboard-am
   DESTINATION ${BIN_INSTALL_DIR})
 
