@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # kdedoxyman.sh
-# Copyright 2007,2010,2012 by Allen Winter <winter@kde.org>
+# Copyright 2007,2010,2012-2013 by Allen Winter <winter@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,13 +25,17 @@
 #
 
 ulimit -c unlimited
-usage="`basename $0` -d <dir>"
+usage="`basename $0` [-d <install_dir>] [-n <project_name>] [-x <project_version>]"
 
-install_dir="";
-while getopts ":d:" options; do
+install_dir="$PWD"
+project_name="KDE"
+project_version="4.12"
+while getopts "hn:x:d:" options; do
   case $options in
+    h ) echo $usage; exit 0;;
     d ) install_dir=$OPTARG;;
-    h ) echo $usage;;
+    n ) project_name="$OPTARG";;
+    x ) project_version="$OPTARG";;
     \? ) echo $usage
          exit 1;;
     * ) echo $usage
@@ -54,8 +58,8 @@ fi
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.11
+PROJECT_NAME           = $project_name
+PROJECT_NUMBER         = $project_version
 OUTPUT_DIRECTORY       = $install_dir
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -150,7 +154,8 @@ EXCLUDE_PATTERNS       = */.svn/* \
                          *unload.* \
                          */test/* \
                          */tests/* \
-                         *_p.cpp
+                         *_p.cpp \
+                         */build-*/*
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO

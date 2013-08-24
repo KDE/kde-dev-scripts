@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # kdedoxyqt.sh
-# Copyright 2008,2010,2012 by Allen Winter <winter@kde.org>
+# Copyright 2008,2010,2012-2013 by Allen Winter <winter@kde.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,13 +27,15 @@ if ( test $V -lt 157 ) then
   exit 1
 fi
 
-usage="`basename $0` [-n <project_name>] [-x <project_version>]"
+usage="`basename $0` [-d <install_dir>] [-n <project_name>] [-x <project_version>]"
 
+install_dir="$PWD"
 project_name="KDE"
-project_version="4.11"
-while getopts "hn:x:" options; do
+project_version="4.12"
+while getopts "hn:x:d:" options; do
   case $options in
     h ) echo $usage; exit 0;;
+    d ) install_dir=$OPTARG;;
     n ) project_name="$OPTARG";;
     x ) project_version="$OPTARG";;
     \? ) echo $usage
@@ -44,6 +46,16 @@ while getopts "hn:x:" options; do
   esac
 done
 
+# compute the default output directory, if necessary
+if ( test "$install_dir" = "" ) then
+  echo "must specify the installation directory with the -d option. Exiting..."
+  exit 1
+fi
+if ( test ! -w "$install_dir" ) then
+  echo "sorry, you do not have write access to the specified installation directory. Exiting..."
+  exit 1
+fi
+
 virtual_folder="$project_name"-"$project_version"
 
 ( cat <<EOF ) | doxygen -
@@ -52,7 +64,7 @@ virtual_folder="$project_name"-"$project_version"
 #---------------------------------------------------------------------------
 PROJECT_NAME           = $project_name
 PROJECT_NUMBER         = $project_version
-OUTPUT_DIRECTORY       = apidocs
+OUTPUT_DIRECTORY       = $install_dir/apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
@@ -112,6 +124,7 @@ GENERATE_DEPRECATEDLIST = YES
 ENABLED_SECTIONS       = 
 MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = YES
+SHOW_DIRECTORIES       = NO
 FILE_VERSION_FILTER    = 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
@@ -146,7 +159,8 @@ EXCLUDE_PATTERNS       = */.svn/* \
                          *unload.* \
                          */test/* \
                          */tests/* \
-                         *_p.cpp
+                         *_p.cpp \
+                         */build-*/*
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
@@ -158,7 +172,7 @@ FILTER_SOURCE_FILES    = NO
 # configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
 ALPHABETICAL_INDEX     = NO
-COLS_IN_ALPHA_INDEX    = 1
+COLS_IN_ALPHA_INDEX    = 5
 IGNORE_PREFIX          = 
 #---------------------------------------------------------------------------
 # do NOT generate any formats other than qhp
