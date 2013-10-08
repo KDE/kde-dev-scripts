@@ -121,6 +121,15 @@ def write_patch(fl, fullname, email, summary, description, diff):
     fl.write(diff)
 
 
+def detect_p_value(diff):
+    for line in diff.splitlines():
+        if line.startswith("diff --git a/"):
+            return 1
+        elif line.startswith("diff --git "):
+            return 0
+    return 1
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument("request_id", type=int,
@@ -157,7 +166,9 @@ def main():
         if not git("checkout", "-b", "rb-%d" % request_id):
             return 1
 
-    if not git("am", name):
+    p_value = detect_p_value(diff)
+
+    if not git("am", "-p%d" % p_value, name):
         return 1
 
     return 0
