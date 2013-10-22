@@ -152,6 +152,9 @@ def main():
     author_info = rb.get_author_info(request_info["links"]["submitter"]["href"])
     summary = request_info["summary"]
     description = request_info["description"]
+    description += "\n\nREVIEW: " + str(request_id)
+    for bug_closed in request_info["bugs_closed"]:
+        description += "\nBUG: " + bug_closed
     fullname, email = parse_author_info(author_info)
 
     print("Downloading diff")
