@@ -633,7 +633,7 @@ sub fix_unnecessary($)
       else
       {
         # better luck next time
-        if ($warnings != $initialwarnings) {
+        if ($retcode == 0 and $warnings != $initialwarnings) {
           print "FAILED, introduces " . ($warnings - $initialwarnings) . " new warnings\n";
         } else {
           print "FATALLY failed\n";
