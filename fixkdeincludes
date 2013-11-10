@@ -286,7 +286,7 @@ sub remove_include ($$$)
 
     if ($srcfile =~ /CMakeLists.txt/ && $line !~ /add_library/) {
       # Remove library, keep the rest of the line
-      $line =~ s/$include//;
+      $line =~ s/ $include//;
     } elsif ($level && $cpplevel == 0 &&
        (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       $level = $level - 1;
