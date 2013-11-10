@@ -131,20 +131,21 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
 sub find_fixable_sources ($)
 {
   # for now I grep the directory (requires srcdir==builddir)
-  # actually it should read the Makefile and
-  # find the _SOURCES / _OBJECTS tags that are put there by
+  # ideally it should read the CMakeLists.txt to find out the sources actually used
 
   my ( $dir ) = @_;
 
   opendir (DIR, "$dir") || die "Couldn't read '$dir'\n";
   my @sources = grep { /^.*\.$cppExt$/o } readdir(DIR);
   closedir(DIR);
-  
+
   print "found sources: [ " . join(' ', @sources) . " ] in $dir\n" if ($verbose);
 
   # prefix them with $dir
   my @retsources = ();
   foreach $source(@sources) {
+    # skip platform-specific sources. We assume unix, so we skip win and mac
+    next if ($source =~ /_mac.cpp/ || $source =~ /_win.cpp/);
     push @retsources, "$dir/$source";
   }
   
@@ -252,7 +253,7 @@ sub remove_include ($$$)
   my @revcontents = reverse @contents;
   @contents = ();
 
-  # we skip all inludes that are somehow ifdefed
+  # we skip all includes that are somehow ifdefed
   # note the logic is reversed because it operates
   # on reversed lines :)
   my $cpplevel = 0;
@@ -304,7 +305,7 @@ sub replace_include ($$$)
   my @revcontents = reverse @contents;
   @contents = ();
 
-  # we skip all inludes that are somehow ifdefed
+  # we skip all includes that are somehow ifdefed
   # note the logic is reversed because it operates
   # on reversed lines :)
   my $cpplevel = 0;
@@ -512,34 +513,32 @@ sub fix_unnecessary($)
   print "Checking for initial compilation: ";
   chdir($builddir);
   my $objextension = "BUG";
+  my $lastcommand = "";
   if($srcfile =~ /\.$hExt$/o) {
-    $output = `$makecmd all 2>&1`;
+    $lastcommand = "$makecmd all";
+    $output = `$lastcommand 2>&1`;
     $objextension = "all" if ( 0 == ($? >> 8));
   }
   else {
-    unlink "$blanksrc.lo";
-    my $output = `$makecmd $blanksrc.lo 2>&1`;
-    $objextension = ".lo" if ( 0 == ($? >> 8));
-    if($objextension eq "BUG") {
-      print "failed with .lo... ";
-      unlink "$blanksrc.o";
-      $output = `$makecmd $blanksrc.o 2>&1`;
-      $objextension = ".o" if ( 0 == ($? >> 8));
-    }
-    if($srcfile =~ /$hExt/) {
-      $output = `$makecmd $blanksrc.o 2>&1`;
-      $objextension = ".o" if ( 0 == ($? >> 8));
-    }
+    unlink "$blanksrc.o";
+    $lastcommand = "$makecmd $blanksrc.o";
+    $output = `$lastcommand 2>&1`;
+    $objextension = ".o" if ( 0 == ($? >> 8));
   }
   if($objextension eq "BUG") {
     warn "can't figure out right compile command for $srcfile :-(\n" .
          "??? unused, or didn't compile in the first place?\n" .
+         "Tried: $lastcommand, and got:\n" .
          "$output";
     chdir($origdir);
+    warn "Aborting!\n";
     exit 1;
   }
 
   print "worked with $objextension\n";
+
+  my $initialwarnings = grep(/warning:/, $output);
+  print "got warnings: $initialwarnings\n" if ($verbose);
 
   # now try to drop some includes 
   foreach $include (@includes) {
@@ -611,8 +610,11 @@ sub fix_unnecessary($)
     my $retcode = ($? >> 8);
     #print "retcode=$retcode\n$output" if ($verbose);
 
+    my $warnings = grep(/warning:/, $output);
+    print "got warnings: $warnings\n" if ($verbose);
+
     chdir($srcdir);
-    if($retcode == 0) {
+    if($retcode == 0 and $warnings == $initialwarnings) {
       # wow, it worked, lets continue!
       print "SUCCESS!\n";
       $SIG{'INT'} = 'DEFAULT';
@@ -631,7 +633,11 @@ sub fix_unnecessary($)
       else
       {
         # better luck next time
-        print "FATALLY failed\n";
+        if ($warnings != $initialwarnings) {
+          print "FAILED, introduces " . ($warnings - $initialwarnings) . " new warnings\n";
+        } else {
+          print "FATALLY failed\n";
+        }
       }
       unlink $srcfile;
       rename $localbackup, $srcfile;
@@ -688,7 +694,8 @@ sub check_for_cmake_srcdir($)
 
 sub init_compat_includelist()
 {
-  open(L, "md5sum /usr/include/Qt{,3Support,Core,DBus,Gui,Network," .
+  # We identify identical headers by their md5sum
+  open(L, "md5sum /usr/include/Qt{3Support,Core,DBus,Gui,Network," .
           "OpenGL,Script,Sql,Svg,Test,Xml}/* | sort |") || return;
 
   my $oldsum = "<invalid>";
@@ -699,7 +706,7 @@ sub init_compat_includelist()
 
     my ($sum, $fname) = ($1, $2);
 
-    $fname = $1 if ($fname =~ /\/(Qt.*)/);
+    $fname = $1 if ($fname =~ /\/(Qt.*)/); # remove /usr/include/, keep only QtFoo/Bar
 
     if ($oldsum eq $sum) {
       $compatmap{$fname} = $oldname;
@@ -721,11 +728,11 @@ sub init_compat_includelist()
 
 &init_compat_includelist();
 
-# warn about modified files
-if($modify) {
-  `cvscheck | grep '^[MmC]'`;
-  print "WARNING: you have pending local changes. You might commit them by accident!\n\n" if($? >> 8 == 0);
-}
+# warn about modified files - TODO port to git diff --quiet, but the exit code seems broken
+#if($modify) {
+#`cvscheck | grep '^[MmC]'`;
+#print "WARNING: you have pending local changes. You might commit them by accident!\n\n" if($? >> 8 == 0);
+#}
 
 if($experimental) {
   print "WARNING: The experimental mode is indeed experimental.\n";
@@ -764,7 +771,7 @@ foreach $dir ( @dirlist ) {
 foreach $dir(@dirlist) {
 
   # check if this directory wants not to be fixed
-  if(open(M, "$dir/Makefile.am")) {
+  if(open(M, "$dir/CMakeLists.txt")) {
     my @mcontents = grep /(\-UQT_NO_COMPAT|\-UKDE_NO_COMPAT)/, <M>;
     close(M);
     if ( @mcontents ) {
