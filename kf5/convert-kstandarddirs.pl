@@ -146,6 +146,8 @@ foreach my $file (@ARGV) {
                 s/KGlobal::dirs\(\)->resourceDirs\(.*\)/QStandardPaths::standardLocations($loc) \/* WARNING: no more trailing slashes *\//;
             }
         }
+        # While we're here...
+        s/KGlobal::config\(\)/KSharedConfig::openConfig()/g;
     } $file;
     functionUtilkde::addIncludeInFile($file, "config-prefix.h") if ($addconfigprefix);
     if (not `grep -i dirs $file | grep -v kstandarddirs\.h`) {
