@@ -122,6 +122,9 @@ $hExt       = "(h|H|hh|hxx|hpp|h\\+\\+)";
  'kcolordlg.h'   =>  "kcolordialog.h",
  'kxmlgui.h'     =>  "kxmlguifactory.h",
  'kdebugclasses.h' => "kdebug.h",
+
+# Qt5/KF5 list
+ 'QtTest/QtTest' => "QtTest/QTest", # oops, don't include the full module, which includes all of QtCore
 );
 
 
@@ -138,6 +141,8 @@ sub find_fixable_sources ($)
   opendir (DIR, "$dir") || die "Couldn't read '$dir'\n";
   my @sources = grep { /^.*\.$cppExt$/o } readdir(DIR);
   closedir(DIR);
+
+  push @sources, "CMakeLists.txt" if ( -f "CMakeLists.txt" );
 
   print "found sources: [ " . join(' ', @sources) . " ] in $dir\n" if ($verbose);
 
@@ -188,6 +193,13 @@ sub find_removable_includes ($)
   my $cpplevel = 0;
   $cpplevel = -1 if ($srcfile=~m/^.*\.$hExt$/); # plan for header-protection #ifndef/#define/#endif
   while (<SRC>) {
+    # support for removing libs from CMakeLists.txt
+    if ($srcfile =~ /CMakeLists.txt/ && !/add_library/) {
+      while (s/(KF5::\w+)//) {
+        push @includes, $1;
+      }
+      next;
+    }
     if ($_ =~ m/^\#if/) {
       $cpplevel = $cpplevel + 1;
       next;
@@ -196,8 +208,9 @@ sub find_removable_includes ($)
       $cpplevel = $cpplevel - 1;
       next;
     }
-    #if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<]([qk]\S*\.h)[\">]\S*/) {
-    if ($cpplevel == 0 && (($_ =~ m/^\#include\s*\"(\S+\.h)\"\S*/) || ($_ =~ m/^\#include\s*\<([qk]\S+)\>\S*/)))  {
+    if ($cpplevel == 0 && $_ =~ m/^\#include\s*[\"<](.*)[\">]\S*/) {
+    # We only look for foo.h and q* and k*
+    #if ($cpplevel == 0 && (($_ =~ m/^\#include\s*\"(\S+\.h)\"\S*/) || ($_ =~ m/^\#include\s*\<([qk]\S+)\>\S*/)))  {
       push @includes, $1;
       next;
     }
@@ -271,7 +284,10 @@ sub remove_include ($$$)
       next;
     }
 
-    if ($level && $cpplevel == 0 && 
+    if ($srcfile =~ /CMakeLists.txt/ && $line !~ /add_library/) {
+      # Remove library, keep the rest of the line
+      $line =~ s/$include//;
+    } elsif ($level && $cpplevel == 0 &&
        (($line =~ m/^\#include\s*\"$include\"\S*/) || ($line =~ m/^\#include\s*\<$include\>\S*/)))  {
       $level = $level - 1;
       # skipping the line..
@@ -360,6 +376,8 @@ sub replace_include_type ($$)
 sub fix_duplicates($)
 {
   my $srcfile = shift @_;
+
+  return if ($srcfile =~ /CMakeLists.txt/);
 
   my @includes = &find_removable_includes($srcfile);
 
@@ -474,6 +492,7 @@ sub sighandler_fix_unnecessary()
   chdir($srcdir);
   unlink $srcfile || warn "couldn't unlink $srcfile";
   rename $localbackup, $srcfile || warn "couldn't rename $localbackup to $srcfile";
+  system("touch $srcfile") if ($srcfile =~ /CMakeLists.txt/);
   exit(1);
 }
 
@@ -514,7 +533,7 @@ sub fix_unnecessary($)
   chdir($builddir);
   my $objextension = "BUG";
   my $lastcommand = "";
-  if($srcfile =~ /\.$hExt$/o) {
+  if($srcfile =~ /\.$hExt$/o || $srcfile =~ /CMakeLists.txt/) {
     $lastcommand = "$makecmd all";
     $output = `$lastcommand 2>&1`;
     $objextension = "all" if ( 0 == ($? >> 8));
@@ -641,6 +660,7 @@ sub fix_unnecessary($)
       }
       unlink $srcfile;
       rename $localbackup, $srcfile;
+      system("touch $srcfile") if ($srcfile =~ /CMakeLists.txt/);
       $SIG{'INT'} = 'DEFAULT';
 
       $exp_failure = $exp_failure + 1;
