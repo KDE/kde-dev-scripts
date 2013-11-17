@@ -156,7 +156,7 @@ echo "done" # Generating
 # Package it
 echo -n "Packaging the files..."
 
-nice -n$NICE tar -cjf "$PKGPATH/$PKGNAME".tar.bz2" -C "$TDIR" "$PKGNAME" 2>/dev/null
+nice -n$NICE tar -cjf "$PKGPATH/$PKGNAME.tar.bz2" -C "$TDIR" "$PKGNAME" 2>/dev/null
 
 if [ $? -ne 0 ]; then
 	echo "There was an error while packaging the files. Exiting."
