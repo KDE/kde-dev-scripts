@@ -1,13 +1,34 @@
 #!/bin/sh
 
-# apply kdelibs coding style to all c, cpp and header files in and below the current directory 
-# 
-# the coding style is defined in http://techbase.kde.org/Policies/Kdelibs_Coding_Style 
-# 
-# requirements: installed astyle 
+# Apply kdelibs coding style to all c, cpp and header files in and below the current directory
+#
+# The coding style is defined in http://techbase.kde.org/Policies/Kdelibs_Coding_Style
+#
+# Requirements: installed astyle
+#
+# IMPORTANT: astyle misparses the Qt "keywords" like foreach and Q_FOREACH, which
+# makes it style wrongly not just the space after the keyword, but also everything
+# inside the parenthesis, leading to things like:
+# Q_FOREACH(const QString & it, l) // note the space after the '&'.
+#
+# To fix this, patch astyle with http://www.davidfaure.fr/kde/astyle_qt.diff
+#
+# Instructions for OpenSuSE users:
+#   zypper si astyle
+#   cd ~/rpmbuild/SOURCES ; wget http://www.davidfaure.fr/kde/astyle_qt.diff
+#   cd ../SPECS ; wget http://www.davidfaure.fr/kde/astyle.spec.diff
+#   patch astyle.spec < astyle.spec.diff
+#   rpmbuild -ba astyle.spec
+#   sudo rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/astyle-*.rpm
 
+files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
 astyle --indent=spaces=4 --brackets=linux \
       --indent-labels --pad-oper --unpad-paren --pad-header \
       --keep-one-line-statements --convert-tabs \
-      --indent-preprocessor \
-      `find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
+      --indent-preprocessor --align-pointer=name \
+      $files
+
+# Watch out for things that lead to method implementations being parsed as if inside other methods,
+# e.g. due to '{' inside #ifdef and #else and '}' outside.
+grep '^\S* \S*::.*) {$' $files && echo "WARNING: check for wrong '{' placement in method definitions, in above grep results"
+
