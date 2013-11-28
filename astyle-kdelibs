@@ -22,7 +22,7 @@
 #   sudo rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/astyle-*.rpm
 
 files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
-astyle --indent=spaces=4 --brackets=linux \
+astyle --indent=spaces=4 --brackets=linux --style=otbs \
       --indent-labels --pad-oper --unpad-paren --pad-header \
       --keep-one-line-statements --convert-tabs \
       --indent-preprocessor --align-pointer=name \
