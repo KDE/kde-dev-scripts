@@ -4,7 +4,7 @@
 #
 # The coding style is defined in http://techbase.kde.org/Policies/Kdelibs_Coding_Style
 #
-# Requirements: installed astyle
+# Requirements: installed astyle >= 2.03
 #
 # IMPORTANT: astyle misparses the Qt "keywords" like foreach and Q_FOREACH, which
 # makes it style wrongly not just the space after the keyword, but also everything
@@ -22,13 +22,50 @@
 #   sudo rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/astyle-*.rpm
 
 files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
-astyle --indent=spaces=4 --brackets=linux --style=otbs \
+if [ -z "$files" ]; then
+  # nothing to do
+  exit 0
+fi
+
+astyle -n \
+      --indent=spaces=4 --style=otbs \
       --indent-labels --pad-oper --unpad-paren --pad-header \
-      --keep-one-line-statements --convert-tabs \
-      --indent-preprocessor --align-pointer=name \
+      --keep-one-line-statements \
+      --convert-tabs \
+      --indent-preprocessor \
+      --align-pointer=name \
+      --break-after-logical \
       $files
+
+# --max-code-length=100 is not used, on purpose. It's a hard limit, sometimes making things
+# less readable than if the code is kept on a single line. 100 is just a recommendation
+# in the coding style.
 
 # Watch out for things that lead to method implementations being parsed as if inside other methods,
 # e.g. due to '{' inside #ifdef and #else and '}' outside.
 grep '^\S* \S*::.*) {$' $files && echo "WARNING: check for wrong '{' placement in method definitions, in above grep results"
+
+# Remove old emacs mode-lines
+perl -pi -e '$_ = "" if /c-basic-offset: [1-8]/' $files
+
+# Remove old kate mode-lines
+perl -pi -e '$_ = "" if /kate: .*indent-width/ || /kate:.*tab-width/' $files
+
+# Remove old vim mode-lines
+perl -pi -e '$_ = "" if /\/\/.* vim:/' $files
+# They are often in a two-liner C comment, so we need a bit of perl magic to remove these
+perl - $files <<EOF
+  foreach my \$file (@ARGV) {
+   open F, "+<", \$file or do { print STDERR "open(\$file) failed : \"\$!\"\n"; next };
+   my \$str = join '', <F>;
+   if( \$str =~ m/vim:/ ) {
+     #print STDERR "Removing multi-line vim modeline from \$file\n";
+     \$str =~ s!/\*\**\s*\**\s*vim:[^\n]*\n\s*\*/!!smg;
+     seek F, 0, 0;
+     print F \$str;
+     truncate F, tell(F);
+   }
+   close F;
+  }
+EOF
 
