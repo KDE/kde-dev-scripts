@@ -13,9 +13,13 @@
 #
 # To fix this, patch astyle with http://www.davidfaure.fr/kde/astyle_qt.diff
 #
+# Another feature was implemented: removing spaces before ',' and ';'.
+# Apply http://www.davidfaure.fr/kde/astyle_comma.diff
+#
 # Instructions for OpenSuSE users:
 #   zypper si astyle
 #   cd ~/rpmbuild/SOURCES ; wget http://www.davidfaure.fr/kde/astyle_qt.diff
+#                           wget http://www.davidfaure.fr/kde/astyle_comma.diff
 #   cd ../SPECS ; wget http://www.davidfaure.fr/kde/astyle.spec.diff
 #   patch astyle.spec < astyle.spec.diff
 #   rpmbuild -ba astyle.spec
