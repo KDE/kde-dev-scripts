@@ -1,7 +1,19 @@
 #!/bin/sh
 
 # This script splits out all the frameworks from kdelibs into separate repositories
-# and puts them into ../frameworks/
+# and puts them into ../frameworks/.
+#
+# For each framework, first it creates an empty repository and it imports the
+# current code, into the original subdirectory. For example, kconfig will be a
+# repository containing a tier1/kconfig/ directory. Then, in a second commit,
+# the code is moved to the root directory of the repository.
+#
+# Doing the move in two steps like this lets git follow the history better.
+# When the old kdelibs history is grafted on the new repositories, the history
+# will contain a commit that deletes everything except that framework, and then
+# another commit moving the framework to the root.
+#
+# Finally, in a third commit, the code is reformatted using astyle.
 
 origproject=kdelibs
 origbranch=frameworks
@@ -26,7 +38,10 @@ for dir in tier1/* tier2/* tier3/* tier4/*; do
 
     frameworkdest=$dest/$frameworkname
     rm -rf $frameworkdest
-    cp -a $dir $dest/
+    # eg. create ../frameworks/kjs/tier1
+    mkdir -p $(dirname $frameworkdest/$dir)
+    # eg. copy tier1/kjs to ../frameworks/kjs/tier1/kjs
+    cp -a $dir $frameworkdest/$dir/
     cd $frameworkdest
 
 git init
@@ -51,6 +66,10 @@ Branched from the monolithic repo, $origproject $origbranch branch, at commit
 $origsha1
 
 EOF
+
+# eg. moves tier1/kconfig/* to .
+git mv $dir/* .
+git commit -q -m "Move $frameworkname code to the root directory."
 
 `dirname $0`/../astyle-kdelibs >/dev/null
 
