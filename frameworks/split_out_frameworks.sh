@@ -16,7 +16,7 @@ dest=../frameworks
 mkdir -p $dest
 here=$PWD
 
-ls -d tier1/* tier2/* tier3/* tier4/* | while read dir; do
+for dir in tier1/* tier2/* tier3/* tier4/*; do
     cd $here
     frameworkname=`basename $dir`
 
