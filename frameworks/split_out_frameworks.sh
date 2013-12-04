@@ -24,9 +24,10 @@ for dir in tier1/* tier2/* tier3/* tier4/*; do
       continue;
     fi
 
-    rm -rf $dest/$frameworkname
+    frameworkdest=$dest/$frameworkname
+    rm -rf $frameworkdest
     cp -a $dir $dest/
-    cd $dest/$frameworkname
+    cd $frameworkdest
 
 git init
 git add .
@@ -56,7 +57,7 @@ EOF
 git commit -q -a -m "Code reformatted using kde-dev-scripts/astyle-kdelibs.
 Use git blame -w `git rev-parse --short HEAD` to show authorship as it was before this commit."
 
-echo "$dest/$frameworkname done."
+echo "$frameworkdest done."
 
 done
 
