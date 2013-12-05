@@ -4,7 +4,9 @@
 #
 # The coding style is defined in http://techbase.kde.org/Policies/Kdelibs_Coding_Style
 #
-# Requirements: installed astyle
+# Requirements:
+# - installed astyle, with patches below
+# - $QT_NORMALIZE_TOOL pointing to qtrepotools/util/normalize/normalize (after compiling it)
 #
 # IMPORTANT: astyle misparses the Qt "keywords" like foreach and Q_FOREACH, which
 # makes it style wrongly not just the space after the keyword, but also everything
@@ -29,6 +31,11 @@ files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.
 if [ -z "$files" ]; then
   # nothing to do
   exit 0
+fi
+
+if test -z "$QT_NORMALIZE_TOOL"; then
+  echo "Please export QT_NORMALIZE_TOOL=<qt5>/qtrepotools/util/normalize/normalize"
+  exit 1
 fi
 
 astyle -n -Q \
@@ -85,3 +92,7 @@ perl - $files <<EOF
    close F;
   }
 EOF
+
+# Normalize signals/slots
+$QT_NORMALIZE_TOOL --modify .
+
