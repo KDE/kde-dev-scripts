@@ -41,7 +41,7 @@ done
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDE
-PROJECT_NUMBER         = 4.11
+PROJECT_NUMBER         = 4.12
 OUTPUT_DIRECTORY       = apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
