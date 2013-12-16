@@ -30,12 +30,10 @@ here=$PWD
 
 for dir in tier1/* tier2/* tier3/* tier4/*; do
     cd $here
-    frameworkname=`basename $dir`
-
-    if [ $frameworkname = 'CMakeLists.txt' ]; then
+    if [ -f $dir ]; then
       continue;
     fi
-
+    frameworkname=`basename $dir`
     frameworkdest=$dest/$frameworkname
     rm -rf $frameworkdest
     # eg. create ../frameworks/kjs/tier1
