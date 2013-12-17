@@ -96,3 +96,6 @@ EOF
 # Normalize signals/slots
 $QT_NORMALIZE_TOOL --modify .
 
+git commit -q -a -m "Code reformatted using kde-dev-scripts/astyle-kdelibs.
+Use git blame -w `git rev-parse --short HEAD` to show authorship as it was before this commit."
+

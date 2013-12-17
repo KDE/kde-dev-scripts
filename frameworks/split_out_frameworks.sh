@@ -69,11 +69,6 @@ EOF
 git mv $dir/* .
 git commit -q -m "Move $frameworkname code to the root directory."
 
-`dirname $0`/../astyle-kdelibs >/dev/null
-
-git commit -q -a -m "Code reformatted using kde-dev-scripts/astyle-kdelibs.
-Use git blame -w `git rev-parse --short HEAD` to show authorship as it was before this commit."
-
 echo "$frameworkdest done."
 
 done
