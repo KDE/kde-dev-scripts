@@ -14,9 +14,11 @@
 # Q_FOREACH(const QString & it, l) // note the space after the '&'.
 #
 # To fix this, patch astyle with http://www.davidfaure.fr/kde/astyle_qt.diff
+# Mentionned upstream in https://sourceforge.net/p/astyle/bugs/154/
 #
 # Another feature was implemented: removing spaces before ',' and ';'.
 # Apply http://www.davidfaure.fr/kde/astyle_comma.diff
+# This has been sent upstream in https://sourceforge.net/p/astyle/bugs/100/
 #
 # Instructions for OpenSuSE users:
 #   zypper si astyle
