@@ -51,7 +51,7 @@ svnbranch() {
   findup .svn
   if test -n "$_hit"; then
     _root=`svn info . | grep "Repository Root:" | awk '{print $3}'`
-    _baseurl=`svn info . | grep URL: | awk '{print $2}' | sed -e s,$_root/,,`
+    _baseurl=`svn info . | grep '^URL:' | awk '{print $2}' | sed -e s,$_root/,,`
     _svnbranch=`echo "$_baseurl" | awk -F/ '{print $1}'`
   fi
 }
