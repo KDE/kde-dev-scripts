@@ -103,7 +103,7 @@ while ($file = <$F>) {
         s!rootDirPath!rootPath!;
         s!cleanDirPath!cleanPath!;
         s!absFilePath!absoluteFilePath!;
-        s!QDir::All!QDir::TypeMask!;
+        s!\bQDir::All\b!QDir::TypeMask!;
         s!QDir::DefaultFilter!QDir::NoFilter!;
         s!QDir::DefaultSort!QDir::NoSort!;
         s!simplifyWhiteSpace!simplified!g;
@@ -126,8 +126,8 @@ while ($file = <$F>) {
         s!Q_UINT64!quint64!g;
 		s!Q_LLONG!qint64!g;
 		s!Q_ULLONG!quint64!g;
-		s!QMAX!qMax!g;
-		s!QMIN!qMin!g;
+		s!\bQMAX\b!qMax!g;
+		s!\bQMIN\b!qMin!g;
 		s!Qt::ScaleMin!Qt::KeepAspectRatio!g;
 		s!Qt::ScaleMax!Qt::KeepAspectRatioByExpanding!g;
 		s!Qt::ScaleFree!Qt::IgnoreAspectRatio!g;
