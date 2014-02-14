@@ -23,8 +23,9 @@ open(my $FILE, "<", $file) || die;
 my @l = map {
   my $orig = $_;
 
-  if (/generate_export_header\s*\(\s*(\w+)/) {
+  if (!/ALIAS/ && /add_library\s*\(\s*(\w+)/) {
     $name = $1;
+    $basename = $1 if ($name =~ m/^KF5(\w+)/);
   }
   if (/BASE_NAME (\w+)/) {
     $basename = $1;
@@ -32,7 +33,7 @@ my @l = map {
 
   if (/target_link_libraries/ && !defined $tid_done) {
     $tid_done = 1;
-    die "didn't find a generate_export_header line before target_link_libraries!" unless defined $name;
+    die "didn't find a add_library line before target_link_libraries!" unless defined $name;
     $_ = "target_include_directories($name INTERFACE \"\$<INSTALL_INTERFACE:\${INCLUDE_INSTALL_DIR}/$basename>\")\n\n$_";
   }
 
@@ -41,7 +42,7 @@ my @l = map {
     $in_install_files = 1;
     if (/^\s*(\w+\/)?(\w+\.h)/ && !/export\.h/ && !/_p\.h/) {
       my $origline = $_;
-      my $subdir = $1;
+      my $subdir = defined($1) ? $1 : "";
       my $header = $2;
       $subdir =~ s,/$,,;
       my $foundclass;
