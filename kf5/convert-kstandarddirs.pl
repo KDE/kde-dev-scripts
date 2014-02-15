@@ -32,6 +32,26 @@ my %xdgconfResource = (
    "autostart" => "autostart"
 );
 
+sub locationAndSubdir
+{
+    my ($resource, $fileName) = @_;
+    my $loc;
+    if (defined $easyResource{$resource}) {
+        $loc = $easyResource{$resource};
+    } elsif (defined $otherResource{$resource}) {
+        $loc = "QStandardPaths::GenericDataLocation";
+        $fileName = $fileName eq "QString()" ? "" : " + $fileName";
+        $fileName = "QLatin1String(\"$otherResource{$resource}\/\")$fileName";
+    } elsif (defined $xdgconfResource{$resource}) {
+        $loc = "QStandardPaths::ConfigLocation";
+        $fileName = $fileName eq "QString()" ? "" : " + $fileName";
+        $fileName = "QLatin1String(\"$xdgconfResource{$resource}\/\")$fileName";
+    } else {
+        print STDERR "Unhandled resource $resource\n";
+    }
+    return ($loc, $fileName);
+}
+
 foreach my $file (@ARGV) {
     my $addconfigprefix = 0;
 
@@ -40,42 +60,22 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->find/KStandardDirs::find/; # findExe, findAllResources...
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
+
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
-            my $resource = $1;
-            my $fileName = $2 eq "QString()" ? "" : " + $2";
-            my $loc;
-            if (defined $easyResource{$resource}) {
-                $loc = $easyResource{$resource};
-                $fileName = "QLatin1Char('\/')$fileName";
-            } elsif (defined $otherResource{$resource}) {
-                $loc = "QStandardPaths::GenericDataLocation";
-                $fileName = "QLatin1String(\"$otherResource{$resource}\/\")$fileName";
-            } elsif (defined $xdgconfResource{$resource}) {
-                $loc = "QStandardPaths::ConfigLocation";
-                $fileName = "QLatin1String(\"$xdgconfResource{$resource}\/\")$fileName";
-            } else {
-                print STDERR "Unhandled resource $resource\n";
-            }
+            my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
+                # prepend a slash
+                if ($fileName =~ m/QLatin1String/) {
+                    $fileName =~ s/QLatin1String\(\"/QLatin1String(\"\//;
+                } else {
+                    $fileName = "QLatin1Char('\/')" . $fileName;
+                }
                 s/KStandardDirs::locateLocal\(.*\)/QStandardPaths::writableLocation($loc) + $fileName/;
             }
         }
         if (/KStandardDirs::locate\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
             /KStandardDirs::findAllResources\(\s*\"(.*)\",\s*(.*)\s*\)/) {
-            my $resource = $1;
-            my $fileName = $2;
-            my $loc;
-            if (defined $easyResource{$resource}) {
-                $loc = $easyResource{$resource};
-            } elsif (defined $otherResource{$resource}) {
-                $loc = "QStandardPaths::GenericDataLocation";
-                $fileName = "QLatin1String(\"$otherResource{$resource}\/\") + $fileName";
-            } elsif (defined $xdgconfResource{$resource}) {
-                $loc = "QStandardPaths::ConfigLocation";
-                $fileName = "QLatin1String(\"$xdgconfResource{$resource}\/\") + $fileName";
-            } else {
-                print STDERR "Unhandled resource $resource\n";
-            }
+            my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
                 # ends with a '/' (in a string literal) ?
                 #print STDERR "fileName=$fileName\n";
@@ -112,21 +112,11 @@ foreach my $file (@ARGV) {
             }
         }
         if (/KGlobal::dirs\(\)->saveLocation\(\s*\"([^\"]*)\"(,\s*[^\)]*)?\s*\)/) {
-            my $resource = $1;
             my $suffix = $2;
+            my ($loc, $add) = locationAndSubdir($1, "");
             #print STDERR "resource=$resource suffix=$suffix\n";
-            my $loc;
-            my $add = "";
-            if (defined $easyResource{$resource}) {
-                $loc = $easyResource{$resource};
-            } elsif (defined $otherResource{$resource}) {
-                $loc = "QStandardPaths::GenericDataLocation";
-                $add = " + QLatin1String(\"$otherResource{$resource}\/\")";
-            } elsif (defined $xdgconfResource{$resource}) {
-                $loc = "QStandardPaths::ConfigLocation";
-                $add = " + QLatin1String(\"$xdgconfResource{$resource}\/\")";
-            } else {
-                print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
+            if ($add ne "") {
+                $add = " + $add";
             }
             if ($suffix) {
                 $suffix =~ s/,\s*//;
@@ -136,20 +126,7 @@ foreach my $file (@ARGV) {
             s/KGlobal::dirs\(\)->saveLocation\(.*\)/QStandardPaths::writableLocation($loc)$add/ if ($loc);
         }
         if (/KGlobal::dirs\(\)->resourceDirs\(\s*\"([^\"]*)\"\s*\)/) {
-            my $resource = $1;
-            my $loc;
-            my $add;
-            if (defined $easyResource{$resource}) {
-                $loc = $easyResource{$resource};
-            } elsif (defined $otherResource{$resource}) {
-                $loc = "QStandardPaths::GenericDataLocation";
-                $add = "QLatin1String(\"$otherResource{$resource}\")";
-            } elsif (defined $xdgconfResource{$resource}) {
-                $loc = "QStandardPaths::ConfigLocation";
-                $add = "QLatin1String(\"$xdgconfResource{$resource}\")";
-            } else {
-                print STDERR "Unhandled resource $resource for saveLocation:\n$_\n";
-            }
+            my ($loc, $add) = locationAndSubdir($1, "");
             if ($add) {
                 s/KGlobal::dirs\(\)->resourceDirs\(.*\)/QStandardPaths::locateAll($loc, $add, QStandardPaths::LocateDirectory)/;
             } elsif ($loc) {
@@ -161,12 +138,9 @@ foreach my $file (@ARGV) {
 
         # ex: KSharedConfig::openConfig("mimeapps.list", KConfig::NoGlobals, "xdgdata-apps");
         if (my ($file, $flags, $resource) = ($_ =~ m/KSharedConfig::openConfig\(\s*([^,]*), ([^,]*), \s*\"([^\"]*)\"\s*\)/)) {
-            my $loc;
-            if (defined $easyResource{$resource}) {
-                $loc = $easyResource{$resource};
-            }
+            my ($loc, $fileName) = locationAndSubdir($resource, $file);
             if ($loc) {
-              s/KSharedConfig::openConfig\(.*\)/KSharedConfig::openConfig($file, $flags, $loc)/;
+              s/KSharedConfig::openConfig\(.*\)/KSharedConfig::openConfig($fileName, $flags, $loc)/;
             }
         }
     } $file;
