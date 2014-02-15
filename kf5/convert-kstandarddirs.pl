@@ -158,6 +158,17 @@ foreach my $file (@ARGV) {
         }
         # While we're here...
         s/KGlobal::config\(\)/KSharedConfig::openConfig()/g;
+
+        # ex: KSharedConfig::openConfig("mimeapps.list", KConfig::NoGlobals, "xdgdata-apps");
+        if (my ($file, $flags, $resource) = ($_ =~ m/KSharedConfig::openConfig\(\s*([^,]*), ([^,]*), \s*\"([^\"]*)\"\s*\)/)) {
+            my $loc;
+            if (defined $easyResource{$resource}) {
+                $loc = $easyResource{$resource};
+            }
+            if ($loc) {
+              s/KSharedConfig::openConfig\(.*\)/KSharedConfig::openConfig($file, $flags, $loc)/;
+            }
+        }
     } $file;
     functionUtilkde::addIncludeInFile($file, "config-prefix.h") if ($addconfigprefix);
     if (not `grep -i dirs $file | grep -v kstandarddirs\.h`) {
