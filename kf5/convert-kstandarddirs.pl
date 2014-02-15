@@ -42,17 +42,17 @@ foreach my $file (@ARGV) {
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my $resource = $1;
-            my $fileName = $2;
+            my $fileName = $2 eq "QString()" ? "" : " + $2";
             my $loc;
             if (defined $easyResource{$resource}) {
                 $loc = $easyResource{$resource};
-                $fileName = "QLatin1Char('\/') + $fileName";
+                $fileName = "QLatin1Char('\/')$fileName";
             } elsif (defined $otherResource{$resource}) {
                 $loc = "QStandardPaths::GenericDataLocation";
-                $fileName = "QLatin1String(\"$otherResource{$resource}\/\") + $fileName";
+                $fileName = "QLatin1String(\"$otherResource{$resource}\/\")$fileName";
             } elsif (defined $xdgconfResource{$resource}) {
                 $loc = "QStandardPaths::ConfigLocation";
-                $fileName = "QLatin1String(\"$xdgconfResource{$resource}\/\") + $fileName";
+                $fileName = "QLatin1String(\"$xdgconfResource{$resource}\/\")$fileName";
             } else {
                 print STDERR "Unhandled resource $resource\n";
             }
