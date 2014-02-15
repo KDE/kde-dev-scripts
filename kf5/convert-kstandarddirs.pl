@@ -38,7 +38,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         s/KGlobal::dirs\(\)->findResource\b/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
-        s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
+        s/KGlobal::dirs\(\)->find/KStandardDirs::find/; # findExe, findAllResources...
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my $resource = $1;
@@ -60,7 +60,8 @@ foreach my $file (@ARGV) {
                 s/KStandardDirs::locateLocal\(.*\)/QStandardPaths::writableLocation($loc) + $fileName/;
             }
         }
-        if (/KStandardDirs::locate\(\s*\"(.*)\",\s*(.*)\s*\)/) {
+        if (/KStandardDirs::locate\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
+            /KStandardDirs::findAllResources\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my $resource = $1;
             my $fileName = $2;
             my $loc;
@@ -77,14 +78,23 @@ foreach my $file (@ARGV) {
             }
             if (defined $loc) {
                 # ends with a '/' (in a string literal) ?
-                print STDERR "fileName=$fileName\n";
+                #print STDERR "fileName=$fileName\n";
+                my ($search, $replace);
+                if (/KStandardDirs::locate/) {
+                   $search = "KStandardDirs::locate";
+                   $replace = "QStandardPaths::locate";
+                } elsif (/KStandardDirs::findAllResources/) {
+                   $search = "KStandardDirs::findAllResources";
+                   $replace = "QStandardPaths::locateAll";
+                }
                 if ($fileName =~ s/\/\"$/\"/ || $fileName =~ s/\/\"\)$/\"\)/) {
-                    s/KStandardDirs::locate\(.*\)/QStandardPaths::locate($loc, $fileName, QStandardPaths::LocateDirectory)/;
+                    s/$search\(.*\)/$replace($loc, $fileName, QStandardPaths::LocateDirectory)/;
                 } else {
-                    s/KStandardDirs::locate\(.*\)/QStandardPaths::locate($loc, $fileName)/;
+                    s/$search\(.*\)/$replace($loc, $fileName)/;
                 }
             }
         }
+
         if (/KStandardDirs::findExe\(\s*\"(.*)\"(,\s*[^\)]*)?\s*\)/ ||
             /KStandardDirs::findExe\(\s*QLatin1String\s*\(\"(.*)\"\)(,\s*[^\)]*)?\s*\)/) {
             my $exe = $1;
