@@ -58,7 +58,7 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         s/KGlobal::dirs\(\)->findResource\b/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
-        s/KGlobal::dirs\(\)->find/KStandardDirs::find/; # findExe, findAllResources...
+        s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
         s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
 
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
@@ -74,7 +74,7 @@ foreach my $file (@ARGV) {
             }
         }
         if (/KStandardDirs::locate\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
-            /KStandardDirs::findAllResources\(\s*\"(.*)\",\s*(.*)\s*\)/) {
+            /KGlobal::dirs\(\)->findAllResources\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
                 # ends with a '/' (in a string literal) ?
@@ -83,8 +83,8 @@ foreach my $file (@ARGV) {
                 if (/KStandardDirs::locate/) {
                    $search = "KStandardDirs::locate";
                    $replace = "QStandardPaths::locate";
-                } elsif (/KStandardDirs::findAllResources/) {
-                   $search = "KStandardDirs::findAllResources";
+                } elsif (/KGlobal::dirs\(\)->findAllResources/) {
+                   $search = "KGlobal::dirs\(\)->findAllResources";
                    $replace = "QStandardPaths::locateAll";
                 }
                 if ($fileName =~ s/\/\"$/\"/ || $fileName =~ s/\/\"\)$/\"\)/) {
@@ -149,7 +149,7 @@ foreach my $file (@ARGV) {
       functionUtilkde::removeIncludeInFile($file, "kstandarddirs.h");
     }
     if (`grep QStandardPaths $file | grep -v '#include'`) {
-      functionUtilkde::addIncludeInFile($file, "qstandardpaths.h");
+      functionUtilkde::addIncludeInFile($file, "QStandardPaths");
     }
 }
 
