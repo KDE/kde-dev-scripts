@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+
+# Prints requested info about KDE projects, as obtained from kde_projects.xml, which
+# must be downloaded separately.
+#
+# Copyright (c) 2014 Michael Pyne <mpyne@kde.org>
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import xml.etree.ElementTree as ET
+import argparse
+import sys
+
+arg_parser = argparse.ArgumentParser(
+        description="Prints data about KDE Project source repositories.",
+        epilog="E.g. '%(prog)s -f /path/to/kde_projects.xml -p juk' would give kde/kdemultimedia/juk"
+        )
+arg_parser.add_argument('-f', '--projects-file', dest='file',
+        required=True, type=argparse.FileType('r'),
+        help="Path to the kde_projects.xml file")
+arg_parser.add_argument('name',
+        help="Name of KDE Project module to read information on")
+
+arg_group = arg_parser.add_mutually_exclusive_group(required=True)
+arg_group.add_argument('-p', '--print-path', action='store_true',
+        help="Print full virtual project path for given modules")
+arg_group.add_argument('-d', '--print-description', action='store_true',
+        help="Print module description")
+# Other options could be added here
+
+args = arg_parser.parse_args()
+proj_data = ET.parse(args.file)
+
+# Finds XML elements with a <repo> child, with an identifier="" attribute. I.e.
+# <foo identifier="name"><repo>...</repo>...</foo>
+element_list = proj_data.findall(".//repo/..[@identifier='%s']" % (args.name))
+if len(element_list) < 1 or element_list[0] is None:
+    print "No project known by the name %s!" % (args.name)
+    sys.exit(1)
+
+if len(element_list) > 1:
+    print "Found %d elements, was only expecting 1." % (len(element_list))
+    sys.exit(1)
+
+# At this point we've found the XML element for our one project, now break out
+# the data we were asked for.
+element = element_list[0]
+
+if args.print_path:
+    path = element.find('path').text
+    print path
+elif args.print_description:
+    desc = element.find('description').text
+    print desc
