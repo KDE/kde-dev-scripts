@@ -28,7 +28,7 @@ foreach my $file (@ARGV) {
         s/k_funcinfo/Q_FUNC_INFO/;
         s/kdebug\.h/qdebug\.h/;
 
-        s/\<\< endl//; # old stuff
+        #s/\<\< endl//; # old stuff
 
         $modified ||= $orig ne $_;
         $_;
