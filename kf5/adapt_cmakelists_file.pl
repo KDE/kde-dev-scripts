@@ -17,7 +17,11 @@ my @l = map {
       $_ =~ s/kde4_add_kcfg_files/kconfig_add_kcfg_files/;
       $modified = 1;
   }
-  
+  if (/kde4_add_executable/) {
+      $_ =~ s/kde4_add_executable/add_executable/;
+      $modified = 1;
+  }
+ 
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
