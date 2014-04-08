@@ -21,7 +21,9 @@ my @l = map {
       $_ =~ s/kde4_add_executable/add_executable/;
       $modified = 1;
   }
- 
+  if (/KDE4_ENABLE_EXCEPTIONS/) {
+      $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\)/kde_enable_exceptions\(\)/;
+  } 
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
