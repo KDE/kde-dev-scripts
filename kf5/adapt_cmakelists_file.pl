@@ -23,7 +23,12 @@ my @l = map {
   }
   if (/KDE4_ENABLE_EXCEPTIONS/) {
       $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\)/kde_enable_exceptions\(\)/;
+      $modified = 1;
   } 
+  if (/qt4_add_dbus_adaptor/) {
+      $_ =~ s/qt4_add_dbus_adaptor/qt5_add_dbus_adaptor/;
+      $modified = 1;
+  }
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
