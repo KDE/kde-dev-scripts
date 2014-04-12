@@ -27,7 +27,7 @@ foreach my $file (@ARGV) {
         s,#include \<akonadi\/agentinstancecreatejob.h\>,#include \<AkonadiCore\/agentinstancecreatejob.h\>,;
         s,#include \<akonadi\/agentinstance.h\>,#include \<AkonadiCore\/agentinstance.h\>,;
         s,#include \<akonadi\/changerecorder.h\>,#include \<AkonadiCore\/changerecorder.h\>,;
-        s,#include \<akonadi\/collectiondialog.h\>,#include \<AkonadiCore\/collectiondialog.h\>,;
+        s,#include \<akonadi\/collectiondialog.h\>,#include \<AkonadiWidgets\/collectiondialog.h\>,;
         s,#include \<akonadi\/collectionfetchjob.h\>,#include \<AkonadiCore\/collectionfetchjob.h\>,;
         s,#include \<akonadi\/collectionfetchscope.h\>,#include \<AkonadiCore\/collectionfetchscope.h\>,;
         s,#include \<akonadi\/collectionfilterproxymodel.h\>,#include \<AkonadiCore\/collectionfilterproxymodel.h\>,;
@@ -44,6 +44,8 @@ foreach my $file (@ARGV) {
         s,#include \<akonadi\/standardactionmanager.h\>,#include \<AkonadiCore\/standardactionmanager.h\>,;
         s,#include \<akonadi\/transactionsequence.h\>,#include \<AkonadiCore\/transactionsequence.h\>,;
         s,#include \<akonadi\/agenttype.h\>,#include \<AkonadiCore\/agenttype.h\>,;
+        s,#include \<akonadi\/attributefactory.h\>,#include \<AkonadiCore\/attributefactory.h\>,;
+        s,#include \<akonadi\/monitor.h\>,#include \<AkonadiCore\/monitor.h\>,;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
