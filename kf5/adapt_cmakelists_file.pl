@@ -29,6 +29,10 @@ my @l = map {
       $_ =~ s/qt4_add_dbus_adaptor/qt5_add_dbus_adaptor/;
       $modified = 1;
   }
+  if (/qt4_wrap_ui/) {
+      $_ =~ s/qt4_wrap_ui/qt5_wrap_ui/;
+      $modified = 1;
+  }
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
