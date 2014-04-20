@@ -33,6 +33,17 @@ my @l = map {
       $_ =~ s/qt4_wrap_ui/qt5_wrap_ui/;
       $modified = 1;
   }
+  #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
+  my $regexp = qr/
+               ^(\s*)                  # (1) Indentation
+               kde4_add_plugin\s*\(    # 
+               \s*([^ ]*)\s*           # (2) libname
+               (.*)$                   # (3) end
+               /x; # /x Enables extended whitespace mode
+  if (my ($indent, $libname, $end) = $_ =~ $regexp) {
+     $_ = $indent . "add_library($libname MODULE " . $end;
+     $modified = 1;
+  }
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
