@@ -45,6 +45,26 @@ my @l = map {
      $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}/KF5::PimUtils/;
      $modified = 1;
   }
+  if (/KDEPIMLIBS_MAILTRANSPORT_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_MAILTRANSPORT_LIBS}/KF5::MailTransport/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KMIME_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KMIME_LIBS}/KF5::KMime/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KPIMIDENTITIES_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KPIMIDENTITIES_LIBS}/KF5::KF5PimIdentities/;
+     $modified = 1;
+  }
+  if (/KDE4_KIO_LIBS/) {
+     $_ =~ s/\${KDE4_KIO_LIBS}/KF5::KIOCore/;
+     $modified = 1;
+  }
+  if (/KDE4_KROSSCORE_LIBS/) {
+     $_ =~ s/\${KDE4_KROSSCORE_LIBS}/KF5::KrossCore/;
+     $modified = 1;
+  }
 
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
@@ -55,7 +75,7 @@ my @l = map {
                (.*)$                   # (3) end
                /x; # /x Enables extended whitespace mode
   if (my ($indent, $libname, $end) = $_ =~ $regexp) {
-     $_ = $indent . "add_library($libname MODULE " . $end;
+     $_ = $indent . "add_library($libname MODULE " . $end . "\n";
      $modified = 1;
   }
   $modified ||= $orig ne $_;
