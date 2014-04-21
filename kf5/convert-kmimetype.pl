@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# David Faure <david.faure@kdab.com>
+# David Faure <faure@kde.org>
 # KMimeType -> QMimeType
 # find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kmimetype.pl
 
