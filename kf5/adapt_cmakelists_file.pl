@@ -22,7 +22,7 @@ my @l = map {
       $modified = 1;
   }
   if (/KDE4_ENABLE_EXCEPTIONS/) {
-      $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\)/kde_enable_exceptions\(\)/;
+      $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/;
       $modified = 1;
   } 
   if (/qt4_add_dbus_adaptor/) {
