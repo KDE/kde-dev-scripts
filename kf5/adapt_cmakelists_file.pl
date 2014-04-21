@@ -33,6 +33,20 @@ my @l = map {
       $_ =~ s/qt4_wrap_ui/qt5_wrap_ui/;
       $modified = 1;
   }
+  if (/KDEPIMLIBS_AKONADI_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_LIBS}/KF5::AkonadiCore/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KCALCORE_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KCALCORE_LIBS}/KF5::CalendarCore/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KPIMUTILS_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}/KF5::PimUtils/;
+     $modified = 1;
+  }
+
+
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
                ^(\s*)                  # (1) Indentation
