@@ -65,7 +65,34 @@ my @l = map {
      $_ =~ s/\${KDE4_KROSSCORE_LIBS}/KF5::KrossCore/;
      $modified = 1;
   }
-
+  if (/QT_QTDBUS_LIBRARY/) {
+     $_ =~ s/\${QT_QTDBUS_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/QT_QTCORE_LIBRARY/) {
+     $_ =~ s/\${QT_QTCORE_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/QT_QTGUI_LIBRARY/) {
+     $_ =~ s/\${QT_QTGUI_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/QT_QTNETWORK_LIBRARY/) {
+     $_ =~ s/\${QT_QTNETWORK_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KIMAP_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KIMAP_LIBS}/KF5::Imap/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_AKONADI_KMIME_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_KMIME_LIBS}/KF5::AkonadiKMime/;
+     $modified = 1;
+  }
+  if (/KDE4_KNOTIFYCONFIG_LIBS/) {
+     $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBS}/KF5::NotifyConfig/;
+     $modified = 1;
+  }
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
