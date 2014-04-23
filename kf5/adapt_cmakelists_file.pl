@@ -121,6 +121,42 @@ my @l = map {
      $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::KAlarmCal/;
      $modified = 1;
   }
+  if (/KDEPIMLIBS_KABC_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Abc/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_AKONADI_CONTACT_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_CONTACT_LIBS}/KF5::AkonadiContact/;
+     $modified = 1;
+  }
+  if (/KDE4_KDEUI_LIBS/) {
+     $_ =~ s/\${KDE4_KDEUI_LIBS}//;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KTNEF_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KTNEF_LIBS}/KF5::KTnef/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KBLOG_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KBLOG_LIBS}/KF5::Blog/;
+     $modified = 1;
+  }
+  if (/KDE4_KNEWSTUFF3_LIBS/) {
+     $_ =~ s/\${KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KLDAP_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KLDAP_LIBS}/KF5::KLdap/;
+     $modified = 1;
+  }
+  if (/BALOO_LIBRARIES/) {
+     $_ =~ s/\${BALOO_LIBRARIES}/Baloo/;
+     $modified = 1;
+  }
+  if (/KDE4_KCMUTILS_LIBS/) {
+     $_ =~ s/\${KDE4_KCMUTILS_LIBS}/KF5::KCMUtils/;
+     $modified = 1;
+  }
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
