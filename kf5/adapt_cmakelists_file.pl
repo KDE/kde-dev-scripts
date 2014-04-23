@@ -9,6 +9,14 @@ open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
   my $orig = $_;
+  if (/kde4_install_icons/) {
+     $_ =~ s/kde4_install_icons/ecm_install_icons/;
+     $modified = 1;
+  }
+  if (/kde4_add_library/) {
+     $_ =~ s/kde4_add_library/add_library/;
+     $modified = 1;
+  }
   if (/kde4_add_ui_files/) {
      $_ =~ s/kde4_add_ui_files/qt5_wrap_ui/;
      $modified = 1;
@@ -54,7 +62,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMIDENTITIES_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMIDENTITIES_LIBS}/KF5::KF5PimIdentities/;
+     $_ =~ s/\${KDEPIMLIBS_KPIMIDENTITIES_LIBS}/KF5::PimIdentities/;
      $modified = 1;
   }
   if (/KDE4_KIO_LIBS/) {
@@ -81,6 +89,10 @@ my @l = map {
      $_ =~ s/\${QT_QTNETWORK_LIBRARY}//;
      $modified = 1;
   }
+  if (/KDE4_KDECORE_LIBS/) {
+     $_ =~ s/\${KDE4_KDECORE_LIBS}//;
+     $modified = 1;
+  }
   if (/KDEPIMLIBS_KIMAP_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_KIMAP_LIBS}/KF5::Imap/;
      $modified = 1;
@@ -91,6 +103,22 @@ my @l = map {
   }
   if (/KDE4_KNOTIFYCONFIG_LIBS/) {
      $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBS}/KF5::NotifyConfig/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KPIMTEXTEDIT_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}/KF5::PimTextEdit/;
+     $modified = 1;
+  }
+  if (/KDE4_KDEWEBKIT_LIBRARY/) {
+     $_ =~ s/\${KDE4_KDEWEBKIT_LIBRARY}/KF5::WebKit/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KMBOX_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KMBOX_LIBS}/KF5::Mbox/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KALARMCAL_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::KAlarmCal/;
      $modified = 1;
   }
 
