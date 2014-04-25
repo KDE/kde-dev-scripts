@@ -157,6 +157,42 @@ my @l = map {
      $_ =~ s/\${KDE4_KCMUTILS_LIBS}/KF5::KCMUtils/;
      $modified = 1;
   }
+  if (/KDEPIMLIBS_KCALUTILS_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KCALUTILS_LIBS}/KF5::CalendarUtils/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_KHOLIDAYS_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KHOLIDAYS_LIBS}/KF5::Holidays/;
+     $modified = 1;
+  }
+  if (/KDE4_KUTILS_LIBS/) {
+     $_ =~ s/\${KDE4_KUTILS_LIBS}//;
+     $modified = 1;
+  }
+  if (/KDE4_KDECORE_LIBRARY/) {
+     $_ =~ s/\${KDE4_KDECORE_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/KDE4_KDEUI_LIBRARY/) {
+     $_ =~ s/\${KDE4_KDEUI_LIBRARY}//;
+     $modified = 1;
+  }
+  if (/KDE4_KTEXTEDITOR_LIBS/) {
+     $_ =~ s/\${KDE4_KTEXTEDITOR_LIBS}/KF5::TextEditor/;
+     $modified = 1;
+  }
+  if (/qt4_wrap_cpp/) {
+     $_ =~ s/qt4_wrap_cpp/qt5_wrap_cpp/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_SYNDICATION_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_SYNDICATION_LIBS}/KF5::Syndication/;
+     $modified = 1;
+  }
+  if (/KDE4_KHTML_LIBS/) {
+     $_ =~ s/\${KDE4_KHTML_LIBS}/KF5::KHtml/;
+     $modified = 1;
+  }
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
