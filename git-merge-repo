@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Merges the tree and history of another git repository into the current one.
+# Based on code Linux Torvalds wrote in an email.
+#
+# This must be run from the root of the target repository, and takes
+# a single argument: a path to the source repository.
+#
+# You must make sure the trees are distinct first. Typically, you
+# move things around in the source repository to be how you want them
+# to appear in the target repository.
+
+if [ ! -d .git ]; then
+  echo "This script must be run from the root of a git repository" >&2
+  exit 1
+fi
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <source-repo>" >&2
+  exit 1
+fi
+
+git fetch $1
+if [ $? != 0 ]; then
+  echo "Could not fetch $1; make sure it is a git repository" >&2
+  exit 1
+fi
+GIT_INDEX_FILE=.git/tmp-index git read-tree FETCH_HEAD || exit 1
+GIT_INDEX_FILE=.git/tmp-index git checkout-index -a -u
+if [ $? != 0 ]; then
+  echo "Could not checkout fetched tree; make sure it is disjoint from this repository's tree" >&2
+  exit 1
+fi
+git update-index --add -- $(GIT_INDEX_FILE=.git/tmp-index git ls-files) || exit 1
+cp .git/FETCH_HEAD .git/MERGE_HEAD || exit 1
+sed -i -e 's/^\([a-z0-9]*\)\s.*/\1/' .git/MERGE_HEAD
+git commit || exit 1
