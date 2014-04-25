@@ -193,6 +193,14 @@ my @l = map {
      $_ =~ s/\${KDE4_KHTML_LIBS}/KF5::KHtml/;
      $modified = 1;
   }
+  if (/KDEPIMLIBS_KONTACTINTERFACE_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_KONTACTINTERFACE_LIBS}/KF5::KontactInterface/;
+     $modified = 1;
+  }
+  if (/KDE4_KNOTIFYCONFIG_LIBRARY/) {
+     $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBRARY}/KF5::NotifyConfig/;
+     $modified = 1;
+  }
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
