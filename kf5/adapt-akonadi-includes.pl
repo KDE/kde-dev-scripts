@@ -51,6 +51,7 @@ foreach my $file (@ARGV) {
         s,#include \<Akonadi\/EntityDisplayAttribute\>,#include \<AkonadiCore\/EntityDisplayAttribute\>,;
         s,#include \<Akonadi\/ItemDeleteJob\>,#include \<AkonadiCore\/ItemDeleteJob\>,;
         #s,#include \<[Aa]konadi\/\>,#include \<AkonadiCore\/\>,;
+        s,#include \<[Aa]konadi\/CollectionDeleteJob\>,#include \<AkonadiCore\/CollectionDeleteJob\>,;
         s,#include \<[Aa]konadi\/SearchCreateJob\>,#include \<AkonadiCore\/SearchCreateJob\>,;
         s,#include \<[Aa]konadi\/persistentsearchattribute.h\>,#include \<AkonadiCore\/persistentsearchattribute.h\>,;
         s,#include \<[Aa]konadi\/CollectionModifyJob\>,#include \<AkonadiCore\/CollectionModifyJob\>,;
