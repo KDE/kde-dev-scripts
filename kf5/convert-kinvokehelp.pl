@@ -2,6 +2,8 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # port KToolInvocation::invokeHelp -> KHelpClient::invokeHelp
+# convert-kinvokehelp.pl *.cpp
+
 
 use strict;
 use File::Basename;
