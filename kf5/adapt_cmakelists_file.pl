@@ -201,6 +201,10 @@ my @l = map {
      $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBRARY}/KF5::NotifyConfig/;
      $modified = 1;
   }
+  if (/QT_QTDECLARATIVE_LIBRARY/) {
+     $_ =~ s/\${QT_QTDECLARATIVE_LIBRARY}/Qt5::Declarative/;
+     $modified = 1;
+  }
 
   if (/\.notifyrc/) {
      my $regexp = qr/
