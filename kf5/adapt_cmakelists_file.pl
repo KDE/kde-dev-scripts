@@ -202,6 +202,22 @@ my @l = map {
      $modified = 1;
   }
 
+  if (/\.notifyrc/) {
+     my $regexp = qr/
+                  ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
+                  \$\{DATA_INSTALL_DIR\}\/[^\s)]+
+                  (.*)$
+                  /x; # /x Enables extended whitespace mode
+     if (my ($begin, $end) = $_ =~ $regexp) {
+        $_ = $begin . "\${KNOTIFYRC_INSTALL_DIR}" . $end . "\n";
+        $modified = 1;
+     } elsif (not /KNOTIFYRC_INSTALL_DIR/) {
+        my $line = $_;
+        $line =~ s/\s*$//;
+        print "Could not fix a .notifyrc file installation call ($line)\n"
+     }
+  }
+
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
                ^(\s*)                  # (1) Indentation
