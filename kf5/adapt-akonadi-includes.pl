@@ -70,6 +70,7 @@ foreach my $file (@ARGV) {
         s,#include \<[Aa]konadi\/agentinstancemodel.h\>,#include \<AkonadiCore\/agentinstancemodel.h\>,;
         s,#include \<[Aa]konadi\/collectionattributessynchronizationjob.h\>,#include \<AkonadiCore\/collectionattributessynchronizationjob.h\>,;
         s,#include \<[Aa]konadi\/collectionstatistics.h\>,#include \<AkonadiCore\/collectionstatistics.h\>,;
+        s,#include \<[Aa]konadi\/CollectionStatistics\>,#include \<AkonadiCore\/collectionstatistics.h\>,;
         s,#include \<[Aa]konadi\/Entity\>,#include \<AkonadiCore\/Entity\>,;
         s,#include \<[Aa]konadi\/AgentInstanceCreateJob\>,#include \<AkonadiCore\/AgentInstanceCreateJob\>,;
         s,#include \<[Aa]konadi\/CollectionStatisticsJob\>,#include \<AkonadiCore\/CollectionStatisticsJob\>,;
