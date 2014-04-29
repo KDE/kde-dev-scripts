@@ -51,6 +51,7 @@ foreach my $file (@ARGV) {
         s,#include \<Akonadi\/EntityDisplayAttribute\>,#include \<AkonadiCore\/EntityDisplayAttribute\>,;
         s,#include \<Akonadi\/ItemDeleteJob\>,#include \<AkonadiCore\/ItemDeleteJob\>,;
         #s,#include \<[Aa]konadi\/\>,#include \<AkonadiCore\/\>,;
+        s,#include \<[Aa]konadi\/collectioncreatejob.h\>,#include \<AkonadiCore\/collectioncreatejob.h\>,;
         s,#include \<[Aa]konadi\/recursiveitemfetchjob.h\>,#include \<AkonadiCore\/recursiveitemfetchjob.h\>,;
         s,#include \<[Aa]konadi\/CollectionDeleteJob\>,#include \<AkonadiCore\/CollectionDeleteJob\>,;
         s,#include \<[Aa]konadi\/SearchCreateJob\>,#include \<AkonadiCore\/SearchCreateJob\>,;
@@ -105,6 +106,7 @@ foreach my $file (@ARGV) {
         s,#include \<Akonadi\/EntityMimeTypeFilterModel\>,#include \<AkonadiCore\/EntityMimeTypeFilterModel\>,;
         s,#include \<Akonadi\/Control\>,#include \<AkonadiCore\/Control\>,;
         s,#include \<Akonadi\/CollectionModel\>,#include \<AkonadiCore\/CollectionModel\>,;
+        s,#include \<[aA]konadi\/collectionmodel.h\>,#include \<AkonadiCore\/collectionmodel.h\>,;
         s,#include \<Akonadi\/CollectionFilterProxyModel\>,#include \<AkonadiCore\/CollectionFilterProxyModel\>,;
         s,#include \<Akonadi\/ItemFetchScope\>,#include \<AkonadiCore\/ItemFetchScope\>,;
         s,#include \<Akonadi\/Session\>,#include \<AkonadiCore\/Session\>,;
@@ -119,7 +121,7 @@ foreach my $file (@ARGV) {
         s,#include \<[Aa]konadi\/agenttypedialog.h\>,#include \<AkonadiWidgets\/agenttypedialog.h\>,;                                                                                                                                                                                                                                                             
         s,#include \<Akonadi\/AgentTypeWidget\>,#include \<AkonadiWidgets\/AgentTypeWidget\>,;                                                                                                                                                                                                                                                               
         s,#include \<Akonadi\/agenttypewidget.h\>,#include \<AkonadiWidgets\/agenttypewidget.h\>,;                                                                                                                                                                                                                                                              
-        s,#include \<Akonadi\/collectioncombobox.h\>,#include \<AkonadiWidgets\/collectioncombobox.h\>,;
+        s,#include \<[Aa]konadi\/collectioncombobox.h\>,#include \<AkonadiWidgets\/collectioncombobox.h\>,;
         s,#include \<akonadi\/collectioncombobox.h\>,#include \<AkonadiWidgets\/collectioncombobox.h\>,;
         s,#include \<Akonadi\/CollectionDialog\>,#include \<AkonadiWidgets\/CollectionDialog\>,;
         s,#include \<Akonadi\/collectiondialog.h\>,#include \<AkonadiWidgets\/collectiondialog.h\>,;
