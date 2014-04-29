@@ -19,6 +19,9 @@ foreach my $file (@ARGV) {
         s/\<KLineEdit\b\>/\<QLineEdit>/ =~ /#include/ ;
         s/\bsetClickMessage\b/setPlaceholderText/;
         s/\bsetClearButtonShown\b/setClearButtonEnabled/;
+        s/\"clickMessage\"/\"placeholderText\"/;
+        s/\"clearButtonShown\"/\"clearButtonEnabled\"/;
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
