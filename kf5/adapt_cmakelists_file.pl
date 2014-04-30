@@ -223,6 +223,10 @@ my @l = map {
      $modified = 1;
   }
 
+  if (/macro_optional_add_subdirectory/) {
+     $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
+     $modified = 1;
+  }
 
   if (/\.notifyrc/) {
      my $regexp = qr/
