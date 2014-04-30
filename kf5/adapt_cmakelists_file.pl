@@ -205,6 +205,10 @@ my @l = map {
      $_ =~ s/\${QT_QTDECLARATIVE_LIBRARY}/Qt5::Declarative/;
      $modified = 1;
   }
+  if (/KDE4_KPARTS_LIBS/) {
+     $_ =~ s/\${KDE4_KPARTS_LIBS}//;
+     $modified = 1;
+  }
 
   if (/\.notifyrc/) {
      my $regexp = qr/
