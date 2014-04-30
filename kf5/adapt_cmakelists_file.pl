@@ -58,7 +58,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KMIME_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KMIME_LIBS}/KF5::KMime/;
+     $_ =~ s/\${KDEPIMLIBS_KMIME_LIBS}/KF5::Mime/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMIDENTITIES_LIBS/) {
@@ -98,7 +98,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_KMIME_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_KMIME_LIBS}/KF5::AkonadiKMime/;
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_KMIME_LIBS}/KF5::AkonadiMime/;
      $modified = 1;
   }
   if (/KDE4_KNOTIFYCONFIG_LIBS/) {
@@ -118,7 +118,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KALARMCAL_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::KAlarmCal/;
+     $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::AlarmCalendar/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KABC_LIBS/) {
@@ -209,6 +209,20 @@ my @l = map {
      $_ =~ s/\${KDE4_KPARTS_LIBS}//;
      $modified = 1;
   }
+
+  if (/kde4_create_handbook/) {
+     $_ =~ s/kde4_create_handbook/kdoctools_create_handbook/;
+     $modified = 1;
+  }
+  if (/kde4_create_manpage/) {
+     $_ =~ s/kde4_create_manpage/kdoctools_create_manpage/;
+     $modified = 1;
+  }
+  if (/KDEPIMLIBS_MICROBLOG_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_MICROBLOG_LIBS}/KF5::MicroBlog/;
+     $modified = 1;
+  }
+
 
   if (/\.notifyrc/) {
      my $regexp = qr/
