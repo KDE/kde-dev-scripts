@@ -232,6 +232,11 @@ my @l = map {
      $_ =~ s/qt4_add_dbus_interfaces/qt5_add_dbus_interfaces/;
      $modified = 1;
   }
+  if (/qt4_add_dbus_interface/) {
+     $_ =~ s/qt4_add_dbus_interface/qt5_add_dbus_interface/;
+     $modified = 1;
+  }
+
 
   if (/\.notifyrc/) {
      my $regexp = qr/
