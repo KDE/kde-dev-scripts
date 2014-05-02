@@ -228,6 +228,11 @@ my @l = map {
      $modified = 1;
   }
 
+  if (/qt4_add_dbus_interfaces/) {
+     $_ =~ s/qt4_add_dbus_interfaces/qt5_add_dbus_interfaces/;
+     $modified = 1;
+  }
+
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
