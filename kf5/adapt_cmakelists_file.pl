@@ -236,7 +236,10 @@ my @l = map {
      $_ =~ s/qt4_add_dbus_interface/qt5_add_dbus_interface/;
      $modified = 1;
   }
-
+  if (/qt4_generate_moc/) {
+     $_ =~ s/qt4_generate_moc/qt5_generate_moc/;
+     $modified = 1;
+  }
 
   if (/\.notifyrc/) {
      my $regexp = qr/
