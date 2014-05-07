@@ -18,7 +18,6 @@ foreach my $file (@ARGV) {
         if (/public KParts::ReadOnlyPart/) {
            $modified = 1;
         }
-        s/KToolInvocation::invokeHelp/KHelpClient::invokeHelp/;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
