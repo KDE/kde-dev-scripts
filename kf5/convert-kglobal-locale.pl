@@ -18,7 +18,7 @@ foreach my $file (@ARGV) {
         if (/KGlobal::locale\(\)\-\>insertCatalog/) {
            s/KGlobal::locale\(\)\-\>insertCatalog/\/\/QT5 KLocale::global\(\)\-\>insertCatalog/;
         }
-        s/\bKGlobal::locale\s*\(\)/KLocale::global\(\)/;
+        s/\bKGlobal::locale\s*\(\)/KLocale::global\(\)/g;
 
         $modified ||= $orig ne $_;
         $_;
