@@ -11,10 +11,16 @@ use functionUtilkde;
 foreach my $file (@ARGV) {
 
     my $modified;
+    my $convertDndDelay;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
+        
         s,::self\(\)\-\>writeConfig\(\),::self\(\)\-\>save\(\),;
+        if (/KGlobalSettings::dndEventDelay/) {
+           s,KGlobalSettings::dndEventDelay\b,QApplication::startDragDistance,;
+           $convertDndDelay = 1;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -23,6 +29,9 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        if ($convertDndDelay) {
+           functionUtilkde::addIncludeInFile($file, "QApplication");
+        }
     }
 }
 
