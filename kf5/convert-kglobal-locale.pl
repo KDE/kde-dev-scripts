@@ -15,6 +15,9 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
+        if (/KGlobal::locale\(\)\-\>insertCatalog/) {
+           s/KGlobal::locale\(\)\-\>insertCatalog/\/\/QT5 KLocale::global\(\)\-\>insertCatalog/;
+        }
         s/\bKGlobal::locale\s*\(\)/KLocale::global\(\)/;
 
         $modified ||= $orig ne $_;
