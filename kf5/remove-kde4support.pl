@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Laurent Montel <montel@kde.org> (2014)
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/remove-qt4support.pl
+# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/remove-kde4support.pl
 
 use strict;
 use File::Basename;
