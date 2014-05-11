@@ -11,7 +11,8 @@ use functionUtilkde;
 foreach my $file (@ARGV) {
 
     my $modified;
-    my $convertDndDelay;
+    my $needQApplicationHeader;
+    my $needQDesktopWidgetHeader;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -19,7 +20,12 @@ foreach my $file (@ARGV) {
         s,::self\(\)\-\>writeConfig\(\),::self\(\)\-\>save\(\),;
         if (/KGlobalSettings::dndEventDelay/) {
            s,KGlobalSettings::dndEventDelay\b,QApplication::startDragDistance,;
-           $convertDndDelay = 1;
+           $needQApplicationHeader = 1;
+        }
+        if (/KGlobalSettings::desktopGeometry/) {
+           s,KGlobalSettings::desktopGeometry\b,QApplication::desktop\(\)\-\>screenGeometry,;
+           $needQApplicationHeader = 1;
+           $needQDesktopWidgetHeader = 1;
         }
         $modified ||= $orig ne $_;
         $_;
@@ -29,8 +35,11 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
-        if ($convertDndDelay) {
+        if ($needQApplicationHeader) {
            functionUtilkde::addIncludeInFile($file, "QApplication");
+        }
+        if ($needQDesktopWidgetHeader) {
+           functionUtilkde::addIncludeInFile($file, "QDesktopWidget");
         }
     }
 }
