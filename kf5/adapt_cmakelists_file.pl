@@ -214,6 +214,10 @@ my @l = map {
      $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
   }
+  if (/QT_QTTEST_LIBRARY/) {
+     $_ =~ s/\${QT_QTTEST_LIBRARY}/Qt5::Test/;
+     $modified = 1;
+  }
 
   if (/kde4_create_handbook/) {
      $_ =~ s/kde4_create_handbook/kdoctools_create_handbook/;
