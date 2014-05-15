@@ -18,6 +18,7 @@ foreach my $file (@ARGV) {
         my $orig = $_;
         
         s,::self\(\)\-\>writeConfig\(\),::self\(\)\-\>save\(\),;
+        s,::self\(\)->readConfig\(\),::self\(\)\-\>load\(\),;
         if (/KGlobalSettings::dndEventDelay/) {
            s,KGlobalSettings::dndEventDelay\b,QApplication::startDragDistance,;
            $needQApplicationHeader = 1;
