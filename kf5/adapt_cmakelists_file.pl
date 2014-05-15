@@ -25,10 +25,11 @@ my @l = map {
       $_ =~ s/kde4_add_kcfg_files/kconfig_add_kcfg_files/;
       $modified = 1;
   }
-  if (/kde4_add_executable/) {
-      $_ =~ s/kde4_add_executable/add_executable/;
+  if (/kde4_add_executable/i) {
+      $_ =~ s/kde4_add_executable/add_executable/i;
       $modified = 1;
   }
+
   if (/KDE4_ENABLE_EXCEPTIONS/) {
       $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/;
       $modified = 1;
@@ -207,6 +208,10 @@ my @l = map {
   }
   if (/KDE4_KPARTS_LIBS/) {
      $_ =~ s/\${KDE4_KPARTS_LIBS}//;
+     $modified = 1;
+  }
+  if (/KDE4_PHONON_LIBS/) {
+     $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
   }
 
