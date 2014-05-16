@@ -231,7 +231,10 @@ my @l = map {
      $_ =~ s/\${KDEPIMLIBS_MICROBLOG_LIBS}/KF5::MicroBlog/;
      $modified = 1;
   }
-
+  if (/KDE4_SOLID_LIBS/) {
+     $_ =~ s/\${KDE4_SOLID_LIBS}//;
+     $modified = 1;     
+  }
   if (/macro_optional_add_subdirectory/) {
      $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
      $modified = 1;
