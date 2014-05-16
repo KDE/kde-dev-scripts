@@ -235,6 +235,10 @@ my @l = map {
      $_ =~ s/\${KDE4_SOLID_LIBS}//;
      $modified = 1;     
   }
+  if (/QT_QTWEBKIT_LIBRARY/) {
+     $_ =~ s/\${QT_QTWEBKIT_LIBRARY}/Qt5::WebKitWidgets/;
+     $modified = 1;
+  }
   if (/macro_optional_add_subdirectory/) {
      $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
      $modified = 1;
