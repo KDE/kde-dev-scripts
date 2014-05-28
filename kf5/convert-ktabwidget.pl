@@ -16,7 +16,7 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
         s/\bKTabWidget\b/QTabWidget/g;
-        s/\<KTabWidget\b\>/\<QTabWiget>/ =~ /#include/ ;
+        s/\<KTabWidget\b\>/\<QTabWidget>/ =~ /#include/ ;
         s/\<ktabwidget.h\>/\<QTabWidget>/ =~ /#include/ ;
 
         $modified ||= $orig ne $_;
