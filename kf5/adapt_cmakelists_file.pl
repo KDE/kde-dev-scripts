@@ -39,7 +39,7 @@ my @l = map {
       $modified = 1;
   }
   if (/qt4_wrap_ui/) {
-      $_ =~ s/qt4_wrap_ui/qt5_wrap_ui/;
+      $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/;
       $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_LIBS/) {
