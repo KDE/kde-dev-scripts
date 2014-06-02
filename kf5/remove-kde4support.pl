@@ -13,6 +13,7 @@ foreach my $file (@ARGV) {
     my $modified;
     my $needQApplicationHeader;
     my $needQDesktopWidgetHeader;
+    my $needKColorScheme;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -28,6 +29,11 @@ foreach my $file (@ARGV) {
            $needQApplicationHeader = 1;
            $needQDesktopWidgetHeader = 1;
         }
+        if (/KGlobalSettings::createApplicationPalette/) {
+           s,KGlobalSettings::createApplicationPalette\b,KColorScheme::createApplicationPalette,;
+           $needKColorScheme = 1;
+        }
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -41,6 +47,9 @@ foreach my $file (@ARGV) {
         }
         if ($needQDesktopWidgetHeader) {
            functionUtilkde::addIncludeInFile($file, "QDesktopWidget");
+        }
+        if ($needKColorScheme) {
+           functionUtilkde::addIncludeInFile($file, "KColorScheme");
         }
     }
 }
