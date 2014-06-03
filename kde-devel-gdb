@@ -22,13 +22,19 @@ define printqstring
     printqstringdata ($arg0).d
 end
 document printqstring
-  Prints the contents of a QString
+  Prints the contents of a Qt3 QString
 end
 define printq4string
     printq4stringdata ($arg0).d
 end
 document printq4string
-  Prints the contents of a Qt QString
+  Prints the contents of a Qt4 QString
+end
+define printq5string
+    printq5stringdata ($arg0).d
+end
+document printq5string
+  Prints the contents of a Qt5 QString
 end
 
 define printqstringdata
@@ -64,27 +70,60 @@ document printq4stringdata
   printq4string $s and printq4stringdata $s.d are equivalent.
 end
 
+define printq5stringdata
+    set $d = ('QString::Data'*) $arg0
+    set $data_char = (char*)$d + $d->offset
+    set $data = (unsigned short*) $data_char
+    set $size = $d->size
+    set $i = 0
+    while $i < $size
+      set $c = (char)($data[$i++] & 0xff)
+      printf "%c", $c
+      # abort after a '-1' character, to avoid going on forever when printing a garbage string
+      if $i != 0 && $c == -1
+        printf "\n<output terminated: junk data?>"
+        loop_break
+      end
+    end
+    printf "\n"
+end
+document printq5stringdata
+  Prints the contents of a Qt5 QString::Data
+  This is useful when the output of another command (e.g. printqmap)
+  shows {d = 0xdeadbeef} for a QString, i.e. the qstringdata address
+  instead of the QString object itself.
+  printq5string $s and printq5stringdata $s.d are equivalent.
+end
+
+define print_utf8_char
+  set $uc = $arg0
+  if ( $uc < 0x80 )
+    printf "%c", (unsigned char)($uc & 0x7f)
+  else
+    if ( $uc < 0x0800 )
+      printf "%c", (unsigned char)(0xc0 | ($uc >> 6))
+    else
+      printf "%c", (unsigned char)(0xe0 | ($uc >> 12)
+      printf "%c", (unsigned char)(0x80 | (($uc > 6) &0x3f)
+    end
+    printf "%c", (unsigned char)(0x80 | ((uchar) $uc & 0x3f))
+  end
+end
+document print_utf8_char
+  Prints a unicode value (stored as an unsigned short) as UTF-8.
+end
+
 define printqstring_utf8
    set $i=0
    set $s = $arg0
    while $i < $s.d->len
      set $uc = (unsigned short) $s.d->unicode[$i++].ucs
-     if ( $uc < 0x80 )
-       printf "%c", (unsigned char)($uc & 0x7f)
-     else
-       if ( $uc < 0x0800 )
-         printf "%c", (unsigned char)(0xc0 | ($uc >> 6))
-       else
-         printf "%c", (unsigned char)(0xe0 | ($uc >> 12)
-         printf "%c", (unsigned char)(0x80 | (($uc > 6) &0x3f)
-       end
-       printf "%c", (unsigned char)(0x80 | ((uchar) $uc & 0x3f))
-     end
+     print_utf8_char $uc
    end
    printf "\n"
 end
 document printqstring_utf8
-  Prints the contents of a QString encoded in utf8. 
+  Prints the contents of a Qt3 QString encoded in utf8.
   Nice if you run your debug session in a utf8 enabled terminal.
 end
 
@@ -93,22 +132,29 @@ define printq4string_utf8
    set $s = $arg0
    while $i < $s.d->size
      set $uc = (unsigned short) $s.d->data[$i++]
-     if ( $uc < 0x80 )
-       printf "%c", (unsigned char)($uc & 0x7f)
-     else
-       if ( $uc < 0x0800 )
-         printf "%c", (unsigned char)(0xc0 | ($uc >> 6))
-       else
-         printf "%c", (unsigned char)(0xe0 | ($uc >> 12)
-         printf "%c", (unsigned char)(0x80 | (($uc > 6) &0x3f)
-       end
-       printf "%c", (unsigned char)(0x80 | ((uchar) $uc & 0x3f))
-     end
+     print_utf8_char $uc
    end
    printf "\n"
 end
 document printq4string_utf8
-  Prints the contents of a QString encoded in utf8. 
+  Prints the contents of a Qt4 QString encoded in utf8.
+  Nice if you run your debug session in a utf8 enabled terminal.
+end
+
+define printq5string_utf8
+   set $i=0
+   set $s = $arg0
+   set $d = $s.d
+   set $data_char = (char*)$d + $d->offset
+   set $data = (unsigned short*) $data_char
+   set $size = $d->size
+   while $i < $size
+     print_utf8_char $data[$i++]
+   end
+   printf "\n"
+end
+document printq5string_utf8
+  Prints the contents of a Qt5 QString encoded in utf8.
   Nice if you run your debug session in a utf8 enabled terminal.
 end
 
@@ -357,6 +403,10 @@ define identifyq4object
 end
 
 # You print QString's too often to type the long name :-)
+define qs5
+  printq5string $arg0
+end
+
 define qs4
   printq4string $arg0
 end
