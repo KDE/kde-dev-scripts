@@ -1,0 +1,19 @@
+Pretty-printers for GDB
+
+These allow you to use GDB's print command to print useful representations of
+Qt objects, like QStrings. At least GDB 7.3 is required.
+
+The printers can be loaded globally, by sourcing the load-qt5printers.py file.
+This can interfere with Qt4 debugging sessions, though, so you probably want to
+do this on a per-session basis.
+
+Alternatively, you can use create-qt5-autoloaders.py to generate auto-load
+scripts that will load and unload the pretty printers with the Qt5 libraries.
+Note that you will have re-generate these every time the Qt5 soversion changes
+(ie: whenever you upgrade your Qt5 instance).
+
+See the comments at the top of the script files for more information.
+
+At some point, possibly when it's a bit more complete and has had a bit of
+testing, this should be upstreamed to Qt, which will eliminate the need for
+users to generate the auto-load scripts.
