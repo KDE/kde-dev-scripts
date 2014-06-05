@@ -19,18 +19,21 @@
 # this software.
 
 import gdb.printing
+import itertools
 import typeinfo
+try:
+    import urlparse
+except ImportError:
+    # Python 3
+    import urllib.parse as urlparse
 
 """Qt5Core pretty printer for GDB."""
 
 # TODO:
 # QDate/QTime/QDateTime
-# QHash
 # QPair? Is a pretty version any better than the normal dump?
-# QSet
 # QStringBuilder?
 # QTimeZone? - just needs to print the m_id from the private header?
-# QUrl
 
 class ArrayIter:
     """Iterates over a fixed-size array."""
@@ -115,6 +118,71 @@ class QByteArrayPrinter:
     def display_hint(self):
         return 'string'
 
+class QHashPrinter:
+    """Print a Qt5 QHash"""
+
+    class Iter:
+        def __init__(self, d, e):
+            self.buckets_left = d['numBuckets']
+            self.node_type = e.type
+            # set us up at the end of a "dummy bucket"
+            self.current_bucket = d['buckets'] - 1
+            self.current_node = None
+            self.i = -1
+            self.waiting_for_value = False
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.waiting_for_value:
+                self.waiting_for_value = False
+                node = self.current_node.reinterpret_cast(self.node_type)
+                return ('value' + str(self.i), node['value'])
+
+            if self.current_node:
+                self.current_node = self.current_node['next']
+
+            # the dummy node that terminates a bucket is distinguishable
+            # by not having its 'next' value set
+            if not self.current_node or not self.current_node['next']:
+                while self.buckets_left:
+                    self.current_bucket += 1
+                    self.buckets_left -= 1
+                    self.current_node = self.current_bucket.referenced_value()
+                    if self.current_node['next']:
+                        break
+                else:
+                    raise StopIteration
+
+            self.i += 1
+            self.waiting_for_value = True
+            node = self.current_node.reinterpret_cast(self.node_type)
+            return ('key' + str(self.i), node['key'])
+
+        def next(self):
+            return self.__next__()
+
+    def __init__(self, val):
+        self.val = val
+
+    def children(self):
+        d = self.val['d']
+
+        if d['size'] == 0:
+            return []
+
+        return self.Iter(d, self.val['e'])
+
+    def to_string(self):
+        # if we return an empty list from children, gdb doesn't print anything
+        if self.val['d']['size'] == 0:
+            return '<empty>'
+        return ''
+
+    def display_hint(self):
+        return 'map'
+
 class QLatin1StringPrinter:
     """Print a Qt5 QLatin1String"""
 
@@ -180,8 +248,6 @@ class QListPrinter:
             self.offset = 0
             if typ.name == 'QStringList':
                 self.el_type = gdb.lookup_type('QString')
-            elif typ.name == 'QVariantList':
-                self.el_type = gdb.lookup_type('QVariant')
             else:
                 self.el_type = typ.template_argument(0)
 
@@ -226,7 +292,7 @@ class QListPrinter:
         if begin == end:
             return []
 
-        return self.Iter(d['array'], begin, end, self.val.type)
+        return self.Iter(d['array'], begin, end, self.val.type.strip_typedefs())
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
@@ -306,8 +372,9 @@ class QMapPrinter:
         if size == 0:
             return []
 
-        keytype = self.val.type.template_argument(0)
-        valtype = self.val.type.template_argument(1)
+        realtype = self.val.type.strip_typedefs()
+        keytype = realtype.template_argument(0)
+        valtype = realtype.template_argument(1)
         node_type = gdb.lookup_type('QMapData<' + keytype.name + ',' + valtype.name + '>::Node')
 
         return self.Iter(d['header'], node_type.pointer())
@@ -320,6 +387,27 @@ class QMapPrinter:
 
     def display_hint(self):
         return 'map'
+
+class QSetPrinter:
+    """Print a Qt5 QSet"""
+
+    def __init__(self, val):
+        self.val = val
+
+    def children(self):
+        hashPrinter = QHashPrinter(self.val['q_hash'])
+        # the keys of the hash are the elements of the set, so select
+        # every other item (starting with the first)
+        return itertools.islice(hashPrinter.children(), 0, None, 2)
+
+    def to_string(self):
+        # if we return an empty list from children, gdb doesn't print anything
+        if self.val['q_hash']['d']['size'] == 0:
+            return '<empty>'
+        return ''
+
+    def display_hint(self):
+        return 'array'
 
 class QStringPrinter:
     """Print a Qt5 QString"""
@@ -387,6 +475,88 @@ class QVectorPrinter:
     def display_hint(self):
         return 'array'
 
+class QUrlPrinter:
+    """Print a Qt5 QUrl"""
+
+    def __init__(self, val):
+        self.val = val
+
+    class ValReader:
+        def __init__(self, data):
+            self.data = data.reinterpret_cast(gdb.lookup_type('char').pointer())
+
+        def next_val(self, typ):
+            val = self.data.reinterpret_cast(typ.pointer())
+            self.data += typ.sizeof
+            return val.referenced_value()
+
+    def to_string(self):
+        d = self.val['d']
+        if not d:
+            return '<empty>'
+
+        int_t = gdb.lookup_type('int')
+        try:
+            atomicint_t = gdb.lookup_type('QAtomicInt')
+        except gdb.error:
+            # let's hope it's the same size as an int
+            atomicint_t = int_t
+        qstring_t = gdb.lookup_type('QString')
+        uchar_t = gdb.lookup_type('uchar')
+
+        reader = self.ValReader(d)
+
+        # These fields (including order) are unstable, and
+        # may change between even patch-level Qt releases
+        reader.next_val(atomicint_t)
+        port = int(reader.next_val(int_t))
+        scheme = reader.next_val(qstring_t)
+        userName = reader.next_val(qstring_t)
+        password = reader.next_val(qstring_t)
+        host = reader.next_val(qstring_t)
+        path = reader.next_val(qstring_t)
+        query = reader.next_val(qstring_t)
+        fragment = reader.next_val(qstring_t)
+        reader.next_val(gdb.lookup_type('void').pointer())
+        sections = int(reader.next_val(uchar_t))
+        flags = int(reader.next_val(uchar_t))
+
+        # isLocalFile and no query and no fragment
+        if flags & 0x01 and not (sections & 0x40) and not (sections & 0x80):
+            # local file
+            return path
+
+        def qs_to_s(qstring):
+            return QStringPrinter(qstring).to_string()
+
+        # QUrl::toString() is way more complicated than what we do here,
+        # but this is good enough for debugging
+        result = ''
+        if sections & 0x01:
+            result += qs_to_s(scheme) + ':'
+        if sections & (0x02 | 0x04 | 0x08 | 0x10) or flags & 0x01:
+            result += '//'
+        if sections & 0x02 or sections & 0x04:
+            result += qs_to_s(userName)
+            if sections & 0x04:
+                # this may appear in backtraces that will be sent to other
+                # people
+                result += ':<omitted>'
+            result += '@'
+        if sections & 0x08:
+            result += qs_to_s(host)
+        if port != -1:
+            result += ':' + str(port)
+        result += qs_to_s(path)
+        if sections & 0x40:
+            result += '?' + qs_to_s(query)
+        if sections & 0x80:
+            result += '#' + qs_to_s(fragment)
+        return result
+
+    def display_hint(self):
+        return 'string'
+
 
 def build_pretty_printer():
     """Builds the pretty printer for Qt5Core."""
@@ -397,13 +567,17 @@ def build_pretty_printer():
     pp.add_printer('QLinkedList', '^QLinkedList<.*>$', QLinkedListPrinter)
     pp.add_printer('QList', '^QList<.*>$', QListPrinter)
     pp.add_printer('QMap', '^QMap<.*>$', QMapPrinter)
+    pp.add_printer('QHash', '^QHash<.*>$', QHashPrinter)
     pp.add_printer('QQueue', '^QQueue<.*>$', QListPrinter)
+    pp.add_printer('QSet', '^QSet<.*>$', QSetPrinter)
     pp.add_printer('QStack', '^QStack<.*>$', QVectorPrinter)
     pp.add_printer('QString', '^QString$', QStringPrinter)
     pp.add_printer('QStringList', '^QStringList$', QListPrinter)
     pp.add_printer('QVariantList', '^QVariantList$', QListPrinter)
+    pp.add_printer('QVariantMap', '^QVariantMap$', QMapPrinter)
     pp.add_printer('QVector', '^QVector<.*>$', QVectorPrinter)
     pp.add_printer('QVarLengthArray', '^QVarLengthArray<.*>$', QVarLengthArrayPrinter)
+    pp.add_printer('QUrl', '^QUrl$', QUrlPrinter)
     return pp
 
 printer = build_pretty_printer()
