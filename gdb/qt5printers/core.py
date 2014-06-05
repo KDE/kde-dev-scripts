@@ -30,7 +30,7 @@ except ImportError:
 """Qt5Core pretty printer for GDB."""
 
 # TODO:
-# QDate/QTime/QDateTime
+# QDateTime
 # QPair? Is a pretty version any better than the normal dump?
 # QStringBuilder?
 # QTimeZone? - just needs to print the m_id from the private header?
@@ -117,6 +117,31 @@ class QByteArrayPrinter:
 
     def display_hint(self):
         return 'string'
+
+class QDatePrinter:
+    """Print a Qt5 QDate"""
+
+    def __init__(self, val):
+        self.val = val
+
+    def to_string(self):
+        jd = int(self.val['jd'])
+        if jd < -784350574879 or jd > 784354017364:
+            return '<invalid>'
+        # maths from http://www.tondering.dk/claus/cal/julperiod.php
+        a = jd + 32044
+        b = (4 * a + 3) // 146097
+        c = a - ( (146097 * b) // 4 )
+        d = (4 * c + 3) // 1461
+        e = c - ( (1461 * d) // 4 )
+        m = (5 * e + 2) // 153
+        day = e - ( (153 * m + 2) // 5 ) + 1
+        month = m + 3 - 12 * ( m // 10 )
+        year = 100 * b + d - 4800 + ( m // 10 )
+        return '{:0=4}-{:0=2}-{:0=2}'.format(year, month, day)
+
+    def display_hint(self):
+        return 'date'
 
 class QHashPrinter:
     """Print a Qt5 QHash"""
@@ -424,6 +449,25 @@ class QStringPrinter:
     def display_hint(self):
         return 'string'
 
+class QTimePrinter:
+    """Print a Qt5 QTime"""
+
+    def __init__(self, val):
+        self.val = val
+
+    def to_string(self):
+        msecs = int(self.val['mds'])
+        if msecs < 0 or msecs > 86400000:
+            return '<invalid>'
+        secs = msecs // 1000
+        mins = secs // 60
+        hours = mins // 60
+        return '{:0=2}:{:0=2}:{:0=2}.{:0=3}'.format(
+                hours % 24, mins % 60, secs % 60, msecs % 1000)
+
+    def display_hint(self):
+        return 'time'
+
 class QVarLengthArrayPrinter:
     """Print a Qt5 QVarLengthArray"""
 
@@ -563,6 +607,7 @@ def build_pretty_printer():
     pp = gdb.printing.RegexpCollectionPrettyPrinter("Qt5Core")
     pp.add_printer('QBitArray', '^QBitArray$', QBitArrayPrinter)
     pp.add_printer('QByteArray', '^QByteArray$', QByteArrayPrinter)
+    pp.add_printer('QDate', '^QDate$', QDatePrinter)
     pp.add_printer('QLatin1String', '^QLatin1String$', QLatin1StringPrinter)
     pp.add_printer('QLinkedList', '^QLinkedList<.*>$', QLinkedListPrinter)
     pp.add_printer('QList', '^QList<.*>$', QListPrinter)
@@ -573,6 +618,7 @@ def build_pretty_printer():
     pp.add_printer('QStack', '^QStack<.*>$', QVectorPrinter)
     pp.add_printer('QString', '^QString$', QStringPrinter)
     pp.add_printer('QStringList', '^QStringList$', QListPrinter)
+    pp.add_printer('QTime', '^QTime$', QTimePrinter)
     pp.add_printer('QVariantList', '^QVariantList$', QListPrinter)
     pp.add_printer('QVariantMap', '^QVariantMap$', QMapPrinter)
     pp.add_printer('QVector', '^QVector<.*>$', QVectorPrinter)
