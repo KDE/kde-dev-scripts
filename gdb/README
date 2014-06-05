@@ -17,3 +17,14 @@ See the comments at the top of the script files for more information.
 At some point, possibly when it's a bit more complete and has had a bit of
 testing, this should be upstreamed to Qt, which will eliminate the need for
 users to generate the auto-load scripts.
+
+
+NOTE
+====
+
+KDevelop also provides GDB pretty-printers, which should work with Qt4 and Qt5
+(they attempt to auto-detect the version at runtime). Those ones are suitable
+for including in your ~/.gdbinit. I may, therefore, remove these ones at some
+point in the future (probably after upstreaming them to Qt).
+
+See https://projects.kde.org/projects/extragear/kdevelop/kdevelop/repository/revisions/master/show/debuggers/gdb/printers
