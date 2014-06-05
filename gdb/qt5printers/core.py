@@ -19,6 +19,7 @@
 # this software.
 
 import gdb.printing
+import typeinfo
 
 """Qt5Core pretty printer for GDB."""
 
@@ -128,12 +129,15 @@ class QListPrinter:
         else:
             el_type = self.val.type.template_argument(0)
 
-        if el_type.sizeof > gdb.lookup_type('void').pointer() or type_is_known_static(el_type):
+        if ((el_type.sizeof > gdb.lookup_type('void').pointer().sizeof)
+                or typeinfo.type_is_known_static(el_type)):
             is_pointer = True
-        elif type_is_known_movable(el_type) or type_is_known_primitive(el_type):
+        elif (typeinfo.type_is_known_movable(el_type) or
+                typeinfo.type_is_known_primitive(el_type)):
             is_pointer = False
         else:
-            raise ValueError("Could not determine whether QList stores " + el_type.name + " directly or as a pointer")
+            raise ValueError("Could not determine whether QList stores " +
+                    el_type.name + " directly or as a pointer")
         node_type = gdb.lookup_type(self.val.type.name + '::Node').pointer()
         result = []
         for i in range(size):
