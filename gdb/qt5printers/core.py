@@ -30,34 +30,82 @@ import typeinfo
 # QSet
 # QStringBuilder?
 # QTimeZone? - just needs to print the m_id from the private header?
+# QUrl
+
+class ArrayIter:
+    """Iterates over a fixed-size array."""
+    def __init__(self, array, size):
+        self.array = array
+        self.i = -1
+        self.size = size
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.i + 1 >= self.size:
+            raise StopIteration
+        self.i += 1
+        return ('[%d]' % self.i, self.array[self.i])
+
+    def next(self):
+        return self.__next__()
 
 class QBitArrayPrinter:
     """Print a Qt5 QBitArray"""
 
+    class Iter:
+        def __init__(self, data, size):
+            self.data = data
+            self.i = -1
+            self.size = size
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.i + 1 >= self.size:
+                raise StopIteration
+            self.i += 1
+            if self.data[1 + (self.i >> 3)] & (1 << (self.i&7)):
+                return (str(self.i), 1)
+            else:
+                return (str(self.i), 0)
+
+        def next(self):
+            return self.__next__()
+
     def __init__(self, val):
         self.val = val
+
+    def children(self):
+        d = self.val['d']['d']
+        data = d.reinterpret_cast(gdb.lookup_type('char').pointer()) + d['offset']
+        size = (int(d['size']) << 3) - int(data[0])
+
+        return self.Iter(data, size)
 
     def to_string(self):
         d = self.val['d']['d']
         data = d.reinterpret_cast(gdb.lookup_type('char').pointer()) + d['offset']
         size = (int(d['size']) << 3) - int(data[0])
-
-        bits = []
-        for i in range(size):
-            if data[1 + (i >> 3)] & (1 << (i&7)):
-                bits.append('1')
-            else:
-                bits.append('0')
-        return ''.join(bits)
+        if size == 0:
+            return '<empty>'
+        return ''
 
     def display_hint(self):
-        return 'bitstring'
+        return 'array'
 
 class QByteArrayPrinter:
     """Print a Qt5 QByteArray"""
 
     def __init__(self, val):
         self.val = val
+
+    def children(self):
+        d = self.val['d']
+        data = d.reinterpret_cast(gdb.lookup_type('char').pointer()) + d['offset']
+        return ArrayIter(data, d['size'])
 
     def to_string(self):
         d = self.val['d']
@@ -82,6 +130,25 @@ class QLatin1StringPrinter:
 class QLinkedListPrinter:
     """Print a Qt5 QLinkedList"""
 
+    class Iter:
+        def __init__(self, tail, size):
+            self.current = tail
+            self.i = -1
+            self.size = size
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.i + 1 >= self.size:
+                raise StopIteration
+            self.i += 1
+            self.current = self.current['n']
+            return (str(self.i), self.current['t'])
+
+        def next(self):
+            return self.__next__()
+
     def __init__(self, val):
         self.val = val
 
@@ -91,19 +158,12 @@ class QLinkedListPrinter:
         if size == 0:
             return []
 
-        el_type = self.val.type.template_argument(0)
-
-        result = []
-        node = self.val['e']['n']
-        for i in range(size):
-            result.append((str(i), node['t']))
-            node = node['n']
-        return result
+        return self.Iter(self.val['e'], size)
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
-            return '= {}'
+            return '<empty>'
         return ''
 
     def display_hint(self):
@@ -112,47 +172,66 @@ class QLinkedListPrinter:
 class QListPrinter:
     """Print a Qt5 QList"""
 
+    class Iter:
+        def __init__(self, array, begin, end, typ):
+            self.array = array
+            self.end = end
+            self.begin = begin
+            self.offset = 0
+            if typ.name == 'QStringList':
+                self.el_type = gdb.lookup_type('QString')
+            elif typ.name == 'QVariantList':
+                self.el_type = gdb.lookup_type('QVariant')
+            else:
+                self.el_type = typ.template_argument(0)
+
+            if ((self.el_type.sizeof > gdb.lookup_type('void').pointer().sizeof)
+                    or typeinfo.type_is_known_static(self.el_type)):
+                self.is_pointer = True
+            elif (typeinfo.type_is_known_movable(self.el_type) or
+                    typeinfo.type_is_known_primitive(self.el_type)):
+                self.is_pointer = False
+            else:
+                raise ValueError("Could not determine whether QList stores " +
+                        self.el_type.name + " directly or as a pointer: to fix " +
+                        "this, add it to one of the variables in the "+
+                        "qt5printers.typeinfo module")
+            self.node_type = gdb.lookup_type(typ.name + '::Node').pointer()
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.begin + self.offset >= self.end:
+                raise StopIteration
+            node = self.array[self.begin + self.offset].reinterpret_cast(self.node_type)
+            if self.is_pointer:
+                p = node['v']
+            else:
+                p = node
+            self.offset += 1
+            return ((str(self.offset), p.cast(self.el_type)))
+
+        def next(self):
+            return self.__next__()
+
     def __init__(self, val):
         self.val = val
 
     def children(self):
         d = self.val['d']
-        array = d['array']
         begin = int(d['begin'])
-        size = int(d['end']) - begin
+        end = int(d['end'])
 
-        if size == 0:
+        if begin == end:
             return []
 
-        if self.val.type.name == 'QStringList':
-            el_type = gdb.lookup_type('QString')
-        else:
-            el_type = self.val.type.template_argument(0)
-
-        if ((el_type.sizeof > gdb.lookup_type('void').pointer().sizeof)
-                or typeinfo.type_is_known_static(el_type)):
-            is_pointer = True
-        elif (typeinfo.type_is_known_movable(el_type) or
-                typeinfo.type_is_known_primitive(el_type)):
-            is_pointer = False
-        else:
-            raise ValueError("Could not determine whether QList stores " +
-                    el_type.name + " directly or as a pointer")
-        node_type = gdb.lookup_type(self.val.type.name + '::Node').pointer()
-        result = []
-        for i in range(size):
-            node = array[begin + i].reinterpret_cast(node_type)
-            if is_pointer:
-                p = node['v']
-            else:
-                p = node
-            result.append((str(i), p.cast(el_type)))
-        return result
+        return self.Iter(d['array'], begin, end, self.val.type)
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['begin'] == self.val['d']['end']:
-            return '= {}'
+            return '<empty>'
         return ''
 
     def display_hint(self):
@@ -161,18 +240,64 @@ class QListPrinter:
 class QMapPrinter:
     """Print a Qt5 QMap"""
 
+    class Iter:
+        def __init__(self, root, node_p_type):
+            self.root = root
+            self.current = None
+            self.node_p_type = node_p_type
+            self.next_is_key = True
+            self.i = -1
+            # we store the path here to avoid keeping re-fetching
+            # values from the inferior (also, skips the pointer
+            # arithmetic involved in using the parent pointer)
+            self.path = []
+
+        def __iter__(self):
+            return self
+
+        def moveToNextNode(self):
+            if self.current is None:
+                # find the leftmost node
+                if not self.root['left']:
+                    return False
+                self.current = self.root
+                while self.current['left']:
+                    self.path.append(self.current)
+                    self.current = self.current['left']
+            elif self.current['right']:
+                self.path.append(self.current)
+                self.current = self.current['right']
+                while self.current['left']:
+                    self.path.append(self.current)
+                    self.current = self.current['left']
+            else:
+                last = self.current
+                self.current = self.path.pop()
+                while self.current['right'] == last:
+                    last = self.current
+                    self.current = self.path.pop()
+                # if there are no more parents, we are at the root
+                if len(self.path) == 0:
+                    return False
+            return True
+
+        def __next__(self):
+            if self.next_is_key:
+                if not self.moveToNextNode():
+                    raise StopIteration
+                self.current_typed = self.current.reinterpret_cast(self.node_p_type)
+                self.next_is_key = False
+                self.i += 1
+                return ('key' + str(self.i), self.current_typed['key'])
+            else:
+                self.next_is_key = True
+                return ('value' + str(self.i), self.current_typed['value'])
+
+        def next(self):
+            return self.__next__()
+
     def __init__(self, val):
         self.val = val
-
-    def node_to_list(self, node):
-        if node:
-            left = node['left'].reinterpret_cast(node.type)
-            right = node['right'].reinterpret_cast(node.type)
-            return (self.node_to_list(left) +
-                    [('key',node['key']),('value',node['value'])] +
-                    self.node_to_list(right))
-        else:
-            return []
 
     def children(self):
         d = self.val['d']
@@ -185,12 +310,12 @@ class QMapPrinter:
         valtype = self.val.type.template_argument(1)
         node_type = gdb.lookup_type('QMapData<' + keytype.name + ',' + valtype.name + '>::Node')
 
-        return self.node_to_list(d['header']['left'].reinterpret_cast(node_type.pointer()))
+        return self.Iter(d['header'], node_type.pointer())
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
-            return '= {}'
+            return '<empty>'
         return ''
 
     def display_hint(self):
@@ -223,17 +348,12 @@ class QVarLengthArrayPrinter:
         if size == 0:
             return []
 
-        data = self.val['ptr']
-
-        result = []
-        for i in range(size):
-            result.append((str(i),data[i]))
-        return result
+        return ArrayIter(self.val['ptr'], size)
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['s'] == 0:
-            return '= {}'
+            return '<empty>'
         return ''
 
     def display_hint(self):
@@ -256,15 +376,12 @@ class QVectorPrinter:
         data_char = d.reinterpret_cast(gdb.lookup_type('char').pointer()) + d['offset']
         data = data_char.reinterpret_cast(el_type.pointer())
 
-        result = []
-        for i in range(data_len):
-            result.append((str(i),data[i]))
-        return result
+        return ArrayIter(data, data_len)
 
     def to_string(self):
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
-            return '= {}'
+            return '<empty>'
         return ''
 
     def display_hint(self):
@@ -284,6 +401,7 @@ def build_pretty_printer():
     pp.add_printer('QStack', '^QStack<.*>$', QVectorPrinter)
     pp.add_printer('QString', '^QString$', QStringPrinter)
     pp.add_printer('QStringList', '^QStringList$', QListPrinter)
+    pp.add_printer('QVariantList', '^QVariantList$', QListPrinter)
     pp.add_printer('QVector', '^QVector<.*>$', QVectorPrinter)
     pp.add_printer('QVarLengthArray', '^QVarLengthArray<.*>$', QVarLengthArrayPrinter)
     return pp
