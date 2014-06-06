@@ -33,7 +33,6 @@ except ImportError:
 # QDateTime
 # QPair? Is a pretty version any better than the normal dump?
 # QStringBuilder?
-# QTimeZone? - just needs to print the m_id from the private header?
 
 class ArrayIter:
     """Iterates over a fixed-size array."""
@@ -53,6 +52,25 @@ class ArrayIter:
 
     def next(self):
         return self.__next__()
+
+class StructReader:
+    """Reads entries from a struct."""
+    def __init__(self, data):
+        self.data = data.reinterpret_cast(gdb.lookup_type('char').pointer())
+        self.ptr_t = gdb.lookup_type('void').pointer()
+
+    def next_aligned_val(self, typ):
+        ptr_val = int(str(self.data.reinterpret_cast(self.ptr_t)), 16)
+        misalignment = ptr_val % self.ptr_t.sizeof
+        if misalignment > 0:
+            self.data += self.ptr_t.sizeof - misalignment
+        val = self.data.reinterpret_cast(typ.pointer())
+        return val.referenced_value()
+
+    def next_val(self, typ):
+        val = self.data.reinterpret_cast(typ.pointer())
+        self.data += typ.sizeof
+        return val.referenced_value()
 
 class QBitArrayPrinter:
     """Print a Qt5 QBitArray"""
@@ -490,6 +508,48 @@ class QTimePrinter:
     def display_hint(self):
         return 'time'
 
+class QTimeZonePrinter:
+    """Print a Qt5 QTimeZone"""
+
+    def __init__(self, val):
+        self.val = val
+
+    def to_string(self):
+        d = self.val['d']['d']
+        if not d:
+            return ''
+
+        try:
+            # Accessing the private data is error-prone,
+            # so try just calling the id() method.
+            # This should be reasonably safe, as all it will
+            # do is create a QByteArray that references the
+            # same internal data as the stored one. However,
+            # it will only work with an attached process.
+            m_id = gdb.parse_and_eval('((QTimeZone*){:})->id()'.format(self.val.address))
+        except:
+            ptr_size = gdb.lookup_type('void').pointer().sizeof
+            try:
+                qshareddata_t = gdb.lookup_type('QSharedData')
+            except gdb.error:
+                try:
+                    # well, it only has a QAtomicInt in it
+                    qshareddata_t = gdb.lookup_type('QAtomicInt')
+                except gdb.error:
+                    # let's hope it's the same size as an int
+                    qshareddata_t = gdb.lookup_type('int')
+
+            reader = StructReader(d)
+            reader.next_val(gdb.lookup_type('void').pointer()) # vtable
+            # vtable:
+            reader.next_val(qshareddata_t)
+            m_id = reader.next_aligned_val(gdb.lookup_type('QByteArray'))
+
+        return QByteArrayPrinter(m_id).to_string()
+
+    def display_hint(self):
+        return 'string'
+
 class QVariantPrinter:
     """Print a Qt5 QVariant"""
 
@@ -622,15 +682,6 @@ class QUrlPrinter:
     def __init__(self, val):
         self.val = val
 
-    class ValReader:
-        def __init__(self, data):
-            self.data = data.reinterpret_cast(gdb.lookup_type('char').pointer())
-
-        def next_val(self, typ):
-            val = self.data.reinterpret_cast(typ.pointer())
-            self.data += typ.sizeof
-            return val.referenced_value()
-
     def to_string(self):
         d = self.val['d']
         if not d:
@@ -645,7 +696,7 @@ class QUrlPrinter:
         qstring_t = gdb.lookup_type('QString')
         uchar_t = gdb.lookup_type('uchar')
 
-        reader = self.ValReader(d)
+        reader = StructReader(d)
 
         # These fields (including order) are unstable, and
         # may change between even patch-level Qt releases
@@ -717,6 +768,7 @@ def build_pretty_printer():
     pp.add_printer('QString', '^QString$', QStringPrinter)
     pp.add_printer('QStringList', '^QStringList$', QListPrinter)
     pp.add_printer('QTime', '^QTime$', QTimePrinter)
+    pp.add_printer('QTimeZone', '^QTimeZone$', QTimeZonePrinter)
     pp.add_printer('QVariant', '^QVariant$', QVariantPrinter)
     pp.add_printer('QVariantList', '^QVariantList$', QListPrinter)
     pp.add_printer('QVariantMap', '^QVariantMap$', QMapPrinter)
