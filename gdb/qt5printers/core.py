@@ -30,7 +30,6 @@ except ImportError:
 """Qt5Core pretty printer for GDB."""
 
 # TODO:
-# QChar
 # QDateTime
 # QPair? Is a pretty version any better than the normal dump?
 # QStringBuilder?
@@ -118,6 +117,28 @@ class QByteArrayPrinter:
 
     def display_hint(self):
         return 'string'
+
+class QCharPrinter:
+    """Print a Qt5 QChar"""
+
+    def __init__(self, val):
+        self.val = val
+
+    def to_string(self):
+        ucs = self.val['ucs']
+        data = ucs.address.reinterpret_cast(gdb.lookup_type('char').pointer())
+        unicode_str = data.string('utf-16', 'replace', 2)
+        uch = unicode_str[0]
+        if uch == unichr(0x27):
+            return "'\\''"
+        # this actually gives us Python escapes, but they should all be
+        # valid C escapes as well
+        return "'" + uch.encode('unicode_escape') + "'"
+
+    def display_hint(self):
+        # this is not recognized by gdb, hence the manual escaping and quoting
+        # we do above
+        return 'char'
 
 class QDatePrinter:
     """Print a Qt5 QDate"""
@@ -683,6 +704,7 @@ def build_pretty_printer():
     pp = gdb.printing.RegexpCollectionPrettyPrinter("Qt5Core")
     pp.add_printer('QBitArray', '^QBitArray$', QBitArrayPrinter)
     pp.add_printer('QByteArray', '^QByteArray$', QByteArrayPrinter)
+    pp.add_printer('QChar', '^QChar$', QCharPrinter)
     pp.add_printer('QDate', '^QDate$', QDatePrinter)
     pp.add_printer('QLatin1String', '^QLatin1String$', QLatin1StringPrinter)
     pp.add_printer('QLinkedList', '^QLinkedList<.*>$', QLinkedListPrinter)
