@@ -30,6 +30,7 @@ except ImportError:
 """Qt5Core pretty printer for GDB."""
 
 # TODO:
+# QChar
 # QDateTime
 # QPair? Is a pretty version any better than the normal dump?
 # QStringBuilder?
@@ -94,7 +95,7 @@ class QBitArrayPrinter:
         size = (int(d['size']) << 3) - int(data[0])
         if size == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -203,7 +204,7 @@ class QHashPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'map'
@@ -257,7 +258,7 @@ class QLinkedListPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -323,7 +324,7 @@ class QListPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['begin'] == self.val['d']['end']:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -408,7 +409,7 @@ class QMapPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'map'
@@ -429,7 +430,7 @@ class QSetPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['q_hash']['d']['size'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -468,6 +469,81 @@ class QTimePrinter:
     def display_hint(self):
         return 'time'
 
+class QVariantPrinter:
+    """Print a Qt5 QVariant"""
+
+    _varmap = {
+        'char': 'c',
+        'uchar': 'uc',
+        'short': 's',
+        'signed char': 'sc',
+        'ushort': 'us',
+        'int': 'i',
+        'uint': 'u',
+        'long': 'l',
+        'ulong': 'ul',
+        'bool': 'b',
+        'double': 'd',
+        'float': 'f',
+        'qreal': 'real',
+        'qlonglong': 'll',
+        'qulonglong': 'ull',
+        'QObject*': 'o',
+        'void*': 'ptr'
+    }
+
+    def __init__(self, val):
+        self.val = val
+
+    def children(self):
+        d = self.val['d']
+        typ = int(d['type'])
+        if typ == typeinfo.meta_type_unknown:
+            return [('type', 'invalid')]
+
+        data = d['data']
+
+        if typ in typeinfo.meta_type_names:
+            typename = typeinfo.meta_type_names[typ]
+            if typename in self._varmap:
+                field = self._varmap[typename]
+                return [('type', typename), ('data', data[field])]
+
+            try:
+                if typename.endswith('*'):
+                    gdb_type = gdb.lookup_type(typename[0:-1]).pointer()
+                else:
+                    gdb_type = gdb.lookup_type(typename)
+            except gdb.error:
+                # couldn't find any type information
+                return [('type', typename), ('data', data)]
+
+            if gdb_type.sizeof > data.type.sizeof:
+                is_pointer = True
+            elif (typeinfo.type_is_known_movable(gdb_type) or
+                    typeinfo.type_is_known_primitive(gdb_type)):
+                is_pointer = False
+            elif gdb_type.tag == 'enum':
+                is_pointer = False
+            else:
+                # couldn't figure out how the type is stored
+                return [('type', typename), ('data', data)]
+
+            if is_pointer:
+                value = data['shared']['ptr'].reinterpret_cast(gdb_type.pointer())
+            else:
+                void_star = gdb.lookup_type('void').pointer()
+                data_void = data['c'].address.reinterpret_cast(void_star)
+                value = data_void.reinterpret_cast(gdb_type.pointer())
+
+            return [('type', typename), ('data', value.referenced_value())]
+        else:
+            # custom type?
+            return [('type', typ), ('data', data)]
+
+    def to_string(self):
+        return None
+
 class QVarLengthArrayPrinter:
     """Print a Qt5 QVarLengthArray"""
 
@@ -486,7 +562,7 @@ class QVarLengthArrayPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['s'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -514,7 +590,7 @@ class QVectorPrinter:
         # if we return an empty list from children, gdb doesn't print anything
         if self.val['d']['size'] == 0:
             return '<empty>'
-        return ''
+        return None
 
     def display_hint(self):
         return 'array'
@@ -619,6 +695,7 @@ def build_pretty_printer():
     pp.add_printer('QString', '^QString$', QStringPrinter)
     pp.add_printer('QStringList', '^QStringList$', QListPrinter)
     pp.add_printer('QTime', '^QTime$', QTimePrinter)
+    pp.add_printer('QVariant', '^QVariant$', QVariantPrinter)
     pp.add_printer('QVariantList', '^QVariantList$', QListPrinter)
     pp.add_printer('QVariantMap', '^QVariantMap$', QMapPrinter)
     pp.add_printer('QVector', '^QVector<.*>$', QVectorPrinter)
