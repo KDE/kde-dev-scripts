@@ -29,10 +29,37 @@ except ImportError:
 
 """Qt5Core pretty printer for GDB."""
 
-# TODO:
-# QDateTime
-# QPair? Is a pretty version any better than the normal dump?
-# QStringBuilder?
+# NB: no QPair printer: the default should be fine
+
+def _format_jd(jd):
+    """Format a Julian Day in YYYY-MM-DD format."""
+    # maths from http://www.tondering.dk/claus/cal/julperiod.php
+    a = jd + 32044
+    b = (4 * a + 3) // 146097
+    c = a - ( (146097 * b) // 4 )
+    d = (4 * c + 3) // 1461
+    e = c - ( (1461 * d) // 4 )
+    m = (5 * e + 2) // 153
+    day = e - ( (153 * m + 2) // 5 ) + 1
+    month = m + 3 - 12 * ( m // 10 )
+    year = 100 * b + d - 4800 + ( m // 10 )
+    return '{:0=4}-{:0=2}-{:0=2}'.format(year, month, day)
+
+def _jd_is_valid(jd):
+    """Return whether QDate would consider a given Julian Day valid."""
+    return jd >= -784350574879 and jd <= 784354017364
+
+def _format_time_ms(msecs):
+    """Format a number of milliseconds since midnight in HH:MM:SS.ssss format."""
+    secs = msecs // 1000
+    mins = secs // 60
+    hours = mins // 60
+    return '{:0=2}:{:0=2}:{:0=2}.{:0=3}'.format(
+            hours % 24, mins % 60, secs % 60, msecs % 1000)
+
+def _ms_is_valid(msecs):
+    """Return whether QTime would consider a ms since midnight valid."""
+    return msecs >= 0 and msecs <= 86400000
 
 class ArrayIter:
     """Iterates over a fixed-size array."""
@@ -65,6 +92,7 @@ class StructReader:
         if misalignment > 0:
             self.data += self.ptr_t.sizeof - misalignment
         val = self.data.reinterpret_cast(typ.pointer())
+        self.data += typ.sizeof
         return val.referenced_value()
 
     def next_val(self, typ):
@@ -166,22 +194,114 @@ class QDatePrinter:
 
     def to_string(self):
         jd = int(self.val['jd'])
-        if jd < -784350574879 or jd > 784354017364:
+        if not _jd_is_valid(jd):
             return '<invalid>'
-        # maths from http://www.tondering.dk/claus/cal/julperiod.php
-        a = jd + 32044
-        b = (4 * a + 3) // 146097
-        c = a - ( (146097 * b) // 4 )
-        d = (4 * c + 3) // 1461
-        e = c - ( (1461 * d) // 4 )
-        m = (5 * e + 2) // 153
-        day = e - ( (153 * m + 2) // 5 ) + 1
-        month = m + 3 - 12 * ( m // 10 )
-        year = 100 * b + d - 4800 + ( m // 10 )
-        return '{:0=4}-{:0=2}-{:0=2}'.format(year, month, day)
+        return _format_jd(jd)
 
     def display_hint(self):
         return 'date'
+
+class QDateTimePrinter:
+    """Print a Qt5 QDateTime"""
+
+    def __init__(self, val):
+        self.val = val
+
+    _unix_epoch_jd = 2440588
+    _ms_per_day = 86400000
+
+    # status field
+    _validDate = 0x04
+    _validTime = 0x08
+    _validDateTime = 0x10
+    _timeZoneCached = 0x20
+
+    # time spec
+    _localTime = 0
+    _UTC = 1
+    _offsetFromUTC = 2
+    _timeZone = 3
+
+    def to_string(self):
+        d = self.val['d']['d']
+        if not d:
+            return '<invalid>'
+
+        try:
+            qshareddata_t = gdb.lookup_type('QSharedData')
+        except gdb.error:
+            try:
+                # well, it only has a QAtomicInt in it
+                qshareddata_t = gdb.lookup_type('QAtomicInt')
+            except gdb.error:
+                # let's hope it's the same size as an int
+                qshareddata_t = gdb.lookup_type('int')
+        try:
+            timespec_t = gdb.lookup_type('Qt::TimeSpec')
+        except gdb.error:
+            # probably an int
+            timespec_t = gdb.lookup_type('int')
+
+        reader = StructReader(d)
+        reader.next_val(qshareddata_t)
+        m_msecs = reader.next_aligned_val(gdb.lookup_type('qint64'))
+        spec = int(reader.next_val(timespec_t))
+        m_offsetFromUtc = reader.next_val(gdb.lookup_type('int'))
+        m_timeZone = reader.next_val(gdb.lookup_type('QTimeZone'))
+        status = int(reader.next_val(gdb.lookup_type('int')))
+
+        if spec == self._timeZone:
+            timeZoneStr = QTimeZonePrinter(m_timeZone).to_string()
+            if timeZoneStr == '':
+                return '<invalid>'
+
+        if spec == self._localTime or (spec == self._timeZone and
+                not status & self._timeZoneCached):
+            # Because QDateTime delays timezone calculations as far as
+            # possible, the ValidDateTime flag may not be set even if
+            # it is a valid DateTime.
+            if not status & self._validDate or not status & self._validTime:
+                return '<invalid>'
+        elif not (status & self._validDateTime):
+            return '<invalid>'
+
+        # actually fetch:
+        m_msecs = int(m_msecs)
+
+        jd = self._unix_epoch_jd # UNIX epoch
+        jd += m_msecs // self._ms_per_day
+        msecs = m_msecs % self._ms_per_day
+        if msecs < 0:
+            # need to adjust back to the previous day
+            jd -= 1
+            msecs += self._ms_per_day
+
+        result = _format_jd(jd) + ' ' + _format_time_ms(msecs)
+
+        if spec == self._localTime:
+            result += ' (Local)'
+        elif spec == self._UTC:
+            result += ' (UTC)'
+        elif spec == self._offsetFromUTC:
+            offset = int(m_offsetFromUtc)
+            if offset == 0:
+                diffstr = ''
+            else:
+                hours = abs(offset // 3600)
+                mins = abs((offset % 3600) // 60)
+                secs = abs(offset % 60)
+                sign = '+' if offset > 0 else '-'
+                diffstr = '{:}{:0=2d}:{:0=2d}'.format(sign, hours, mins)
+                if secs > 0:
+                    diffstr += ':{:0=2d}'.format(secs)
+            result += ' (UTC{:})'.format(diffstr)
+        elif spec == self._timeZone:
+            result += ' ({:})'.format(timeZoneStr)
+
+        return result
+
+    def display_hint(self):
+        return 'datetime'
 
 class QHashPrinter:
     """Print a Qt5 QHash"""
@@ -497,13 +617,9 @@ class QTimePrinter:
 
     def to_string(self):
         msecs = int(self.val['mds'])
-        if msecs < 0 or msecs > 86400000:
+        if not _ms_is_valid(msecs):
             return '<invalid>'
-        secs = msecs // 1000
-        mins = secs // 60
-        hours = mins // 60
-        return '{:0=2}:{:0=2}:{:0=2}.{:0=3}'.format(
-                hours % 24, mins % 60, secs % 60, msecs % 1000)
+        return _format_time_ms(msecs)
 
     def display_hint(self):
         return 'time'
@@ -541,7 +657,6 @@ class QTimeZonePrinter:
 
             reader = StructReader(d)
             reader.next_val(gdb.lookup_type('void').pointer()) # vtable
-            # vtable:
             reader.next_val(qshareddata_t)
             m_id = reader.next_aligned_val(gdb.lookup_type('QByteArray'))
 
@@ -757,6 +872,7 @@ def build_pretty_printer():
     pp.add_printer('QByteArray', '^QByteArray$', QByteArrayPrinter)
     pp.add_printer('QChar', '^QChar$', QCharPrinter)
     pp.add_printer('QDate', '^QDate$', QDatePrinter)
+    pp.add_printer('QDateTime', '^QDateTime$', QDateTimePrinter)
     pp.add_printer('QLatin1String', '^QLatin1String$', QLatin1StringPrinter)
     pp.add_printer('QLinkedList', '^QLinkedList<.*>$', QLinkedListPrinter)
     pp.add_printer('QList', '^QList<.*>$', QListPrinter)
