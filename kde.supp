@@ -268,7 +268,7 @@
 }
 
 # Helgrind suppressions for atomic operations.
-# This is because helgrind cannot tell that they are atomic operations, on x86. The machine code is exactly the same.
+# This is because helgrind/drd cannot tell that they are atomic operations, on x86. The machine code is exactly the same.
 {
    QBasicAtomicPointer_load
    Helgrind:Race
@@ -304,5 +304,29 @@
 {
    QBasicAtomicOps_testAndSet
    Helgrind:Race
+   fun:_ZN15QBasicAtomicOps*testAndSet*
+}
+
+## Same for DRD (tested with Qt5 only)
+{
+   QBasicAtomic_load_drd
+   drd:ConflictingAccess
+   # catch load and loadAcquire
+   fun:_ZNK19QBasicAtomic*load*
+}
+{
+   QBasicAtomic_store_drd
+   drd:ConflictingAccess
+   # catch store and storeRelease
+   fun:_ZN19QBasicAtomic*store*
+}
+{
+   QBasicAtomicOps_fetchAndStore_drd
+   drd:ConflictingAccess
+   fun:_ZN15QBasicAtomicOps*fetchAndStore*
+}
+{
+   QBasicAtomicOps_testAndSet_drd
+   drd:ConflictingAccess
    fun:_ZN15QBasicAtomicOps*testAndSet*
 }
