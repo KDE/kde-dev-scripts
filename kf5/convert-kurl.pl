@@ -22,7 +22,7 @@ foreach my $file (@ARGV) {
         s/#include <KUrl>/#include <QUrl>/;
         s/class KUrl\;/class QUrl\;/;
         s/KUrl\(\)\;/QUrl()\;/;
-
+        s/KUrl::toPercentEncoding\b/QUrl::toPercentEncoding/;
         # Detect variables being declared as KUrl
         if (/const KUrl\s*&\s*(\w+)/ || /^\s*KUrl\s+(\w+)\s*[=\;]/ || /^\s*KUrl\s+(\w+)\s*\(/) {
             $urls{$1} = 1;
