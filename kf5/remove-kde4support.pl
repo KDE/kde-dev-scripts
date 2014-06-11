@@ -14,6 +14,7 @@ foreach my $file (@ARGV) {
     my $needQApplicationHeader;
     my $needQDesktopWidgetHeader;
     my $needKColorScheme;
+    my $needQStandardPaths;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -33,6 +34,30 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::createApplicationPalette\b,KColorScheme::createApplicationPalette,;
            $needKColorScheme = 1;
         }
+        if (/KGlobalSettings::documentPath/) {
+           s,KGlobalSettings::documentPath\(\),QStandardPaths::writableLocation\(QStandardPaths::DocumentsLocation\),;
+           $needQStandardPaths = 1;
+        }
+        if (/KGlobalSettings::desktopPath/) {
+           s,KGlobalSettings::desktopPath\(\),QStandardPaths::writableLocation\(QStandardPaths::DesktopLocation\),;
+           $needQStandardPaths = 1;
+        }
+        if (/KGlobalSettings::musicPath/) {
+           s,KGlobalSettings::musicPath\(\),QStandardPaths::writableLocation\(QStandardPaths::MusicLocation\),;
+           $needQStandardPaths = 1;
+        }
+        if (/KGlobalSettings::videosPath/) {
+           s,KGlobalSettings::videosPath\(\),QStandardPaths::writableLocation\(QStandardPaths::MoviesLocation\),;
+           $needQStandardPaths = 1;
+        }
+        if (/KGlobalSettings::downloadPath/) {
+           s,KGlobalSettings::downloadPath\(\),QStandardPaths::writableLocation\(QStandardPaths::DownloadLocation\),;
+           $needQStandardPaths = 1;
+        }
+        if (/KGlobalSettings::picturesPath/) {
+           s,KGlobalSettings::picturesPath\(\),QStandardPaths::writableLocation\(QStandardPaths::PicturesLocation\),;
+           $needQStandardPaths = 1;
+        }
 
         $modified ||= $orig ne $_;
         $_;
@@ -50,6 +75,9 @@ foreach my $file (@ARGV) {
         }
         if ($needKColorScheme) {
            functionUtilkde::addIncludeInFile($file, "KColorScheme");
+        }
+        if ($needQStandardPaths) {
+           functionUtilkde::addIncludeInFile($file, "QStandardPaths");
         }
     }
 }
