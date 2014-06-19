@@ -264,6 +264,14 @@ my @l = map {
      $_ =~ s/qt4_generate_dbus_interface/qt5_generate_dbus_interface/;
      $modified = 1;
   }
+  if (/kde4_install_auth_helper_files/) {
+     $_ =~ s/kde4_install_auth_helper_files/kauth_install_helper_files/;
+     $modified = 1;
+  }
+  if (/kde4_install_auth_actions/) {
+     $_ =~ s/kde4_install_auth_actions/kauth_install_actions/;
+     $modified = 1;
+  }
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
