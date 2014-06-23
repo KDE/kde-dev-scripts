@@ -23,6 +23,9 @@ foreach my $file (@ARGV) {
         if (/setHelpText\b/) {
            warn "QAction doesn't support setHelpText, just reimplement it in your code see kaction.cpp\n";
         }
+        if (/setShortcutConfigurable/) {
+           warn "QAction doesn't support directly setShortcutConfigurable, use KActionCollection::setShortcutsConfigurable(QAction *action, bool configurable)\n";
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
