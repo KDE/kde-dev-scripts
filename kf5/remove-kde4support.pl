@@ -63,6 +63,10 @@ foreach my $file (@ARGV) {
            s,KLocale::global\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
            $needKFormat = 1;
         }
+        if (/KLocale::global\(\)\-\>prettyFormatDuration/) {
+           s,KLocale::global\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
+           $needKFormat = 1;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
