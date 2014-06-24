@@ -15,6 +15,7 @@ foreach my $file (@ARGV) {
     my $needQDesktopWidgetHeader;
     my $needKColorScheme;
     my $needQStandardPaths;
+    my $needKFormat;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -58,7 +59,10 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::picturesPath\(\),QStandardPaths::writableLocation\(QStandardPaths::PicturesLocation\),;
            $needQStandardPaths = 1;
         }
-
+        if (/KLocale::global\(\)\-\>formatByteSize/) {
+           s,KLocale::global\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
+           $needKFormat = 1;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -78,6 +82,9 @@ foreach my $file (@ARGV) {
         }
         if ($needQStandardPaths) {
            functionUtilkde::addIncludeInFile($file, "QStandardPaths");
+        }
+        if ($needKFormat) {
+           functionUtilkde::addIncludeInFile($file, "KFormat");
         }
     }
 }
