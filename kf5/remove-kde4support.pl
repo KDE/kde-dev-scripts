@@ -80,6 +80,14 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::windowTitleFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::TitleFont\),g;
            $needQFontDatabase = 1;
         }
+        if (/KGlobalSettings::contrast\b/) {
+           s,/KGlobalSettings::contrast\b,KColorScheme::contrast,g;
+           $needKColorScheme = 1;
+        }
+        if (/KGlobalSettings::contrast\b/) {
+           s,/KGlobalSettings::contrastF\b,KColorScheme::contrastF,g;
+           $needKColorScheme = 1;
+        }
 
         $modified ||= $orig ne $_;
         $_;
