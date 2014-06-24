@@ -16,6 +16,7 @@ foreach my $file (@ARGV) {
     my $needKColorScheme;
     my $needQStandardPaths;
     my $needKFormat;
+    my $needQFontDatabase;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -67,6 +68,19 @@ foreach my $file (@ARGV) {
            s,KLocale::global\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
            $needKFormat = 1;
         }
+        if (/KGlobalSettings::generalFont/) {
+           s,KGlobalSettings::generalFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::GeneralFont\),g;
+           $needQFontDatabase = 1;
+        }
+        if (/KGlobalSettings::fixedFont/) {
+           s,KGlobalSettings::fixedFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::FixedFont\),g;
+           $needQFontDatabase = 1;
+        }
+        if (/KGlobalSettings::windowTitleFont/) {
+           s,KGlobalSettings::windowTitleFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::TitleFont\),g;
+           $needQFontDatabase = 1;
+        }
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -89,6 +103,9 @@ foreach my $file (@ARGV) {
         }
         if ($needKFormat) {
            functionUtilkde::addIncludeInFile($file, "KFormat");
+        }
+        if ($needQFontDatabase) {
+           functionUtilkde::addIncludeInFile($file, "QFontDatabase");
         }
     }
 }
