@@ -27,7 +27,6 @@ foreach my $file (@ARGV) {
         if (my ($indent, $left, $var, $argument, $afterreg) = $_ =~ $regexp) {
           #KPushButton( const KGuiItem &item, QWidget *parent = 0 );
           my ($kguiitem, $parent, $after);
-          warn "kpushbutton \n";
           my $constructor_regexp = qr/
                                  ^(\s*KStandardGuiItem[^,]*)\s*        # kguitem
                                  (?:,\s([^,]*))?    # parent
@@ -43,6 +42,19 @@ foreach my $file (@ARGV) {
              $needGuiItem = 1;
              $_ .= $indent . "KGuiItem::assign($var,$kguiitem);" . $after . "\n";
           }
+        }
+        
+        # support for ui.addButton->setGuiItem( KStandardGuiItem::add() );
+        my $setGuiItemRegex = qr/
+           ^(\s*)                        # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
+           (.*?)\-\>setGuiItem\(         # (2) variable name
+           \s*(KStandardGuiItem::.*)     # (3) kstandardguiitem
+           (.*)$                         # (5) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $var, $kstandardguiitem, $after) = $_ =~ $setGuiItemRegex) {
+           warn "found setGuiItem \"$kstandardguiitem\" \"$var\"\n";
+           $_ = $indent . "KGuiItem::assign($var, $kstandardguiitem" . $after . "\n";
+           $needGuiItem = 1;
         }
         s/\bKPushButton\b/QPushButton/g;
         s/\<KPushButton\b\>/\<QPushButton>/ =~ /#include/ ;
