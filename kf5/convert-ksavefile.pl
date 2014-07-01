@@ -25,7 +25,6 @@ foreach my $file (@ARGV) {
           (\w+)            # (2) variable name          
           /x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexp) {
-           warn "var found !!!!!!!! $var , before $left\n";
            $varname{$var} = 1;
            s/\bKSaveFile\b/QSaveFile/;
         }
