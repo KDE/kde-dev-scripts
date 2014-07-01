@@ -26,6 +26,7 @@ foreach my $file (@ARGV) {
         if (/setShortcutConfigurable/) {
            warn "QAction doesn't support directly setShortcutConfigurable, use KActionCollection::setShortcutsConfigurable(QAction *action, bool configurable)\n";
         }
+        s/\bKAction\b/QAction/g;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
