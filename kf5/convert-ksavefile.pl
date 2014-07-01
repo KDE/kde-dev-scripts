@@ -41,6 +41,13 @@ foreach my $file (@ARGV) {
               s/$var\.open\(\s*\)/$var\.open\(QIODevice::ReadWrite\)/;
            }
         }
+        if (/(\w+)\.abort\(\s*\)/) {
+           my $var = $1;
+           if ( defined $varname{$var} ) {
+              s/$var\.abort\(\s*\)/$var\.cancelWriting\(\)/;
+           }
+        }
+
         s/\bKSaveFile\b/QSaveFile/g;
         s/\<KSaveFile\b\>/\<QSaveFile>/ =~ /#include/ ;
         s/\<ksavefile.h\>/\<QSaveFile>/ =~ /#include/ ;
