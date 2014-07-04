@@ -17,6 +17,7 @@ foreach my $file (@ARGV) {
     my $needQStandardPaths;
     my $needKFormat;
     my $needQFontDatabase;
+    my $needQDir;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -81,12 +82,16 @@ foreach my $file (@ARGV) {
            $needQFontDatabase = 1;
         }
         if (/KGlobalSettings::contrast\b/) {
-           s,/KGlobalSettings::contrast\b,KColorScheme::contrast,g;
+           s,KGlobalSettings::contrast\b,KColorScheme::contrast,g;
            $needKColorScheme = 1;
         }
         if (/KGlobalSettings::contrast\b/) {
-           s,/KGlobalSettings::contrastF\b,KColorScheme::contrastF,g;
+           s,KGlobalSettings::contrastF\b,KColorScheme::contrastF,g;
            $needKColorScheme = 1;
+        }
+        if (/KStandardDirs::makeDir\b/) {
+           $needQDir = 1;
+           s,KStandardDirs::makeDir\b,QDir\(\)\.mkpath,; 
         }
 
         $modified ||= $orig ne $_;
@@ -114,6 +119,9 @@ foreach my $file (@ARGV) {
         }
         if ($needQFontDatabase) {
            functionUtilkde::addIncludeInFile($file, "QFontDatabase");
+        }
+        if ($needQDir) {
+           functionUtilkde::addIncludeInFile($file, "QDir");
         }
     }
 }
