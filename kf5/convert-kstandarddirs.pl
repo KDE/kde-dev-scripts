@@ -68,7 +68,7 @@ foreach my $file (@ARGV) {
             if (defined $loc) {
                 # prepend a slash
                 if ($fileName =~ m/QLatin1String/) {
-                    $fileName =~ s/QLatin1String\(\"/QLatin1String(\"\//;
+                    $fileName =~ s/QLatin1String\s*\(\s*\"/QLatin1String(\"\//;
                 } else {
                     $fileName = "QLatin1Char('\/') + " . $fileName;
                 }
