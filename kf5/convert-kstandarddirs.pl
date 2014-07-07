@@ -145,6 +145,11 @@ foreach my $file (@ARGV) {
               s/KSharedConfig::openConfig\(.*\)/KSharedConfig::openConfig($fileName, $flags, $loc)/;
             }
         }
+        if (/KStandardDirs::locateLocal\s*\(\s*\"tmp\"/) {
+            s/KStandardDirs::locateLocal\s*\(\s*\"tmp\"\s*,/QDir::tempPath\(\) \+ QLatin1Char\(\'\/\'\) \+ /;
+        }
+
+
     } $file;
     functionUtilkde::addIncludeInFile($file, "config-prefix.h") if ($addconfigprefix);
     if (not `grep -i dirs $file | grep -v kstandarddirs\.h`) {
