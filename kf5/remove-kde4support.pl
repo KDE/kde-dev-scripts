@@ -18,6 +18,7 @@ foreach my $file (@ARGV) {
     my $needKFormat;
     my $needQFontDatabase;
     my $needQDir;
+    my $needKComponentData;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -93,6 +94,10 @@ foreach my $file (@ARGV) {
            $needQDir = 1;
            s,KStandardDirs::makeDir\b,QDir\(\)\.mkpath,; 
         }
+        if (/KGlobal::activeComponent\b/) {
+           s,KGlobal::activeComponent\b,KComponentData::activeComponent,;
+           $needKComponentData = 1;
+        }
 
         $modified ||= $orig ne $_;
         $_;
@@ -122,6 +127,9 @@ foreach my $file (@ARGV) {
         }
         if ($needQDir) {
            functionUtilkde::addIncludeInFile($file, "QDir");
+        }
+        if ($needKComponentData) {
+           functionUtilkde::addIncludeInFile($file, "KComponentData");
         }
     }
 }
