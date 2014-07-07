@@ -61,7 +61,7 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
         s/KGlobal::dirs\(\)->localxdgdatadir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '\/'/;
         s/KGlobal::dirs\(\)->localxdgconfdir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + '\/'/;
-        s/KStandardDirs::locate\("exe", /KStandardDirs::findExe\(/;
+        s/KStandardDirs::locate\s*\(\s*"exe", /KStandardDirs::findExe\(/;
 
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my ($loc, $fileName) = locationAndSubdir($1, $2);
@@ -97,15 +97,15 @@ foreach my $file (@ARGV) {
             }
         }
 
-        if (/KStandardDirs::findExe\(\s*\"(.*)\"(,\s*[^\)]*)?\s*\)/ ||
-            /KStandardDirs::findExe\(\s*QLatin1String\s*\(\"(.*)\"\)(,\s*[^\)]*)?\s*\)/) {
+        if (/KStandardDirs::findExe\s*\(\s*\"(.*)\"(,\s*[^\)]*)?\s*\)/ ||
+            /KStandardDirs::findExe\s*\(\s*QLatin1String\s*\(\"(.*)\"\)(,\s*[^\)]*)?\s*\)/) {
             my $exe = $1;
             if (`which $exe 2>/dev/null`) {
                 print STDERR "found $exe\n";
                 s/KStandardDirs::findExe/QStandardPaths::findExecutable/;
             } else {
                 if (`locate libexec/$exe`) {
-                    s/KStandardDirs::findExe\([^\)]*\)/CMAKE_INSTALL_PREFIX \"\/\" LIBEXEC_INSTALL_DIR \"\/$exe\"/;
+                    s/KStandardDirs::findExe\s*\([^\)]*\)/CMAKE_INSTALL_PREFIX \"\/\" LIBEXEC_INSTALL_DIR \"\/$exe\"/;
                     #print STDERR "$exe NOT found in PATH, use CMAKE_INSTALL_PREFIX \"/\" LIBEXEC_INSTALL_DIR \"/$exe\" instead\n";
                     $addconfigprefix = 1;
                 } else {
