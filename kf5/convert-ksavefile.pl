@@ -20,9 +20,9 @@ foreach my $file (@ARGV) {
         #KSaveFile file( filename );
 
         my $regexp = qr/
-          ^(.*?)           # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
-          KSaveFile\s+     
-          (\w+)            # (2) variable name          
+          ^(\s*)           # (1) Indentation
+          KSaveFile\s+
+          (\w+)            # (2) variable name
           /x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexp) {
            $varname{$var} = 1;
@@ -49,8 +49,8 @@ foreach my $file (@ARGV) {
         }
 
         s/\bKSaveFile\b/QSaveFile/g;
-        s/\<KSaveFile\b\>/\<QSaveFile>/ =~ /#include/ ;
-        s/\<ksavefile.h\>/\<QSaveFile>/ =~ /#include/ ;
+        s/\<KSaveFile\b\>/\<QSaveFile>/ if (/#include/);
+        s/\<ksavefile.h\>/\<QSaveFile>/ if (/#include/);
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
