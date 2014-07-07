@@ -272,6 +272,10 @@ my @l = map {
      $_ =~ s/kde4_install_auth_actions/kauth_install_actions/;
      $modified = 1;
   }
+  if (/qt4_add_resources/) {
+     $_ =~ s/qt4_add_resources/qt5_add_resources/;
+     $modified = 1;
+  }
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
