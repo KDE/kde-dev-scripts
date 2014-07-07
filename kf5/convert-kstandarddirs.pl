@@ -84,17 +84,16 @@ foreach my $file (@ARGV) {
                 #print STDERR "fileName=$fileName\n";
                 my ($search, $replace);
                 if (/KStandardDirs::locate/) {
-                   $search = "KStandardDirs::locate";
+                   $search = qr/KStandardDirs::locate/;
                    $replace = "QStandardPaths::locate";
                 } elsif (/KGlobal::dirs\(\)->findAllResources/) {
-                   $search = "KGlobal::dirs\(\)->findAllResources";
+                   $search = qr/KGlobal::dirs\(\)->findAllResources/;
                    $replace = "QStandardPaths::locateAll";
                 } elsif (/KGlobal::dirs\(\)->findDirs/) {
                    warn "found Global::dirs\(\)->findD\n";
-                   $search = "KGlobal::dirs\(\)->findDirs";
+                   $search = qr/KGlobal::dirs\(\)->findDirs/;
                    $replace = "QStandardPaths::locateAll";
                 }
-                warn "search :$search : replace :$replace line $_\n";
                 if ($fileName =~ s/\/\"$/\"/ || $fileName =~ s/\/\"\)$/\"\)/) {
                     s/$search\(.*\)/$replace($loc, $fileName, QStandardPaths::LocateDirectory)/;
                 } else {
