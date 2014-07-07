@@ -122,7 +122,7 @@ foreach my $file (@ARGV) {
             }
             if ($suffix) {
                 $suffix =~ s/,\s*//;
-                $add .= " + '/' + $suffix" unless $suffix eq "QString(" || $suffix eq "\"\"";
+                $add .= " + QLatin1Char('/') + $suffix)" unless $suffix eq "QString(" || $suffix eq "\"\"";
                 #print STDERR "loc=$loc suffix=$suffix add=$add\n";
             }
             s/KGlobal::dirs\(\)->saveLocation\(.*\)/QStandardPaths::writableLocation($loc)$add/ if ($loc);
