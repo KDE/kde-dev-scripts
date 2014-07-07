@@ -75,8 +75,9 @@ foreach my $file (@ARGV) {
                 s/KStandardDirs::locateLocal\(.*\)/QStandardPaths::writableLocation($loc) + $fileName/;
             }
         }
-        if (/KStandardDirs::locate\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
-            /KGlobal::dirs\(\)->findAllResources\(\s*\"(.*)\",\s*(.*)\s*\)/) {
+        if (/KStandardDirs::locate\s*\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
+            /KGlobal::dirs\(\)->findAllResources\s*\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
+            /KGlobal::dirs\(\)->findDirs\s*\(\s*\"(.*)\",\s*(.*)\s*\)/  ) {
             my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
                 # ends with a '/' (in a string literal) ?
@@ -88,7 +89,12 @@ foreach my $file (@ARGV) {
                 } elsif (/KGlobal::dirs\(\)->findAllResources/) {
                    $search = "KGlobal::dirs\(\)->findAllResources";
                    $replace = "QStandardPaths::locateAll";
+                } elsif (/KGlobal::dirs\(\)->findDirs/) {
+                   warn "found Global::dirs\(\)->findD\n";
+                   $search = "KGlobal::dirs\(\)->findDirs";
+                   $replace = "QStandardPaths::locateAll";
                 }
+                warn "search :$search : replace :$replace line $_\n";
                 if ($fileName =~ s/\/\"$/\"/ || $fileName =~ s/\/\"\)$/\"\)/) {
                     s/$search\(.*\)/$replace($loc, $fileName, QStandardPaths::LocateDirectory)/;
                 } else {
