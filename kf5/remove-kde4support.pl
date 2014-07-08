@@ -98,6 +98,10 @@ foreach my $file (@ARGV) {
            s,KGlobal::activeComponent\b,KComponentData::activeComponent,;
            $needKComponentData = 1;
         }
+        if (/KGlobal::setActiveComponent\b/) {
+           s,KGlobal::setActiveComponent\b,KComponentData::setActiveComponent,;
+           $needKComponentData = 1;
+        }
 
         $modified ||= $orig ne $_;
         $_;
