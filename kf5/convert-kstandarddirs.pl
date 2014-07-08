@@ -59,8 +59,8 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->findResource\b/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
-        s/KGlobal::dirs\(\)->localxdgdatadir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '\/'/;
-        s/KGlobal::dirs\(\)->localxdgconfdir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + '\/'/;
+        s/KGlobal::dirs\(\)->localxdgdatadir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('\/')/;
+        s/KGlobal::dirs\(\)->localxdgconfdir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('\/')/;
         s/KStandardDirs::locate\s*\(\s*"exe", /KStandardDirs::findExe\(/;
 
         if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
