@@ -14,6 +14,7 @@ foreach my $file (@ARGV) {
     my $modified;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my %varname = ();
+    my %finalized_called = ();
     my @l = map {
         my $orig = $_;
 
@@ -32,6 +33,7 @@ foreach my $file (@ARGV) {
            my $var = $1;
            if ( defined $varname{$var} ) {
               s/$var\.finalize/$var\.commit/;
+              $finalized_called{$var} = 1;
            }
         }
         # Add default argument
@@ -54,6 +56,12 @@ foreach my $file (@ARGV) {
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
+
+    foreach my $var (keys %varname) {
+        if (not defined($finalized_called{$var})) {
+            warn "WARNING: add $var.commit() at the time it is destructed. KSaveFile called finalize() in the dtor, and this code never calls it, but QSaveFile requires an explicit call to commit(), otherwise the changes are discarded";
+         }
+    }
 
     if ($modified) {
         open (my $OUT, ">", $file);
