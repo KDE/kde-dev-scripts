@@ -78,6 +78,10 @@ my @l = map {
      $_ =~ s/\${QT_QTDBUS_LIBRARY}//;
      $modified = 1;
   }
+  if (/QT_QTXML_LIBRARY/) {
+     $_ =~ s/\${QT_QTXML_LIBRARY}/Qt5::Xml/;
+     $modified = 1;
+  }
   if (/QT_QTCORE_LIBRARY/) {
      $_ =~ s/\${QT_QTCORE_LIBRARY}//;
      $modified = 1;
