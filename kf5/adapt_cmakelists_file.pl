@@ -142,6 +142,10 @@ my @l = map {
      $_ =~ s/\${KDEPIMLIBS_KBLOG_LIBS}/KF5::Blog/;
      $modified = 1;
   }
+  if (/KDEPIMLIBS_AKONADI_KABC_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_KABC_LIBS}/KF5::AkonadiAbc/;
+     $modified = 1;
+  }
   if (/KDE4_KNEWSTUFF3_LIBS/) {
      $_ =~ s/\${KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
      $modified = 1;
