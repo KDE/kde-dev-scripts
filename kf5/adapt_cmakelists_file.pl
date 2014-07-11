@@ -122,6 +122,11 @@ my @l = map {
      $_ =~ s/\${KDEPIMLIBS_KMBOX_LIBS}/KF5::Mbox/;
      $modified = 1;
   }
+  if (/QT_QTUITOOLS_LIBRARY/) {
+     $_ =~ s/\${QT_QTUITOOLS_LIBRARY}/Qt5::UiTools/;
+     $modified = 1;
+
+  }
   if (/KDEPIMLIBS_KALARMCAL_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::AlarmCalendar/;
      $modified = 1;
