@@ -54,6 +54,14 @@ foreach my $file (@ARGV) {
                 s/KUrl $var/QUrl $var/;
             }
         }
+        if (/(\w+)\.pass\(\)/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.pass\(\)/$url\.password()/g;
+        }
+        if (/(\w+)\.setPass\b/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.setPass\b/$url\.setPassword/g;
+        }
 
         if (/(\w+)\.protocol\(\)/ && defined $urls{$1}) {
             my $url = $1;
@@ -67,6 +75,11 @@ foreach my $file (@ARGV) {
             my $url = $1;
             s/$url\.user\(\)/$url\.userName()/g;
         }
+        if (/(\w+)\.setUser\b/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.setUser\b/$url\.setUserName/g;
+        }
+
         if (/(\w+)\.hasRef\(\)/ && defined $urls{$1}) {
             my $url = $1;
             s/$url\.hasRef\(\)/$url\.hasFragment()/g;
