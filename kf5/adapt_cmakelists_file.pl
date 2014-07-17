@@ -42,6 +42,10 @@ my @l = map {
       $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/;
       $modified = 1;
   }
+  if (/KDE4_KMIME_LIBRARY/) {
+     $_ =~ s/\${KDE4_KMIME_LIBRARY}/KF5::Mime/;
+     $modified = 1;
+  }
   if (/KDEPIMLIBS_AKONADI_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_AKONADI_LIBS}/KF5::AkonadiCore/;
      $modified = 1;
@@ -288,6 +292,11 @@ my @l = map {
   if (/qt4_add_resources/) {
      $_ =~ s/qt4_add_resources/qt5_add_resources/;
      $modified = 1;
+  }
+  if (/KDE4_INCLUDES/) {
+     $_ =~ s/\${KDE4_INCLUDES}//;
+     $modified = 1;
+
   }
   if (/\.notifyrc/) {
      my $regexp = qr/
