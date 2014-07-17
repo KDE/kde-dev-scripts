@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # Adapt new akonadi includes
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/adapt_knewstuff3_includes.pl.pl
+# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/adapt_knewstuff3_includes.pl
 
 use strict;
 use File::Basename;
