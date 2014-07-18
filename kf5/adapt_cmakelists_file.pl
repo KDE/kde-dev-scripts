@@ -296,8 +296,12 @@ my @l = map {
   if (/KDE4_INCLUDES/) {
      $_ =~ s/\${KDE4_INCLUDES}//;
      $modified = 1;
-
   }
+  if (/akonadi-kde/) {
+     $_ =~ s/akonadi-kde//;
+     $modified = 1;
+  }
+
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
