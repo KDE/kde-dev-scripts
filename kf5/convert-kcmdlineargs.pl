@@ -23,11 +23,11 @@ foreach my $file (@ARGV) {
     functionUtilkde::substInFile {
         if (/KCmdLineOptions (\w*)/) {
             $opt = $1;
-            s/KCmdLineOptions /QCommandLineParser \*/;
-            s/$opt/parser = new QCommandLineParser/;
+            s/KCmdLineOptions /QCommandLineParser /;
+            s/$opt/parser/;
             $_ .= "    app.setApplicationVersion(INSERT_VERSION_HERE);\n";
-            $_ .= "    parser->addVersionOption();\n";
-            $_ .= "    parser->addHelpOption(INSERT_DESCRIPTION_HERE);\n";
+            $_ .= "    parser.addVersionOption();\n";
+            $_ .= "    parser.addHelpOption();\n";
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
@@ -50,7 +50,7 @@ foreach my $file (@ARGV) {
                 $negatedOptions{$name} = 1;
             }
             my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
-            $_ = "${prefix}parser->addOption(QCommandLineOption(QStringList() << $short\"$name\", $translate$trail));\n";
+            $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << QLatin1String($short\"$name\"), $translate$trail));\n";
             $short = "";
         } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
             $args = $1;
@@ -59,12 +59,12 @@ foreach my $file (@ARGV) {
             s/KCmdLineArgs::qtArgc\(\)/argc/;
             s/KCmdLineArgs::qtArgv\(\)/argv/;
             if (defined $args) {
-                s/${args}\->getOptionList/parser->arguments/;
-                s/${args}\->getOption/parser->argument/;
-                s/${args}\->isSet/parser->isSet/;
-                s/${args}\->count/parser->remainingArguments().count/;
-                s/${args}\->usage\s*\(\)/parser->showHelp()/;
-                s/KCmdLineArgs::usage\s*\(\)/parser->showHelp()/;
+                s/${args}\->getOptionList/parser.arguments/;
+                s/${args}\->getOption/parser.argument/;
+                s/${args}\->isSet/parser.isSet/;
+                s/${args}\->count/parser.positionalArguments().count/;
+                s/${args}\->usage\s*\(\)/parser.showHelp()/;
+                s/KCmdLineArgs::usage\s*\(\)/parser.showHelp()/;
                 if (/arguments?\(\"(\w*)/ || /isSet\(\"(\w*)/) {
                     my $optionName = $1;
                     if (defined $negatedOptions{"no$optionName"}) {
@@ -78,8 +78,10 @@ foreach my $file (@ARGV) {
     } $file;
     if (`grep QCommand $file | grep -v '#include'`) {
       functionUtilkde::removeIncludeInFile($file, "kcmdlineargs.h");
-      functionUtilkde::addIncludeInFile($file, "qcommandlineparser.h");
-      functionUtilkde::addIncludeInFile($file, "qcommandlineoption.h");
+      functionUtilkde::removeIncludeInFile($file, "KCmdLineArgs");
+      functionUtilkde::removeIncludeInFile($file, "KCmdLineOptions");
+      functionUtilkde::addIncludeInFile($file, "QCommandLineParser");
+      functionUtilkde::addIncludeInFile($file, "QCommandLineOption");
     }
 }
 
