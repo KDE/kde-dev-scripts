@@ -46,6 +46,7 @@ foreach my $file (@ARGV) {
     my $hasOkButton;
     my $needQDialogButtonBox;
     my $needQBoxLayout;
+    my $hasMainWidget;
     my @l = map {
         my $orig = $_;
         my $regexp = qr/
@@ -89,20 +90,25 @@ foreach my $file (@ARGV) {
               #warn $functionUtilkde::current_file . ":" . $functionUtilkde::current_line . ": couldn't extract last argument from " . $args . "\n";
            }
         }
-         my $regexpMainWidget =qr/
-          ^(\s*)           # (1) Indentation
-          (.*?)            # (2) Possibly "Classname *" (the ? means non-greedy)
-          \(\s*mainWidget\(\)
-          \s*\);/x; # /x Enables extended whitespace mode
-         if ( my ($left, $widget) = $_ =~ $regexpMainWidget) {
-            $_ = $left . "QWidget *mainWidget = new QWidget(this);\n";
-            $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-            $_ .= $left . "setLayout(mainLayout);\n";
-            $_ .= $left . "mainLayout->addWidget(mainWidget);\n";
-            $_ .= $left . "$widget(mainWidget);\n";
-            warn "found mainWidget \n";
-            $needQBoxLayout = 1;
-         }
+        my $regexpMainWidget =qr/
+         ^(\s*)           # (1) Indentation
+         (.*?)            # (2) Possibly "Classname *" (the ? means non-greedy)
+         \(\s*mainWidget\(\)
+         \s*\);/x; # /x Enables extended whitespace mode
+        if ( my ($left, $widget) = $_ =~ $regexpMainWidget) {
+           if (not defined $hasMainWidget) {
+             $_ = $left . "QWidget *mainWidget = new QWidget(this);\n";
+             $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
+             $_ .= $left . "mainLayout->addWidget(mainWidget);\n";
+             $_ .= $left . "$widget(mainWidget);\n";
+           } else {
+             $_ = $left . "$widget(mainWidget);\n";
+           }
+           warn "found mainWidget \n";
+           $needQBoxLayout = 1;
+           $hasMainWidget = 1;
+        }
 
         my $regexpSetButtons = qr/
           ^(\s*)           # (1) Indentation
@@ -164,6 +170,15 @@ foreach my $file (@ARGV) {
            warn " $resultList \n";
            $_ = $left . "//PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.\n";
            $_ .= $left . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
+           if (not defined $hasMainWidget) {
+             $_ .= $left . "QWidget *mainWidget = new QWidget(this);\n";
+             $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
+             $_ .= $left . "mainLayout->addWidget(mainWidget);\n";
+             #$_ .= $left . "$widget(mainWidget);\n";
+             $hasMainWidget = 1;
+             $needQBoxLayout = 1;
+           }
 
            if (defined $hasOkButton) {
               $_ .= $left . "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
@@ -216,9 +231,6 @@ foreach my $file (@ARGV) {
              s/user3Clicked\(\)/clicked()/;
         }
 
-
-
-        #TODO add enableButton
         
         my $regexEnableButton = qr/
           ^(\s*)           # (1) Indentation
@@ -348,7 +360,7 @@ foreach my $file (@ARGV) {
         s/\bKDialog\b/QDialog/g;
         s/\<KDialog\b\>/\<QDialog>/ if (/#include/);
         s/\<kdialog.h\>/\<QDialog>/ if (/#include/);
-
+        s/\bsetInitialSize\b/resize/;
 
         $modified ||= $orig ne $_;
         $_;
