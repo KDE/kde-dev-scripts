@@ -351,10 +351,10 @@ foreach my $file (@ARGV) {
            $_ = "//TODO PORT QT5 " .  $_;
         }
 
-        #if (/\bsetMainWidget\b/) {
+        if (/\bsetMainWidget\b/) {
            # remove setMainWidget doesn't exist now.
-        #   $_ = "";
-        #}
+           $_ = "//PORTING: Verify that widget was added to mainLayout " . $_;
+        }
         s/\bsetCaption\b/setWindowTitle/;
         s/\benableButtonOk\b/okButton->setEnabled/;
         s/\bKDialog\b/QDialog/g;
