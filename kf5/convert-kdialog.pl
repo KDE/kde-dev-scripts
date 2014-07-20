@@ -475,16 +475,18 @@ foreach my $file (@ARGV) {
            functionUtilkde::addIncludeInFile($file, "KConfigGroup");
            functionUtilkde::addIncludeInFile($file, "QPushButton");
         } else {
-           warn "WARNING:if \'$file\' is cpp file perhaps you use default button Ok|Cancel without uses setButton\n";
-           warn "Add in source code:\n";
-           warn "QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);\n";
-           warn "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
-           warn "okButton->setDefault(true);\n";
-           warn "okButton->setShortcut(Qt::CTRL | Qt::Key_Return);\n";
-           warn "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
-           warn "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
-           warn "mainLayout->addWidget(buttonBox);\n";
-           warn "#include <QDialogButtonBox>\n";
+           if ( $file =~ /\.cpp$/) {
+             warn "WARNING:if \'$file\' is cpp file perhaps you use default button Ok|Cancel without uses setButton\n";
+             warn "Add in source code:\n";
+             warn "QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);\n";
+             warn "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
+             warn "okButton->setDefault(true);\n";
+             warn "okButton->setShortcut(Qt::CTRL | Qt::Key_Return);\n";
+             warn "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
+             warn "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
+             warn "mainLayout->addWidget(buttonBox);\n";
+             warn "#include <QDialogButtonBox>\n";
+           }
         }
         if (defined $needQBoxLayout) {
            functionUtilkde::addIncludeInFile($file, "QVBoxLayout");
