@@ -233,9 +233,9 @@ foreach my $file (@ARGV) {
         
         my $regexEnableButton = qr/
           ^(\s*)           # (1) Indentation
-          enableButton\s*\(
+          enableButton
           ${paren_begin}2${paren_end}  # (5) (args)
-          \);/x; # /x Enables extended whitespace mode
+          /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
            my $extract_args_regexp = qr/
