@@ -31,7 +31,10 @@ my %dialogButtonType = (
    "Reset" => "QDialogButtonBox::Reset",
    "KDialog::Reset" => "QDialogButtonBox::Reset",
    "None" => "QDialogButtonBox::NoButton",
-   "KDialog::None" => "QDialogButtonBox::NoButton"
+   "KDialog::None" => "QDialogButtonBox::NoButton",
+   "Apply" => "QDialogButtonBox::Apply",
+   "KDialog::Apply" => "QDialogButtonBox::Apply"
+
 );
 
 
@@ -152,6 +155,9 @@ foreach my $file (@ARGV) {
            }
            if ( "Yes" ~~ @listButton || "KDialog::Yes" ~~ @listButton)  {
               push @myNewDialogButton , "QDialogButtonBox::Yes";
+           }
+           if ( "Apply" ~~ @listButton || "KDialog::Apply" ~~ @listButton)  {
+              push @myNewDialogButton , "QDialogButtonBox::Apply";
            }
            if ( "Reset" ~~ @listButton || "KDialog::Reset" ~~ @listButton)  {
               push @myNewDialogButton , "QDialogButtonBox::Reset";
