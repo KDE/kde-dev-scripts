@@ -219,15 +219,15 @@ foreach my $file (@ARGV) {
              s/cancelClicked\(\)/clicked()/;
         }
         if (/user1Clicked\(\)/) {
-             s/connect\s*\(\s*this,/user1Button,/;
+             s/connect\s*\(\s*this,/connect(user1Button,/;
              s/user1Clicked\(\)/clicked()/;
         }
         if (/user2Clicked\(\)/) {
-             s/connect\s*\(\s*this,/user2Button,/;
+             s/connect\s*\(\s*this,/connect(user2Button,/;
              s/user2Clicked\(\)/clicked()/;
         }
         if (/user3Clicked\(\)/) {
-             s/connect\s*\(\s*this,/user3Button,/;
+             s/connect\s*\(\s*this,/connect(user3Button,/;
              s/user3Clicked\(\)/clicked()/;
         }
 
@@ -416,6 +416,9 @@ foreach my $file (@ARGV) {
         s/\<KDialog\b\>/\<QDialog>/ if (/#include/);
         s/\<kdialog.h\>/\<QDialog>/ if (/#include/);
         s/\bsetInitialSize\b/resize/;
+        s/button\s*\(\s*User2\s*\)/user2Button/;
+        s/button\s*\(\s*User1\s*\)/user1Button/;
+        s/button\s*\(\s*User3\s*\)/user3Button/;
 
         $modified ||= $orig ne $_;
         $_;
