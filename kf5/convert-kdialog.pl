@@ -173,8 +173,7 @@ foreach my $file (@ARGV) {
            }
            my $resultList = join('|', @myNewDialogButton);
            warn " $resultList \n";
-           $_ = $left . "//PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.\n";
-           $_ .= $left . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
+           $_ = $left . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
            if (not defined $hasMainWidget) {
              $_ .= $left . "QWidget *mainWidget = new QWidget(this);\n";
              $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
@@ -207,6 +206,7 @@ foreach my $file (@ARGV) {
 
            $_ .= $left . "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
            $_ .= $left . "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
+           $_ .= $left . "//PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.\n";
            $_ .= $left . "mainLayout->addWidget(buttonBox);\n";
            
            warn "WARNING we can't move this code at the end of constructor. Need to move it !!!!\n";
