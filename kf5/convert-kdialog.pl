@@ -325,9 +325,9 @@ foreach my $file (@ARGV) {
 
         my $regexSetButtonText = qr/
           ^(\s*)           # (1) Indentation
-          setButtonText\s*\(
+          setButtonText
           ${paren_begin}2${paren_end}  # (2) (args)
-          \);/x; # /x Enables extended whitespace mode
+          /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonText) {
            warn "found setButtonText $args\n";
            my $extract_args_regexp = qr/
