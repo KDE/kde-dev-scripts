@@ -47,6 +47,7 @@ foreach my $file (@ARGV) {
     my $needQDialogButtonBox;
     my $needQBoxLayout;
     my $hasMainWidget;
+    my $needKGuiItem;
     my @l = map {
         my $orig = $_;
         my $regexp = qr/
@@ -56,9 +57,13 @@ foreach my $file (@ARGV) {
           \);/x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexp) {
            warn "setMainWidget found :$left $var\n";
-           $_ = $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-           $_ .= $left . "setLayout(mainLayout);\n";
-           $_ .= $left . "mainLayout->addWidget($var);\n";
+           if (defined $hasMainWidget) {
+             $_ = $left . "mainLayout->addWidget($var);\n";
+           } else {
+             $_ = $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
+             $_ .= $left . "mainLayout->addWidget($var);\n";
+           }
            $varname{$var} = $var;
         }
         my $widget_regexp = qr/
@@ -433,7 +438,45 @@ foreach my $file (@ARGV) {
            }
         }
 
-        # TODO setButtonGuiItem
+        my $regexSetButtonGuiItem = qr/
+          ^(\s*)           # (1) Indentation
+          setButtonGuiItem
+          ${paren_begin}2${paren_end}  # (2) (args)
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $args) = $_ =~ $regexSetButtonGuiItem) {
+           warn "found setButtonGuiItem $args\n";
+           my $extract_args_regexp = qr/
+                                 ^\(([^,]*)           # button
+                                 ,\s*([^,]*)        # state
+                                 (.*)$              # after
+                                 /x;
+           if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
+              $button =~ s, ,,g;
+              $menuName =~ s, ,,g;
+              $menuName =~ s,\),,g;
+              $needKGuiItem = 1;
+              warn "Found setButtonGuiItem: \'$button\', menu variable \'$menuName\'\n";
+              if (defined $dialogButtonType{$button}) {
+                 if ( $button eq "Ok" || $button eq "KDialog::Ok") {
+                    $_ = $left . "KGuiItem::assign(okButton, $menuName);\n";
+                 } else {
+                    $_ = $left . "KGuiItem::assign(buttonBox->button($dialogButtonType{$button}), $menuName);\n";
+                }
+              } else {
+                 if ($button eq "User1") {
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                 } elsif ($button eq "User2") {
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                 } elsif ($button eq "User3") {
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                 } else {
+                     warn "Set Button Gui Item: unknown or not supported \'$button\'\n";
+                 }
+              }
+           }
+        }
+
+
 
         if (/KDialog::spacingHint/) {
            $_ = "//TODO PORT QT5 " .  $_;
@@ -524,6 +567,9 @@ foreach my $file (@ARGV) {
              warn "mainLayout->addWidget(buttonBox);\n";
              warn "#include <QDialogButtonBox>\n";
            }
+        }
+        if (defined $needKGuiItem) {
+           functionUtilkde::addIncludeInFile($file, "KGuiItem");
         }
         if (defined $needQBoxLayout) {
            functionUtilkde::addIncludeInFile($file, "QVBoxLayout");
