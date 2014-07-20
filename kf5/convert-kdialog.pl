@@ -178,6 +178,7 @@ foreach my $file (@ARGV) {
              #$_ .= $left . "$widget(mainWidget);\n";
              $hasMainWidget = 1;
              $needQBoxLayout = 1;
+             $needQDialogButtonBox = 1;
            }
 
            if (defined $hasOkButton) {
