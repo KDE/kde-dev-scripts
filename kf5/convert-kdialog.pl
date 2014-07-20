@@ -396,7 +396,7 @@ foreach my $file (@ARGV) {
               }
            }
         }
-
+        # TODO setButtonIcon
         # TODO setButtonGuiItem
 
         if (/KDialog::spacingHint/) {
@@ -409,6 +409,10 @@ foreach my $file (@ARGV) {
         if (/\bsetMainWidget\b/) {
            # remove setMainWidget doesn't exist now.
            $_ = "//PORTING: Verify that widget was added to mainLayout " . $_;
+        }
+        if (/\bshowButtonSeparator\b/) {
+           # remove showButtonSeparator doesn't exist now.
+           $_ = "";
         }
         s/\bsetCaption\b/setWindowTitle/;
         s/\benableButtonOk\b/okButton->setEnabled/;
