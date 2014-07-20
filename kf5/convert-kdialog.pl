@@ -211,7 +211,7 @@ foreach my $file (@ARGV) {
              s/defaultClicked\(\)/clicked()/;
         }
         if (/okClicked\(\)/) {
-             s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Ok),/;
+             s/connect\s*\(\s*this,/connect(okButton,/;
              s/okClicked\(\)/clicked()/;
         }
         if (/cancelClicked\(\)/) {
@@ -378,7 +378,7 @@ foreach my $file (@ARGV) {
               $menuName =~ s,\),,g;
               warn "Found setButtonMenu: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
-                 if ( $button eq "Ok") {
+                 if ( $button eq "Ok" || $button eq "KDialog::Ok") {
                     $_ = $left . "okButton->setMenu($menuName);\n";
                  } else {
                     $_ = $left . "buttonBox->button($dialogButtonType{$button})->setMenu($menuName);\n";
@@ -414,6 +414,44 @@ foreach my $file (@ARGV) {
            # remove showButtonSeparator doesn't exist now.
            $_ = "";
         }
+        
+
+        my $regexButton = qr/
+          ^(\s*)           # (1) Indentation
+          button
+          ${paren_begin}2${paren_end}  # (2) (args)
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $button) = $_ =~ $regexButton) {
+           $button =~ s/\(//;
+           $button =~ s/\)//;
+           $button =~ s, ,,g;
+           if (defined $dialogButtonType{$button}) {
+              if ( $button eq "Ok" || $button eq "KDialog::Ok") {
+                 s/button\s*\(\s*KDialog::Ok\s*\)/okButton/;
+                 s/button\s*\(\s*Ok\s*\)/okButton/;
+              } else {
+                 s/button\s*\(\s*$button\s*\)/buttonBox->button($dialogButtonType{$button})/;
+              }
+           } else {
+              if ($button eq "User1") {
+                 s/button\s*\(\s*KDialog::User1\s*\)/user1Button/;
+                 s/button\s*\(\s*User1\s*\)/user1Button/;
+
+              } elsif ($button eq "User2") {
+                 s/button\s*\(\s*KDialog::User2\s*\)/user1Button/;
+                 s/button\s*\(\s*User2\s*\)/user1Button/;
+              } elsif ($button eq "User3") {
+                 s/button\s*\(\s*KDialog::User3\s*\)/user1Button/;
+                 s/button\s*\(\s*User3\s*\)/user1Button/;
+              } else {
+                 warn "button(...): unknown or not supported \'$button\'\n";
+              }
+           }
+
+           warn "Found button(...) with argument $button\n";
+        }
+
+
         s/\bsetCaption\b/setWindowTitle/;
         s/\benableButtonOk\b/okButton->setEnabled/;
         s/\bKDialog\b/QDialog/g;
