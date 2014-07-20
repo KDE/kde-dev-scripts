@@ -458,17 +458,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonGuiItem: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "KGuiItem::assign(okButton, $menuName);\n";
+                    $_ = $left . "KGuiItem::assign(okButton, $menuName));\n";
                  } else {
-                    $_ = $left . "KGuiItem::assign(buttonBox->button($dialogButtonType{$button}), $menuName);\n";
+                    $_ = $left . "KGuiItem::assign(buttonBox->button($dialogButtonType{$button}), $menuName));\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName);\n";
+                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
                  } else {
                      warn "Set Button Gui Item: unknown or not supported \'$button\'\n";
                  }
