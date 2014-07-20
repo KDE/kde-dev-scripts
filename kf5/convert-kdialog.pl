@@ -237,25 +237,36 @@ foreach my $file (@ARGV) {
           enableButton\s*\(
           ${paren_begin}2${paren_end}  # (5) (args)
           \);/x; # /x Enables extended whitespace mode
-        if (my ($indent, $args) = $_ =~ $regexEnableButton) {
+        if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
-           if ( my ($button, $state) = $args =~  $extract_args_regexp ) {
-              $button =~ s, ,,g;
+           if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
+              $defaultButtonType =~ s, ,,g;
               $state =~ s, ,,g;
               $state =~ s,\),,g;
-              if ( $button eq "Ok") {
-                  $_ = $indent . "okButton->setEnabled($state);\n";
-              } else {
-                  $_ = $indent . "buttonBox->button($dialogButtonType{$button})->setEnabled($state);\n";;
-              }
-              warn "Found enabled button \'$button\', state \'$state\'\n";
+             if (defined $dialogButtonType{$defaultButtonType}) {
+                if ( $defaultButtonType eq "Ok") {
+                   $_ = $left . "okButton->setEnabled($state);\n";
+                } else {
+                   $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setEnabled($state);\n";
+                }
+             } else {
+                if ($defaultButtonType eq "User1") {
+                   $_ = $left . "user1Button\->setEnabled($state);\n";
+                } elsif ($defaultButtonType eq "User2") {
+                   $_ = $left . "user2Button\->setEnabled($state);\n";
+                } elsif ($defaultButtonType eq "User3") {
+                   $_ = $left . "user3Button\->setEnabled($state);\n";
+                } else {
+                   warn "Enable button: unknown or not supported \'$defaultButtonType\'\n";
+                }
+             }
+             warn "Found enabled button \'$defaultButtonType\', state \'$state\'\n";
            }
-
         }
 
         my $regexDefaultButton = qr/
@@ -273,7 +284,15 @@ foreach my $file (@ARGV) {
                  $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setDefault(true);\n";
               }
            } else {
-              warn "Default button type unknown or not supported \'$defaultButtonType\'\n";
+              if ($defaultButtonType eq "User1") {
+                 $_ = $left . "user1Button\->setDefault(true);\n";
+              } elsif ($defaultButtonType eq "User2") {
+                 $_ = $left . "user2Button\->setDefault(true);\n";
+              } elsif ($defaultButtonType eq "User3") {
+                 $_ = $left . "user3Button\->setDefault(true);\n";
+              } else {
+                warn "Default button type unknown or not supported \'$defaultButtonType\'\n";
+              }
            }
         }
 
@@ -287,12 +306,20 @@ foreach my $file (@ARGV) {
            warn "Found default button focus : $defaultButtonType\n";
            if (defined $dialogButtonType{$defaultButtonType}) {
               if ( $defaultButtonType eq "Ok") {
-                $_ = $left . "okButton->setFocus();\n";
+                 $_ = $left . "okButton->setFocus();\n";
               } else {
-                $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setFocus();\n";
+                 $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setFocus();\n";
               }
            } else {
-              warn "Default button focus unknown or not supported \'$defaultButtonType\'\n";
+              if ($defaultButtonType eq "User1") {
+                 $_ = $left . "user1Button\->setFocus();\n";
+              } elsif ($defaultButtonType eq "User2") {
+                 $_ = $left . "user2Button\->setFocus();\n";                
+              } elsif ($defaultButtonType eq "User3") {
+                 $_ = $left . "user3Button\->setFocus();\n";
+              } else {
+                warn "Default button focus: unknown or not supported \'$defaultButtonType\'\n";
+              }
            }
         }
 
@@ -302,23 +329,34 @@ foreach my $file (@ARGV) {
           setButtonText\s*\(
           ${paren_begin}2${paren_end}  # (2) (args)
           \);/x; # /x Enables extended whitespace mode
-        if (my ($indent, $args) = $_ =~ $regexSetButtonText) {
+        if (my ($left, $args) = $_ =~ $regexSetButtonText) {
            warn "found setButtonText $args\n";
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
-           if ( my ($button, $text) = $args =~  $extract_args_regexp ) {
-              $button =~ s, ,,g;
+           if ( my ($defaultButtonType, $text) = $args =~  $extract_args_regexp ) {
+              $defaultButtonType =~ s, ,,g;
               $text =~ s, ,,g;
               $text =~ s,\),,g;
-              if ( $button eq "Ok") {
-                  $_ = $indent . "okButton->setText($text);\n";
+              if (defined $dialogButtonType{$defaultButtonType}) {
+                 if ( $defaultButtonType eq "Ok") {
+                    $_ = $left . "okButton->setText($text);\n";
+                 } else {
+                    $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setText($text);\n";
+                }
               } else {
-                  $_ = $indent . "buttonBox->button($dialogButtonType{$button})->setText($text);\n";;
+                 if ($defaultButtonType eq "User1") {
+                    $_ = $left . "user1Button\->setText($text);\n";
+                 } elsif ($defaultButtonType eq "User2") {
+                    $_ = $left . "user2Button\->setText($text);\n";
+                 } elsif ($defaultButtonType eq "User3") {
+                    $_ = $left . "user3Button\->setText($text);\n";
+                 } else {
+                     warn "Set button Text: unknown or not supported \'$defaultButtonType\'\n";
+                 }
               }
-              warn "found setButtonText: \'$button\', state \'$text\'\n";
            }
         }
 
@@ -327,7 +365,7 @@ foreach my $file (@ARGV) {
           setButtonMenu
           ${paren_begin}2${paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
-        if (my ($indent, $args) = $_ =~ $regexSetButtonMenu) {
+        if (my ($left, $args) = $_ =~ $regexSetButtonMenu) {
            warn "found setButtonMenu $args\n";
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
@@ -339,10 +377,27 @@ foreach my $file (@ARGV) {
               $menuName =~ s, ,,g;
               $menuName =~ s,\),,g;
               warn "Found setButtonMenu: \'$button\', menu variable \'$menuName\'\n";
-              $_ = $indent . "buttonBox->button($dialogButtonType{$button})->setMenu($menuName);\n";
+              if (defined $dialogButtonType{$button}) {
+                 if ( $button eq "Ok") {
+                    $_ = $left . "okButton->setMenu($menuName);\n";
+                 } else {
+                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setMenu($menuName);\n";
+                }
+              } else {
+                 if ($button eq "User1") {
+                    $_ = $left . "user1Button\->setMenu($menuName);\n";
+                 } elsif ($button eq "User2") {
+                    $_ = $left . "user2Button\->setMenu($menuName);\n";
+                 } elsif ($button eq "User3") {
+                    $_ = $left . "user3Button\->setMenu($menuName);\n";
+                 } else {
+                     warn "Set Button Menu: unknown or not supported \'$button\'\n";
+                 }
+              }
            }
         }
 
+        # TODO setButtonGuiItem
 
         if (/KDialog::spacingHint/) {
            $_ = "//TODO PORT QT5 " .  $_;
