@@ -477,6 +477,43 @@ foreach my $file (@ARGV) {
         }
 
 
+        my $regexShowButton = qr/
+          ^(\s*)           # (1) Indentation
+          showButton
+          ${paren_begin}2${paren_end}  # (5) (args)
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $args) = $_ =~ $regexShowButton) {
+           warn "found showButton $args\n";
+           my $extract_args_regexp = qr/
+                                 ^\(([^,]*)           # button
+                                 ,\s*([^,]*)        # state
+                                 (.*)$              # after
+                                 /x;
+           if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
+              $defaultButtonType =~ s, ,,g;
+              $state =~ s, ,,g;
+              $state =~ s,\),,g;
+             if (defined $dialogButtonType{$defaultButtonType}) {
+                if ( $defaultButtonType eq "Ok") {
+                   $_ = $left . "okButton->setVisible($state);\n";
+                } else {
+                   $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setVisible($state);\n";
+                }
+             } else {
+                if ($defaultButtonType eq "User1") {
+                   $_ = $left . "user1Button\->setVisible($state);\n";
+                } elsif ($defaultButtonType eq "User2") {
+                   $_ = $left . "user2Button\->setVisible($state);\n";
+                } elsif ($defaultButtonType eq "User3") {
+                   $_ = $left . "user3Button\->setVisible($state);\n";
+                } else {
+                   warn "Show button: unknown or not supported \'$defaultButtonType\'\n";
+                }
+             }
+             warn "Found show button \'$defaultButtonType\', state \'$state\'\n";
+           }
+        }
+
 
         if (/KDialog::spacingHint/) {
            $_ = "//TODO PORT QT5 " .  $_;
