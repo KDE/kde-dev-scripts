@@ -395,7 +395,43 @@ foreach my $file (@ARGV) {
               }
            }
         }
-        # TODO setButtonIcon
+        my $regexSetButtonIcon = qr/
+          ^(\s*)           # (1) Indentation
+          setButtonIcon
+          ${paren_begin}2${paren_end}  # (2) (args)
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $args) = $_ =~ $regexSetButtonIcon) {
+           warn "found setButtonIcon $args\n";
+           my $extract_args_regexp = qr/
+                                 ^\(([^,]*)           # button
+                                 ,\s*([^,]*)        # state
+                                 (.*)$              # after
+                                 /x;
+           if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
+              $button =~ s, ,,g;
+              $menuName =~ s, ,,g;
+              $menuName =~ s,\),,g;
+              warn "Found setButtonIcon: \'$button\', menu variable \'$menuName\'\n";
+              if (defined $dialogButtonType{$button}) {
+                 if ( $button eq "Ok" || $button eq "KDialog::Ok") {
+                    $_ = $left . "okButton->setIcon($menuName);\n";
+                 } else {
+                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setIcon($menuName);\n";
+                }
+              } else {
+                 if ($button eq "User1") {
+                    $_ = $left . "user1Button\->setIcon($menuName);\n";
+                 } elsif ($button eq "User2") {
+                    $_ = $left . "user2Button\->setIcon($menuName);\n";
+                 } elsif ($button eq "User3") {
+                    $_ = $left . "user3Button\->setIcon($menuName);\n";
+                 } else {
+                     warn "Set Button Icon: unknown or not supported \'$button\'\n";
+                 }
+              }
+           }
+        }
+
         # TODO setButtonGuiItem
 
         if (/KDialog::spacingHint/) {
