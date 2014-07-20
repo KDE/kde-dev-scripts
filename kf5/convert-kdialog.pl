@@ -205,7 +205,6 @@ foreach my $file (@ARGV) {
            
            warn "WARNING we can't move this code at the end of constructor. Need to move it !!!!\n";
         }
-        #TODO fix connect signal/slot
         if (/defaultClicked\(\)/) {
              s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::RestoreDefaults),/;
              s/defaultClicked\(\)/clicked()/;
