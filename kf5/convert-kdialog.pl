@@ -341,17 +341,17 @@ foreach my $file (@ARGV) {
               $text =~ s,\),,g;
               if (defined $dialogButtonType{$defaultButtonType}) {
                  if ( $defaultButtonType eq "Ok") {
-                    $_ = $left . "okButton->setText($text);\n";
+                    $_ = $left . "okButton->setText($text));\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setText($text);\n";
+                    $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setText($text));\n";
                 }
               } else {
                  if ($defaultButtonType eq "User1") {
-                    $_ = $left . "user1Button\->setText($text);\n";
+                    $_ = $left . "user1Button\->setText($text));\n";
                  } elsif ($defaultButtonType eq "User2") {
-                    $_ = $left . "user2Button\->setText($text);\n";
+                    $_ = $left . "user2Button\->setText($text));\n";
                  } elsif ($defaultButtonType eq "User3") {
-                    $_ = $left . "user3Button\->setText($text);\n";
+                    $_ = $left . "user3Button\->setText($text));\n";
                  } else {
                      warn "Set button Text: unknown or not supported \'$defaultButtonType\'\n";
                  }
@@ -474,6 +474,17 @@ foreach my $file (@ARGV) {
            # Need to add KConfigGroup because it was added by kdialog before
            functionUtilkde::addIncludeInFile($file, "KConfigGroup");
            functionUtilkde::addIncludeInFile($file, "QPushButton");
+        } else {
+           warn "WARNING:if \'$file\' is cpp file perhaps you use default button Ok|Cancel without uses setButton\n";
+           warn "Add in source code:\n";
+           warn "QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);\n";
+           warn "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
+           warn "okButton->setDefault(true);\n";
+           warn "okButton->setShortcut(Qt::CTRL | Qt::Key_Return);\n";
+           warn "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
+           warn "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
+           warn "mainLayout->addWidget(buttonBox);\n";
+           warn "#include <QDialogButtonBox>\n";
         }
         if (defined $needQBoxLayout) {
            functionUtilkde::addIncludeInFile($file, "QVBoxLayout");
