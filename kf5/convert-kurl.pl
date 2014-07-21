@@ -82,6 +82,18 @@ foreach my $file (@ARGV) {
             my $url = $1;
             s/$url\.setUser\b/$url\.setUserName/g;
         }
+        if (/(\w+)\.setRef\b/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.setRef\b/$url\.setFragment/g;
+        }
+        if (/(\w+)\.htmlRef\(\)/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.htmlRef\(\)/$url\.fragment(QUrl::FullyDecoded)/g;
+        }
+        if (/(\w+)\.hasHTMLRef\(\)/ && defined $urls{$1}) {
+            my $url = $1;
+            s/$url\.hasHTMLRef\(\)/$url\.hasFragment()/g;
+        }
 
         if (/(\w+)\.hasRef\(\)/ && defined $urls{$1}) {
             my $url = $1;
