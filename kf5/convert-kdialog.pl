@@ -472,9 +472,9 @@ foreach my $file (@ARGV) {
                  if ($button eq "User1") {
                     $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
+                    $_ = $left . "KGuiItem::assign(user2Button, $menuName));\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
+                    $_ = $left . "KGuiItem::assign(user3Button, $menuName));\n";
                  } else {
                      warn "Set Button Gui Item: unknown or not supported \'$button\'\n";
                  }
