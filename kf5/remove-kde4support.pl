@@ -102,7 +102,9 @@ foreach my $file (@ARGV) {
            s,KGlobal::setActiveComponent\b,KComponentData::setActiveComponent,;
            $needKComponentData = 1;
         }
-
+        if (/KUrl::fromPath/) {
+           s,KUrl::fromPath\b,QUrl::fromLocalFile,;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
