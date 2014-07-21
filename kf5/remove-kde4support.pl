@@ -19,6 +19,7 @@ foreach my $file (@ARGV) {
     my $needQFontDatabase;
     my $needQDir;
     my $needKComponentData;
+    my $removeKdemacros;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -105,6 +106,10 @@ foreach my $file (@ARGV) {
         if (/KUrl::fromPath/) {
            s,KUrl::fromPath\b,QUrl::fromLocalFile,;
         }
+        if (/KDE_EXPORT KCModule/) {
+           s,KDE_EXPORT KCModule,Q_DECL_EXPORT KCModule,;
+           $removeKdemacros = 1;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -136,6 +141,9 @@ foreach my $file (@ARGV) {
         }
         if ($needKComponentData) {
            functionUtilkde::addIncludeInFile($file, "KComponentData");
+        }
+        if ($removeKdemacros) {
+           functionUtilkde::removeIncludeInFile($file, "kdemacros.h");
         }
     }
 }
