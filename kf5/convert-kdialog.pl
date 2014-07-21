@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # convert KDialog to QDialog
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kascii.pl
+# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kdialog.pl
 
 use strict;
 use File::Basename;
@@ -84,10 +84,10 @@ foreach my $file (@ARGV) {
            my $extract_parent_regexp = qr/
             ^\(
             (?:.*?)                # args before the parent (not captured, not greedy)
-            \s*(\w+)\s*            # (1) parent 
+            \s*(\w+)\s*            # (1) parent
             (?:,\s*\"[^\"]*\"\s*)? # optional: object name
              \)$
-            /x; # /x Enables extended whitespace mode      
+            /x; # /x Enables extended whitespace mode
            if (my ($lastArg) = $args =~ $extract_parent_regexp) {
               print STDERR "extracted parent=" . $lastArg . "\n";
               my $mylayoutname = $varname{$lastArg};
@@ -100,7 +100,7 @@ foreach my $file (@ARGV) {
         }
         my $regexpMainWidget =qr/
          ^(\s*)           # (1) Indentation
-         (.*?)            # (2) Possibly "Classname *" (the ? means non-greedy)
+         (.*?)            # (2) (the ? means non-greedy)
          \(\s*mainWidget\(\)
          \s*\);/x; # /x Enables extended whitespace mode
         if ( my ($left, $widget) = $_ =~ $regexpMainWidget) {
@@ -129,7 +129,7 @@ foreach my $file (@ARGV) {
            $needQDialogButtonBox = 1;
            warn "setButtons found : $var\n";
            my @listButton = split(/\|/, $var);
-           my @myNewDialogButton; 
+           my @myNewDialogButton;
            warn " list button found @listButton\n";
            if ( "Ok" ~~ @listButton || "KDialog::Ok" ~~ @listButton )  {
               push @myNewDialogButton , "QDialogButtonBox::Ok";
@@ -214,7 +214,7 @@ foreach my $file (@ARGV) {
            $_ .= $left . "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
            $_ .= $left . "//PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.\n";
            $_ .= $left . "mainLayout->addWidget(buttonBox);\n";
-           
+
            warn "WARNING we can't move this code at the end of constructor. Need to move it !!!!\n";
         }
         if (/defaultClicked\(\)/) {
@@ -242,16 +242,15 @@ foreach my $file (@ARGV) {
              s/user3Clicked\(\)/clicked()/;
         }
 
-        
         my $regexEnableButton = qr/
           ^(\s*)           # (1) Indentation
           enableButton
-          ${paren_begin}2${paren_end}  # (5) (args)
+          ${paren_begin}2${paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
            my $extract_args_regexp = qr/
-                                 ^\(([^,]*)           # button
+                                 ^\(([^,]*)         # button
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
@@ -283,7 +282,7 @@ foreach my $file (@ARGV) {
         my $regexDefaultButton = qr/
                                ^(\s*)           # (1) Indentation
                                setDefaultButton\s*\(
-                               (.*)
+                               (.*)             # (2) button type
                                \);/x; # /x Enables extended whitespace mode
         if ( my ($left, $defaultButtonType) = $_ =~ $regexDefaultButton ) {
            warn "Found default button type : $defaultButtonType\n";
@@ -325,7 +324,7 @@ foreach my $file (@ARGV) {
               if ($defaultButtonType eq "User1") {
                  $_ = $left . "user1Button\->setFocus();\n";
               } elsif ($defaultButtonType eq "User2") {
-                 $_ = $left . "user2Button\->setFocus();\n";                
+                 $_ = $left . "user2Button\->setFocus();\n";
               } elsif ($defaultButtonType eq "User3") {
                  $_ = $left . "user3Button\->setFocus();\n";
               } else {
@@ -486,7 +485,7 @@ foreach my $file (@ARGV) {
         my $regexShowButton = qr/
           ^(\s*)           # (1) Indentation
           showButton
-          ${paren_begin}2${paren_end}  # (5) (args)
+          ${paren_begin}2${paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexShowButton) {
            warn "found showButton $args\n";
@@ -536,7 +535,6 @@ foreach my $file (@ARGV) {
            # remove showButtonSeparator doesn't exist now.
            $_ = "";
         }
-        
 
         my $regexButton = qr/
           ^(\s*)           # (1) Indentation
@@ -599,8 +597,9 @@ foreach my $file (@ARGV) {
            functionUtilkde::addIncludeInFile($file, "QPushButton");
         } else {
            if ( $file =~ /\.cpp$/) {
-             warn "WARNING:if \'$file\' is cpp file perhaps you use default button Ok|Cancel without uses setButton\n";
-             warn "Add in source code:\n";
+             warn "WARNING: check if you are using the default buttons Ok|Cancel without calling setButtons\n";
+             warn "In this case, add this code:\n";
+             warn "#include <QDialogButtonBox>\n";
              warn "QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);\n";
              warn "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
              warn "okButton->setDefault(true);\n";
@@ -608,7 +607,6 @@ foreach my $file (@ARGV) {
              warn "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
              warn "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
              warn "mainLayout->addWidget(buttonBox);\n";
-             warn "#include <QDialogButtonBox>\n";
            }
         }
         if (defined $needKGuiItem) {
