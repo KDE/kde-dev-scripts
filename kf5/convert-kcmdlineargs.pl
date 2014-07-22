@@ -61,6 +61,11 @@ foreach my $file (@ARGV) {
             s/$opt/parser/;
             if (defined $port_kapplicationAndK4AboutData) {
                $_ .= "    QApplication app(argc, argv);\n";    
+               $_ .= "    KAboutData::setApplicationData(aboutData);\n";
+               $_ .= "    app.setApplicationName(aboutData.componentName());\n";
+               $_ .= "    app.setApplicationDisplayName(aboutData.displayName());\n";
+               $_ .= "    app.setOrganizationDomain(aboutData.organizationDomain());\n";
+               $_ .= "    app.setApplicationVersion(aboutData.version());\n";
             }
             $_ .= "    parser.addVersionOption();\n";
             $_ .= "    parser.addHelpOption();\n";
@@ -104,9 +109,9 @@ foreach my $file (@ARGV) {
             s/KCmdLineArgs::qtArgc\(\)/argc/;
             s/KCmdLineArgs::qtArgv\(\)/argv/;
             if (defined $args) {
-                s/${args}\->getOptionList/parser.values/;
-                s/${args}\->getOption/parser.value/;
-                s/${args}\->isSet/parser.isSet/;
+                s/${args}\->getOptionList/parser.values/g;
+                s/${args}\->getOption/parser.value/g;
+                s/${args}\->isSet/parser.isSet/g;
                 s/${args}\->count/parser.positionalArguments().count/;
                 s/${args}\->usage\s*\(\)/parser.showHelp()/;
                 s/${args}\->clear\s*\(\);//;
