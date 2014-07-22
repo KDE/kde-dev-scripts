@@ -110,6 +110,9 @@ foreach my $file (@ARGV) {
            s,KDE_EXPORT KCModule,Q_DECL_EXPORT KCModule,;
            $removeKdemacros = 1;
         }
+        if (/KConfigSkeleton::usrReadConfig\b/) {
+           s,KConfigSkeleton::usrReadConfig\b,KConfigSkeleton::usrRead,;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
