@@ -8,10 +8,18 @@ use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
 my $use_tr;
+my $use_aboutdata;
 
 # Set $use_tr to generate code that uses QCoreApplication::translate
 # If it's not set, i18n will be used.
 #$use_tr = 1;
+
+# Set $use_aboutdata_tr to generate code that uses kaboutdata
+$use_aboutdata = 1;
+
+my $port_kapplicationAndK4AboutData;
+# Set $port_kapplicationAndK4AboutData if you want to port k4aboutdata + kapplication
+$port_kapplicationAndK4AboutData = 1;
 
 foreach my $file (@ARGV) {
     my $context = "\"main\"";
@@ -19,15 +27,52 @@ foreach my $file (@ARGV) {
     my $short = "";
     my $args;
     my %negatedOptions = ();
-
+    my $needRemoveKApplication;
+    my %varname = ();
     functionUtilkde::substInFile {
+        if (defined $port_kapplicationAndK4AboutData) {
+           if (/KApplication app/) {
+              $_ ="";
+              $needRemoveKApplication = 1;
+           }
+           my $regexpK4AboutDataLocal = qr/
+              ^(\s*)           # (1) Indentation
+              K4AboutData\s+
+              (\w+)            # (2) variable name
+              /x; # /x Enables extended whitespace mode
+           if (my ($left, $var) = $_ =~ $regexpK4AboutDataLocal) {
+               $varname{$var} = 1;
+               s/ki18n/i18n/g;
+           }
+           if (/(\w+)\.addAuthor\s*\(/) {
+              my $var = $1;
+              if ( defined $varname{$var} ) {
+                  s/ki18n/i18n/g;
+                  s/KLocalizedString\b/QString/g;
+              }
+           }
+           s/K4AboutData::License_/KAboutLicense::/;
+           s/K4AboutData/KAboutData/g;
+        }
         if (/KCmdLineOptions (\w*)/) {
             $opt = $1;
+            
             s/KCmdLineOptions /QCommandLineParser /;
             s/$opt/parser/;
-            $_ .= "    app.setApplicationVersion(INSERT_VERSION_HERE);\n";
+            if (defined $port_kapplicationAndK4AboutData) {
+               $_ .= "    QApplication app(argc, argv);\n";    
+            }
             $_ .= "    parser.addVersionOption();\n";
             $_ .= "    parser.addHelpOption();\n";
+            if ( defined $use_aboutdata) {
+              $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
+              $_ .= "    aboutData.setupCommandLine(&parser);\n";        
+            }
+            $_ .= "    parser.process(app);\n";
+            if ( defined $use_aboutdata) {
+              $_ .= "    aboutData.processCommandLine(&parser);\n";
+            }
+
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
@@ -59,11 +104,12 @@ foreach my $file (@ARGV) {
             s/KCmdLineArgs::qtArgc\(\)/argc/;
             s/KCmdLineArgs::qtArgv\(\)/argv/;
             if (defined $args) {
-                s/${args}\->getOptionList/parser.arguments/;
-                s/${args}\->getOption/parser.argument/;
+                s/${args}\->getOptionList/parser.values/;
+                s/${args}\->getOption/parser.value/;
                 s/${args}\->isSet/parser.isSet/;
                 s/${args}\->count/parser.positionalArguments().count/;
                 s/${args}\->usage\s*\(\)/parser.showHelp()/;
+                s/${args}\->clear\s*\(\);//;
                 s/KCmdLineArgs::usage\s*\(\)/parser.showHelp()/;
                 if (/arguments?\(\"(\w*)/ || /isSet\(\"(\w*)/) {
                     my $optionName = $1;
@@ -76,6 +122,17 @@ foreach my $file (@ARGV) {
         }
         $_;
     } $file;
+
+    if (defined $needRemoveKApplication) {
+      functionUtilkde::removeIncludeInFile($file, "KApplication");
+      functionUtilkde::removeIncludeInFile($file, "kapplication.h");
+      functionUtilkde::addIncludeInFile($file, "QApplication");
+      functionUtilkde::removeIncludeInFile($file, "K4AboutData");
+      functionUtilkde::removeIncludeInFile($file, "k4aboutdata.h");
+      functionUtilkde::addIncludeInFile($file, "KAboutData");
+
+    }
+
     if (`grep QCommand $file | grep -v '#include'`) {
       functionUtilkde::removeIncludeInFile($file, "kcmdlineargs.h");
       functionUtilkde::removeIncludeInFile($file, "KCmdLineArgs");
