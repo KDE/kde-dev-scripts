@@ -19,6 +19,8 @@ foreach my $file (@ARGV) {
         s/\<KMenu\b\>/\<QMenu>/ =~ /#include/ ;
         s/\<kmenu.h\>/\<QMenu>/ =~ /#include/ ;
 
+        s/\baddTitle\b/addSection/;
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
