@@ -29,6 +29,7 @@ foreach my $file (@ARGV) {
     my %negatedOptions = ();
     my $needRemoveKApplication;
     my %varname = ();
+    my $QCommandLineParserAdded;
     functionUtilkde::substInFile {
         if (defined $port_kapplicationAndK4AboutData) {
            if (/KApplication app/) {
@@ -77,9 +78,32 @@ foreach my $file (@ARGV) {
             if ( defined $use_aboutdata) {
               $_ .= "    aboutData.processCommandLine(&parser);\n";
             }
+            $QCommandLineParserAdded = 1;
 
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
             $_ = "";
+            if ( not defined $QCommandLineParserAdded) {
+              if (defined $port_kapplicationAndK4AboutData) {
+                 $_ = "    QApplication app(argc, argv);\n";
+                 $_ .= "   QCommandLineParser parser;\n";
+                 $_ .= "    KAboutData::setApplicationData(aboutData);\n";
+                 $_ .= "    app.setApplicationName(aboutData.componentName());\n";
+                 $_ .= "    app.setApplicationDisplayName(aboutData.displayName());\n";
+                 $_ .= "    app.setOrganizationDomain(aboutData.organizationDomain());\n";
+                 $_ .= "    app.setApplicationVersion(aboutData.version());\n";
+              }
+              $_ .= "    parser.addVersionOption();\n";
+              $_ .= "    parser.addHelpOption();\n";
+              if ( defined $use_aboutdata) {
+                $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
+                $_ .= "    aboutData.setupCommandLine(&parser);\n";
+              }
+              $_ .= "    parser.process(app);\n";
+              if ( defined $use_aboutdata) {
+                $_ .= "    aboutData.processCommandLine(&parser);\n";
+              }
+            }
+            $QCommandLineParserAdded = 1;
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
             $_ = "";
             $short = "\"$2\" << ";
