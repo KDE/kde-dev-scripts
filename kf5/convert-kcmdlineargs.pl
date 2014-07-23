@@ -30,6 +30,7 @@ foreach my $file (@ARGV) {
     my $needRemoveKApplication;
     my %varname = ();
     my $QCommandLineParserAdded;
+    my $needQCommandLineOption;
     functionUtilkde::substInFile {
         if (defined $port_kapplicationAndK4AboutData) {
            if (/KApplication app/) {
@@ -125,6 +126,7 @@ foreach my $file (@ARGV) {
             }
             my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
             $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << QLatin1String($short\"$name\"), $translate$trail));\n";
+            $needQCommandLineOption = 1;
             $short = "";
         } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
             $args = $1;
@@ -167,7 +169,9 @@ foreach my $file (@ARGV) {
       functionUtilkde::removeIncludeInFile($file, "KCmdLineArgs");
       functionUtilkde::removeIncludeInFile($file, "KCmdLineOptions");
       functionUtilkde::addIncludeInFile($file, "QCommandLineParser");
-      functionUtilkde::addIncludeInFile($file, "QCommandLineOption");
+      if (defined $needQCommandLineOption) {
+        functionUtilkde::addIncludeInFile($file, "QCommandLineOption");
+      }
     }
 }
 
