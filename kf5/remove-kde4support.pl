@@ -106,6 +106,10 @@ foreach my $file (@ARGV) {
         if (/KUrl::fromPath/) {
            s,KUrl::fromPath\b,QUrl::fromLocalFile,;
         }
+       
+        s/KUrl::toPercentEncoding\b/QUrl::toPercentEncoding/g;
+        s/KUrl::fromPercentEncoding\b/QUrl::fromPercentEncoding/g;
+
         if (/KDE_EXPORT KCModule/) {
            s,KDE_EXPORT KCModule,Q_DECL_EXPORT KCModule,;
            $removeKdemacros = 1;
