@@ -19,6 +19,7 @@ foreach my $file (@ARGV) {
         s/\bKAction\s*\*/QAction \*/;
         s!KDE/KAction\b!QAction!;
         s!#include \<KAction\>!#include \<QAction\>!;
+        s!#include \<kaction.h\>!#include \<QAction\>!;
         s!class KAction;!class QAction;!;
         if (/setHelpText\b/) {
            warn "QAction doesn't support setHelpText, just reimplement it in your code see kaction.cpp\n";
