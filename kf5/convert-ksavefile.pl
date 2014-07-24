@@ -59,7 +59,7 @@ foreach my $file (@ARGV) {
 
     foreach my $var (keys %varname) {
         if (not defined($finalized_called{$var})) {
-            warn "WARNING: add $var.commit() at the time it is destructed. KSaveFile called finalize() in the dtor, and this code never calls it, but QSaveFile requires an explicit call to commit(), otherwise the changes are discarded";
+            warn "WARNING: add $var.commit() at the time it is destructed. KSaveFile called finalize() in the dtor, and this code never calls it, but QSaveFile requires an explicit call to commit(), otherwise the changes are discarded\n";
          }
     }
 
