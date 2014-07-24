@@ -17,6 +17,7 @@ foreach my $file (@ARGV) {
         my $orig = $_;
         s/\bKIcon\b\s*\(/QIcon::fromTheme(/;
         s/\<KIcon\b\>/\<QIcon>/ =~ /#include/ ;
+        s/\<kicon.h\b\>/\<QIcon>/ =~ /#include/ ;
 
         $modified ||= $orig ne $_;
         $_;
