@@ -19,6 +19,7 @@ foreach my $file (@ARGV) {
         # see http://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes
         s/KMimeType::Ptr/QMimeType/g;
         s/if \(mime\)/if (mime.isValid())/;
+        s/if\s*\(mime.isNull\(\)\)/if (!mime.isValid())/;
         s/KMimeType::mimeType\s*\(/db.mimeTypeForName(/;
         s/, KMimeType::DontResolveAlias//;
         s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
