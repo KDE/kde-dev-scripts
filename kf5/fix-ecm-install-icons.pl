@@ -155,6 +155,8 @@ foreach my $cmakelists (@ARGV) {
 
 # Hopefully all of these files were in the same repo :)
 my $repodir = findGitRepo($lastfile);
-chdir($repodir);
-system("git", "status");
+if ($repodir) {
+    chdir($repodir);
+    system("git", "status");
+}
 # vim:et:sw=4:sts=4:
