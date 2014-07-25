@@ -20,6 +20,7 @@ foreach my $file (@ARGV) {
     my $needQDir;
     my $needKComponentData;
     my $removeKdemacros;
+    my $needQMimeDatabase;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -117,6 +118,17 @@ foreach my $file (@ARGV) {
         if (/KConfigSkeleton::usrReadConfig\b/) {
            s,KConfigSkeleton::usrReadConfig\b,KConfigSkeleton::usrRead,;
         }
+
+        my $regexp = qr/
+           ^(\s*)                        # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
+           (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
+           KMimeType::extractKnownExtension(.*)$                         # (3) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $left, $after) = $_ =~ $regexp) {
+           $_ = $indent . "QMimeDatabase db;\n";
+           $_ .= $indent . "$left" . "db.suffixForFileName" . $after . "\n";
+           $needQMimeDatabase = 1;
+        }
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -151,6 +163,9 @@ foreach my $file (@ARGV) {
         }
         if ($removeKdemacros) {
            functionUtilkde::removeIncludeInFile($file, "kdemacros.h");
+        }
+        if ($needQMimeDatabase) {
+           functionUtilkde::addIncludeInFile($file, "QMimeDatabase");
         }
     }
 }
