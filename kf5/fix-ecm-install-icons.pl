@@ -4,8 +4,9 @@
 # when using the old form
 # ecm_install_icons(<icon_install_dir>)
 #
-# Usage: ./fix-ecm-install-icons.pl [--indent indentstr] <CMake Lists file>
+# Usage: ./fix-ecm-install-icons.pl [--indent indentstr] [CMakeLists.txt files]
 # You can use '\t' escapes in the indentstr. The default is four spaces.
+# If no files are given, CMakeLists.txt from the current directory is used.
 #
 # NB: if your CMakeLists.txt uses kde4_install_icons, you should
 #     run the adapt_cmakelists_file.pl script first
@@ -20,10 +21,13 @@ use Cwd;
 sub findGitRepo {
     my $dir = dirname(shift);
 
-    while (!-e "$dir/.git" ) {
+    while (not $dir eq '/' and !-e "$dir/.git") {
         $dir = dirname($dir);
     }
 
+    if ($dir eq '/') {
+        return "";
+    }
     return $dir;
 }
 
@@ -50,10 +54,17 @@ if (scalar(@ARGV) eq 0) {
 
 my $lastfile = "";
 
+my $savedir = getcwd;
+
 foreach my $cmakelists (@ARGV) {
+    my $mv = 'mv';
     my $cmakecontents = read_file($cmakelists);
+    my $cmakelistsfile = basename($cmakelists);
     my $cwdir = dirname($cmakelists);
     my $repodir = findGitRepo($cmakelists);
+    if ($repodir) {
+        $mv = 'git mv';
+    }
 
     chdir($cwdir);
 
@@ -63,8 +74,8 @@ foreach my $cmakelists (@ARGV) {
         my $replacestr = "";
         my %themehash = ();
 
-        find(sub {
-            if ($_ =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
+        foreach my $file (<{*.png,*.svgz,*.mng}>) {
+            if ($file =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
                 my $th = $1;
                 my $size = $2;
                 my $group = $3;
@@ -90,9 +101,9 @@ foreach my $cmakelists (@ARGV) {
                 my $newfilename = "$size-$group-$iconname.$extension";
 
                 $themehash{$th} .= "\n${indent}$newfilename";
-                `git mv $_ $newfilename`;
+                `$mv "$file" "$newfilename"`;
             }
-        }, $cwdir);
+        }
 
         foreach my $key (sort keys %themehash) {
             $replacestr .= "ecm_install_icons(ICONS$themehash{$key}\n";
@@ -128,12 +139,17 @@ foreach my $cmakelists (@ARGV) {
         if ($replacestr ne "") {
             $cmakecontents =~ s/ecm_install_icons\s*\(\s*[^\s]+(?:\s+[^\s]+)?\s*\)/$replacestr/;
 
-            write_file($cmakelists, $cmakecontents);
-            `git add $cmakelists`;
+            write_file($cmakelistsfile, $cmakecontents);
+            if ($repodir) {
+                `git add $cmakelistsfile`;
+            }
         }
     }
 
     $lastfile = $cmakelists;
+
+    # so relative paths work on the next iteration
+    chdir($savedir);
 }
 
 # Hopefully all of these files were in the same repo :)
