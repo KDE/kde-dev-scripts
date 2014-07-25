@@ -77,7 +77,7 @@ foreach my $file (@ARGV) {
         if (/(\w+)\.setSuffix\s*\((.*)\)/) {
            my $var = $1;
            if ( defined $varname{$var} ) {
-               my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String($2)";
+               my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String(\"XXXXXX\") + QLatin1String($2)";
                warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
                $_ = "//code was $_";
                $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
@@ -87,7 +87,7 @@ foreach my $file (@ARGV) {
         if (/(\w+)\->setSuffix\s*\((.*)\)/) {
            my $var = $1;
            if ( defined $varname{$var} ) {
-               my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String($2)";
+               my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String(\"XXXXXX\") + QLatin1String($2)";
                warn "$file :KTemporaryFile uses setPrefix add '$newContructor'\n";
                $_ = "//code was $_";
                $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
