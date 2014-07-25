@@ -27,6 +27,8 @@ sub findGitRepo {
 
 #TODO figure prefix for targets using either repo name or arg
 
+my $lastfile = "";
+
 foreach my $cmakelists (@ARGV) {
     my $cmakecontents = read_file($cmakelists);
     my $cwdir = dirname($cmakelists);
@@ -105,6 +107,11 @@ foreach my $cmakelists (@ARGV) {
 	    `git add $cmakelists`;
 	}
     }
+
+    $lastfile = $cmakelists;
 }
 
+# Hopefully all of these files were in the same repo :)
+my $repodir = findGitRepo($lastfile);
+chdir($repodir);
 system("git", "status");
