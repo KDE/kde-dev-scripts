@@ -17,9 +17,10 @@ use File::Basename;
 use File::Slurp::Unicode;
 use File::Find;
 use Cwd;
+use Cwd 'abs_path';
 
 sub findGitRepo {
-    my $dir = dirname(shift);
+    my $dir = abs_path(dirname(shift));
 
     while (not $dir eq '/' and !-e "$dir/.git") {
         $dir = dirname($dir);
