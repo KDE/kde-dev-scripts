@@ -4,7 +4,12 @@
 # when using the old form
 # ecm_install_icons(<icon_install_dir>)
 #
+#
+#
 # Usage: ./fix-ecm-install-icons.pl <CMake Lists file>
+#
+# NB: if your CMakeLists.txt uses kde4_install_icons, you should
+#     run the adapt_cmakelists_file.pl script first
 
 use strict;
 
@@ -40,8 +45,9 @@ foreach my $cmakelists (@ARGV) {
 
     chdir($cwdir);
 
-    if ($cmakecontents =~ /ecm_install_icons\s*\(\s*([^\s]+)\s*\)/) {
+    if ($cmakecontents =~ /ecm_install_icons\s*\(\s*([^\s]+)(?:\s+([^\s]+))?\s*\)/) {
         my $destination = $1;
+        my $l10n_code = $2;
         my $replacestr = "";
         my %themehash = ();
 
@@ -95,13 +101,17 @@ foreach my $cmakelists (@ARGV) {
                 $replacestr .= "hicolor"
             }
 
+            if ($l10n_code) {
+                $replacestr .= "\n\tLANG " . $l10n_code
+            }
+
             $replacestr .= "\n)\n\n";
         }
 
         chop($replacestr);
 
         if ($replacestr ne "") {
-            $cmakecontents =~ s/ecm_install_icons\s*\(\s*[^\s]+\s*\)/$replacestr/;
+            $cmakecontents =~ s/ecm_install_icons\s*\(\s*[^\s]+(?:\s+[^\s]+)?\s*\)/$replacestr/;
 
             write_file($cmakelists, $cmakecontents);
             `git add $cmakelists`;
