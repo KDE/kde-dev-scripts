@@ -4,9 +4,8 @@
 # when using the old form
 # ecm_install_icons(<icon_install_dir>)
 #
-#
-#
-# Usage: ./fix-ecm-install-icons.pl <CMake Lists file>
+# Usage: ./fix-ecm-install-icons.pl [--indent indentstr] <CMake Lists file>
+# You can use '\t' escapes in the indentstr. The default is four spaces.
 #
 # NB: if your CMakeLists.txt uses kde4_install_icons, you should
 #     run the adapt_cmakelists_file.pl script first
@@ -16,9 +15,7 @@ use strict;
 use File::Basename;
 use File::Slurp::Unicode;
 use File::Find;
-
-#TODO Figure out a portable way to do this
-my $path_separator = "/";
+use Cwd;
 
 sub findGitRepo {
     my $dir = dirname(shift);
@@ -30,7 +27,26 @@ sub findGitRepo {
     return $dir;
 }
 
-#TODO figure prefix for targets using either repo name or arg
+my $indent = '    ';
+
+if ((scalar(@ARGV) > 0) and (($ARGV[0] eq '--indent') or ($ARGV[0] eq '-i'))) {
+    shift @ARGV;
+    if (scalar(@ARGV) eq 0) {
+        print "No indent string given\n";
+        exit 1;
+    }
+    $indent = $ARGV[0];
+    shift @ARGV;
+    $indent =~ s/\\t/\t/g;
+    if (not $indent =~ /^\s*$/) {
+        print "Indent string is not whitespace\n";
+        exit 2;
+    }
+}
+
+if (scalar(@ARGV) eq 0) {
+    @ARGV = ("CMakeLists.txt");
+}
 
 my $lastfile = "";
 
@@ -38,10 +54,6 @@ foreach my $cmakelists (@ARGV) {
     my $cmakecontents = read_file($cmakelists);
     my $cwdir = dirname($cmakelists);
     my $repodir = findGitRepo($cmakelists);
-    my $targetname = $cwdir;
-
-    $targetname =~ s/^$repodir//;
-    $targetname =~ s/$path_separator/_/g;
 
     chdir($cwdir);
 
@@ -77,35 +89,38 @@ foreach my $cmakelists (@ARGV) {
 
                 my $newfilename = "$size-$group-$iconname.$extension";
 
-                $themehash{$th} .= "\n\t$newfilename";
+                $themehash{$th} .= "\n${indent}$newfilename";
                 `git mv $_ $newfilename`;
             }
         }, $cwdir);
 
         foreach my $key (sort keys %themehash) {
-            $replacestr .= "ecm_install_icons(ICONS$themehash{$key}\n\tDESTINATION $destination\n\tTHEME ";
+            $replacestr .= "ecm_install_icons(ICONS$themehash{$key}\n";
+            $replacestr .= "${indent}DESTINATION $destination\n";
+            $replacestr .= "${indent}THEME ";
 
             if ($key eq "br") {
                 $replacestr .=  "breeze";
             }
             elsif ($key eq "ox") {
-                $replacestr .= "oxygen"
+                $replacestr .= "oxygen";
             }
             elsif ($key eq "cr") {
-                $replacestr .= "crystalsvg"
+                $replacestr .= "crystalsvg";
             }
             elsif ($key eq "lo") {
-                $replacestr .= "locolor"
+                $replacestr .= "locolor";
             }
             elsif ($key eq "hi") {
-                $replacestr .= "hicolor"
+                $replacestr .= "hicolor";
             }
+            $replacestr .= "\n";
 
             if ($l10n_code) {
-                $replacestr .= "\n\tLANG " . $l10n_code
+                $replacestr .= "${indent}LANG $l10n_code\n";
             }
 
-            $replacestr .= "\n)\n\n";
+            $replacestr .= ")\n";
         }
 
         chop($replacestr);
@@ -125,3 +140,4 @@ foreach my $cmakelists (@ARGV) {
 my $repodir = findGitRepo($lastfile);
 chdir($repodir);
 system("git", "status");
+# vim:et:sw=4:sts=4:
