@@ -46,7 +46,7 @@ foreach my $cmakelists (@ARGV) {
 	my %themehash = ();
 	
 	find(sub {
-	    if ($_ =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-(\w+).(png|svgz|mng)/) {
+	    if ($_ =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
 		my $th = $1;
 		my $size = $2;
 		my $group = $3;
