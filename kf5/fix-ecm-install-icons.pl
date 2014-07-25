@@ -17,9 +17,9 @@ my $path_separator = "/";
 
 sub findGitRepo {
     my $dir = dirname(shift);
-    
+
     while (!-e "$dir/.git" ) {
-	$dir = dirname($dir);
+        $dir = dirname($dir);
     }
 
     return $dir;
@@ -41,71 +41,71 @@ foreach my $cmakelists (@ARGV) {
     chdir($cwdir);
 
     if ($cmakecontents =~ /ecm_install_icons\s*\(\s*([^\s]+)\s*\)/) {
-	my $destination = $1;
-	my $replacestr = "";
-	my %themehash = ();
-	
-	find(sub {
-	    if ($_ =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
-		my $th = $1;
-		my $size = $2;
-		my $group = $3;
-		my $iconname = $4;
-		my $extension = $5;
+        my $destination = $1;
+        my $replacestr = "";
+        my %themehash = ();
 
-		if ($group eq "mime") {
-		    $group = "mimetypes";
-		}
-		elsif ($group eq "filesys") {
-		    $group = "places";
-		}
-		elsif ($group eq "device") {
-		    $group = "devices";
-		}
-		elsif ($group eq "app") {
-		    $group = "apps";
-		}
-		elsif ($group eq "action") {
-		    $group = "actions";
-		}
+        find(sub {
+            if ($_ =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
+                my $th = $1;
+                my $size = $2;
+                my $group = $3;
+                my $iconname = $4;
+                my $extension = $5;
 
-		my $newfilename = "$size-$group-$iconname.$extension";
+                if ($group eq "mime") {
+                    $group = "mimetypes";
+                }
+                elsif ($group eq "filesys") {
+                    $group = "places";
+                }
+                elsif ($group eq "device") {
+                    $group = "devices";
+                }
+                elsif ($group eq "app") {
+                    $group = "apps";
+                }
+                elsif ($group eq "action") {
+                    $group = "actions";
+                }
 
-		$themehash{$th} .= "\n\t$newfilename";
-	        `git mv $_ $newfilename`;
-	    }
-	     }, $cwdir);
+                my $newfilename = "$size-$group-$iconname.$extension";
 
-	foreach my $key (sort keys %themehash) {
-	    $replacestr .= "ecm_install_icons(ICONS$themehash{$key}\n\tDESTINATION $destination\n\tTHEME ";
+                $themehash{$th} .= "\n\t$newfilename";
+                `git mv $_ $newfilename`;
+            }
+        }, $cwdir);
 
-	    if ($key eq "br") {
-		$replacestr .=  "breeze";
-	    }
-	    elsif ($key eq "ox") {
-		$replacestr .= "oxygen"
-	    }
-	    elsif ($key eq "cr") {
-		$replacestr .= "crystalsvg"
-	    }
-	    elsif ($key eq "lo") {
-		$replacestr .= "locolor"
-	    }
-	    elsif ($key eq "hi") {
-		$replacestr .= "hicolor"
-	    }
+        foreach my $key (sort keys %themehash) {
+            $replacestr .= "ecm_install_icons(ICONS$themehash{$key}\n\tDESTINATION $destination\n\tTHEME ";
 
-	    $replacestr .= "\n)\n\n";
-	}
+            if ($key eq "br") {
+                $replacestr .=  "breeze";
+            }
+            elsif ($key eq "ox") {
+                $replacestr .= "oxygen"
+            }
+            elsif ($key eq "cr") {
+                $replacestr .= "crystalsvg"
+            }
+            elsif ($key eq "lo") {
+                $replacestr .= "locolor"
+            }
+            elsif ($key eq "hi") {
+                $replacestr .= "hicolor"
+            }
 
-	chop($replacestr);
-	
-	if ($replacestr ne "") {
-	    $cmakecontents =~ s/ecm_install_icons\s*\(\s*[^\s]+\s*\)/$replacestr/;
+            $replacestr .= "\n)\n\n";
+        }
 
-	    write_file($cmakelists, $cmakecontents);
-	    `git add $cmakelists`;
-	}
+        chop($replacestr);
+
+        if ($replacestr ne "") {
+            $cmakecontents =~ s/ecm_install_icons\s*\(\s*[^\s]+\s*\)/$replacestr/;
+
+            write_file($cmakelists, $cmakecontents);
+            `git add $cmakelists`;
+        }
     }
 
     $lastfile = $cmakelists;
