@@ -37,7 +37,7 @@ foreach my $file (@ARGV) {
            (.*)$                         # (5) afterreg
            /x; # /x Enables extended whitespace mode
         if (my ($indent, $left, $var, $argument, $afterreg) = $_ =~ $regexp) {
-          warn "KTemporaryFile found \'$var\' \'$argument\'\n";
+           #warn "KTemporaryFile found \'$var\' \'$argument\'\n";
            $varname{$var} = 1;
            s/\bKTemporaryFile\b/QTemporaryFile/;
         }
@@ -48,7 +48,7 @@ foreach my $file (@ARGV) {
           (\w+)            # (2) variable name
           /x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexpKMenuFunction) {
-           warn "Found KTemporaryFile in function!!!! $var\n";
+           #warn "Found KTemporaryFile in function!!!! $var\n";
            $varname{$var} = 1;
            s/\bKTemporaryFile\b/QTemporaryFile/;
         }
@@ -57,8 +57,11 @@ foreach my $file (@ARGV) {
            my $var = $1;
            if ( defined $varname{$var} ) {
                my $newContructor= $2 . "QLatin1Char('/') + QLatin1String(\"/myapp_XXXXXX.txt\")";
-               warn "KTemporaryFile uses setPrefix add '$newContructor'\n";
-               $_ = "//add to constructor and adapt if necessay: $newContructor \n";
+               warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
+               
+               $_ = "//code was $_";
+               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
+               
            }
         }
 
@@ -66,16 +69,18 @@ foreach my $file (@ARGV) {
            my $var = $1;
            if ( defined $varname{$var} ) {
                my $newContructor= $2 . "QLatin1Char('/') + QLatin1String(\"/myapp_XXXXXX.txt\")";
-               warn "KTemporaryFile uses setPrefix add '$newContructor'\n";
-               $_ = "//add to constructor and adapt if necessay: $newContructor \n";
+               warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
+               $_ = "//code was $_";
+               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
            }
         }
         if (/(\w+)\.setSuffix\s*\((.*)\)/) {
            my $var = $1;
            if ( defined $varname{$var} ) {
                my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String($2)";
-               warn "KTemporaryFile uses setPrefix add '$newContructor'\n";
-               $_ = "//add to constructor and adapt if necessay: $newContructor \n";
+               warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
+               $_ = "//code was $_";
+               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
            }
         }
 
@@ -83,8 +88,9 @@ foreach my $file (@ARGV) {
            my $var = $1;
            if ( defined $varname{$var} ) {
                my $newContructor= "QDir::tempPath() + QLatin1Char('/') + QLatin1String($2)";
-               warn "KTemporaryFile uses setPrefix add '$newContructor'\n";
-               $_ = "//add to constructor and adapt if necessay: $newContructor \n";
+               warn "$file :KTemporaryFile uses setPrefix add '$newContructor'\n";
+               $_ = "//code was $_";
+               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
            }
         }
 
