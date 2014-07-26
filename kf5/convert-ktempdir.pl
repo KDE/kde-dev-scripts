@@ -80,6 +80,22 @@ foreach my $file (@ARGV) {
            }
         }
 
+        if (/(\w+)\.exists\(/) {
+           my $var = $1;
+           if ( defined $varname{$var} ) {
+              warn "$file: replace exists by QTemporaryDir::isValid() + QDir::exists(path) if necessary\n";
+              s/$var\.exists/$var\.isValid/;
+           }
+        }
+        if (/(\w+)\->exists\(/) {
+           my $var = $1;
+           if ( defined $varname{$var} ) {
+              warn "$file: replace exists by QTemporaryDir::isValid() + QDir::exists(path) if necessary\n";
+              s/$var\->exists/$var\->isValid/;
+           }
+        }
+
+
         if (/(\w+)\->unlink\(/) {
            my $var = $1;
            if ( defined $varname{$var} ) {
