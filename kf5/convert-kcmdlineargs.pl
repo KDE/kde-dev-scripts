@@ -129,7 +129,7 @@ foreach my $file (@ARGV) {
             $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << QLatin1String($short\"$name\"), $translate$trail));\n";
             $needQCommandLineOption = 1;
             $short = "";
-        } elsif (/KCmdLineArgs\s*\*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
+        } elsif (/KCmdLineArgs\s*\*\s*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
             $args = $1;
             $_ = "";
         } else {
