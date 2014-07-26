@@ -58,25 +58,21 @@ foreach my $file (@ARGV) {
         }
         if (/KCmdLineOptions (\w*)/) {
             $opt = $1;
-            
+
             s/KCmdLineOptions /QCommandLineParser /;
             s/$opt/parser/;
             if (defined $QCommandLineParserAdded) {
               $_ = "";
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ .= "    QApplication app(argc, argv);\n";    
+                 $_ .= "    QApplication app(argc, argv);\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
-                 $_ .= "    app.setApplicationName(aboutData.componentName());\n";
-                 $_ .= "    app.setApplicationDisplayName(aboutData.displayName());\n";
-                 $_ .= "    app.setOrganizationDomain(aboutData.organizationDomain());\n";
-                 $_ .= "    app.setApplicationVersion(aboutData.version());\n";
               }
               $_ .= "    parser.addVersionOption();\n";
               $_ .= "    parser.addHelpOption();\n";
               if ( defined $use_aboutdata) {
                 $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
-                $_ .= "    aboutData.setupCommandLine(&parser);\n";        
+                $_ .= "    aboutData.setupCommandLine(&parser);\n";
               }
               $_ .= "    parser.process(app);\n";
               if ( defined $use_aboutdata) {
