@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # now we have a include for each kpart and not just #include <kparts/part.h>
-# add_missing_kpart_include.pl *.h
+# find -iname "*.cpp" -o -iname "*.h" |xargs kde-dev-scripts/kf5/add_missing_kpart_include.pl
 
 use strict;
 use File::Basename;

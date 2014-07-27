@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KGlobal::config() -> KSharedConfig::openConfig()
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kglobal-config.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kglobal-config.pl
 
 use strict;
 use File::Basename;

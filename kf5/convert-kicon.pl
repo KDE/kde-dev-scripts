@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KIcon("...") => QIcon::fromTheme("...")
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kicon.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kicon.pl
 
 use strict;
 use File::Basename;

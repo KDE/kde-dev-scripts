@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # Q_WS* -> Q_OS*
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-qt-os-macro.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-qt-os-macro.pl
 
 use strict;
 use File::Basename;

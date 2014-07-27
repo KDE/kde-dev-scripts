@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # convert KCategoryDrawerV2 and KCategoryDrawerV3 to KCategoryDrawer
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kcategorydrawer.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kcategorydrawer.pl
 
 use strict;
 use File::Basename;

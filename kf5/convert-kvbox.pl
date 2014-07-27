@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # K[V|H]Box -> QWidget + QH|VBoxLayout
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kvbox.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kvbox.pl
 
 use strict;
 use File::Basename;

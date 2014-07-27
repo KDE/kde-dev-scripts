@@ -2,6 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # adapt KJob:: class
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kjob.pl
 
 use strict;
 use File::Basename;

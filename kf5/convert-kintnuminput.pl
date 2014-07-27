@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KIntNumInput -> QSpinBox
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kintnuminput.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kintnuminput.pl
 
 use strict;
 use File::Basename;

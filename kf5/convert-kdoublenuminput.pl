@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KDoubleNumInput -> QSpinBox
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kdoublenuminput.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kdoublenuminput.pl
 
 use strict;
 use File::Basename;

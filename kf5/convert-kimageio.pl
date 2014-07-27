@@ -3,7 +3,7 @@
 # Laurent Montel <montel@kde.org> (2014)
 # KImageIO::mimeTypes() => QImageReader/QImageWriter::supportedImageFormats()
 
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kimageio.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kimageio.pl
 
 use strict;
 use File::Basename;

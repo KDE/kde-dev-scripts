@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KLocale::global()->removeAcceleratorMarker(...) -> KLocalizedString::removeAcceleratorMarker(...)
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kglobal-removeAcceleratorMarker.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kglobal-removeAcceleratorMarker.pl
 
 use strict;
 use File::Basename;

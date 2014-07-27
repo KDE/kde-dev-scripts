@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # KGlobal::charsets() -> KCharsets::charsets()
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-kglobal-charset.pl
+# find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kglobal-charset.pl
 
 use strict;
 use File::Basename;
