@@ -89,10 +89,6 @@ foreach my $file (@ARGV) {
                  $_ = "    QApplication app(argc, argv);\n";
                  $_ .= "    QCommandLineParser parser;\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
-                 $_ .= "    app.setApplicationName(aboutData.componentName());\n";
-                 $_ .= "    app.setApplicationDisplayName(aboutData.displayName());\n";
-                 $_ .= "    app.setOrganizationDomain(aboutData.organizationDomain());\n";
-                 $_ .= "    app.setApplicationVersion(aboutData.version());\n";
               }
               $_ .= "    parser.addVersionOption();\n";
               $_ .= "    parser.addHelpOption();\n";
