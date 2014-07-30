@@ -18,6 +18,7 @@ foreach my $file (@ARGV) {
     my %varname = ();
 
     my $modified;
+    my $buttonId=0;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -43,6 +44,26 @@ foreach my $file (@ARGV) {
               s/clicked/buttonClicked/;
            }
         }
+        if ( /\s*connect\s*\(\s*(\w+),\s*SIGNAL\s*\(\s*released\s*\(\s*int\s*\)/ ) {
+           if (defined $varname{$1} ) {
+              my $newValue = $varname{$1};
+              s/$1/$newValue/;
+              s/released/buttonReleased/;
+           }
+        }
+        if ( /\s*connect\s*\(\s*(\w+),\s*SIGNAL\s*\(\s*pressed\s*\(\s*int\s*\)/ ) {
+           if (defined $varname{$1} ) {
+              my $newValue = $varname{$1};
+              s/$1/$newValue/;
+              s/pressed/buttonPressed/;
+           }
+        }
+        if ( /\s*connect\s*\(\s*(\w+),\s*SIGNAL\s*\(\s*changed\s*\(\s*int\s*\)/ ) {
+           if (defined $varname{$1} ) {
+              warn "$file: QButtonGroup doesn't have changed signal. Need to adapt it\n";
+           }
+        }
+
         if (/(\w+)\->selected\s*\(\)/) {
            if (defined $varname{$1} ) {
               my $newValue = $varname{$1};
