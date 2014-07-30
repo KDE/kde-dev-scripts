@@ -107,6 +107,12 @@ foreach my $file (@ARGV) {
         s/#include <kvbox\.h>/#include <QVBoxLayout>/;
         s/#include <KHBox>/#include <QHBoxLayout>/;
         s/#include <KVBox>/#include <QVBoxLayout>/;
+        s/class KVBox;//;
+        s/class KHBox;//;
+        s/KVBox\s*\*/QWidget */;
+        s/KHBox\s*\*/QWidget */;
+
+
 
 
         $modified ||= $orig ne $_;
