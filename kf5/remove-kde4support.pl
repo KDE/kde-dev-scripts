@@ -118,6 +118,12 @@ foreach my $file (@ARGV) {
         if (/KConfigSkeleton::usrReadConfig\b/) {
            s,KConfigSkeleton::usrReadConfig\b,KConfigSkeleton::usrRead,;
         }
+        if (/KApplication::clipboard\b/) {
+           s,KApplication::clipboard\b,QApplication::clipboard,;
+        }
+        if (/KApplication::isRightToLeft\b/) {
+           s,KApplication::isRightToLeft\b,QApplication::isRightToLeft,;
+        }
 
         my $regexp = qr/
            ^(\s*)                        # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
