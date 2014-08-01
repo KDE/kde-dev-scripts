@@ -125,6 +125,29 @@ foreach my $file (@ARGV) {
             my $url = $1;
             s/$url\.adjustPath\(KUrl::RemoveTrailingSlash\)/$url = $url\.adjusted(QUrl::StripTrailingSlash)/g;
         }
+
+        #url.setFileName(...)
+       my $regexpRange = qr/
+           ^(\s*)                        # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
+           (\w+)                         # (2) variable name
+           \.setFileName\s*\((.*)\)        # (3) argument
+           (.*)$                         # (4) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $url, $arg, $afterreg) = $_ =~ $regexpRange) {
+           if (defined $urls{$url}) {
+              $_ = $indent . "$url = $url.adjusted(QUrl::RemoveFilename);\n";
+              $_ .= $indent . "$url.setPath($url.path() + $arg);\n";
+           }
+        }
+
+
+        #u.queryItem(QLatin1String("x-allow-unencrypted"))
+        #=> QUrlQuery(url).queryItemValue
+        if (/(\w+)\.queryItem\b/ && defined $urls{$1}) {
+           my $url = $1;
+           s/$url\.queryItem\b/QUrlQuery($url).queryItemValue/;
+        }
+
         # url.addPath(path)
         if (my ($indent, $url, $path) = /^(\s*)(\w+)\.addPath\(\s*([^\)]*)\s*\)/) {
             if (defined $urls{$url}) {
@@ -132,6 +155,12 @@ foreach my $file (@ARGV) {
             }
         }
 
+        if ( /(\w+)\.prettyUrl\(\)/ && defined $urls{$1}) {
+           my $url = $1;
+           s/$url\.prettyUrl\b/$url\.toDisplayString/;
+        }        
+
+        s,\bKUrl\b,QUrl,g;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
