@@ -96,6 +96,7 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        warn "$file: Verify maximum value. KDoubleSpinBox defined maximum as 9999.0, but QSpinBox define it as 99.99.\n";
     }
 }
 

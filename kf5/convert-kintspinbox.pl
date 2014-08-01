@@ -87,6 +87,7 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        warn "$file: Verify maximum value. KIntSpinBox defined maximum as 32767, but QSpinBox define it as 99.\n";
     }
 }
 
