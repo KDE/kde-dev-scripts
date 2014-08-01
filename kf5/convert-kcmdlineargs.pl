@@ -82,11 +82,60 @@ foreach my $file (@ARGV) {
             $QCommandLineParserAdded = 1;
 
         } elsif (defined $opt && /KCmdLineArgs::addCmdLineOptions\s*\(\s*$opt\s*\)/ || /KCmdLineArgs::init/) {
+           my $addNewAboutData;
+           my $regexp = qr/
+             ^(.*)                        # (1) Indentation
+              KCmdLineArgs::init\s*\((.*)\)   # (2)  KCmdLineArgs::init(...,...,...,...);
+              (.*)$                         # (3) afterreg
+              /x; # /x Enables extended whitespace mode
+           if (my ($indent, $argument, $afterreg) = $_ =~ $regexp) {
+              my ($argc, $argv, $appname, $catalog, $programname, $version, $description);
+              my $constructor_regexp = qr/
+                                 ^([^,]*)\s*        # argc
+                                 ,\s*([^,]*)\s*     # argv
+			         ,\s*([^,]*)\s*     # appname
+                                 ,\s*([^,]*)         # catalog
+                                 ,\s*([^,]*)         # programname
+                                 ,\s*([^,]*)         # version
+                                 (?:,\s*([^,]*))?    # description
+                                 (.*)$              # after
+                                 /x;
+              if ( ($argc, $argv, $appname, $catalog, $programname, $version, $description) = $argument =~ $constructor_regexp ) {
+                 $appname =~ s/ki18n/i18n/;
+                 $appname =~ s/ki18n/i18n/;
+                 $programname =~ s/ki18n/i18n/;
+                 if ( $appname =~ /^\"/ ) {
+                    if ( $appname =~ /QLatin1String/ ) {
+                       #nothing
+                    } else {
+                       $appname = "QLatin1String($appname)";
+                    }
+                 }
+                 if ( $version =~ /QLatin1String/ ) {
+                    #nothing
+                 } else {
+                    $version = "QLatin1String($version)";
+                 }
+                 $_ = $indent . "KAboutData aboutData( $appname, $programname, $version);\n";
+                 if (defined $description) {
+                    warn "DESCRIPION : $description\n";
+                    $description =~ s/^,//;
+                    $description =~ s/ki18n/i18n/;
+                    $_ .= $indent . "aboutData.setShortDescription($description);\n";
+                 }
+                 $addNewAboutData = 1;
+              }
+            }
+
             if ( defined $QCommandLineParserAdded) {
-               $_ = "";
+               if (defined $addNewAboutData) {
+                  #nothing
+               } else {
+                  $_ = "";
+               }
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ = "    QApplication app(argc, argv);\n";
+                 $_ .= "    QApplication app(argc, argv);\n";
                  $_ .= "    QCommandLineParser parser;\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
@@ -114,10 +163,14 @@ foreach my $file (@ARGV) {
             my $trail = "";
             if ($name =~ /(\w*) <(.*)>/) { # "stylesheet <xsl>"
                 $name = $1;
-                $trail = ", \"$2\"";
+                $trail = ", QLatin1String(\"$2\")";
             }
             if (defined $defaultValue) {
-                $trail .= ", false, $defaultValue";
+                if ( $defaultValue =~ /QLatin1String/ ) {
+                   $trail .= ", $defaultValue";
+                } else {
+                    $trail .= ", QLatin1String($defaultValue)";
+                }
             } elsif ($name =~ /^no/) { # negative option, e.g. --nosignal
                 $negatedOptions{$name} = 1;
             }
@@ -158,6 +211,7 @@ foreach my $file (@ARGV) {
       functionUtilkde::removeIncludeInFile($file, "K4AboutData");
       functionUtilkde::removeIncludeInFile($file, "k4aboutdata.h");
       functionUtilkde::addIncludeInFile($file, "KAboutData");
+      functionUtilkde::addIncludeInFile($file, "KLocalizedString");
 
     }
 
