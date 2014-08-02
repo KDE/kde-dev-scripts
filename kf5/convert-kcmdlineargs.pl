@@ -124,6 +124,8 @@ foreach my $file (@ARGV) {
                     $_ .= $indent . "aboutData.setShortDescription($description);\n";
                  }
                  $addNewAboutData = 1;
+              } else {
+                 $_ = "";
               }
             }
 
@@ -152,8 +154,10 @@ foreach my $file (@ARGV) {
             }
             $QCommandLineParserAdded = 1;
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
+
             $_ = "";
-            $short = "\"$2\" << ";
+            $short = "QLatin1String(\"$2\") <<";
+            warn "$file: Be sure that option is added \'$2\'\n";
         } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*k(i18nc?)\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
             my $prefix = $1; # e.g. indent
             my $name = $2;
@@ -175,7 +179,7 @@ foreach my $file (@ARGV) {
                 $negatedOptions{$name} = 1;
             }
             my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
-            $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << QLatin1String($short\"$name\"), $translate$trail));\n";
+            $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << $short QLatin1String(\"$name\"), $translate$trail));\n";
             $needQCommandLineOption = 1;
             $short = "";
         } elsif (/KCmdLineArgs\s*\*\s*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
