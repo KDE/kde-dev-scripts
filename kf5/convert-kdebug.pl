@@ -27,6 +27,7 @@ foreach my $file (@ARGV) {
         s/kFatal\(\)/qFatal\(\)/;
         s/k_funcinfo/Q_FUNC_INFO/;
         s/kdebug\.h/qdebug\.h/;
+        s/KDebug/QDebug/;
 
         #s/\<\< endl//; # old stuff
 
