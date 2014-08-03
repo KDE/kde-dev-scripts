@@ -26,8 +26,9 @@ foreach my $file (@ARGV) {
         s/kError\(\)/qCritical\(\)/;
         s/kFatal\(\)/qFatal\(\)/;
         s/k_funcinfo/Q_FUNC_INFO/;
-        s/kdebug\.h/qdebug\.h/;
-        s/KDebug/QDebug/;
+
+        s/\<kdebug\.h>/\<QDebug>/ if (/#include/);
+        s/\<KDebug\>/\<QDebug>/ if (/#include/);
 
         #s/\<\< endl//; # old stuff
 
