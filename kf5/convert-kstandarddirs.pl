@@ -59,11 +59,11 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->findResource\b/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->locate/KStandardDirs::locate/;
         s/KGlobal::dirs\(\)->findExe/KStandardDirs::findExe/;
-        s/KGlobal::dirs\(\)->localxdgdatadir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('\/')/;
-        s/KGlobal::dirs\(\)->localxdgconfdir\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('\/')/;
+        s/KGlobal::dirs\(\)->localxdgdatadir\s*\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('\/')/;
+        s/KGlobal::dirs\(\)->localxdgconfdir\s*\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('\/')/;
         s/KStandardDirs::locate\s*\(\s*"exe", /KStandardDirs::findExe\(/;
 
-        if (/KStandardDirs::locateLocal\(\s*\"(.*)\",\s*(.*)\s*\)/) {
+        if (/KStandardDirs::locateLocal\s*\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
                 # prepend a slash
@@ -72,7 +72,7 @@ foreach my $file (@ARGV) {
                 } else {
                     $fileName = "QLatin1Char('\/') + " . $fileName;
                 }
-                s/KStandardDirs::locateLocal\(.*\)/QStandardPaths::writableLocation($loc) + $fileName/;
+                s/KStandardDirs::locateLocal\s*\(.*\)/QStandardPaths::writableLocation($loc) + $fileName/;
             }
         }
         if (/KStandardDirs::locate\s*\(\s*\"(.*)\",\s*(.*)\s*\)/ ||
@@ -84,14 +84,14 @@ foreach my $file (@ARGV) {
                 #print STDERR "fileName=$fileName\n";
                 my ($search, $replace);
                 if (/KStandardDirs::locate/) {
-                   $search = qr/KStandardDirs::locate/;
+                   $search = qr/KStandardDirs::locate\s*/;
                    $replace = "QStandardPaths::locate";
                 } elsif (/KGlobal::dirs\(\)->findAllResources/) {
-                   $search = qr/KGlobal::dirs\(\)->findAllResources/;
+                   $search = qr/KGlobal::dirs\(\)->findAllResources\s*/;
                    $replace = "QStandardPaths::locateAll";
                 } elsif (/KGlobal::dirs\(\)->findDirs/) {
                    warn "found Global::dirs\(\)->findD\n";
-                   $search = qr/KGlobal::dirs\(\)->findDirs/;
+                   $search = qr/KGlobal::dirs\(\)->findDirs\s*/;
                    $replace = "QStandardPaths::locateAll";
                 }
                 if ($fileName =~ s/\/\"$/\"/ || $fileName =~ s/\/\"\)$/\"\)/) {
