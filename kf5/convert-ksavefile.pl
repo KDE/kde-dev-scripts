@@ -40,7 +40,7 @@ foreach my $file (@ARGV) {
         if (/(\w+)\.open\(\s*\)/) {
            my $var = $1;
            if ( defined $varname{$var} ) {
-              s/$var\.open\(\s*\)/$var\.open\(QIODevice::ReadWrite\)/;
+              s/$var\.open\(\s*\)/$var\.open\(QIODevice::WriteOnly\)/;
            }
         }
         if (/(\w+)\.abort\(\s*\)/) {
