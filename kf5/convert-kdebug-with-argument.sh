@@ -78,6 +78,7 @@ EOF
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kDebug\s*\(\s*$oldcategorynumber\s*\),qCDebug\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kWarning\s*\(\s*$oldcategorynumber\s*\),qCWarning\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kFatal\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kError\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
 
 git add $debugnamefile.cpp $debugnamefile.h
 
