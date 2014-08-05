@@ -135,6 +135,26 @@ foreach my $file (@ARGV) {
            $_ .= $indent . "$left" . "db.suffixForFileName" . $after . "\n";
            $needQMimeDatabase = 1;
         }
+
+        my $regexpEscape = qr/
+           ^(\s*)            # (1) Indentation
+           (.*?)             # (2) Possibly "Classname *" (the ? means non-greedy)
+           Qt::escape
+           ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}  # (3) (args)
+           (.*)$                        # (4) end              
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $left, $args, $end) = $_ =~ $regexpEscape) {
+           #warn "found escape $args \n";
+           $args =~ s/^\(\s*//;
+           $args =~ s/\s*\)$//;
+           if ($args =~ /^\*/) {
+             $_ = $indent . $left . "($args).toHtmlEscaped()" . $end . "\n";
+
+           } else {
+             $_ = $indent . $left . "$args.toHtmlEscaped()" . $end . "\n";
+           }
+        }
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
