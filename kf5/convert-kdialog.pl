@@ -8,8 +8,6 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
-our $paren_begin = '(\((?:(?>[^()]+)|(?';
-our $paren_end = '))*\))';
 
 my %dialogButtonType = (
    "Ok" => "QDialogButtonBox::Ok",
@@ -76,7 +74,7 @@ foreach my $file (@ARGV) {
            \s*=\s*           #     assignment
            new\s+            #     new
            (\w+)\s*          # (4) classname
-           ${paren_begin}5${paren_end}  # (5) (args)
+           ${functionUtilkde::paren_begin}5${functionUtilkde::paren_end}  # (5) (args)
            /x; # /x Enables extended whitespace mode
         if (my ($indent, $left, $var, $classname, $args) = $_ =~ $widget_regexp) {
            # Extract last argument
@@ -245,7 +243,7 @@ foreach my $file (@ARGV) {
         my $regexEnableButton = qr/
           ^(\s*)           # (1) Indentation
           enableButton
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
@@ -337,7 +335,7 @@ foreach my $file (@ARGV) {
         my $regexSetButtonText = qr/
           ^(\s*)           # (1) Indentation
           setButtonText
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonText) {
            warn "found setButtonText $args\n";
@@ -373,7 +371,7 @@ foreach my $file (@ARGV) {
         my $regexSetButtonMenu = qr/
           ^(\s*)           # (1) Indentation
           setButtonMenu
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonMenu) {
            warn "found setButtonMenu $args\n";
@@ -409,7 +407,7 @@ foreach my $file (@ARGV) {
         my $regexSetButtonIcon = qr/
           ^(\s*)           # (1) Indentation
           setButtonIcon
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonIcon) {
            warn "found setButtonIcon $args\n";
@@ -446,7 +444,7 @@ foreach my $file (@ARGV) {
         my $regexSetButtonGuiItem = qr/
           ^(\s*)           # (1) Indentation
           setButtonGuiItem
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonGuiItem) {
            warn "found setButtonGuiItem $args\n";
@@ -485,7 +483,7 @@ foreach my $file (@ARGV) {
         my $regexShowButton = qr/
           ^(\s*)           # (1) Indentation
           showButton
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexShowButton) {
            warn "found showButton $args\n";
@@ -539,7 +537,7 @@ foreach my $file (@ARGV) {
         my $regexButton = qr/
           ^(\s*)           # (1) Indentation
           button
-          ${paren_begin}2${paren_end}  # (2) (args)
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $button) = $_ =~ $regexButton) {
            $button =~ s/\(//;

@@ -8,8 +8,6 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
-our $paren_begin = '(\((?:(?>[^()]+)|(?';
-our $paren_end = '))*\))';
 
 foreach my $file (@ARGV) {
 
@@ -56,7 +54,7 @@ foreach my $file (@ARGV) {
            \s*=\s*           #     assignment
            new\s+            #     new
            (\w+)\s*          # (4) classname
-           ${paren_begin}5${paren_end}  # (5) (args)
+           ${functionUtilkde::paren_begin}5${functionUtilkde::paren_end}  # (5) (args)
            /x; # /x Enables extended whitespace mode
        if (my ($indent, $left, $var, $classname, $args) = $_ =~ $widget_regexp) {
            # Extract last argument

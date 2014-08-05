@@ -3,6 +3,10 @@
 
 package functionUtilkde;
 use strict;
+
+our $paren_begin = '(\((?:(?>[^()]+)|(?';
+our $paren_end = '))*\))';
+
 sub diffFile
 {
 	if (-d ".svn") {
@@ -13,6 +17,17 @@ sub diffFile
                 system(qw(git diff), $@);
 	}
 	warn "files to commit: $@\n";
+}
+
+sub headerName
+{
+    my ($cppfile) = @_;
+    my $headerfile;
+    if ( $cppfile =~ /.cpp$/ ) {
+       $cppfile =~ s/.cpp$//;
+       $headerfile = $cppfile . ".h";
+    } 
+    return $headerfile;
 }
 
 sub excludeFile

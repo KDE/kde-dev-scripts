@@ -8,8 +8,6 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
-our $paren_begin = '(\((?:(?>[^()]+)|(?';
-our $paren_end = '))*\))';
 
 
 foreach my $file (@ARGV) {
@@ -106,7 +104,7 @@ foreach my $file (@ARGV) {
            ^(\s*)                         # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
            (.*?)                          # (2) before KTempDir::removeDir
            KTempDir::removeDir
-           ${paren_begin}3${paren_end}    # (3) (args)
+           ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}    # (3) (args)
            (.*)$                         # (4) afterreg
            /x; # /x Enables extended whitespace mode
         if ( my ($indent, $before, $argument, $after) = $_ =~ $regexpRemoveDir) {

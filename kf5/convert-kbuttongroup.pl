@@ -8,8 +8,6 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
-our $paren_begin = '(\((?:(?>[^()]+)|(?';
-our $paren_end = '))*\))';
 
 foreach my $file (@ARGV) {
 
