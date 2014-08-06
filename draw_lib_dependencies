@@ -24,11 +24,11 @@ LDDTMPFILE=
 
 cleanup() {
 	for _v in TMPFILE READELFTMPFILE LDDTMPFILE; do
-		[ -n "${$_v}" ] && rm -f -- "${$_v}"
+		[ -n "${!_v}" ] && rm -f -- "${!_v}"
 	done
 }
 
-trap EXIT cleanup
+trap cleanup EXIT
  
 # analyze a given file on its
 # dependecies using ldd and write
