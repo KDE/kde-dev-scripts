@@ -9,14 +9,15 @@ our $paren_end = '))*\))';
 
 sub diffFile
 {
-	if (-d ".svn") {
-		system(qw(svn diff), $@);
-	} elsif (-d "CVS") {
-		system(qw(cvs diff -up), $@);
-	} elsif (-d ".git") {
-                system(qw(git diff), $@);
-	}
-	warn "files to commit: $@\n";
+    if ( system("git rev-parse --is-inside-work-tree 2>/dev/null >/dev/null") == 0 ) {
+        system( qw(git diff), $@ );
+    } elsif ( system("svn info 2>/dev/null >/dev/null") == 0 ) {
+        system( qw(svn diff), $@ );
+    } elsif ( system("hg identify 2>/dev/null >/dev/null") == 0 ) {
+        system( qw(hg diff), $@ );
+    } elsif ( -d "CVS" ) {
+        system( qw(cvs diff -up), $@ );
+    }
 }
 
 sub headerName
@@ -125,6 +126,13 @@ sub removeIncludeInFile
    close F;
 }
 
+
+sub cleanSpace
+{
+  my ($var) = @_;
+  $var =~ s/ //g;
+  return $var;
+}
 
 # code from MDK::common package
 # Code from Drakx Mandriva code (GPL code)
