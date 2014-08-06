@@ -24,7 +24,7 @@ LDDTMPFILE=
 
 cleanup() {
 	for _v in TMPFILE READELFTMPFILE LDDTMPFILE; do
-		[ -n "${$_v}" ] && rm -f -- "${$_v}"
+		[ -n "${!_v}" ] && rm -f -- "${!_v}"
 	done
 }
 
