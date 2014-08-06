@@ -28,7 +28,7 @@ cleanup() {
 	done
 }
 
-trap EXIT cleanup
+trap cleanup EXIT
  
 # analyze a given file on its
 # dependecies using ldd and write
