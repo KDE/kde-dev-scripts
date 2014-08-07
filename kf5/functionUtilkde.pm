@@ -27,6 +27,9 @@ sub headerName
     if ( $cppfile =~ /.cpp$/ ) {
        $cppfile =~ s/.cpp$//;
        $headerfile = $cppfile . ".h";
+       unless ( -e $headerfile ) {
+          $headerfile = $cppfile . "_p.h";
+       }
     } 
     return $headerfile;
 }
