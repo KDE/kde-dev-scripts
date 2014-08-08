@@ -28,6 +28,37 @@ foreach my $file (@ARGV) {
     my %varname = ();
     my $headerclassname;
     my $numberOfClassName=0;
+    my %uiclassname = ();
+    my %localuiclass = ();
+    # Search all ui file and parse them
+    open(my $ALLFILE, "-|", qw(find . -type f));
+    my $uifile;
+    while ($uifile = <$ALLFILE>) {
+      next if not $uifile =~ /\.ui/;
+      chomp $uifile;
+      open(my $FILE, "<", $uifile) or warn "We can't open file $uifile:$!\n";
+      warn "Open file $uifile\n";
+      my $mainClassFound;
+      my @lui = map {
+        #<widget class="QProgressBar" name="progressBar" >
+        if (/\<widget class=\"(.*)\" name=\"(.*)\"/) {
+           my $className = $1;
+           my $variableName = $2;
+           warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
+           $varname{$variableName} = ${className};
+        }
+        if (/\<class\>(.*)\<\/class\>/) {
+           if (not defined $mainClassFound) {
+             my $name = $1;
+             $uiclassname{$name} = 1;
+             warn "Found Class Name in file \'$uifile\': name \'$name\'\n";
+             $mainClassFound = 1;
+           }
+        }
+        $_;
+      } <$FILE>
+    }
+
 
     my $header = functionUtilkde::headerName($file);
     warn "Parse header file: $header \n";
@@ -53,6 +84,15 @@ foreach my $file (@ARGV) {
            warn "FOUND Class \'$class\' parentClass: \'$parentClass\' $_\n";
            $headerclassname = $class;
            $numberOfClassName++;
+        }
+        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/) {
+           my $uiclass = $1;
+           my $uivariable = $2;
+           warn "$uiclass :  $uivariable \n";
+           if (defined $uiclassname{$uiclass}) {
+              warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              $localuiclass{$uivariable} = $uiclass;
+           }
         }
         $_;
     } <$HEADERFILE>;
@@ -118,7 +158,22 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } else {
-                    $notpossible = 1;
+                    if ( $sender =~ /(\w+).(.*)/ ) {
+                       my $uivariable = $1;
+                       my $varui = $2;
+                       #warn "UI VARIABLE :$uivariable\n";
+                       if (defined $localuiclass{$uivariable} ) {
+                           #warn "variable defined  $varui\n";
+                           if ( defined $varname{$varui} ) {
+                              #warn "vartype found $varname{$varui} \n";
+                              $signal = "$varname{$varui}::$signal";
+                           } else {
+                             $notpossible = 1;
+                           }
+                       } else {
+                         $notpossible = 1;
+                       }
+                    }
                   }
                   if (not defined $notpossible) {
                      if ( defined $varname{$receiver} ) {
@@ -155,7 +210,22 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } else {
-                    $notpossible = 1;
+                    if ( $sender =~ /(\w+).(.*)/ ) {
+                       my $uivariable = $1;
+                       my $varui = $2;
+                       #warn "UI VARIABLE :$uivariable\n";
+                       if (defined $localuiclass{$uivariable} ) {
+                           #warn "variable defined  $varui\n";
+                           if ( defined $varname{$varui} ) {
+                              #warn "vartype found $varname{$varui} \n";
+                              $signal = "$varname{$varui}::$signal";
+                           } else {
+                             $notpossible = 1;
+                           }
+                       } else {
+                         $notpossible = 1;
+                       }
+                    }
                   }
                   if (not defined $notpossible) {
                      if ( defined $varname{$receiver} ) {
@@ -195,7 +265,22 @@ foreach my $file (@ARGV) {
                       } elsif ( $sender eq "this") {
                         $signal = "$headerclassname::$signal";
                       } else {
-                        $notpossible = 1;
+                        if ( $sender =~ /(\w+).(.*)/ ) { # || $sender =~ /(\w+)\-\>(.*)/) {
+                          my $uivariable = $1;
+                          my $varui = $2;
+                          #warn "UI VARIABLE :$uivariable\n";
+                          if (defined $localuiclass{$uivariable} ) {
+                              #warn "variable defined  $varui\n";
+                              if ( defined $varname{$varui} ) {
+                                #warn "vartype found $varname{$varui} \n";
+                                $signal = "$varname{$varui}::$signal";
+                              } else {
+                                $notpossible = 1;
+                              }
+                          } else {
+                            $notpossible = 1;
+                          }
+                        }
                       }
                       if (not defined $notpossible) {
                          $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
@@ -203,9 +288,29 @@ foreach my $file (@ARGV) {
                          warn "Can not convert \'$_\' \n";
                       }
                    } else {
-                      warn "Can not convert \'$_\' \n";
+                       my $notpossible;
+                       if ( $sender =~ /(\w+).(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
+                         my $uivariable = $1;
+                         my $varui = $2;
+                         #warn "UI VARIABLE :$uivariable\n";
+                         if (defined $localuiclass{$uivariable} ) {
+                             #warn "variable defined  $varui\n";
+                             if ( defined $varname{$varui} ) {
+                               #warn "vartype found $varname{$varui} \n";
+                               $signal = "$varname{$varui}::$signal";
+                             } else {
+                               $notpossible = 1;
+                             }
+                         } else {
+                           $notpossible = 1;
+                         }
+                      }
+                      if (not defined $notpossible) {
+                         $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
+                      } else {
+                         warn "Can not convert \'$_\' \n";
+                      }
                   }
-
                 } 
               }
            }
