@@ -12,15 +12,36 @@ use functionUtilkde;
 foreach my $file (@ARGV) {
 
     my $modified;
+    my %varname = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
 
         # see http://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes
-        s/KMimeType::Ptr/QMimeType/g;
-        s/\bis\b/inherits/;
-        s/if \(mime\)/if (mime.isValid())/;
-        s/if\s*\(mime.isNull\(\)\)/if (!mime.isValid())/;
+        if (/KMimeType::Ptr\s+(\w+)/) {
+           my $var = $1;
+           $varname{$var} = 1;
+           s/KMimeType::Ptr/QMimeType/g;
+        }
+        if (/(\w+)\->is\s*\(/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->is/$var\.inherits/;
+           }
+        }
+        if (/if\s+\(\s*(\w+)\s*\)/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/if\s+\(\s*$var\s*\)/if \($var\.isValid\(\)\)/;
+           }
+
+        }
+        if (/if\s*\(\s*(\w+).isNull\s*\(\s*\)\s*\)/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/if\s*\(\s*$var.isNull\s*\(\s*\)\s*\)/if \(!$var\.isValid\(\)\)/;
+           }
+        }
         s/KMimeType::mimeType\s*\(/db.mimeTypeForName(/;
         s/, KMimeType::DontResolveAlias//;
         s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
