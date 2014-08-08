@@ -13,6 +13,8 @@ foreach my $file (@ARGV) {
 
     my $modified;
     my %varname = ();
+    my $qmimedatabaseAdded;
+
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -44,8 +46,10 @@ foreach my $file (@ARGV) {
         }
         s/KMimeType::mimeType\s*\(/db.mimeTypeForName(/;
         s/, KMimeType::DontResolveAlias//;
-        s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
-        s/KMimeType::findByUrl\s*\(/db.mimeTypeForUrl(/;
+        if (/KMimeType::findByUrl\s*\(/) {
+          s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
+          s/KMimeType::findByUrl\s*\(/db.mimeTypeForUrl(/;
+        }
         s/KMimeType::findByPath\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
         s/KMimeType::findByPath\s*\(/db.mimeTypeForFile(/;
         s/KMimeType::findByContent\s*\(/db.mimeTypeForData(/;
