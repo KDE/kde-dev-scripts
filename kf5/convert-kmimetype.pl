@@ -53,6 +53,14 @@ foreach my $file (@ARGV) {
            }
         }
 
+        if (/(\w+)\->isDefault\s*\(/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->isDefault/$var\.isDefault/;
+           }
+        }
+
+
         my $regexpMimeTypeForName = qr/
            ^(\s*)                        # (1) Indentation
            (.*)                          # (2) before
@@ -65,13 +73,27 @@ foreach my $file (@ARGV) {
             $_ .= $indent . $before . "db.mimeTypeForName(" . $afterreg . "\n";
             $qmimedatabaseAdded = 1;
         }
+        if (/(\w+)\->iconName\s*\(/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->iconName/$var\.iconName/;
+           }
+        }
+        if (/(\w+)\->comment\s*\(/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->comment/$var\.comment/;
+           }
+        }
+
+
  
         s/, KMimeType::DontResolveAlias//;
         if (/KMimeType::findByUrl\s*\(/) {
-          s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
+          s/KMimeType::findByUrl\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
           s/KMimeType::findByUrl\s*\(/db.mimeTypeForUrl(/;
         }
-        s/KMimeType::findByPath\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
+        s/KMimeType::findByPath\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
         s/KMimeType::findByPath\s*\(/db.mimeTypeForFile(/;
         s/KMimeType::findByContent\s*\(/db.mimeTypeForData(/;
         s/KMimeType::findByNameAndContent\s*\(/db.mimeTypeForNameAndData(/;
