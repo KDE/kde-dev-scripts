@@ -18,6 +18,7 @@ foreach my $file (@ARGV) {
 
         # see http://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes
         s/KMimeType::Ptr/QMimeType/g;
+        s/\bis\b/inherits/;
         s/if \(mime\)/if (mime.isValid())/;
         s/if\s*\(mime.isNull\(\)\)/if (!mime.isValid())/;
         s/KMimeType::mimeType\s*\(/db.mimeTypeForName(/;
@@ -35,10 +36,6 @@ foreach my $file (@ARGV) {
         s/KMimeType::extractKnownExtension/db.suffixForFileName/;
         s/KMimeType::allMimeTypes/db.allMimeTypes/;
 
-        if (/#include <KMimeType>/ || /#include <kmimetype\.h>/) {
-            $_ = "#include <QMimeType>\n#include <QMimeDatabase>\n";
-        }
-
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -47,6 +44,11 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        functionUtilkde::removeIncludeInFile($file, "KMimeType");
+        functionUtilkde::removeIncludeInFile($file, "kmimetype.h");
+
+        functionUtilkde::addIncludeInFile($file, "QMimeDatabase");
+        functionUtilkde::addIncludeInFile($file, "QMimeType");
     }
 }
 
