@@ -38,13 +38,34 @@ foreach my $file (@ARGV) {
            }
 
         }
-        if (/if\s*\(\s*(\w+).isNull\s*\(\s*\)\s*\)/) {
+        if (/if\s*\(\s*(\w+).isNull\s*\(\s*\)/) {
            my $var = $1;
+        
            if (defined $varname{$var}) {
-              s/if\s*\(\s*$var.isNull\s*\(\s*\)\s*\)/if \(!$var\.isValid\(\)\)/;
+              s/if\s*\(\s*$var.isNull\s*\(\s*\)/if \(!$var\.isValid\(\)/;
            }
         }
-        s/KMimeType::mimeType\s*\(/db.mimeTypeForName(/;
+        if (/if\s*\(\s*!(\w+).isNull\s*\(\s*\)/) {
+           my $var = $1;
+        
+           if (defined $varname{$var}) {
+              s/if\s*\(\s*!$var.isNull\s*\(\s*\)/if \($var\.isValid\(\)/;
+           }
+        }
+
+        my $regexpMimeTypeForName = qr/
+           ^(\s*)                        # (1) Indentation
+           (.*)                          # (2) before
+           KMimeType::mimeType\s*\(
+           (.*)$                         # (3) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $before, $afterreg) = $_ =~ $regexpMimeTypeForName) {
+            $_ = $indent . "QMimeDatabase db;\n";
+            $afterreg =~ s/,\s*KMimeType::ResolveAliases//;
+            $_ .= $indent . $before . "db.mimeTypeForName(" . $afterreg . "\n";
+            $qmimedatabaseAdded = 1;
+        }
+ 
         s/, KMimeType::DontResolveAlias//;
         if (/KMimeType::findByUrl\s*\(/) {
           s/KMimeType::findByUrl\s*\((.*),\s*0,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
