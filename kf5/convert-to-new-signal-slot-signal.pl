@@ -158,14 +158,14 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } else {
-                    if ( $sender =~ /(\w+).(.*)/ ) {
+                    if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
-                       #warn "UI VARIABLE :$uivariable\n";
+                       warn "UI VARIABLE :$uivariable\n";
                        if (defined $localuiclass{$uivariable} ) {
-                           #warn "variable defined  $varui\n";
+                           warn "variable defined  $varui\n";
                            if ( defined $varname{$varui} ) {
-                              #warn "vartype found $varname{$varui} \n";
+                              warn "vartype found $varname{$varui} \n";
                               $signal = "$varname{$varui}::$signal";
                            } else {
                              $notpossible = 1;
@@ -210,7 +210,7 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } else {
-                    if ( $sender =~ /(\w+).(.*)/ ) {
+                    if ( $sender =~ /(\w+).(.*)/ || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
                        #warn "UI VARIABLE :$uivariable\n";
