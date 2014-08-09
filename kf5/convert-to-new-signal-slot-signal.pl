@@ -158,7 +158,7 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                    $signal = "QDialogButtonBox::$signal";
+                    $signal = "QPushButton::$signal";
                   } else {
                     if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
@@ -212,7 +212,7 @@ foreach my $file (@ARGV) {
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                    $signal = "QDialogButtonBox::$signal";
+                    $signal = "QPushButton::$signal";
                   } else {
                     if ( $sender =~ /(\w+).(.*)/ || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
@@ -269,7 +269,7 @@ foreach my $file (@ARGV) {
                       } elsif ( $sender eq "this") {
                         $signal = "$headerclassname::$signal";
                       } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                        $signal = "QDialogButtonBox::$signal";
+                        $signal = "QPushButton::$signal";
                       } else {
                         if ( $sender =~ /(\w+).(.*)/ ) { # || $sender =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
