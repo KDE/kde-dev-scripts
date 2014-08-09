@@ -119,7 +119,7 @@ foreach my $file (@ARGV) {
            $varname{$var} = ${classname};
            warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
         }
-        if (/(\w+)\s*\*(\w+)\s*=.*addAction\s*\(/) {
+        if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
            my $classname = $1;
            my $var = $2;
            $varname{$var} = ${classname};
