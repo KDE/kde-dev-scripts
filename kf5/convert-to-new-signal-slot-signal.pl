@@ -41,7 +41,7 @@ foreach my $file (@ARGV) {
       my $mainClassFound;
       my @lui = map {
         #<widget class="QProgressBar" name="progressBar" >
-        if (/\<widget class=\"(.*)\" name=\"(.*)\"/) {
+        if (/\<widget class=\"(.*)\" name=\"(\w+)\"/) {
            my $className = $1;
            my $variableName = $2;
            warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
