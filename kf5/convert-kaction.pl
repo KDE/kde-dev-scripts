@@ -22,10 +22,10 @@ foreach my $file (@ARGV) {
         s!#include \<kaction.h\>!#include \<QAction\>!;
         s!class KAction;!class QAction;!;
         if (/setHelpText\b/) {
-           warn "QAction doesn't support setHelpText, just reimplement it in your code see kaction.cpp\n";
+           warn "$file: QAction doesn't support setHelpText, just reimplement it in your code see kaction.cpp\n";
         }
         if (/setShortcutConfigurable/) {
-           warn "QAction doesn't support directly setShortcutConfigurable, use KActionCollection::setShortcutsConfigurable(QAction *action, bool configurable)\n";
+           warn "$file: QAction doesn't support directly setShortcutConfigurable, use KActionCollection::setShortcutsConfigurable(QAction *action, bool configurable)\n";
         }
         s/\bKAction\b/QAction/g;
         $modified ||= $orig ne $_;
