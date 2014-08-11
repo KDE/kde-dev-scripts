@@ -260,10 +260,11 @@ my @l = map {
      $_ =~ s/\${KDE4_KFILE_LIBS}//;
      $modified = 1;
   }
-  if (/macro_optional_add_subdirectory/) {
-     $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
-     $modified = 1;
-  }
+
+  #if (/macro_optional_add_subdirectory/) {
+  #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
+  #   $modified = 1;
+  #}
 
   if (/qt4_add_dbus_interfaces/) {
      $_ =~ s/qt4_add_dbus_interfaces/qt5_add_dbus_interfaces/;
@@ -300,6 +301,11 @@ my @l = map {
   if (/akonadi-kde/) {
      $_ =~ s/akonadi-kde//;
      $modified = 1;
+  }
+  if (/macro_optional_add_subdirectory/) {
+     $_ =~ s/macro_optional_add_subdirectory/ecm_optional_add_subdirectory/;
+     $modified = 1;
+     warn "Need to add \'include(ECMOptionalAddSubdirectory)\' in $file \n";
   }
 
   if (/\.notifyrc/) {
