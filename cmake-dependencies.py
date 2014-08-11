@@ -1,4 +1,4 @@
-#!/usr/bin/pyton3
+#!/usr/bin/python3
 
 # cmake . --trace |& grep ^/ | grep -v CMakeLists.txt | cut -d '(' -f 1 | sort -u
 
