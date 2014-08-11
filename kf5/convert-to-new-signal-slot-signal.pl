@@ -147,9 +147,17 @@ foreach my $file (@ARGV) {
               $sender = functionUtilkde::cleanSpace($sender);
               $signal = extractFunctionName($signal);
               $slot = extractFunctionName($slot);
+              my $localVariable;
+              if ( $sender =~ /^&/) {
+                 $sender =~ s/^&//;
+                 $localVariable = 1;
+              }
               if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
                   $signal = "$varname{$sender}::$signal";
                   $slot = "$varname{$receiver}::$slot";
+                  if ( defined $localVariable) {
+                     $sender = "&" . $sender;
+                  }
                   $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
               } else {
                   my $notpossible;
@@ -190,6 +198,9 @@ foreach my $file (@ARGV) {
                     }
                   }
                   if (not defined $notpossible) {
+                     if ( defined $localVariable) {
+                        $sender = "&" . $sender;
+                     }
                      $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
                   } else {
                      warn "Can not convert \'$_\' \n";
@@ -265,6 +276,11 @@ foreach my $file (@ARGV) {
                    $sender = functionUtilkde::cleanSpace($sender);
                    $signal = extractFunctionName($signal);
                    $slot = extractFunctionName($slot);
+                   my $localVariable;
+                   if ( $sender =~ /^&/) {
+                     $sender =~ s/^&//;
+                     $localVariable = 1;
+                   }
 
                    warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
                    if ( defined $varname{$sender} ) {
@@ -298,6 +314,10 @@ foreach my $file (@ARGV) {
                         }
                       }
                       if (not defined $notpossible) {
+                         if ( defined $localVariable) {
+                            $sender = "&" . $sender;
+                         }
+
                          $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
                       } else {
                          warn "Can not convert \'$_\' \n";
