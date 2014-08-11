@@ -16,6 +16,7 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
         s/\bKSharedPtr\b/QExplicitlySharedDataPointer/g;
+        s/\bKShared\b/QSharedData/g;
         s/\<KSharedPtr\b\>/\<QExplicitlySharedDataPointer>/ =~ /#include/ ;
         s/\<ksharedptr.h\>/\<QExplicitlySharedDataPointer>/ =~ /#include/ ;
 
