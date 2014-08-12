@@ -20,12 +20,22 @@ foreach my $file (@ARGV) {
 
         s/#include <kurl.h>/#include <QUrl>/;
         s/#include <KUrl>/#include <QUrl>/;
-        s/KUrl::List\b/QList<QUrl>/g;
         s/class KUrl\;/class QUrl\;/;
         s/KUrl\(\)\;/QUrl()\;/;
         s/KUrl::toPercentEncoding\b/QUrl::toPercentEncoding/;
         s/KUrl::fromPercentEncoding\b/QUrl::fromPercentEncoding/;
         s,KUrl::fromPath\b,QUrl::fromLocalFile,;
+
+        if (/KUrl::List::fromMimeData\s*\(\s*(\w+)\s*\)/) {
+           my $var = $1;
+           s/KUrl::List::fromMimeData\s*\(\s*$var\s*\)/$var\-\>urls()/;
+        }
+        if (/KUrl::List::canDecode\s*\(\s*(\w+)\s*\)/) {
+           my $var = $1;
+           s/KUrl::List::canDecode\s*\(\s*$var\s*\)/$var\-\>hasUrls()/;
+        }
+
+
         # Detect variables being declared as KUrl
         if (/const KUrl\s*&\s*(\w+)/ || /^\s*KUrl\s+(\w+)\s*[=\;]/ || /^\s*KUrl\s+(\w+)\s*\(/) {
             $urls{$1} = 1;
@@ -159,8 +169,9 @@ foreach my $file (@ARGV) {
            my $url = $1;
            s/$url\.prettyUrl\b/$url\.toDisplayString/;
         }        
-
+        s/KUrl::List\b/QList<QUrl>/g;
         s,\bKUrl\b,QUrl,g;
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
