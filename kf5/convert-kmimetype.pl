@@ -85,12 +85,36 @@ foreach my $file (@ARGV) {
               s/(\w+)\->comment/$var\.comment/;
            }
         }
+        if (/(\w+)\->patterns\s*\(/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->patterns/$var\.globPatterns/;
+           }
+        }
 
 
- 
+          
         s/, KMimeType::DontResolveAlias//;
+        my $regexFindByUrlArgs = qr/
+           ^(\s*)                        # (1) Indentation
+           (.*)                          # (2) before
+           KMimeType::findByUrl\s*\((.*),\s*0\s*,\s*true\s*\) # (3) argument
+           (.*)$                         # (3) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $before, $args, $afterreg) = $_ =~ $regexFindByUrlArgs) {
+            my $addDataBase = "";
+            if (not defined $qmimedatabaseAdded) {
+               $addDataBase = $indent . "QMimeDatabase db;\n";
+            }
+            $_ = $addDataBase . $indent . "db.mimeTypeForFile($args.path(), QMimeDatabase::MatchExtension)" . "$afterreg" . "\n";
+        }
+
+
+
         if (/KMimeType::findByUrl\s*\(/) {
-          s/KMimeType::findByUrl\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1.path(), QMimeDatabase::MatchExtension)/;
+          if (not defined $qmimedatabaseAdded) {
+              $_ =  "QMimeDatabase db;\n" . $_;
+          }
           s/KMimeType::findByUrl\s*\(/db.mimeTypeForUrl(/;
         }
         s/KMimeType::findByPath\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
