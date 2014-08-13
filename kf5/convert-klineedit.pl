@@ -17,7 +17,7 @@ foreach my $file (@ARGV) {
         my $orig = $_;
         s/\bKLineEdit\b/QLineEdit/g;
         s/\<KLineEdit\b\>/\<QLineEdit>/ =~ /#include/ ;
-        s/\<klineEdit.h\>/\<QLineEdit>/ =~ /#include/ ;
+        s/\<klineedit.h\>/\<QLineEdit>/ =~ /#include/ ;
         s/\bsetClickMessage\b/setPlaceholderText/;
         s/\bsetClearButtonShown\b/setClearButtonEnabled/;
         s/\"clickMessage\"/\"placeholderText\"/;
