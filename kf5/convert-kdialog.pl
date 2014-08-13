@@ -346,7 +346,7 @@ foreach my $file (@ARGV) {
                                  /x;
            if ( my ($defaultButtonType, $text) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
-              $text =~ s, ,,g;
+              #$text =~ s, ,,g;
               $text =~ s,\),,g;
               if (defined $dialogButtonType{$defaultButtonType}) {
                  if ( $defaultButtonType eq "Ok") {
@@ -455,7 +455,7 @@ foreach my $file (@ARGV) {
                                  /x;
            if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
-              $menuName =~ s, ,,g;
+              #$menuName =~ s, ,,g;
               $menuName =~ s,\),,g;
               $needKGuiItem = 1;
               warn "Found setButtonGuiItem: \'$button\', menu variable \'$menuName\'\n";
