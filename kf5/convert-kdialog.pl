@@ -556,11 +556,11 @@ foreach my $file (@ARGV) {
                  s/button\s*\(\s*User1\s*\)/user1Button/;
 
               } elsif ($button eq "User2") {
-                 s/button\s*\(\s*KDialog::User2\s*\)/user1Button/;
-                 s/button\s*\(\s*User2\s*\)/user1Button/;
+                 s/button\s*\(\s*KDialog::User2\s*\)/user2Button/;
+                 s/button\s*\(\s*User2\s*\)/user2Button/;
               } elsif ($button eq "User3") {
-                 s/button\s*\(\s*KDialog::User3\s*\)/user1Button/;
-                 s/button\s*\(\s*User3\s*\)/user1Button/;
+                 s/button\s*\(\s*KDialog::User3\s*\)/user3Button/;
+                 s/button\s*\(\s*User3\s*\)/user3Button/;
               } else {
                  warn "button(...): unknown or not supported \'$button\'\n";
               }
