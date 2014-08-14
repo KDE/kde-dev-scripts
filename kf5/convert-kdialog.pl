@@ -254,6 +254,7 @@ foreach my $file (@ARGV) {
                                  /x;
            if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
+              $defaultButtonType =~ s,^KDialog::,,;
               $state =~ s, ,,g;
               $state =~ s,\),,g;
              if (defined $dialogButtonType{$defaultButtonType}) {
@@ -346,6 +347,7 @@ foreach my $file (@ARGV) {
                                  /x;
            if ( my ($defaultButtonType, $text) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
+              $defaultButtonType =~ s,^KDialog::,,;
               #$text =~ s, ,,g;
               $text =~ s,\),,g;
               if (defined $dialogButtonType{$defaultButtonType}) {
@@ -543,6 +545,7 @@ foreach my $file (@ARGV) {
            $button =~ s/\(//;
            $button =~ s/\)//;
            $button =~ s, ,,g;
+           $button =~ s,^KDialog::,,;
            if (defined $dialogButtonType{$button}) {
               if ( $button eq "Ok" || $button eq "KDialog::Ok") {
                  s/button\s*\(\s*KDialog::Ok\s*\)/okButton/;
