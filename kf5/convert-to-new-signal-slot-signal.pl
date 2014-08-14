@@ -94,6 +94,29 @@ foreach my $file (@ARGV) {
               $localuiclass{$uivariable} = $uiclass;
            }
         }
+        # Foo toto;        
+        if ( /(\w+)\s+(\w+);/) {
+           my $classname = $1;
+           my $var = $2;
+           warn "FOO toto : \'$classname\' : \'$var\'  $_\n";
+           $varname{$var} = ${classname};
+        }
+
+        # Foo toto = 
+        if ( /.*(\w+)\s+(\w+)\s*=/) {
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
+        # Foo toto(...)
+        if ( /.*(\w+)\s+(\w+)\(/) {
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
+
         $_;
     } <$HEADERFILE>;
 
@@ -124,6 +147,29 @@ foreach my $file (@ARGV) {
            my $var = $2;
            $varname{$var} = ${classname};
         }
+
+        # Foo toto;        
+        if ( /.*(\w+)\s+(\w+);/) {
+           warn "FOO toto : $1 : $2\n";
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
+        # Foo toto = 
+        if ( /.*(\w+)\s+(\w+)\s*=/) {
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
+        # Foo toto(...)
+        if ( /.*(\w+)\s+(\w+)\(/) {
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
 
 
         my $regexpConnect = qr/
@@ -165,6 +211,8 @@ foreach my $file (@ARGV) {
                     $signal = "$varname{$sender}::$signal";
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
+                  } elsif ( $sender eq "qApp") {
+                     $signal = "QApplication::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                     $signal = "QPushButton::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
@@ -225,6 +273,8 @@ foreach my $file (@ARGV) {
                     $signal = "$varname{$sender}::$signal";
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
+                  } elsif ( $sender eq "qApp") {
+                     $signal = "QApplication::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                     $signal = "QPushButton::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
@@ -283,25 +333,32 @@ foreach my $file (@ARGV) {
                    }
 
                    warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
+
+                   # => we don't have receiver => slot and signal will have same parent.
+                   my $notpossible;                   
                    if ( defined $varname{$sender} ) {
+                      warn "FOUND :::::::::::::::::::::::::::::::::::::$_ \n";
                       $slot = "$headerclassname::$slot";
-                      my $notpossible;
-                      if ( defined $varname{$sender} ) {
-                         $signal = "$varname{$sender}::$signal";
-                      } elsif ( $sender eq "this") {
+                      $signal = "$varname{$sender}::$signal";
+                   } else {
+                      $slot = "$headerclassname::$slot";
+                      if ( $sender eq "this") {
                         $signal = "$headerclassname::$signal";
+                      } elsif ( $sender eq "qApp") {
+                        $signal = "QApplication::$signal";
                       } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                         $signal = "QPushButton::$signal";
                       } elsif ( $sender =~ /(.*)::self\(\)/) {
                         my $class = $1;
                         $signal = "$class::$signal";
                       } else {
-                        if ( $sender =~ /(\w+).(.*)/ ) { # || $sender =~ /(\w+)\-\>(.*)/) {
+                          
+                          if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
                           my $varui = $2;
-                          #warn "UI VARIABLE :$uivariable\n";
+                          warn "UI VARIABLE :$uivariable\n";
                           if (defined $localuiclass{$uivariable} ) {
-                              #warn "variable defined  $varui\n";
+                              warn "variable defined  $varui\n";
                               if ( defined $varname{$varui} ) {
                                 #warn "vartype found $varname{$varui} \n";
                                 $signal = "$varname{$varui}::$signal";
@@ -313,39 +370,15 @@ foreach my $file (@ARGV) {
                           }
                         }
                       }
-                      if (not defined $notpossible) {
-                         if ( defined $localVariable) {
-                            $sender = "&" . $sender;
-                         }
-
-                         $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
-                      } else {
-                         warn "Can not convert \'$_\' \n";
-                      }
-                   } else {
-                       my $notpossible;
-                       if ( $sender =~ /(\w+).(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
-                         my $uivariable = $1;
-                         my $varui = $2;
-                         #warn "UI VARIABLE :$uivariable\n";
-                         if (defined $localuiclass{$uivariable} ) {
-                             #warn "variable defined  $varui\n";
-                             if ( defined $varname{$varui} ) {
-                               #warn "vartype found $varname{$varui} \n";
-                               $signal = "$varname{$varui}::$signal";
-                             } else {
-                               $notpossible = 1;
-                             }
-                         } else {
-                           $notpossible = 1;
-                         }
-                      }
-                      if (not defined $notpossible) {
-                         $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
-                      } else {
-                         warn "Can not convert \'$_\' \n";
-                      }
-                  }
+                    }
+                    if (not defined $notpossible) {
+                      if ( defined $localVariable) {
+                          $sender = "&" . $sender;
+                       }
+                       $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
+                    } else {
+                       warn "Can not convert \'$_\' \n";
+                    }
                 } 
               }
            }
