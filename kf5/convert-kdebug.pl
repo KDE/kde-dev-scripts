@@ -19,12 +19,12 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
-        s/kDebug\(\)/qDebug\(\)/;
-        s/kdDebug\(\)/qDebug\(\)/;
-        s/kWarning\(\)/qWarning\(\)/;
-        s/kdWarning\(\)/qWarning\(\)/;
-        s/kError\(\)/qCritical\(\)/;
-        s/kFatal\(\)/qFatal\(\)/;
+        s/kDebug\(\s*\)/qDebug\(\)/;
+        s/kdDebug\(\s*\)/qDebug\(\)/;
+        s/kWarning\(\s*\)/qWarning\(\)/;
+        s/kdWarning\(\s*\)/qWarning\(\)/;
+        s/kError\(\s*\)/qCritical\(\)/;
+        s/kFatal\(\s*\)/qFatal\(\)/;
         s/k_funcinfo/Q_FUNC_INFO/;
 
         s/\<kdebug\.h>/\<QDebug>/ if (/#include/);
