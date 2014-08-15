@@ -337,7 +337,6 @@ foreach my $file (@ARGV) {
                    # => we don't have receiver => slot and signal will have same parent.
                    my $notpossible;                   
                    if ( defined $varname{$sender} ) {
-                      warn "FOUND :::::::::::::::::::::::::::::::::::::$_ \n";
                       $slot = "$headerclassname::$slot";
                       $signal = "$varname{$sender}::$signal";
                    } else {
@@ -356,9 +355,9 @@ foreach my $file (@ARGV) {
                           if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
                           my $varui = $2;
-                          warn "UI VARIABLE :$uivariable\n";
+                          #warn "UI VARIABLE :$uivariable\n";
                           if (defined $localuiclass{$uivariable} ) {
-                              warn "variable defined  $varui\n";
+                              #warn "variable defined  $varui\n";
                               if ( defined $varname{$varui} ) {
                                 #warn "vartype found $varname{$varui} \n";
                                 $signal = "$varname{$varui}::$signal";
