@@ -99,7 +99,7 @@ foreach my $file (@ARGV) {
                  $_ .= ", QString()";
               }
               if (defined $url) {
-                 if ($url eq "KUrl()" || $url eq "QUrl()") {
+                 if ($url eq "KUrl()" || $url eq "QUrl()" || $url eq "") {
                     $_ .= ");\n";
                  } else {
                     $_ .= ", $url);\n";
