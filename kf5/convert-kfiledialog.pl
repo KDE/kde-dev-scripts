@@ -66,7 +66,49 @@ foreach my $file (@ARGV) {
               }
               $needQFileDialog = 1;
            }
+        }
 
+       
+        my $regexgetExistingDirectory = qr/
+           ^(\s*)                        # (1) Indentation
+           (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
+           (\w+)                         # (3) variable name
+           \s*=\s*                       #   assignment
+           KFileDialog::getExistingDirectory\s*\((.*)\)  # (4)  new KPushButton(...,...,...,...);
+           (.*)$                         # (5) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $left, $var, $argument, $afterreg) = $_ =~ $regexgetExistingDirectory) {
+           warn "QFileDialog::getExistingDirectory found\n";
+           my $constructor_regexp = qr/
+                                 ^([^,]*)           # (1) Url
+                                 (?:,\s*([^,]*))?   # (2) parent
+                                 (?:,\s*([^,]*))?   # (3) caption
+                                 (.*)$              # (4) after
+                                 /x;
+           my ($url, $parent, $caption, $after);
+           if ( ($url, $parent, $caption, $after) = $argument =~  $constructor_regexp ) {
+              $_ = $indent . $left . $var . " = QFileDialog::getExistingDirectory(";
+              if (defined $parent) {
+                 $_ .= "$parent";
+              } else {
+                 $_ .= "0";
+              }
+              if (defined $caption) {
+                 $_ .= ", $caption";
+              } else {
+                 $_ .= ", QString()";
+              }
+              if (defined $url) {
+                 if ($url eq "KUrl()" || $url eq "QUrl()") {
+                    $_ .= ");\n";
+                 } else {
+                    $_ .= ", $url);\n";
+                 }
+              } else {
+                 $_ .= ")\n";
+              }
+              $needQFileDialog = 1;
+           }
         }
 
         $modified ||= $orig ne $_;
