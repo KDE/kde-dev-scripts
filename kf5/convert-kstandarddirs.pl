@@ -23,7 +23,8 @@ my %otherResource = (
    "icon" => "icons",
    "locale" => "locale",
    "wallpaper" => "wallpapers",
-   "xdgdata-mime" => "mime"
+   "xdgdata-mime" => "mime",
+   "sound" => "sound"
 );
 
 my %xdgconfResource = (
@@ -100,7 +101,27 @@ foreach my $file (@ARGV) {
                 }
             }
         }
+        my $regexp = qr/
+           ^(\s*)                                  # (1) Indentation
+           (.*?)                                   # (2) Possibly "Classname " (the ? means non-greedy)
+           (\w+)                                   # (3) variable name
+           \s*=\s*                                 #   assignment
+           KGlobal::dirs\(\)->findResourceDir\s*\(\s* #  KGlobal::dirs\(\)->findResourceDir\(
+           \"(.*)\"\s*,                            # (4) location
+           \s*(.*)\s*\)                            # (5) subdir
+           (.*)$                                   # (6) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $left, $var, $location, $subdir, $after) = $_ =~ $regexp) {
+           my ($loc, $fileName) = locationAndSubdir($location, $subdir);
+           if (defined $loc) {
+               warn "$loc, $fileName\n";
+               $_ = $indent . $left . $var . "= QStandardPaths::locate($loc, $fileName)" . $after . "\n";
+               $_ .= $indent . "$var = QFileInfo($var).absolutePath();\n";
+           }
+        }
+       
 
+ 
         if (/KStandardDirs::findExe\s*\(\s*\"(.*)\"(,\s*[^\)]*)?\s*\)/ ||
             /KStandardDirs::findExe\s*\(\s*QLatin1String\s*\(\"(.*)\"\)(,\s*[^\)]*)?\s*\)/) {
             my $exe = $1;
