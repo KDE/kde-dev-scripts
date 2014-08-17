@@ -160,6 +160,10 @@ foreach my $file (@ARGV) {
     if (not `grep -i dirs $file | grep -v kstandarddirs\.h`) {
       functionUtilkde::removeIncludeInFile($file, "kstandarddirs.h");
     }
+    if (not `grep -i dirs $file | grep -v KStandardDirs`) {
+      functionUtilkde::removeIncludeInFile($file, "KStandardDirs");
+    }
+
     if (`grep QStandardPaths $file | grep -v '#include'`) {
       functionUtilkde::addIncludeInFile($file, "QStandardPaths");
     }
