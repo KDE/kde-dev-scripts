@@ -90,7 +90,6 @@ foreach my $file (@ARGV) {
                    $search = qr/KGlobal::dirs\(\)->findAllResources\s*/;
                    $replace = "QStandardPaths::locateAll";
                 } elsif (/KGlobal::dirs\(\)->findDirs/) {
-                   warn "found Global::dirs\(\)->findD\n";
                    $search = qr/KGlobal::dirs\(\)->findDirs\s*/;
                    $replace = "QStandardPaths::locateAll";
                 }
