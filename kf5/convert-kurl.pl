@@ -14,6 +14,7 @@ foreach my $file (@ARGV) {
 
     # I don't use functionUtilkde::substInFile because it touches all files, even those which were not modified.
     my $modified;
+    my %varname = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -26,6 +27,19 @@ foreach my $file (@ARGV) {
         s/KUrl::fromPercentEncoding\b/QUrl::fromPercentEncoding/;
         s,KUrl::fromPath\b,QUrl::fromLocalFile,;
 
+        if (/\s*KUrl::List\s+(\w+);/) {
+           my $var = $1;
+           $varname{$1} = 1;
+        }
+
+        if (/(\s*)(\w+)\.populateMimeData\s*\(\s*(\w+)\s*\);/) {
+           my $var = $2;
+           if (defined $varname{$var}) {
+              my $urls = $3;
+              my $indent = $1;
+              $_ = $indent . "$urls->setUrls($var);\n";
+           }
+        }
         if (/KUrl::List::fromMimeData\s*\(\s*(\w+)\s*\)/) {
            my $var = $1;
            s/KUrl::List::fromMimeData\s*\(\s*$var\s*\)/$var\-\>urls()/;
