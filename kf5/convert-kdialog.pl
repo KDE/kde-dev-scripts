@@ -527,9 +527,11 @@ foreach my $file (@ARGV) {
            $_ = "//TODO PORT QT5 " .  $_;
         }
 
-        if (/\bsetMainWidget\b/) {
+        if (/\bsetMainWidget\s*\(\s*(\w+)\s*\)/) {
            # remove setMainWidget doesn't exist now.
-           $_ = "//PORTING: Verify that widget was added to mainLayout " . $_;
+           my $var = $1;
+           $_ = "//PORTING: Verify that widget was added to mainLayout: " . $_;
+           $_ .= "// Add mainLayout->addWidget($var); if necessary\n";
         }
         if (/\bshowButtonSeparator\b/) {
            # remove showButtonSeparator doesn't exist now.
