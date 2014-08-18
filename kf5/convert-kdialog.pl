@@ -223,6 +223,11 @@ foreach my $file (@ARGV) {
              s/connect\s*\(\s*this,/connect(okButton,/;
              s/okClicked\(\)/clicked()/;
         }
+        if (/applyClicked\(\)/) {
+             s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Apply),/;
+             s/applyClicked\(\)/clicked()/;
+        }
+
         if (/cancelClicked\(\)/) {
              s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Cancel),/;
              s/cancelClicked\(\)/clicked()/;
