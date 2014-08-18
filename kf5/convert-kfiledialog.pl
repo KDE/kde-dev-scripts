@@ -201,6 +201,8 @@ foreach my $file (@ARGV) {
         close ($OUT);
         if ($needQFileDialog) {
            functionUtilkde::addIncludeInFile($file, "QFileDialog");
+           #TODO remove KFileDialog when all KFileDialog is converted in files
+           #functionUtilkde::removeIncludeInFile($file, "KFileDialog");
         }
     }
 }
