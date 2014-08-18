@@ -464,6 +464,8 @@ foreach my $file (@ARGV) {
               $button =~ s, ,,g;
               #$menuName =~ s, ,,g;
               $menuName =~ s,\),,g;
+              $button =~ s,^KDialog::,,;
+
               $needKGuiItem = 1;
               warn "Found setButtonGuiItem: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
