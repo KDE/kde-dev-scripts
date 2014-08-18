@@ -9,6 +9,17 @@ use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
 
+sub defaultUrl
+{
+  my ($starturl) = @_;
+  $starturl = functionUtilkde::cleanSpace($starturl);
+  warn "$starturl \n";
+  if ($starturl eq "KUrl()" || $starturl eq "QUrl()" || $starturl eq "") {
+      return 1;
+  }
+  return 0;
+}
+
 foreach my $file (@ARGV) {
 
     my $modified;
@@ -133,44 +144,46 @@ foreach my $file (@ARGV) {
            my ($starturl, $filter, $parent, $caption, $option, $after);
            if ( ($starturl, $filter, $parent, $caption, $option, $after) = $argument =~  $constructor_regexp ) {
               $_ = $indent . $left . $var . " = QFileDialog::getSaveFileName(";
-
-              #QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0
-              if (defined $parent) {
-                 $_ .= "$parent";
+              if ((not defined $parent) and (not defined $caption) and (defaultUrl($starturl) eq "1") and (not defined $filter) and (not defined $option)) {
+                $_ .= ");\n";
               } else {
-                 $_ .= "0";
-              }
-              if (defined $caption) {
-                 $_ .= ", $caption";
-              } else {
-                 $_ .= ", QString()";
-              }
-              if (defined $starturl) {
-                 $starturl =~ s, ,,g;
-                 if ($starturl eq "KUrl()" || $starturl eq "QUrl()" || $starturl eq "") {
+                #QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0
+                if (defined $parent) {
+                   $_ .= "$parent";
+                } else {
+                   $_ .= "0";
+                }
+                if (defined $caption) {
+                   $_ .= ", $caption";
+                } else {
                    $_ .= ", QString()";
-                 } else {
-                    $_ .= ", $starturl";
-                 }
-              } else {
-                 $_ .= ", QString()";
-              }
-              if (defined $filter) {
-                 $_ .= ", $filter";
-              } else {
-                 $_ .= ", QString()";
-              }
-              if (defined $option) {
-                 $option =~ s, ,,g;
-                 if ($option =~ /KFileDialog::ConfirmOverwrite/) {
-                    $_ .=");\n"
-                 } else {
-                   warn "$file : QFileDialog::getSaveFileName : fix me option \'$option\'\n";
-                   $_ .= ", 0, $option);\n"; # TODO fix option
-                 }
-              } else {
-                 warn "$file : QFileDialog::getSaveFileName : fix me option \'$option\'\n";
-                 $_ .= ", 0, $option);\n"; # TODO fix option
+                }
+                if (defined $starturl) {
+                   $starturl = functionUtilkde::cleanSpace($starturl);
+                   if (defaultUrl($starturl) eq "1" ) {
+                     $_ .= ", QString()";
+                   } else {
+                      $_ .= ", $starturl";
+                   }
+                } else {
+                   $_ .= ", QString()";
+                }
+                if (defined $filter) {
+                   $_ .= ", $filter";
+                } else {
+                   $_ .= ", QString()";
+                }
+                if (defined $option) {
+                   $option =~ s, ,,g;
+                   if ($option =~ /KFileDialog::ConfirmOverwrite/) {
+                      $_ .=");\n"
+                   } else {
+                     warn "$file : QFileDialog::getSaveFileName : fix me option \'$option\'\n";
+                     $_ .= ", 0, $option);\n"; # TODO fix option
+                   }
+                } else {
+                   $_ .= ");\n"; # TODO fix option
+                }
               }
               $needQFileDialog = 1;
            }
