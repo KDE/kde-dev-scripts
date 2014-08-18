@@ -99,6 +99,7 @@ foreach my $file (@ARGV) {
                  $_ .= ", QString()";
               }
               if (defined $url) {
+                 $url =~ s, ,,g;
                  if ($url eq "KUrl()" || $url eq "QUrl()" || $url eq "") {
                     $_ .= ");\n";
                  } else {
@@ -145,7 +146,12 @@ foreach my $file (@ARGV) {
                  $_ .= ", QString()";
               }
               if (defined $starturl) {
-                 $_ .= ", $starturl";
+                 $starturl =~ s, ,,g;
+                 if ($starturl eq "KUrl()" || $starturl eq "QUrl()" || $starturl eq "") {
+                   $_ .= ", QString()";
+                 } else {
+                    $_ .= ", $starturl";
+                 }
               } else {
                  $_ .= ", QString()";
               }
@@ -155,7 +161,7 @@ foreach my $file (@ARGV) {
                  $_ .= ", QString()";
               }
               if (defined $option) {
-                 $option =~ s, ,,;
+                 $option =~ s, ,,g;
                  if ($option =~ /KFileDialog::ConfirmOverwrite/) {
                     $_ .=");\n"
                  } else {
@@ -166,9 +172,7 @@ foreach my $file (@ARGV) {
                  warn "$file : QFileDialog::getSaveFileName : fix me option \'$option\'\n";
                  $_ .= ", 0, $option);\n"; # TODO fix option
               }
-
-
-
+              $needQFileDialog = 1;
            }
         }
 
