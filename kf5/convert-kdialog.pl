@@ -611,6 +611,7 @@ foreach my $file (@ARGV) {
              warn "WARNING: check if you are using the default buttons Ok|Cancel without calling setButtons\n";
              warn "In this case, add this code:\n";
              warn "#include <QDialogButtonBox>\n";
+             warn "#include <QPushButton>\n";
              warn "QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);\n";
              warn "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
              warn "okButton->setDefault(true);\n";
