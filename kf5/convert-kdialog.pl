@@ -580,7 +580,10 @@ foreach my $file (@ARGV) {
 
            warn "Found button(...) with argument $button\n";
         }
-
+        if (/::slotButtonClicked\b/) {
+           $_ = "//Adapt code and connect okbutton or other to new slot. It doesn't exist in qdialog\n" . $_;
+           warn "$file connect okbutton and other to new slot here\n";
+        }
 
         s/\bsetCaption\b/setWindowTitle/;
         s/\benableButtonOk\b/okButton->setEnabled/;
