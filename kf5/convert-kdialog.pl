@@ -584,6 +584,7 @@ foreach my $file (@ARGV) {
 
         s/\bsetCaption\b/setWindowTitle/;
         s/\benableButtonOk\b/okButton->setEnabled/;
+        s/\benableButtonApply\b/buttonBox->button(QDialogButtonBox::Apply)->setEnabled/;
         s/\bKDialog\b/QDialog/g;
         s/\<KDialog\b\>/\<QDialog>/ if (/#include/);
         s/\<kdialog.h\>/\<QDialog>/ if (/#include/);
