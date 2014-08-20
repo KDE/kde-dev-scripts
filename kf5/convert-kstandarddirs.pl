@@ -64,6 +64,10 @@ foreach my $file (@ARGV) {
         s/KGlobal::dirs\(\)->localxdgconfdir\s*\(\)/QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('\/')/;
         s/KStandardDirs::locate\s*\(\s*"exe", /KStandardDirs::findExe\(/;
 
+        if ( /KStandardDirs::Recursive/ ) {
+           warn "$file : we can not convert directly see https://community.kde.org/Frameworks/Porting_Notes/KStandardDirs \n";
+        }
+
         if (/KStandardDirs::locateLocal\s*\(\s*\"(.*)\",\s*(.*)\s*\)/) {
             my ($loc, $fileName) = locationAndSubdir($1, $2);
             if (defined $loc) {
