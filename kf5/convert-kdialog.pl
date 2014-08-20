@@ -605,7 +605,9 @@ foreach my $file (@ARGV) {
         print $OUT @l;
         close ($OUT);
         # Need to add KConfigGroup because it was added by kdialog before
-        functionUtilkde::addIncludeInFile($file, "KConfigGroup");
+        if ($file =~ /\.cpp$/) {
+            functionUtilkde::addIncludeInFile($file, "KConfigGroup");
+        }
 
         if (defined $needQDialogButtonBox) {
            functionUtilkde::addIncludeInFile($file, "QDialogButtonBox");
