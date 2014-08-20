@@ -124,7 +124,9 @@ foreach my $file (@ARGV) {
         if (/KApplication::isRightToLeft\b/) {
            s,KApplication::isRightToLeft\b,QApplication::isRightToLeft,;
         }
-
+        s,KViewStateSaver\b,KConfigViewStateSaver,;
+        s/\<KViewStateSaver\b\>/\<KConfigViewStateSaver>/ if (/#include/);
+        s/\<kviewstatesaver\.h\>/\<KConfigViewStateSaver\>/ if (/#include/);
         my $regexp = qr/
            ^(\s*)                        # (1) Indentation, possibly "Classname *" (the ? means non-greedy)
            (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
