@@ -68,10 +68,20 @@ foreach my $file (@ARGV) {
            s,KLocale::global\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
            $needKFormat = 1;
         }
+        if (/KGlobal::locale\(\)\-\>formatByteSize/) {
+           s,KGlobal::locale\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
+           $needKFormat = 1;
+        }
+
         if (/KLocale::global\(\)\-\>prettyFormatDuration/) {
            s,KLocale::global\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
            $needKFormat = 1;
         }
+        if (/KGlobal::locale\(\)\-\>prettyFormatDuration/) {
+           s,KGlobal::locale\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
+           $needKFormat = 1;
+        }
+
         if (/KGlobalSettings::generalFont/) {
            s,KGlobalSettings::generalFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::GeneralFont\),g;
            $needQFontDatabase = 1;
