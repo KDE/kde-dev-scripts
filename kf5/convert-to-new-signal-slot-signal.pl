@@ -148,6 +148,14 @@ foreach my $file (@ARGV) {
            $varname{$var} = ${classname};
         }
 
+        #QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        if (/(\w+)\s*\*\s*(\w+)\s*=.*buttonBox\-\>button\s*\(QDialogButtonBox\b/) {
+           my $classname = $1;
+           my $var = $2;
+           $varname{$var} = ${classname};
+        }
+
+
         # Foo toto;        
         if ( /.*(\w+)\s+(\w+);/) {
            warn "FOO toto : $1 : $2\n";
