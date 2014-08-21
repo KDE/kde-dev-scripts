@@ -18,7 +18,7 @@ foreach my $file (@ARGV) {
        
         if (/KLocale::global\(\)\-\>formatDate\s*\((.*)\)/) {   
            my $args = $1;
-           warn "Found KGlobal::locale : $args\n";
+           warn "Found KLocale::global()->formatDate : $args\n";
            my $arg_regexp = qr/
                             ^([^,]*)\s*        # date
                             (?:,\s([^,]*))?    # option
@@ -33,6 +33,31 @@ foreach my $file (@ARGV) {
               s,KLocale::ShortDate,QLocale::ShortFormat,;
               s,KLocale::LongDate,QLocale::LongFormat,;
            } 
+        }
+        my $regexp = qr/
+           ^(\s*)                                                           # (1) Indentation
+           (.*?)                                                            # (2) Possibly "Classname *" (the ? means non-greedy)
+           KLocale::global\(\)\-\>formatDateTime
+           ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}    # (3) (args)
+           (.*)$                                                            # (4) afterreg
+           /x; # /x Enables extended whitespace mode
+        if ( my ($indent, $before, $args, $after) = $_ =~ $regexp) {
+           warn "Found KLocale::global()->formatDateTime : $args\n";
+           my $arg_regexp = qr/
+                            ^([^,]*)\s*        # date
+                            (?:,\s([^,]*))?    # option
+                            (.*)$              # after
+                            /x;
+           if ( my ($date, $option, $afterargs) = $args =~ $arg_regexp ) {
+              if ( not defined $option) {
+                 # default option in kde is QLocale::ShortFormat in QLocale it's QLocale::LongFormat
+                 $_ = $indent . $before . "QLocale().toString($date, QLocale::ShortFormat)" . $after . "\n";
+              } else {
+                  s,KLocale::global\(\)\-\>formatDateTime\b,QLocale().toString,;
+                  s,KLocale::ShortDate,QLocale::ShortFormat,;
+                  s,KLocale::LongDate,QLocale::LongFormat,;
+              }
+           }
         }
 
         s,KLocale::global\(\)\-\>weekStartDay\(\),QLocale().firstDayOfWeek(),g;
