@@ -95,22 +95,23 @@ foreach my $file (@ARGV) {
            }
         }
         # Foo toto;        
-        if ( /(\w+)\s+(\w+);/) {
+        if ( /([:\w]+)\s+(\w+);/) {
            my $classname = $1;
            my $var = $2;
-           warn "FOO toto : \'$classname\' : \'$var\'  $_\n";
+           warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
+
            $varname{$var} = ${classname};
         }
 
         # Foo toto = 
-        if ( /.*(\w+)\s+(\w+)\s*=/) {
+        if ( /.*([:\w]+)\s+(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
            $varname{$var} = ${classname};
         }
 
         # Foo toto(...)
-        if ( /.*(\w+)\s+(\w+)\(/) {
+        if ( /.*([:\w]+)\s+(\w+)\(/) {
            my $classname = $1;
            my $var = $2;
            $varname{$var} = ${classname};
@@ -139,54 +140,80 @@ foreach my $file (@ARGV) {
         if (my ($indent, $left, $var, $classname, $afterreg) = $_ =~ $regexp) {
            $classname = functionUtilkde::cleanSpace($classname); 
            $var = functionUtilkde::cleanSpace($var);
-           $varname{$var} = ${classname};
-           warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
+           #If we found variable in header don't overwrite it
+           if (not defined $varname{$var}) {
+             $varname{$var} = ${classname};
+             warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
+           }
         }
         if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           #If we found variable in header don't overwrite it
+           if (not defined $varname{$var}) {
+              $varname{$var} = ${classname};
+           }
         }
 
         #QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         if (/(\w+)\s*\*\s*(\w+)\s*=.*buttonBox\-\>button\s*\(QDialogButtonBox\b/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           if (not $classname eq ":") { 
+              #If we found variable in header don't overwrite it
+              if (not defined $varname{$var}) {
+                $varname{$var} = ${classname};
+             }
+           }
         }
 
 
         # Foo toto;        
-        if ( /.*(\w+)\s+(\w+);/) {
-           warn "FOO toto : $1 : $2\n";
+        if ( /^\s*([:\w]+)\s+(\w+);/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
+
+           
+           if (not $classname eq ":") { 
+              #If we found variable in header don't overwrite it
+              if (not defined $varname{$var}) {
+                 $varname{$var} = ${classname}; 
+              }
+           }
         }
 
         # Foo toto = 
-        if ( /.*(\w+)\s+(\w+)\s*=/) {
+        if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           #If we found variable in header don't overwrite it
+           if (not defined $varname{$var}) {
+               $varname{$var} = ${classname};
+           }
         }
 
         # Foo toto(...)
-        if ( /.*(\w+)\s+(\w+)\(/) {
+        if ( /^\s*([:\w]+)\s+(\w+)\(/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           if (not $classname eq ":") {
+              #If we found variable in header don't overwrite it
+              if (not defined $varname{$var}) {
+                   $varname{$var} = ${classname};
+              }
+           }
         }
 
 
 
         my $regexpConnect = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:QObject::)?)           # (1) Indentation
           connect
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
           ;/x; # /x Enables extended whitespace mode
         if (my ($indent, $argument) = $_ =~ $regexpConnect ) {
-           #warn "ARGUMENT $argument\n";
+           warn "ARGUMENT $argument\n";
            my ($sender, $signal, $receiver, $slot, $after);
            my $connectArgument_regexp = qr/
                                  ^([^,]*)\s*                 # (1) sender
@@ -201,16 +228,25 @@ foreach my $file (@ARGV) {
               $sender = functionUtilkde::cleanSpace($sender);
               $signal = extractFunctionName($signal);
               $slot = extractFunctionName($slot);
-              my $localVariable;
+              my $localSenderVariable;
+              my $localReceiverVariable;
               if ( $sender =~ /^&/) {
                  $sender =~ s/^&//;
-                 $localVariable = 1;
+                 $localSenderVariable = 1;
               }
+              if ( $receiver =~ /^&/) {
+                 $receiver =~ s/^&//;
+                 $localReceiverVariable = 1;
+              }
+
               if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
                   $signal = "$varname{$sender}::$signal";
                   $slot = "$varname{$receiver}::$slot";
-                  if ( defined $localVariable) {
+                  if ( defined $localSenderVariable) {
                      $sender = "&" . $sender;
+                  }
+                  if ( defined $localReceiverVariable) {
+                     $receiver = "&" . $receiver;
                   }
                   $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
               } else {
@@ -245,18 +281,38 @@ foreach my $file (@ARGV) {
                     }
                   }
                   if (not defined $notpossible) {
-                     if ( defined $varname{$receiver} ) {
+
+                    if ( defined $varname{$receiver} ) {
                       $slot = "$varname{$receiver}::$slot";
                     } elsif ( $receiver eq "this") {
                       $slot = "$headerclassname::$slot";
                     } else {
-                      $notpossible = 1;
+                       if ( $receiver =~ /(\w+)\.(.*)/  || $receiver =~ /(\w+)\-\>(.*)/) {
+                          my $uivariable = $1;
+                          my $varui = $2;
+                          warn "UI VARIABLE :$uivariable\n";
+                          if (defined $localuiclass{$uivariable} ) {
+                              warn "variable defined  $varui\n";
+                              if ( defined $varname{$varui} ) {
+                                 warn "vartype found $varname{$varui} \n";
+                                 $signal = "$varname{$varui}::$slot";
+                              } else {
+                                 $notpossible = 1;
+                              }
+                          } else {
+                            $notpossible = 1;
+                          }
+                       }
                     }
                   }
                   if (not defined $notpossible) {
-                     if ( defined $localVariable) {
+                     if ( defined $localSenderVariable) {
                         $sender = "&" . $sender;
                      }
+                     if ( defined $localReceiverVariable) {
+                        $receiver = "&" . $receiver;
+                     }
+
                      $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
                   } else {
                      warn "Can not convert \'$_\' \n";
