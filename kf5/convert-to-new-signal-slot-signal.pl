@@ -88,7 +88,7 @@ foreach my $file (@ARGV) {
         if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/) {
            my $uiclass = $1;
            my $uivariable = $2;
-           warn "$uiclass :  $uivariable \n";
+           warn "$file: $uiclass :  $uivariable \n";
            if (defined $uiclassname{$uiclass}) {
               warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
               $localuiclass{$uivariable} = $uiclass;
@@ -128,6 +128,17 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
+
+        # private class in cpp file.
+        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/) {
+           my $uiclass = $1;
+           my $uivariable = $2;
+           warn "$file: $uiclass :  $uivariable \n";
+           if (defined $uiclassname{$uiclass}) {
+              warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              $localuiclass{$uivariable} = $uiclass;
+           }
+        }
 
         my $regexp = qr/
            ^(\s*)                        # (1) Indentation
@@ -395,6 +406,11 @@ foreach my $file (@ARGV) {
                      $sender =~ s/^&//;
                      $localVariable = 1;
                    }
+                   my $privateClass;
+                   if ( $sender =~ /^d\-\>/) {
+                     $sender =~ s/^d\-\>//;
+                     $privateClass = 1;
+                   }
 
                    warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
 
@@ -419,11 +435,11 @@ foreach my $file (@ARGV) {
                           if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
                           my $varui = $2;
-                          #warn "UI VARIABLE :$uivariable\n";
+                          warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
                           if (defined $localuiclass{$uivariable} ) {
-                              #warn "variable defined  $varui\n";
+                              warn "With Argument and no receiver: variable defined  $varui\n";
                               if ( defined $varname{$varui} ) {
-                                #warn "vartype found $varname{$varui} \n";
+                                warn "vartype found $varname{$varui} \n";
                                 $signal = "$varname{$varui}::$signal";
                               } else {
                                 $notpossible = 1;
@@ -435,6 +451,9 @@ foreach my $file (@ARGV) {
                       }
                     }
                     if (not defined $notpossible) {
+                      if ( defined $privateClass ) {
+                          $sender = "d->" . $sender;
+                      }
                       if ( defined $localVariable) {
                           $sender = "&" . $sender;
                        }
