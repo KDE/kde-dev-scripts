@@ -25,7 +25,7 @@ foreach my $file (@ARGV) {
                       (.*)$                   # (4) end
                       /x; # /x Enables extended whitespace mode
         if (my ($indent, $variable, $argument, $end) = $_ =~ $regexp) {
-            $_ = $indent . "KJobWidgets::setWindow($2,$3" . $end;
+            $_ = $indent . "KJobWidgets::setWindow($2, $3" . $end;
         }
 
         $modified ||= $orig ne $_;
