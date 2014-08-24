@@ -25,9 +25,23 @@ my @l = map {
       $_ =~ s/kde4_add_kcfg_files/kconfig_add_kcfg_files/;
       $modified = 1;
   }
-  if (/kde4_add_executable/i) {
+  if (/kde4_add_executable\s*\(\s*([\w_]+)/i) {
+      my $target = $1;
       $_ =~ s/kde4_add_executable/add_executable/i;
+      if (s/ NOGUI//) {
+          $_ .= "ecm_mark_nongui_executable($target)\n";
+      }
+      if (s/ TEST//) {
+          $_ .= "ecm_mark_as_test($target)\n";
+      }
       $modified = 1;
+  }
+  if (/kde4_add_unit_test\s*\(\s*([\w_]+)/i) {
+      my $target = $1;
+      $_ =~ s/kde4_add_unit_test/add_executable/i;
+      s/ TEST//;
+      $_ .= "add_test($target $target)\n";
+      $_ .= "ecm_mark_as_test($target)\n";
   }
 
   if (/KDE4_ENABLE_EXCEPTIONS/) {
@@ -79,7 +93,7 @@ my @l = map {
      $modified = 1;
   }
   if (/QT_QTDBUS_LIBRARY/) {
-     $_ =~ s/\${QT_QTDBUS_LIBRARY}//;
+     $_ =~ s/\${QT_QTDBUS_LIBRARY}/Qt5::DBus/;
      $modified = 1;
   }
   if (/QT_QTXML_LIBRARY/) {
@@ -87,19 +101,19 @@ my @l = map {
      $modified = 1;
   }
   if (/QT_QTCORE_LIBRARY/) {
-     $_ =~ s/\${QT_QTCORE_LIBRARY}//;
+     $_ =~ s/\${QT_QTCORE_LIBRARY}/Qt5::Core/;
      $modified = 1;
   }
   if (/QT_QTGUI_LIBRARY/) {
-     $_ =~ s/\${QT_QTGUI_LIBRARY}//;
+     $_ =~ s/\${QT_QTGUI_LIBRARY}/Qt5::Gui/;
      $modified = 1;
   }
   if (/QT_QTNETWORK_LIBRARY/) {
-     $_ =~ s/\${QT_QTNETWORK_LIBRARY}//;
+     $_ =~ s/\${QT_QTNETWORK_LIBRARY}/Qt5::Network/;
      $modified = 1;
   }
   if (/KDE4_KDECORE_LIBS/) {
-     $_ =~ s/\${KDE4_KDECORE_LIBS}//;
+     $_ =~ s/\${KDE4_KDECORE_LIBS}/KF5::KDELibs4Support/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KIMAP_LIBS/) {
