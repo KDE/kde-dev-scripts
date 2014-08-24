@@ -45,7 +45,7 @@ foreach my $file (@ARGV) {
            warn "Found KLocale::global()->formatDateTime : $args\n";
            my $arg_regexp = qr/
                             ^([^,]*)\s*        # date
-                            (?:,\s([^,]*))?    # option
+                            (?:,\s*([^,]*))?    # option
                             (.*)$              # after
                             /x;
            if ( my ($date, $option, $afterargs) = $args =~ $arg_regexp ) {
