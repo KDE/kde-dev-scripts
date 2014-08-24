@@ -97,7 +97,7 @@ foreach my $file (@ARGV) {
 
         s/\bKTemporaryFile\b/QTemporaryFile/g;
         s/\<KTemporaryFile\b\>/\<QTemporaryFile>/ if (/#include/);
-        s/\<KTemporaryFile.h\>/\<QTemporaryFile>/ if (/#include/);
+        s/\<ktemporaryfile.h\>/\<QTemporaryFile>/ if (/#include/);
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
