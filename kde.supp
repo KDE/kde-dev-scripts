@@ -222,9 +222,14 @@
 # but they're deep inside Qt, and usually not what we want to see
 # when debugging a threading issue in a KDE application.
 {
-   QMutex_unlock_false_race
+   QMutex_qt4_unlock_false_race
    Helgrind:Race
    fun:_ZN6QMutex6unlockEv
+}
+{
+   QMutex_qt4_lock_false_race
+   Helgrind:Race
+   fun:_ZN6QMutex4lockEv
 }
 {
    # Qt4 qmutex_p.h, see maximumSpinTime declared as "volatile qint64"...
@@ -233,9 +238,20 @@
    fun:_ZN6QMutex12lockInternalEv
 }
 {
-   QMutex_lock_false_race
+   # (Qt5) QMutex::lock checks a bool that is set by the QMutex constructor.
+   # To use a mutex from another thread, some synchronization must have happened
+   # already, which propagated this non-atomic write. Helgrind doesn't catch that.
+   QMutex_isRecursive_false_race
    Helgrind:Race
+   fun:_ZL11isRecursiveP10QMutexData
    fun:_ZN6QMutex4lockEv
+}
+{
+   # I don't really see a problem with fork+exit "exiting while still holding one mutex".
+   # I think helgrind just doesn't notice that we forked before calling exit -> TODO: report hg bug
+   Helgrind_Exit
+   Helgrind:Misc
+   fun:_Exit
 }
 {
    deallocate_stack
@@ -282,16 +298,10 @@
    fun:_ZN19QBasicAtomicPointer*store*
 }
 {
-   QBasicAtomicInt_load_in_qt5
+   QBasicAtomicInt
    Helgrind:Race
-   # catch load and loadAcquire
-   fun:_ZNK19QBasicAtomicInteger*load*
-}
-{
-   QBasicAtomicInt_store_in_qt5
-   Helgrind:Race
-   # catch store and storeRelease
-   fun:_ZN19QBasicAtomicInteger*store*
+   # catch Int and Integer, load, loadAcquire, store, storeRelease, testAndSet*, etc.
+   fun:_*QBasicAtomicInt*
 }
 
 # Additional helgrind suppressions: these are actual atomic operations,
@@ -305,6 +315,11 @@
    QBasicAtomicOps_testAndSet
    Helgrind:Race
    fun:_ZN15QBasicAtomicOps*testAndSet*
+}
+{
+   QBasicAtomicOps_ref
+   Helgrind:Race
+   fun:_ZN15QBasicAtomicOps*ref*
 }
 
 ## Same for DRD (tested with Qt5 only)
