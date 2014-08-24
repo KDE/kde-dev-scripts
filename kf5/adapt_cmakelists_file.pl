@@ -224,7 +224,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDE4_KPARTS_LIBS/) {
-     $_ =~ s/\${KDE4_KPARTS_LIBS}//;
+     $_ =~ s/\${KDE4_KPARTS_LIBS}/KF5::Parts/;
      $modified = 1;
   }
   if (/KDE4_PHONON_LIBS/) {
