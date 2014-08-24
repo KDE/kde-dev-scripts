@@ -2,7 +2,7 @@
 
 # Laurent Montel <montel@kde.org> (2014)
 # Convert KAboutData to K4AboutData to help us to compile
-# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-to-k4aboutdata.pl.pl
+# find -iname "*.cpp"|xargs kde-dev-scripts/kf5/convert-to-k4aboutdata.pl
 
 use strict;
 use File::Basename;

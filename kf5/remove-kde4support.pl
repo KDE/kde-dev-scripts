@@ -98,7 +98,7 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::contrast\b,KColorScheme::contrast,g;
            $needKColorScheme = 1;
         }
-        if (/KGlobalSettings::contrast\b/) {
+        if (/KGlobalSettings::contrastF\b/) {
            s,KGlobalSettings::contrastF\b,KColorScheme::contrastF,g;
            $needKColorScheme = 1;
         }
@@ -117,7 +117,7 @@ foreach my $file (@ARGV) {
         if (/KUrl::fromPath/) {
            s,KUrl::fromPath\b,QUrl::fromLocalFile,;
         }
-       
+
         s/KUrl::toPercentEncoding\b/QUrl::toPercentEncoding/g;
         s/KUrl::fromPercentEncoding\b/QUrl::fromPercentEncoding/g;
 
