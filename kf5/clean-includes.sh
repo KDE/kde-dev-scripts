@@ -76,7 +76,7 @@ do
        new=`echo "$new" |perl -pi -e 's!QtNetwork/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KJobWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPIMTextEdit/!!g'`;
-
+       new=`echo "$new" |perl -pi -e 's!QtSql/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
@@ -353,6 +353,13 @@ do
                               remove_include;
                            fi
                         ;;
+                        QTest)
+                          number=`egrep "QCOMPARE|QVERIFY" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
+
                         QtTest)
                            number=`egrep "QCOMPARE|QVERIFY" $file|wc -l`;
                            if test $number = 0 ; then
