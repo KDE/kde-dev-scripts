@@ -130,7 +130,7 @@ do
                            fi
                         ;;
                         QClipboard)
-                           number=`grep "Application::clipboard"  $file|wc -l`;
+                           number=`egrep "Application::clipboard|clipboard()"  $file|wc -l`;
                            if test $number = 0 ; then
                                 remove_include;
                            fi
