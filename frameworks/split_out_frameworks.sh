@@ -13,8 +13,6 @@
 # will contain a commit that deletes everything except that framework, and then
 # another commit moving the framework to the root.
 #
-# Finally, in a third commit, the code is reformatted using astyle.
-
 origproject=kdelibs
 origbranch=frameworks
 origsha1=`git rev-parse HEAD`
