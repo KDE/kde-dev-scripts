@@ -347,6 +347,18 @@ do
                         ;;
                         QHostAddress)
                         ;;
+                        QMenuBar)
+                           number=`grep "menuBar()" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
+                        QtTest)
+                           number=`egrep "QCOMPARE|QVERIFY" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
                         *)
                            remove_include; 
                         ;;
