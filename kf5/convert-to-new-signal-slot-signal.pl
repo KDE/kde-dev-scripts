@@ -203,6 +203,16 @@ foreach my $file (@ARGV) {
               }
            }
         }
+        # Foo *toto = 
+        if ( /^\s*([:\w]+)\s*\*\s*(\w+)\s*=/) {
+           my $classname = $1;
+           my $var = $2;
+           #If we found variable in header don't overwrite it
+           if (not defined $varname{$var}) {
+               $varname{$var} = ${classname};
+           }
+        }
+
 
         # Foo toto = 
         if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
