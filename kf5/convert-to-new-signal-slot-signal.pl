@@ -351,6 +351,8 @@ foreach my $file (@ARGV) {
                                  /x;
               if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument2_regexp) {
                  $sender = cleanSender($sender);
+                 $signal = extractFunctionName($signal);
+                 $slot = extractFunctionName($slot);
 
                  warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                   my $notpossible;
