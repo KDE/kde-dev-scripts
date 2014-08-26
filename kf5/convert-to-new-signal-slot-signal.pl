@@ -10,6 +10,14 @@ use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
 
+sub cleanSender
+{
+   my ($var) = @_;
+   $var =~ s/^\(//;
+   $var = functionUtilkde::cleanSpace($var);
+   return $var;
+}
+
 sub extractFunctionName
 {
    my ($line) = @_;
@@ -235,8 +243,7 @@ foreach my $file (@ARGV) {
                                  /x;
            if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument_regexp) {
               #warn "Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
-              $sender =~ s/^\(//;
-              $sender = functionUtilkde::cleanSpace($sender);
+              $sender = cleanSender($sender);
               $signal = extractFunctionName($signal);
               $slot = extractFunctionName($slot);
               my $localSenderVariable;
@@ -332,6 +339,7 @@ foreach my $file (@ARGV) {
  
               warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
            } else {
+              warn "line actual : $_ argumen:\'$argument\'\n";
               my $connectArgument2_regexp = qr/
                                  ^([^,]*)\s*                                                       # (1) sender
                                  \s*,\s*SIGNAL\s*
@@ -342,6 +350,8 @@ foreach my $file (@ARGV) {
                                  (.*)$                                                             # (5) after
                                  /x;
               if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument2_regexp) {
+                 $sender = cleanSender($sender);
+
                  warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                   my $notpossible;
                   if ( defined $varname{$sender} ) {
@@ -397,8 +407,7 @@ foreach my $file (@ARGV) {
                                  (.*)$                                                             # (4) after
                                  /x;
                 if ( ($sender, $signal, $slot, $after) = $argument =~ $connectArgument2_regexp) {
-                   $sender =~ s/^\(//;
-                   $sender = functionUtilkde::cleanSpace($sender);
+                   $sender = cleanSender($sender);
                    $signal = extractFunctionName($signal);
                    $slot = extractFunctionName($slot);
                    my $localVariable;
