@@ -306,7 +306,7 @@ foreach my $file (@ARGV) {
                               warn "variable defined  $varui\n";
                               if ( defined $varname{$varui} ) {
                                  warn "vartype found $varname{$varui} \n";
-                                 $signal = "$varname{$varui}::$slot";
+                                 $slot = "$varname{$varui}::$slot";
                               } else {
                                  $notpossible = 1;
                               }
