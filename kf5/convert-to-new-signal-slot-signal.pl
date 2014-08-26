@@ -115,7 +115,9 @@ foreach my $file (@ARGV) {
         if ( /.*([:\w]+)\s+(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           if ( not $classname eq "return" ) { 
+               $varname{$var} = ${classname};
+           }
         }
 
         # Foo toto(...)
@@ -194,7 +196,7 @@ foreach my $file (@ARGV) {
            #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
 
            
-           if (not $classname eq ":") { 
+           if (not $classname eq ":" and not $classname eq "return") { 
               #If we found variable in header don't overwrite it
               if (not defined $varname{$var}) {
                  $varname{$var} = ${classname}; 
