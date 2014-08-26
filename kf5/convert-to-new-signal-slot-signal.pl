@@ -239,7 +239,7 @@ foreach my $file (@ARGV) {
 
 
         my $regexpConnect = qr/
-          ^(\s*(?:QObject::)?)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           connect
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
           ;/x; # /x Enables extended whitespace mode
