@@ -9,6 +9,7 @@ use strict;
 use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
+my $activateDebug = 1;
 
 sub cleanSender
 {
@@ -52,14 +53,18 @@ foreach my $file (@ARGV) {
         if (/\<widget class=\"(.*)\" name=\"(\w+)\"/) {
            my $className = $1;
            my $variableName = $2;
-           warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
+           if (defined $activateDebug) {
+	      warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
+           }
            $varname{$variableName} = ${className};
         }
         if (/\<class\>(.*)\<\/class\>/) {
            if (not defined $mainClassFound) {
              my $name = $1;
              $uiclassname{$name} = 1;
-             warn "Found Class Name in file \'$uifile\': name \'$name\'\n";
+             if (defined $activateDebug) {
+                 warn "Found Class Name in file \'$uifile\': name \'$name\'\n";
+             }
              $mainClassFound = 1;
            }
         }
@@ -81,7 +86,9 @@ foreach my $file (@ARGV) {
            ;/x; # /x Enables extended whitespace mode
         if (my ($indent, $classname, $var) = $_ =~ $regexp) {
            $classname = functionUtilkde::cleanSpace($classname);
-           warn "$header file: found classname \'$classname\' variable: \'$var\'\n";
+            if (defined $activateDebug) {
+               warn "$header file: found classname \'$classname\' variable: \'$var\'\n";
+           }
            $varname{$var} = ${classname};
         }
 
@@ -89,7 +96,9 @@ foreach my $file (@ARGV) {
         if (/class\s*(?:\w+EXPORT|\w+DEPRECATED)?\s*(\w+)\s*:\s*public\s*(.*)/) {
            my $class = $1;
            my $parentClass = $2;
-           warn "FOUND Class \'$class\' parentClass: \'$parentClass\' $_\n";
+           if (defined $activateDebug) {
+              warn "FOUND Class \'$class\' parentClass: \'$parentClass\' $_\n";
+           }
            $headerclassname = $class;
            $numberOfClassName++;
         }
@@ -98,7 +107,9 @@ foreach my $file (@ARGV) {
            my $uivariable = $2;
            warn "$file: $uiclass :  $uivariable \n";
            if (defined $uiclassname{$uiclass}) {
-              warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              if (defined $activateDebug) {
+                  warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              }
               $localuiclass{$uivariable} = $uiclass;
            }
         }
@@ -106,7 +117,9 @@ foreach my $file (@ARGV) {
         if ( /([:\w]+)\s+(\w+);/) {
            my $classname = $1;
            my $var = $2;
-           warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
+           if (defined $activateDebug) {
+               warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
+           }
 
            $varname{$var} = ${classname};
         }
@@ -145,7 +158,9 @@ foreach my $file (@ARGV) {
            my $uivariable = $2;
            warn "$file: $uiclass :  $uivariable \n";
            if (defined $uiclassname{$uiclass}) {
-              warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              if (defined $activateDebug) {
+                 warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+              }
               $localuiclass{$uivariable} = $uiclass;
            }
         }
@@ -164,7 +179,9 @@ foreach my $file (@ARGV) {
            #If we found variable in header don't overwrite it
            if (not defined $varname{$var}) {
              $varname{$var} = ${classname};
-             warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
+             if (defined $activateDebug) {
+                warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
+             }
            }
         }
         if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
@@ -194,7 +211,6 @@ foreach my $file (@ARGV) {
            my $classname = $1;
            my $var = $2;
            #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
-
            
            if (not $classname eq ":" and not $classname eq "return") { 
               #If we found variable in header don't overwrite it
@@ -244,7 +260,9 @@ foreach my $file (@ARGV) {
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
           ;/x; # /x Enables extended whitespace mode
         if (my ($indent, $argument) = $_ =~ $regexpConnect ) {
-           warn "ARGUMENT $argument\n";
+           if (defined $activateDebug) {
+              warn "ARGUMENT $argument\n";
+           }
            my ($sender, $signal, $receiver, $slot, $after);
            my $connectArgument_regexp = qr/
                                  ^([^,]*)\s*                 # (1) sender
@@ -296,11 +314,17 @@ foreach my $file (@ARGV) {
                     if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
-                       warn "UI VARIABLE :$uivariable\n";
+                       if (defined $activateDebug) {
+                          warn "UI VARIABLE :$uivariable\n";
+                       }
                        if (defined $localuiclass{$uivariable} ) {
-                           warn "variable defined  $varui\n";
+                           if (defined $activateDebug) {
+                              warn "variable defined  $varui\n";
+                           }
                            if ( defined $varname{$varui} ) {
-                              warn "vartype found $varname{$varui} \n";
+                              if (defined $activateDebug) {
+                                 warn "vartype found $varname{$varui} \n";
+                              }
                               $signal = "$varname{$varui}::$signal";
                            } else {
                              $notpossible = 1;
@@ -320,11 +344,17 @@ foreach my $file (@ARGV) {
                        if ( $receiver =~ /(\w+)\.(.*)/  || $receiver =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
                           my $varui = $2;
-                          warn "UI VARIABLE :$uivariable\n";
+                          if (defined $activateDebug) {
+                             warn "UI VARIABLE :$uivariable\n";
+                          }
                           if (defined $localuiclass{$uivariable} ) {
-                              warn "variable defined  $varui\n";
+                              if (defined $activateDebug) {
+                                 warn "variable defined  $varui\n";
+                              }
                               if ( defined $varname{$varui} ) {
-                                 warn "vartype found $varname{$varui} \n";
+                                 if (defined $activateDebug) {
+                                    warn "vartype found $varname{$varui} \n";
+                                 }
                                  $slot = "$varname{$varui}::$slot";
                               } else {
                                  $notpossible = 1;
@@ -348,8 +378,9 @@ foreach my $file (@ARGV) {
                      warn "Can not convert \'$_\' \n";
                   }
               }
- 
-              warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+              if (defined $activateDebug) {
+                 warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+              }
            } else {
               warn "line actual : $_ argumen:\'$argument\'\n";
               my $connectArgument2_regexp = qr/
@@ -366,20 +397,22 @@ foreach my $file (@ARGV) {
                  $signal = extractFunctionName($signal);
                  $slot = extractFunctionName($slot);
 
-                 warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
-                  my $notpossible;
-                  if ( defined $varname{$sender} ) {
-                    $signal = "$varname{$sender}::$signal";
-                  } elsif ( $sender eq "this") {
-                    $signal = "$headerclassname::$signal";
-                  } elsif ( $sender eq "qApp") {
-                     $signal = "QApplication::$signal";
-                  } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                    $signal = "QPushButton::$signal";
-                  } elsif ( $sender =~ /(.*)::self\(\)/) {
+                 if (defined $activateDebug) {
+                     warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+                 }
+                 y $notpossible;
+                 if ( defined $varname{$sender} ) {
+                   $signal = "$varname{$sender}::$signal";
+                 } elsif ( $sender eq "this") {
+                   $signal = "$headerclassname::$signal";
+                 } elsif ( $sender eq "qApp") {
+                    $signal = "QApplication::$signal";
+                 } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
+                   $signal = "QPushButton::$signal";
+                 } elsif ( $sender =~ /(.*)::self\(\)/) {
                     my $class = $1;
                     $signal = "$class::$signal";
-                  } else {
+                 } else {
                     if ( $sender =~ /(\w+).(.*)/ || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
@@ -434,8 +467,9 @@ foreach my $file (@ARGV) {
                      $sender =~ s/^d\-\>//;
                      $privateClass = 1;
                    }
-
-                   warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
+                   if (defined $activateDebug) {
+                      warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
+                   }
 
                    # => we don't have receiver => slot and signal will have same parent.
                    my $notpossible;                   
@@ -458,9 +492,13 @@ foreach my $file (@ARGV) {
                           if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
                           my $varui = $2;
-                          warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
+                          if (defined $activateDebug) {
+                             warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
+                          }
                           if (defined $localuiclass{$uivariable} ) {
-                              warn "With Argument and no receiver: variable defined  $varui\n";
+                              if (defined $activateDebug) {
+                                 warn "With Argument and no receiver: variable defined  $varui\n";
+                              }
                               if ( defined $varname{$varui} ) {
                                 warn "vartype found $varname{$varui} \n";
                                 $signal = "$varname{$varui}::$signal";
