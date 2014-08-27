@@ -400,7 +400,7 @@ foreach my $file (@ARGV) {
                  if (defined $activateDebug) {
                      warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                  }
-                 y $notpossible;
+                 my $notpossible;
                  if ( defined $varname{$sender} ) {
                    $signal = "$varname{$sender}::$signal";
                  } elsif ( $sender eq "this") {
