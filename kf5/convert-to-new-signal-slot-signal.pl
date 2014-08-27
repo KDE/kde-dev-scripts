@@ -148,6 +148,7 @@ foreach my $file (@ARGV) {
 
     # Parse cpp file
     my $modified;
+    my %varnamewithpointer = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
@@ -178,10 +179,14 @@ foreach my $file (@ARGV) {
            $var = functionUtilkde::cleanSpace($var);
            #If we found variable in header don't overwrite it
            if (not defined $varname{$var}) {
-             $varname{$var} = ${classname};
-             if (defined $activateDebug) {
-                warn "$file: cpp file: found classname \'$classname\' variable: \'$var\'\n";
-             }
+                if (defined $activateDebug) {
+                   warn "$file: cpp file: found classname \'$classname\' variable: \'$var\' $_\n";
+                }
+                if ( $left =~ /QPointer\<$classname\>/) {
+                   $varnamewithpointer{$var} = ${classname};
+                } else {
+                   $varname{$var} = ${classname};
+                }
            }
         }
         if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
@@ -299,8 +304,12 @@ foreach my $file (@ARGV) {
                   $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
               } else {
                   my $notpossible;
+                  my $classWithQPointer;
                   if ( defined $varname{$sender} ) {
                     $signal = "$varname{$sender}::$signal";
+                  } elsif ( defined $varnamewithpointer{$sender} ) {
+                    $signal = "$varnamewithpointer{$sender}::$signal";
+                    $classWithQPointer = 1;
                   } elsif ( $sender eq "this") {
                     $signal = "$headerclassname::$signal";
                   } elsif ( $sender eq "qApp") {
@@ -372,7 +381,9 @@ foreach my $file (@ARGV) {
                      if ( defined $localReceiverVariable) {
                         $receiver = "&" . $receiver;
                      }
-
+                     if ( defined $classWithQPointer) {
+                        $sender = $sender . ".data()";
+                     }
                      $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
                   } else {
                      warn "Can not convert \'$_\' \n";
