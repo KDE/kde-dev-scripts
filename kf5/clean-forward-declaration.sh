@@ -29,5 +29,5 @@ for file in $list ; do
 	fi
 done
 #look at diff
-git di .
+git diff .
 
