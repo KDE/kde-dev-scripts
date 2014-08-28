@@ -16,6 +16,15 @@ my $numberOfClassName=0;
 my %uiclassname = ();
 my %localuiclass = ();
 
+sub overload
+{
+    my ($classname, $argument, $function) = @_;
+    if (($classname eq "QCompleter") and ($argument eq "QString") and ($function eq "activated")) {
+       return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
+    }
+    return "&QCompleter::activated";
+}
+
 sub initVariables
 {
   %varname = ();
@@ -34,6 +43,9 @@ sub addToVarName
       #If we found variable in header don't overwrite it
       if (not defined $varname{$var}) {
           $varname{$var} = ${classname}; 
+          if (defined $activateDebug) {
+              warn "new variable added: \'$var\' className :\'$classname\'\n";
+          }
       }
    }
 }
@@ -141,9 +153,6 @@ foreach my $file (@ARGV) {
            my $classname = $1;
            my $var = $2;
            addToVarName($classname, $var);
-           if (defined $activateDebug) {
-               warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
-           }
         }
 
         # Foo toto = 
@@ -159,8 +168,6 @@ foreach my $file (@ARGV) {
            my $var = $2;
            addToVarName($classname, $var);
         }
-
-
         $_;
     } <$HEADERFILE>;
 
@@ -250,8 +257,6 @@ foreach my $file (@ARGV) {
            my $var = $2;
            addToVarName($classname, $var);
         }
-
-
 
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
