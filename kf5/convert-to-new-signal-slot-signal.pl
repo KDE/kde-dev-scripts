@@ -16,6 +16,14 @@ my $numberOfClassName=0;
 my %uiclassname = ();
 my %localuiclass = ();
 
+sub addData
+{
+  my ($var) = @_;
+  $var = $var . ".data()";
+  return $var;
+}
+
+
 sub overload
 {
     my ($classname, $argument, $function) = @_;
@@ -122,7 +130,7 @@ foreach my $file (@ARGV) {
         if (my ($indent, $classname, $var) = $_ =~ $regexp) {
            $classname = functionUtilkde::cleanSpace($classname);
             if (defined $activateDebug) {
-               warn "$header file: found classname \'$classname\' variable: \'$var\'\n";
+               warn "$header file: found classname \'$classname\' variable: \'$var\' indent \'indent\'\n";
            }
            $varname{$var} = ${classname};
         }
@@ -304,6 +312,7 @@ foreach my $file (@ARGV) {
               } else {
                   my $notpossible;
                   my $classWithQPointer;
+                  my $receiverWithQPointer;
                   if ( defined $varname{$sender} ) {
                     $signal = "$varname{$sender}::$signal";
                   } elsif ( defined $varnamewithpointer{$sender} ) {
@@ -346,6 +355,9 @@ foreach my $file (@ARGV) {
 
                     if ( defined $varname{$receiver} ) {
                       $slot = "$varname{$receiver}::$slot";
+                    } elsif ( defined $varnamewithpointer{$receiver} ) {
+                      $slot = "$varnamewithpointer{$receiver}::$slot";
+                      $receiverWithQPointer = 1;
                     } elsif ( $receiver eq "this") {
                       $slot = "$headerclassname::$slot";
                     } else {
@@ -381,7 +393,10 @@ foreach my $file (@ARGV) {
                         $receiver = "&" . $receiver;
                      }
                      if ( defined $classWithQPointer) {
-                        $sender = $sender . ".data()";
+                        $sender = addData($sender);
+                     }
+                     if (defined $receiverWithQPointer) {
+                        $receiver = addData($receiver);
                      }
                      $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
                   } else {
