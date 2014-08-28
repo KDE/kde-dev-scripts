@@ -10,6 +10,33 @@ use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
 my $activateDebug = 1;
+my %varname = ();
+my $headerclassname;
+my $numberOfClassName=0;
+my %uiclassname = ();
+my %localuiclass = ();
+
+sub initVariables
+{
+  %varname = ();
+  $headerclassname = "";
+  $numberOfClassName=0;
+  %uiclassname = ();
+  %localuiclass = ();
+}
+
+sub addToVarName
+{
+    my ($classname, $var) = @_;
+    #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
+           
+    if (not $classname eq ":" and not $classname eq "return") { 
+      #If we found variable in header don't overwrite it
+      if (not defined $varname{$var}) {
+          $varname{$var} = ${classname}; 
+      }
+   }
+}
 
 sub cleanSender
 {
@@ -34,11 +61,7 @@ sub extractFunctionName
 }
 
 foreach my $file (@ARGV) {
-    my %varname = ();
-    my $headerclassname;
-    my $numberOfClassName=0;
-    my %uiclassname = ();
-    my %localuiclass = ();
+    initVariables();
     # Search all ui file and parse them
     open(my $ALLFILE, "-|", qw(find . -type f));
     my $uifile;
@@ -117,27 +140,24 @@ foreach my $file (@ARGV) {
         if ( /([:\w]+)\s+(\w+);/) {
            my $classname = $1;
            my $var = $2;
+           addToVarName($classname, $var);
            if (defined $activateDebug) {
                warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
            }
-
-           $varname{$var} = ${classname};
         }
 
         # Foo toto = 
         if ( /.*([:\w]+)\s+(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
-           if ( not $classname eq "return" ) { 
-               $varname{$var} = ${classname};
-           }
-        }
+           addToVarName($classname, $var);
+       }
 
         # Foo toto(...)
         if ( /.*([:\w]+)\s+(\w+)\(/) {
            my $classname = $1;
            my $var = $2;
-           $varname{$var} = ${classname};
+           addToVarName($classname, $var);
         }
 
 
@@ -192,22 +212,14 @@ foreach my $file (@ARGV) {
         if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
            my $classname = $1;
            my $var = $2;
-           #If we found variable in header don't overwrite it
-           if (not defined $varname{$var}) {
-              $varname{$var} = ${classname};
-           }
+           addToVarName($classname, $var);
         }
 
         #QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         if (/(\w+)\s*\*\s*(\w+)\s*=.*buttonBox\-\>button\s*\(QDialogButtonBox\b/) {
            my $classname = $1;
            my $var = $2;
-           if (not $classname eq ":") { 
-              #If we found variable in header don't overwrite it
-              if (not defined $varname{$var}) {
-                $varname{$var} = ${classname};
-             }
-           }
+           addToVarName($classname, $var);
         }
 
 
@@ -215,23 +227,13 @@ foreach my $file (@ARGV) {
         if ( /^\s*([:\w]+)\s+(\w+);/) {
            my $classname = $1;
            my $var = $2;
-           #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
-           
-           if (not $classname eq ":" and not $classname eq "return") { 
-              #If we found variable in header don't overwrite it
-              if (not defined $varname{$var}) {
-                 $varname{$var} = ${classname}; 
-              }
-           }
+           addToVarName($classname, $var);
         }
         # Foo *toto = 
         if ( /^\s*([:\w]+)\s*\*\s*(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
-           #If we found variable in header don't overwrite it
-           if (not defined $varname{$var}) {
-               $varname{$var} = ${classname};
-           }
+           addToVarName($classname, $var);
         }
 
 
@@ -239,22 +241,14 @@ foreach my $file (@ARGV) {
         if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
            my $classname = $1;
            my $var = $2;
-           #If we found variable in header don't overwrite it
-           if (not defined $varname{$var}) {
-               $varname{$var} = ${classname};
-           }
+           addToVarName($classname, $var);
         }
 
         # Foo toto(...)
         if ( /^\s*([:\w]+)\s+(\w+)\(/) {
            my $classname = $1;
            my $var = $2;
-           if (not $classname eq ":") {
-              #If we found variable in header don't overwrite it
-              if (not defined $varname{$var}) {
-                   $varname{$var} = ${classname};
-              }
-           }
+           addToVarName($classname, $var);
         }
 
 
