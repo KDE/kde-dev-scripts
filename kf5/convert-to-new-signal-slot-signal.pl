@@ -28,7 +28,7 @@ sub overload
 {
     my ($classname, $argument, $function) = @_;
     warn "ClassName \'$classname\' Argument \'$argument\' Function \'$function\'\n";
-    if (($classname eq "QCompleter") and ($argument eq "QString") and ($function eq "activated")) {
+    if (($classname eq "QCompleter") and ($argument eq "(QString)") and ($function eq "activated")) {
        return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
     } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
        return "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
