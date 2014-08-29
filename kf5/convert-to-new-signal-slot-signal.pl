@@ -266,6 +266,15 @@ foreach my $file (@ARGV) {
            addToVarName($classname, $var);
         }
 
+       #AttachmentControllerBase *const q;
+        if (/\s*(\w+)\s*\*const\s+(\w+);/ ) {
+           my $classname = $1;
+           my $var = $2;
+           addToVarName($classname, $var);
+        }
+
+
+
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           connect
