@@ -38,6 +38,12 @@ sub overload
        } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
           return "static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged)";
        }
+    } elsif ($classname eq "QButtonGroup") {
+       if (($argument eq "(int)") and ($function eq "buttonReleased")) {
+          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonReleased)";
+       } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonReleased")) {
+          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonReleased)";       
+       }
     }
     return "";
 }
