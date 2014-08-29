@@ -29,6 +29,7 @@ foreach my $file (@ARGV) {
 
         s/\<kdebug\.h>/\<QDebug>/ if (/#include/);
         s/\<KDebug\>/\<QDebug>/ if (/#include/);
+        s/\"kdebug\.h"/\<QDebug>/ if (/#include/);
 
         #s/\<\< endl//; # old stuff
 
