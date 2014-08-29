@@ -32,8 +32,12 @@ sub overload
        return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
     } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
        return "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
-    } elsif (($classname eq "KComboBox") and ($argument eq "(int)") and ($function eq "activated")) {
-       return "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";    
+    } elsif (($classname eq "KComboBox") ) {
+       if (($argument eq "(int)") and ($function eq "activated")) {
+          return "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";
+       } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
+          return "static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged)";
+       }
     }
     return "";
 }
@@ -197,6 +201,14 @@ foreach my $file (@ARGV) {
            my $var = $2;
            addToVarName($classname, $var);
         }
+
+        # Private* const d;
+        if (/\s*(\w+)\s*\*\s*const\s+(\w+);/ ) {
+           my $classname = $1;
+           my $var = $2;
+           addToVarName($classname, $var);
+        }
+
         $_;
     } <$HEADERFILE>;
 
@@ -366,11 +378,12 @@ foreach my $file (@ARGV) {
                     my $class = $1;
                     $signal = "$class::$signal";
                   } else {
+                    # It's not specific to ui class. It can be a private class too
                     if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
                        if (defined $activateDebug) {
-                          warn "UI VARIABLE :$uivariable\n";
+                          warn "22UI VARIABLE :$uivariable\n";
                        }
                        if (defined $localuiclass{$uivariable} ) {
                            if (defined $activateDebug) {
@@ -383,6 +396,20 @@ foreach my $file (@ARGV) {
                               $signal = "$varname{$varui}::$signal";
                            } else {
                              $notpossible = 1;
+                           }
+                       } elsif (defined $varname{$uivariable}) {
+                           if ( defined $varname{$varui} ) {
+                              my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
+                              if (not $overloadResult eq "") {
+                                 $signal = $overloadResult;
+                                 $overloadFound = 1;
+                              } else {
+                                 $signal = "$varname{$varui}::$signal";
+                              }
+
+                              if (defined $activateDebug) {
+                                 warn "vartype found $varname{$varui} \n";
+                              }
                            }
                        } else {
                          $notpossible = 1;
@@ -403,7 +430,7 @@ foreach my $file (@ARGV) {
                           my $uivariable = $1;
                           my $varui = $2;
                           if (defined $activateDebug) {
-                             warn "UI VARIABLE :$uivariable\n";
+                             warn "11UI VARIABLE :$uivariable\n";
                           }
                           if (defined $localuiclass{$uivariable} ) {
                               if (defined $activateDebug) {
