@@ -32,6 +32,8 @@ sub overload
        return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
     } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
        return "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
+    } elsif (($classname eq "KComboBox") and ($argument eq "(int)") and ($function eq "activated")) {
+       return "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";    
     }
     return "";
 }
@@ -458,6 +460,9 @@ foreach my $file (@ARGV) {
                                  /x;
               if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument2_regexp) {
                  $sender = cleanSender($sender);
+                 my $signalArgument = extraArgumentFunctionName($signal);
+                 my $overloadFound;
+
                  $signal = extractFunctionName($signal);
                  $slot = extractFunctionName($slot);
 
@@ -466,7 +471,13 @@ foreach my $file (@ARGV) {
                  }
                  my $notpossible;
                  if ( defined $varname{$sender} ) {
-                   $signal = "$varname{$sender}::$signal";
+                    my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
+                    if (not $overloadResult eq "") {
+                       $signal = $overloadResult;
+                       $overloadFound = 1;
+                    } else {
+                       $signal = "$varname{$sender}::$signal";
+                    }
                  } elsif ( $sender eq "this") {
                    $signal = "$headerclassname::$signal";
                  } elsif ( $sender eq "qApp") {
@@ -504,7 +515,10 @@ foreach my $file (@ARGV) {
                     }
                   }
                   if (not defined $notpossible) {
-                     $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                     if (not defined $overloadFound) {
+                        $signal = "&" . $signal;
+                     }
+                     $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
                   } else {
                      warn "Can not convert \'$_\' \n";
                   }
@@ -519,6 +533,8 @@ foreach my $file (@ARGV) {
                                  /x;
                 if ( ($sender, $signal, $slot, $after) = $argument =~ $connectArgument2_regexp) {
                    $sender = cleanSender($sender);
+                   my $signalArgument = extraArgumentFunctionName($signal);
+                   my $overloadFound;
                    $signal = extractFunctionName($signal);
                    $slot = extractFunctionName($slot);
                    my $localVariable;
@@ -539,7 +555,13 @@ foreach my $file (@ARGV) {
                    my $notpossible;                   
                    if ( defined $varname{$sender} ) {
                       $slot = "$headerclassname::$slot";
-                      $signal = "$varname{$sender}::$signal";
+                      my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
+                      if (not $overloadResult eq "") {
+                         $signal = $overloadResult;
+                         $overloadFound = 1;
+                      } else {
+                         $signal = "$varname{$sender}::$signal";
+                      }
                    } else {
                       $slot = "$headerclassname::$slot";
                       if ( $sender eq "this") {
@@ -581,8 +603,12 @@ foreach my $file (@ARGV) {
                       }
                       if ( defined $localVariable) {
                           $sender = "&" . $sender;
-                       }
-                       $_ = $indent . "connect($sender, &$signal, this, &$slot);\n";
+                      }
+                      if (not defined $overloadFound) {
+                        $signal = "&" . $signal;
+                      }
+
+                      $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
                     } else {
                        warn "Can not convert \'$_\' \n";
                     }
