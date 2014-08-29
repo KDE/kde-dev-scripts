@@ -27,10 +27,13 @@ sub addData
 sub overload
 {
     my ($classname, $argument, $function) = @_;
+    warn "ClassName \'$classname\' Argument \'$argument\' Function \'$function\'\n";
     if (($classname eq "QCompleter") and ($argument eq "QString") and ($function eq "activated")) {
        return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
+    } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
+       return "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
     }
-    return "&QCompleter::activated";
+    return "";
 }
 
 sub initVariables
@@ -64,6 +67,22 @@ sub cleanSender
     $var =~ s/^\(//;
     $var = functionUtilkde::cleanSpace($var);
     return $var;
+}
+
+sub extraArgumentFunctionName
+{
+    my ($line) = @_;
+    my $argument;
+    warn "$line \n";
+    my $regexpArgument = qr/
+                    ^\(.*
+                    ${functionUtilkde::paren_begin}1${functionUtilkde::paren_end}
+                    \).*$                        
+                    /x; # /x Enables extended whitespace mode
+    if ( my ($argument2) = $line =~ $regexpArgument) {
+       $argument = $argument2;
+    }
+    return $argument;
 }
 
 sub extractFunctionName
@@ -295,6 +314,7 @@ foreach my $file (@ARGV) {
            if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument_regexp) {
               #warn "Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
               $sender = cleanSender($sender);
+              my $signalArgument = extraArgumentFunctionName($signal);
               $signal = extractFunctionName($signal);
               $slot = extractFunctionName($slot);
               my $localSenderVariable;
@@ -322,8 +342,15 @@ foreach my $file (@ARGV) {
                   my $notpossible;
                   my $classWithQPointer;
                   my $receiverWithQPointer;
+                  my $overloadFound;
                   if ( defined $varname{$sender} ) {
-                    $signal = "$varname{$sender}::$signal";
+                    my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
+                    if (not $overloadResult eq "") {
+                       $signal = $overloadResult;
+                       $overloadFound = 1;
+                    } else {
+                       $signal = "$varname{$sender}::$signal";
+                    }
                   } elsif ( defined $varnamewithpointer{$sender} ) {
                     $signal = "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
@@ -407,7 +434,10 @@ foreach my $file (@ARGV) {
                      if (defined $receiverWithQPointer) {
                         $receiver = addData($receiver);
                      }
-                     $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                     if (not defined $overloadFound) {
+                        $signal = "&" . $signal;
+                     }
+                     $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
                   } else {
                      warn "Can not convert \'$_\' \n";
                   }
