@@ -48,6 +48,7 @@ sub overload
     return "";
 }
 
+# initialize variable before to parse new file
 sub initVariables
 {
     %varname = ();
@@ -57,11 +58,10 @@ sub initVariables
     %localuiclass = ();
 }
 
+# add new variable with its type.
 sub addToVarName
 {
-    my ($classname, $var) = @_;
-    #warn "$file Found variable: classname:\'$classname\', variable: \'$var\'\n";
-           
+    my ($classname, $var) = @_;           
     if (not $classname eq ":" and not $classname eq "return") { 
       #If we found variable in header don't overwrite it
       if (not defined $varname{$var}) {
@@ -73,6 +73,7 @@ sub addToVarName
    }
 }
 
+# Clean sender variable
 sub cleanSender
 {
     my ($var) = @_;
@@ -81,6 +82,7 @@ sub cleanSender
     return $var;
 }
 
+# extract argument from signal
 sub extraArgumentFunctionName
 {
     my ($line) = @_;
@@ -97,6 +99,7 @@ sub extraArgumentFunctionName
     return $argument;
 }
 
+# extract function name
 sub extractFunctionName
 {
     my ($line) = @_;
@@ -112,8 +115,11 @@ sub extractFunctionName
 }
 
 foreach my $file (@ARGV) {
+    
+    # 1) initialize variable before to parse file
     initVariables();
-    # Search all ui file and parse them
+    
+    # 2) Search all ui file and parse them
     open(my $ALLFILE, "-|", qw(find . -type f));
     my $uifile;
     while ($uifile = <$ALLFILE>) {
@@ -146,7 +152,7 @@ foreach my $file (@ARGV) {
       } <$FILE>
     }
 
-
+    # 3) read header and parse it.
     my $header = functionUtilkde::headerName($file);
     warn "Parse header file: $header \n";
     # parse header file
@@ -220,7 +226,8 @@ foreach my $file (@ARGV) {
 
     warn "We have $numberOfClassName class in $header\n";
 
-    # Parse cpp file
+    
+    # 4) Parse cpp file
     my $modified;
     my %varnamewithpointer = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
