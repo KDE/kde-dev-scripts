@@ -18,9 +18,9 @@ my %localuiclass = ();
 
 sub addData
 {
-  my ($var) = @_;
-  $var = $var . ".data()";
-  return $var;
+    my ($var) = @_;
+    $var = $var . ".data()";
+    return $var;
 }
 
 
@@ -35,11 +35,11 @@ sub overload
 
 sub initVariables
 {
-  %varname = ();
-  $headerclassname = "";
-  $numberOfClassName=0;
-  %uiclassname = ();
-  %localuiclass = ();
+    %varname = ();
+    $headerclassname = "";
+    $numberOfClassName=0;
+    %uiclassname = ();
+    %localuiclass = ();
 }
 
 sub addToVarName
@@ -60,24 +60,24 @@ sub addToVarName
 
 sub cleanSender
 {
-   my ($var) = @_;
-   $var =~ s/^\(//;
-   $var = functionUtilkde::cleanSpace($var);
-   return $var;
+    my ($var) = @_;
+    $var =~ s/^\(//;
+    $var = functionUtilkde::cleanSpace($var);
+    return $var;
 }
 
 sub extractFunctionName
 {
-   my ($line) = @_;
-   my $regexpSignal = qr/
+    my ($line) = @_;
+    my $regexpSignal = qr/
                     ^\(\s*
                     (\w+)                      # (1) functionname
                     .*$                        
                     /x; # /x Enables extended whitespace mode
-   if ( my ($functionname) = $line =~ $regexpSignal) {
+    if ( my ($functionname) = $line =~ $regexpSignal) {
        $line = $1;
-   }
-   return $line;
+    }
+    return $line;
 }
 
 foreach my $file (@ARGV) {
