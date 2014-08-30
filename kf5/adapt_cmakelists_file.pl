@@ -18,7 +18,7 @@ my @l = map {
      $modified = 1;
   }
   if (/kde4_add_ui_files/) {
-     $_ =~ s/kde4_add_ui_files/qt5_wrap_ui/;
+     $_ =~ s/kde4_add_ui_files/ki18n_wrap_ui/;
      $modified = 1;
   }
   if (/kde4_add_kcfg_files/) {
