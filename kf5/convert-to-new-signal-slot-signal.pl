@@ -625,9 +625,18 @@ foreach my $file (@ARGV) {
                               if (defined $activateDebug) {
                                  warn "With Argument and no receiver: variable defined  $varui\n";
                               }
+                  
+                              
                               if ( defined $varname{$varui} ) {
+                                 my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
+                                 if (not $overloadResult eq "") {
+                                    $signal = $overloadResult;
+                                    $overloadFound = 1;
+                                 } else {
+                                    $signal = "$varname{$varui}::$signal";
+                                 }
+
                                 warn "vartype found $varname{$varui} \n";
-                                $signal = "$varname{$varui}::$signal";
                               } else {
                                 $notpossible = 1;
                               }
