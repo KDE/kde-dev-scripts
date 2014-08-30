@@ -11,6 +11,7 @@ use functionUtilkde;
 
 foreach my $file (@ARGV) {
 
+    my %headersToAdd = ();
     my $modified;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
@@ -28,6 +29,12 @@ foreach my $file (@ARGV) {
            warn "$file: QAction doesn't support directly setShortcutConfigurable, use KActionCollection::setShortcutsConfigurable(QAction *action, bool configurable)\n";
         }
         s/\bKAction\b/QAction/g;
+
+        # While we're here...
+        if (s/KAuthorized::authorizeUrlAction/KUrlAuthorized::authorizeUrlAction/g) {
+            $headersToAdd{'kurlauthorized.h'} = 1;
+        }
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
@@ -36,6 +43,9 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        foreach my $include (keys %headersToAdd) {
+            functionUtilkde::addIncludeInFile($file, $include);
+        }
     }
 }
 
