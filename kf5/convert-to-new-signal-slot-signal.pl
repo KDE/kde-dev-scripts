@@ -43,6 +43,24 @@ sub overload
           return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonReleased)";
        } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonReleased")) {
           return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonReleased)";       
+       } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonClicked")) {
+          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonClicked)";
+       } elsif (($argument eq "(int)") and ($function eq "buttonClicked")) {
+          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked)";
+       } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonPressed")) {
+          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonPressed)";
+       } elsif (($argument eq "(int)") and ($function eq "buttonPressed")) {
+          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed)";
+       } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonToggled")) {
+          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonToggled)";
+       } elsif (($argument eq "(int)") and ($function eq "buttonToggled")) {
+          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonToggled)";
+       }
+    } elsif ($classname eq "QSpinBox") {
+       if (($argument eq "(int)") and ($function eq "valueChanged")) {
+          return "static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged)";
+       } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
+          return "static_cast<void (QSpinBox::*)(const QString &)>(&QSpinBox::valueChanged)";
        }
     }
     return "";
