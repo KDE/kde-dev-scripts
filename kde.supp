@@ -286,16 +286,10 @@
 # Helgrind suppressions for atomic operations.
 # This is because helgrind/drd cannot tell that they are atomic operations, on x86. The machine code is exactly the same.
 {
-   QBasicAtomicPointer_load
+   QBasicAtomicPointer
    Helgrind:Race
-   # catch load and loadAcquire
-   fun:_ZNK19QBasicAtomicPointer*load*
-}
-{
-   QBasicAtomicPointer_store
-   Helgrind:Race
-   # catch store and storeRelease
-   fun:_ZN19QBasicAtomicPointer*store*
+   # catch load*, store*, and the qt4 operators
+   fun:_ZN19QBasicAtomicPointer*
 }
 {
    QBasicAtomicInt
