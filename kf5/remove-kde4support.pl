@@ -64,23 +64,23 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::picturesPath\(\),QStandardPaths::writableLocation\(QStandardPaths::PicturesLocation\),;
            $needQStandardPaths = 1;
         }
-        if (/KLocale::global\(\)\-\>formatByteSize/) {
-           s,KLocale::global\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
-           $needKFormat = 1;
-        }
+
+        s/\bKGlobal::charsets\s*\(\)/KCharsets::charsets\(\)/;
+
         if (/KGlobal::locale\(\)\-\>formatByteSize/) {
            s,KGlobal::locale\(\)\-\>formatByteSize,KFormat\(\).formatByteSize,g;
            $needKFormat = 1;
         }
 
-        if (/KLocale::global\(\)\-\>prettyFormatDuration/) {
-           s,KLocale::global\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
-           $needKFormat = 1;
-        }
         if (/KGlobal::locale\(\)\-\>prettyFormatDuration/) {
            s,KGlobal::locale\(\)\-\>prettyFormatDuration,KFormat\(\).formatSpelloutDuration,g;
            $needKFormat = 1;
         }
+
+        if (/KGlobal::locale\(\)\-\>insertCatalog/) {
+           s/KGlobal::locale\(\)\-\>insertCatalog/\/\/KF5 port: remove this line and define TRANSLATION_DOMAIN in CMakeLists.txt instead\n\/\/KLocale::global\(\)\-\>insertCatalog/;
+        }
+        s/\bKGlobal::locale\s*\(\)/KLocale::global\(\)/g;
 
         if (/KGlobalSettings::generalFont/) {
            s,KGlobalSettings::generalFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::GeneralFont\),g;
