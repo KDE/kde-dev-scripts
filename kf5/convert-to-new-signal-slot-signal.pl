@@ -70,6 +70,21 @@ sub overload
        } elsif(($argument eq "(QAction*)") and ($function eq "triggered")) {
           return "static_cast<void (KSelectAction::*)(QAction*)>(&KSelectAction::triggered)";
        }
+    } elsif ($classname eq "KUrlLabel") {
+      if (($argument eq "(QString)") and ($function eq "leftClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::leftClickedUrl)";
+      } elsif (($argument eq "()") and ($function eq "leftClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::leftClickedUrl)";
+      } elsif (($argument eq "(QString)") and ($function eq "rightClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
+      } elsif (($argument eq "()") and ($function eq "rightClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
+      } elsif (($argument eq "(QString)") and ($function eq "rightClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
+      } elsif (($argument eq "()") and ($function eq "rightClickedUrl")) {
+          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
+      }
+
     }
     return "";
 }
