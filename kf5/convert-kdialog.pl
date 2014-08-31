@@ -221,16 +221,16 @@ foreach my $file (@ARGV) {
         }
         if (/okClicked\(\)/) {
              s/connect\s*\(\s*this,/connect(okButton,/;
-             s/okClicked\(\)/clicked()/;
+             s/SIGNAL\s*\(\s*okClicked\(\)/SIGNAL\(clicked()/;
         }
         if (/applyClicked\(\)/) {
              s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Apply),/;
-             s/applyClicked\(\)/clicked()/;
+             s/SIGNAL\s*\(\s*applyClicked\(\)/SIGNAL\(clicked()/;
         }
 
         if (/cancelClicked\(\)/) {
              s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Cancel),/;
-             s/cancelClicked\(\)/clicked()/;
+             s/SIGNAL\s*\(\s*cancelClicked\(\)/SIGNAL\(clicked()/;
         }
         if (/user1Clicked\(\)/) {
              s/connect\s*\(\s*this,/connect(user1Button,/;
@@ -238,11 +238,11 @@ foreach my $file (@ARGV) {
         }
         if (/user2Clicked\(\)/) {
              s/connect\s*\(\s*this,/connect(user2Button,/;
-             s/user2Clicked\(\)/clicked()/;
+             s/SIGNAL\s*\(\s*user2Clicked\(\)/SIGNAL\(clicked()/;
         }
         if (/user3Clicked\(\)/) {
              s/connect\s*\(\s*this,/connect(user3Button,/;
-             s/user3Clicked\(\)/clicked()/;
+             s/SIGNAL\s*\(\s*user3Clicked\(\)/SIGNAL\(clicked()/;
         }
 
         my $regexEnableButton = qr/
