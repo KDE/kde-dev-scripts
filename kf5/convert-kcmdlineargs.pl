@@ -53,6 +53,22 @@ foreach my $file (@ARGV) {
                   s/KLocalizedString\b/QString/g;
               }
            }
+           if (/(\w+)\.addCredit\s*\(/) {
+              my $var = $1;
+              if ( defined $varname{$var} ) {
+                  s/ki18n/i18n/g;
+                  s/KLocalizedString\b/QString/g;
+              }
+           }
+           if (/(\w+)\.setTranslator\s*\(/) {
+              my $var = $1;
+              if ( defined $varname{$var} ) {
+                  s/ki18n/i18n/g;
+                  s/KLocalizedString\b/QString/g;
+              }
+           }
+
+
            s/K4AboutData::License_/KAboutLicense::/;
            s/K4AboutData/KAboutData/g;
         }
