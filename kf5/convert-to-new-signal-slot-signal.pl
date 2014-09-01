@@ -84,7 +84,12 @@ sub overload
       } elsif (($argument eq "()") and ($function eq "rightClickedUrl")) {
           return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
       }
-
+    } elsif ($classname eq "QTcpSocket") {
+      if (($argument eq "(QAbstractSocket::SocketError)") and ($function eq "error")) {
+          return "static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error)";
+      } elsif (($argument eq "()") and ($function eq "error")) {
+          return "static_cast<void (QTcpSocket::*)()>(&QTcpSocket::error)";
+      }
     }
     return "";
 }
