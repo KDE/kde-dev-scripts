@@ -228,7 +228,7 @@ foreach my $file (@ARGV) {
            $headerclassname = $class;
            $numberOfClassName++;
         }
-        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/) {
+        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
            my $uiclass = $1;
            my $uivariable = $2;
            warn "$file: $uiclass :  $uivariable \n";
@@ -281,7 +281,7 @@ foreach my $file (@ARGV) {
         my $orig = $_;
 
         # private class in cpp file.
-        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/) {
+        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
            my $uiclass = $1;
            my $uivariable = $2;
            warn "$file: $uiclass :  $uivariable \n";
