@@ -394,14 +394,14 @@ foreach my $file (@ARGV) {
            my ($sender, $signal, $receiver, $slot, $lastArgument, $after);
            my $connectArgument_regexp = qr/
                                  ^([^,]*)\s*                 # (1) sender
-                                 ,\s*SIGNAL\s*([^,]*)\s*     # (2) signal
+                                 ,\s*SIGNAL\s*${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}\s*     # (2) signal
                                  ,\s*([^,]*)                 # (3) receiver
-                                 ,\s*SLOT\s*([^,]*)          # (4) slot
+                                 ,\s*SLOT\s*${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}          # (4) slot
                                  (?:,\s([^,]*))?             # (5) Last argument in slot as Qt::QueuedConnection
                                  (.*)$                       # (6) after
                                  /x;
            if ( ($sender, $signal, $receiver, $slot, $lastArgument, $after) = $argument =~ $connectArgument_regexp) {
-              #warn "Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+              warn "11Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
               $sender = cleanSender($sender);
               my $signalArgument = extraArgumentFunctionName($signal);
               $signal = extractFunctionName($signal);
