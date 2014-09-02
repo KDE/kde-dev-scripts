@@ -71,17 +71,11 @@ sub overload
        } elsif (($argument eq "(int)") and ($function eq "buttonToggled")) {
           return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonToggled)";
        }
-    } elsif ($classname eq "QSpinBox") {
+    } elsif (($classname eq "QSpinBox") or ($classname eq "KPluralHandlingSpinBox")) {
        if (($argument eq "(int)") and ($function eq "valueChanged")) {
-          return "static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged)";
+          return "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::valueChanged)";
        } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
-          return "static_cast<void (QSpinBox::*)(const QString &)>(&QSpinBox::valueChanged)";
-       }
-    } elsif ($classname eq "KPluralHandlingSpinBox") {
-       if (($argument eq "(int)") and ($function eq "valueChanged")) {
-          return "static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged)";
-       } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
-          return "static_cast<void (KPluralHandlingSpinBox::*)(const QString &)>(&KPluralHandlingSpinBox::valueChanged)";
+          return "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::valueChanged)";
        }
     } elsif ($classname eq "KSelectAction") {
        if (($argument eq "(QString)") and ($function eq "triggered")) {
