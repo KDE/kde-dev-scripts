@@ -555,87 +555,6 @@ foreach my $file (@ARGV) {
                  warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
               }
            } else {
-              warn "line actual : $_ argumen:\'$argument\'\n";
-              my $connectArgument2_regexp = qr/
-                                 ^([^,]*)\s*                                                       # (1) sender
-                                 \s*,\s*SIGNAL\s*
-                                 ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}     # (2) signal
-                                 \s*,\s([^,]*)                                                     # (3) receiver
-                                 \s*,\s*SLOT\s*
-                                 ${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}     # (4) slot
-                                 (?:,\s([^,]*))?                                                   # (5) Last argument in slot as Qt::QueuedConnection
-                                 (.*)$                                                             # (6) after
-                                 /x;
-              if ( ($sender, $signal, $receiver, $slot, $lastArgument, $after) = $argument =~ $connectArgument2_regexp) {
-                 $sender = cleanSender($sender);
-                 my $signalArgument = extraArgumentFunctionName($signal);
-                 my $overloadFound;
-
-                 $signal = extractFunctionName($signal);
-                 $slot = extractFunctionName($slot);
-
-                 if (defined $activateDebug) {
-                     warn "With Argument and receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
-                 }
-                 my $notpossible;
-                 if ( defined $varname{$sender} ) {
-                    my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
-                    if (not $overloadResult eq "") {
-                       $signal = $overloadResult;
-                       $overloadFound = 1;
-                    } else {
-                       $signal = "$varname{$sender}::$signal";
-                    }
-                 } elsif ( $sender eq "this") {
-                   $signal = "$headerclassname::$signal";
-                 } elsif ( $sender eq "qApp") {
-                    $signal = "QApplication::$signal";
-                 } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                   $signal = "QPushButton::$signal";
-                 } elsif ( $sender =~ /(.*)::self\(\)/) {
-                    my $class = $1;
-                    $signal = "$class::$signal";
-                 } else {
-                    if ( $sender =~ /(\w+).(.*)/ || $sender =~ /(\w+)\-\>(.*)/) {
-                       my $uivariable = $1;
-                       my $varui = $2;
-                       warn "UI VARIABLE :$uivariable\n";
-                       if (defined $localuiclass{$uivariable} ) {
-                           warn "variable defined  $varui\n";
-                           if ( defined $varname{$varui} ) {
-                              warn "vartype found $varname{$varui} \n";
-                              $signal = "$varname{$varui}::$signal";
-                           } else {
-                             $notpossible = 1;
-                           }
-                       } else {
-                         $notpossible = 1;
-                       }
-                    }
-                  }
-                  if (not defined $notpossible) {
-                     if ( defined $varname{$receiver} ) {
-                      $slot = "$varname{$receiver}::$slot";
-                    } elsif ( $receiver eq "this") {
-                      $slot = "$headerclassname::$slot";
-                    } else {
-                      $notpossible = 1;
-                    }
-                  }
-                  if (not defined $notpossible) {
-                     if (not defined $overloadFound) {
-                        $signal = "&" . $signal;
-                     }
-                     if (defined $lastArgument) {
-                        # Last Argument has ')'
-                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
-                     } else {
-                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
-                     }
-                  } else {
-                     warn "Can not convert \'$_\' \n";
-                  }
-              } else {
                 my $connectArgument2_regexp = qr/
                                  ^([^,]*)\s*                                                       # (1) sender
                                  \s*,\s*SIGNAL\s*
@@ -738,7 +657,6 @@ foreach my $file (@ARGV) {
                     } else {
                        warn "Can not convert \'$_\' \n";
                     }
-                } 
               }
            }
         }
