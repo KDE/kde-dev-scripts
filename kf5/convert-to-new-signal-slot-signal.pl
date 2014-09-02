@@ -391,43 +391,47 @@ foreach my $file (@ARGV) {
            if (defined $activateDebug) {
               warn "ARGUMENT $argument\n";
            }
-           my ($sender, $signal, $receiver, $slot, $lastArgument, $after);
+           my ($sender, $signal, $receiver, $signalorslot, $slot, $lastArgument, $after);
            my $connectArgument_regexp = qr/
                                  ^([^,]*)\s*                 # (1) sender
                                  ,\s*SIGNAL\s*${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}\s*     # (2) signal
                                  ,\s*([^,]*)                 # (3) receiver
-                                 ,\s*SLOT\s*${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}          # (4) slot
-                                 (?:,\s([^,]*))?             # (5) Last argument in slot as Qt::QueuedConnection
-                                 (.*)$                       # (6) after
+                                 ,\s*(\w+)\s*                # (4) SLOT or SIGNAL
+                                 ${functionUtilkde::paren_begin}5${functionUtilkde::paren_end}          # (5) slot
+                                 (?:,\s([^,]*))?             # (6) Last argument in slot as Qt::QueuedConnection
+                                 (.*)$                       # (7) after
                                  /x;
-           if ( ($sender, $signal, $receiver, $slot, $lastArgument, $after) = $argument =~ $connectArgument_regexp) {
-              warn "11Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
-              $sender = cleanSender($sender);
-              my $signalArgument = extraArgumentFunctionName($signal);
-              $signal = extractFunctionName($signal);
-              $slot = extractFunctionName($slot);
-              my $localSenderVariable;
-              my $localReceiverVariable;
-              if ( $sender =~ /^&/) {
-                 $sender =~ s/^&//;
-                 $localSenderVariable = 1;
-              }
-              if ( $receiver =~ /^&/) {
-                 $receiver =~ s/^&//;
-                 $localReceiverVariable = 1;
-              }
+           if ( ($sender, $signal, $receiver, $signalorslot, $slot, $lastArgument, $after) = $argument =~ $connectArgument_regexp) {
+           
+              # We can have SIGNAL/SIGNAL or SIGNAL/SLOT
+              if (($signalorslot eq "SIGNAL") or ($signalorslot eq "SLOT")) {
+                warn "11Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+                $sender = cleanSender($sender);
+                my $signalArgument = extraArgumentFunctionName($signal);
+                $signal = extractFunctionName($signal);
+                $slot = extractFunctionName($slot);
+                my $localSenderVariable;
+                my $localReceiverVariable;
+                if ( $sender =~ /^&/) {
+                   $sender =~ s/^&//;
+                   $localSenderVariable = 1;
+                }
+                if ( $receiver =~ /^&/) {
+                   $receiver =~ s/^&//;
+                   $localReceiverVariable = 1;
+                }
 
-              if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
-                  $signal = "$varname{$sender}::$signal";
-                  $slot = "$varname{$receiver}::$slot";
-                  if ( defined $localSenderVariable) {
-                     $sender = "&" . $sender;
-                  }
-                  if ( defined $localReceiverVariable) {
-                     $receiver = "&" . $receiver;
-                  }
-                  $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
-              } else {
+                if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
+                    $signal = "$varname{$sender}::$signal";
+                    $slot = "$varname{$receiver}::$slot";
+                    if ( defined $localSenderVariable) {
+                       $sender = "&" . $sender;
+                    }
+                    if ( defined $localReceiverVariable) {
+                       $receiver = "&" . $receiver;
+                    }
+                    $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                } else {
                   my $notpossible;
                   my $classWithQPointer;
                   my $receiverWithQPointer;
@@ -550,113 +554,118 @@ foreach my $file (@ARGV) {
                   } else {
                      warn "Can not convert \'$_\' \n";
                   }
-              }
-              if (defined $activateDebug) {
-                 warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+                }
+                if (defined $activateDebug) {
+                   warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+                }
               }
            } else {
                 my $connectArgument2_regexp = qr/
                                  ^([^,]*)\s*                                                       # (1) sender
                                  \s*,\s*SIGNAL\s*
                                  ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}     # (2) signal
-                                 \s*,\s*SLOT\s*
-                                 ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}     # (3) slot
-                                 (?:,\s([^,]*))?                                                   # (4) Last argument in slot as Qt::QueuedConnection
-                                 (.*)$                                                             # (5) after
+                                 ,\s*(\w+)\s*                                                      # (3) SLOT or SIGNAL
+                                 ${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}     # (4) slot
+                                 (?:,\s([^,]*))?                                                   # (5) Last argument in slot as Qt::QueuedConnection
+                                 (.*)$                                                             # (6) after
                                  /x;
-                if ( ($sender, $signal, $slot, $lastArgument, $after) = $argument =~ $connectArgument2_regexp) {
-                   $sender = cleanSender($sender);
-                   my $signalArgument = extraArgumentFunctionName($signal);
-                   my $overloadFound;
-                   $signal = extractFunctionName($signal);
-                   $slot = extractFunctionName($slot);
-                   my $localVariable;
-                   if ( $sender =~ /^&/) {
-                     $sender =~ s/^&//;
-                     $localVariable = 1;
-                   }
-                   my $privateClass;
-                   if ( $sender =~ /^d\-\>/) {
-                     $sender =~ s/^d\-\>//;
-                     $privateClass = 1;
-                   }
-                   if (defined $activateDebug) {
-                      warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
-                   }
+                if ( ($sender, $signal, $signalorslot, $slot, $lastArgument, $after) = $argument =~ $connectArgument2_regexp) {
+                   # We can have SIGNAL/SIGNAL or SIGNAL/SLOT
+                   if (($signalorslot eq "SIGNAL") or ($signalorslot eq "SLOT")) {
 
-                   # => we don't have receiver => slot and signal will have same parent.
-                   my $notpossible;                   
-                   if ( defined $varname{$sender} ) {
-                      $slot = "$headerclassname::$slot";
-                      my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
-                      if (not $overloadResult eq "") {
-                         $signal = $overloadResult;
-                         $overloadFound = 1;
-                      } else {
-                         $signal = "$varname{$sender}::$signal";
-                      }
-                   } else {
-                      $slot = "$headerclassname::$slot";
-                      if ( $sender eq "this") {
-                        $signal = "$headerclassname::$signal";
-                      } elsif ( $sender eq "qApp") {
-                        $signal = "QApplication::$signal";
-                      } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                        $signal = "QPushButton::$signal";
-                      } elsif ( $sender =~ /(.*)::self\(\)/) {
-                        my $class = $1;
-                        $signal = "$class::$signal";
-                      } else {
+                     $sender = cleanSender($sender);
+                     my $signalArgument = extraArgumentFunctionName($signal);
+                     my $overloadFound;
+                     $signal = extractFunctionName($signal);
+                     $slot = extractFunctionName($slot);
+                     my $localVariable;
+                     if ( $sender =~ /^&/) {
+                       $sender =~ s/^&//;
+                       $localVariable = 1;
+                     }
+                     my $privateClass;
+                     if ( $sender =~ /^d\-\>/) {
+                       $sender =~ s/^d\-\>//;
+                       $privateClass = 1;
+                     }
+                     if (defined $activateDebug) {
+                        warn "With Argument and no receiver: SENDER: \'$sender\'  SIGNAL: \'$signal\' SLOT: \'$slot\' \n";
+                     }
+
+                     # => we don't have receiver => slot and signal will have same parent.
+                     my $notpossible;                   
+                     if ( defined $varname{$sender} ) {
+                        $slot = "$headerclassname::$slot";
+                        my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
+                        if (not $overloadResult eq "") {
+                           $signal = $overloadResult;
+                           $overloadFound = 1;
+                        } else {
+                           $signal = "$varname{$sender}::$signal";
+                        }
+                     } else {
+                        $slot = "$headerclassname::$slot";
+                        if ( $sender eq "this") {
+                          $signal = "$headerclassname::$signal";
+                        } elsif ( $sender eq "qApp") {
+                          $signal = "QApplication::$signal";
+                        } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
+                          $signal = "QPushButton::$signal";
+                        } elsif ( $sender =~ /(.*)::self\(\)/) {
+                          my $class = $1;
+                          $signal = "$class::$signal";
+                        } else {
                           
-                          if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
-                          my $uivariable = $1;
-                          my $varui = $2;
-                          if (defined $activateDebug) {
-                             warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
-                          }
-                          if (defined $localuiclass{$uivariable} ) {
-                              if (defined $activateDebug) {
-                                 warn "With Argument and no receiver: variable defined  $varui\n";
-                              }
-                  
-                              
-                              if ( defined $varname{$varui} ) {
-                                 my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
-                                 if (not $overloadResult eq "") {
-                                    $signal = $overloadResult;
-                                    $overloadFound = 1;
-                                 } else {
-                                    $signal = "$varname{$varui}::$signal";
-                                 }
-
-                                warn "vartype found $varname{$varui} \n";
-                              } else {
-                                $notpossible = 1;
-                              }
-                          } else {
-                            $notpossible = 1;
+                            if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
+                            my $uivariable = $1;
+                            my $varui = $2;
+                            if (defined $activateDebug) {
+                               warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
+                            }
+                            if (defined $localuiclass{$uivariable} ) {
+                                if (defined $activateDebug) {
+                                   warn "With Argument and no receiver: variable defined  $varui\n";
+                                }
+                    
+                                
+                                if ( defined $varname{$varui} ) {
+                                   my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
+                                   if (not $overloadResult eq "") {
+                                      $signal = $overloadResult;
+                                      $overloadFound = 1;
+                                   } else {
+                                      $signal = "$varname{$varui}::$signal";
+                                   }
+ 
+                                  warn "vartype found $varname{$varui} \n";
+                                } else {
+                                  $notpossible = 1;
+                                }
+                            } else {
+                              $notpossible = 1;
+                            }
                           }
                         }
                       }
-                    }
-                    if (not defined $notpossible) {
-                      if ( defined $privateClass ) {
-                          $sender = "d->" . $sender;
-                      }
-                      if ( defined $localVariable) {
-                          $sender = "&" . $sender;
-                      }
-                      if (not defined $overloadFound) {
-                        $signal = "&" . $signal;
-                      }
-                      if (defined $lastArgument) {
-                        $_ = $indent . "connect($sender, $signal, this, &$slot, $lastArgument;\n";
+                      if (not defined $notpossible) {
+                        if ( defined $privateClass ) {
+                            $sender = "d->" . $sender;
+                        }
+                        if ( defined $localVariable) {
+                            $sender = "&" . $sender;
+                        }
+                        if (not defined $overloadFound) {
+                          $signal = "&" . $signal;
+                        }
+                        if (defined $lastArgument) {
+                          $_ = $indent . "connect($sender, $signal, this, &$slot, $lastArgument;\n";
+                        } else {
+                          $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
+                        }
                       } else {
-                        $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
+                         warn "Can not convert \'$_\' \n";
                       }
-                    } else {
-                       warn "Can not convert \'$_\' \n";
-                    }
+                  }
               }
            }
         }
