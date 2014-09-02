@@ -77,13 +77,14 @@ sub overload
        } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
           return "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::valueChanged)";
        }
-    } elsif ($classname eq "KSelectAction") {
+    } elsif (($classname eq "KSelectAction") or ($classname eq "KFontAction")) {
        if (($argument eq "(QString)") and ($function eq "triggered")) {
-          return "static_cast<void (KSelectAction::*)(const QString &)>(&KSelectAction::triggered)";
+          return "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::triggered)";
        } elsif (($argument eq "(int)") and ($function eq "triggered")) {
+          return "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::triggered)";
           return "static_cast<void (KSelectAction::*)(int)>(&KSelectAction::triggered)";
        } elsif(($argument eq "(QAction*)") and ($function eq "triggered")) {
-          return "static_cast<void (KSelectAction::*)(QAction*)>(&KSelectAction::triggered)";
+          return "static_cast<void ($classname" . "::*)(QAction*)>(&" . "$classname" . "::triggered)";
        }
     } elsif ($classname eq "KUrlLabel") {
       if (($argument eq "(QString)") and ($function eq "leftClickedUrl")) {
@@ -104,6 +105,14 @@ sub overload
           return "static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error)";
       } elsif (($argument eq "()") and ($function eq "error")) {
           return "static_cast<void (QTcpSocket::*)()>(&QTcpSocket::error)";
+      }
+    } elsif ($classname eq "Akonadi::ChangeRecorder") {
+      if ($function eq "collectionChanged") {
+         if ($argument eq "(Akonadi::Collection)") {
+            return "static_cast<void ($classname" . "::*)(const Akonadi::Collection &)>(&" . "$classname" . "::$function)";
+         } elsif ($argument eq "(Akonadi::Collection,QSet<QByteArray>)") {
+            return "static_cast<void ($classname" . "::*)(const QSet<QByteArray &)>(&" . "$classname" . "::$function)";         
+         }
       }
     }
     return "";
@@ -451,6 +460,8 @@ foreach my $file (@ARGV) {
                     $signal = "$headerclassname::$signal";
                   } elsif ( $sender eq "qApp") {
                      $signal = "QApplication::$signal";
+                  } elsif ( $sender eq "kapp") {
+                     $signal = "KApplication::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                     $signal = "QPushButton::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
@@ -609,6 +620,8 @@ foreach my $file (@ARGV) {
                           $signal = "$headerclassname::$signal";
                         } elsif ( $sender eq "qApp") {
                           $signal = "QApplication::$signal";
+                        } elsif ( $sender eq "kapp") {
+                          $signal = "KApplication::$signal";
                         } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                           $signal = "QPushButton::$signal";
                         } elsif ( $sender =~ /(.*)::self\(\)/) {
