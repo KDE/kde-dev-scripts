@@ -391,15 +391,16 @@ foreach my $file (@ARGV) {
            if (defined $activateDebug) {
               warn "ARGUMENT $argument\n";
            }
-           my ($sender, $signal, $receiver, $slot, $after);
+           my ($sender, $signal, $receiver, $slot, $lastArgument, $after);
            my $connectArgument_regexp = qr/
                                  ^([^,]*)\s*                 # (1) sender
                                  ,\s*SIGNAL\s*([^,]*)\s*     # (2) signal
                                  ,\s*([^,]*)                 # (3) receiver
                                  ,\s*SLOT\s*([^,]*)          # (4) slot
-                                 (.*)$                       # (5) after
+                                 (?:,\s([^,]*))?             # (5) Last argument in slot as Qt::QueuedConnection
+                                 (.*)$                       # (6) after
                                  /x;
-           if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument_regexp) {
+           if ( ($sender, $signal, $receiver, $slot, $lastArgument, $after) = $argument =~ $connectArgument_regexp) {
               #warn "Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
               $sender = cleanSender($sender);
               my $signalArgument = extraArgumentFunctionName($signal);
@@ -540,7 +541,12 @@ foreach my $file (@ARGV) {
                      if (not defined $overloadFound) {
                         $signal = "&" . $signal;
                      }
-                     $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+                     if (defined $lastArgument) {
+                        # lastArgument has ')'
+                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
+                     } else {
+                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+                     }
                   } else {
                      warn "Can not convert \'$_\' \n";
                   }
@@ -557,9 +563,10 @@ foreach my $file (@ARGV) {
                                  \s*,\s([^,]*)                                                     # (3) receiver
                                  \s*,\s*SLOT\s*
                                  ${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}     # (4) slot
-                                 (.*)$                                                             # (5) after
+                                 (?:,\s([^,]*))?                                                   # (5) Last argument in slot as Qt::QueuedConnection
+                                 (.*)$                                                             # (6) after
                                  /x;
-              if ( ($sender, $signal, $receiver, $slot, $after) = $argument =~ $connectArgument2_regexp) {
+              if ( ($sender, $signal, $receiver, $slot, $lastArgument, $after) = $argument =~ $connectArgument2_regexp) {
                  $sender = cleanSender($sender);
                  my $signalArgument = extraArgumentFunctionName($signal);
                  my $overloadFound;
@@ -592,11 +599,11 @@ foreach my $file (@ARGV) {
                     if ( $sender =~ /(\w+).(.*)/ || $sender =~ /(\w+)\-\>(.*)/) {
                        my $uivariable = $1;
                        my $varui = $2;
-                       #warn "UI VARIABLE :$uivariable\n";
+                       warn "UI VARIABLE :$uivariable\n";
                        if (defined $localuiclass{$uivariable} ) {
-                           #warn "variable defined  $varui\n";
+                           warn "variable defined  $varui\n";
                            if ( defined $varname{$varui} ) {
-                              #warn "vartype found $varname{$varui} \n";
+                              warn "vartype found $varname{$varui} \n";
                               $signal = "$varname{$varui}::$signal";
                            } else {
                              $notpossible = 1;
@@ -619,7 +626,12 @@ foreach my $file (@ARGV) {
                      if (not defined $overloadFound) {
                         $signal = "&" . $signal;
                      }
-                     $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+                     if (defined $lastArgument) {
+                        # Last Argument has ')'
+                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
+                     } else {
+                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+                     }
                   } else {
                      warn "Can not convert \'$_\' \n";
                   }
@@ -630,9 +642,10 @@ foreach my $file (@ARGV) {
                                  ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}     # (2) signal
                                  \s*,\s*SLOT\s*
                                  ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}     # (3) slot
-                                 (.*)$                                                             # (4) after
+                                 (?:,\s([^,]*))?                                                   # (4) Last argument in slot as Qt::QueuedConnection
+                                 (.*)$                                                             # (5) after
                                  /x;
-                if ( ($sender, $signal, $slot, $after) = $argument =~ $connectArgument2_regexp) {
+                if ( ($sender, $signal, $slot, $lastArgument, $after) = $argument =~ $connectArgument2_regexp) {
                    $sender = cleanSender($sender);
                    my $signalArgument = extraArgumentFunctionName($signal);
                    my $overloadFound;
@@ -717,8 +730,11 @@ foreach my $file (@ARGV) {
                       if (not defined $overloadFound) {
                         $signal = "&" . $signal;
                       }
-
-                      $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
+                      if (defined $lastArgument) {
+                        $_ = $indent . "connect($sender, $signal, this, &$slot, $lastArgument;\n";
+                      } else {
+                        $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
+                      }
                     } else {
                        warn "Can not convert \'$_\' \n";
                     }
