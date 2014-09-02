@@ -77,6 +77,12 @@ sub overload
        } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
           return "static_cast<void (QSpinBox::*)(const QString &)>(&QSpinBox::valueChanged)";
        }
+    } elsif ($classname eq "KPluralHandlingSpinBox") {
+       if (($argument eq "(int)") and ($function eq "valueChanged")) {
+          return "static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged)";
+       } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
+          return "static_cast<void (KPluralHandlingSpinBox::*)(const QString &)>(&KPluralHandlingSpinBox::valueChanged)";
+       }
     } elsif ($classname eq "KSelectAction") {
        if (($argument eq "(QString)") and ($function eq "triggered")) {
           return "static_cast<void (KSelectAction::*)(const QString &)>(&KSelectAction::triggered)";
