@@ -478,16 +478,16 @@ foreach my $file (@ARGV) {
                     $signal = "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
                   } elsif ( $sender eq "this") {
-                    $signal = "$headerclassname::$signal";
+                    $signal = "&" . "$headerclassname::$signal";
                   } elsif ( $sender eq "qApp") {
-                     $signal = "QApplication::$signal";
+                     $signal = "&QApplication::$signal";
                   } elsif ( $sender eq "kapp") {
-                     $signal = "KApplication::$signal";
+                     $signal = "&KApplication::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                    $signal = "QPushButton::$signal";
+                    $signal = "&QPushButton::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
                     my $class = $1;
-                    $signal = "$class::$signal";
+                    $signal = "&" . "$class::$signal";
                   } else {
                     # It's not specific to ui class. It can be a private class too
                     if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
@@ -622,15 +622,15 @@ foreach my $file (@ARGV) {
                      } else {
                         $slot = "$headerclassname::$slot";
                         if ( $sender eq "this") {
-                          $signal = "$headerclassname::$signal";
+                          $signal = "&" . "$headerclassname::$signal";
                         } elsif ( $sender eq "qApp") {
-                          $signal = "QApplication::$signal";
+                          $signal = "&QApplication::$signal";
                         } elsif ( $sender eq "kapp") {
-                          $signal = "KApplication::$signal";
+                          $signal = "&KApplication::$signal";
                         } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
-                          $signal = "QPushButton::$signal";
+                          $signal = "&QPushButton::$signal";
                         } elsif ( $sender =~ /(.*)::self\(\)/) {
-                          my $class = $1;
+                          my $class = "&" . $1;
                           $signal = "$class::$signal";
                         } else {
                           
