@@ -27,95 +27,101 @@ sub addData
 sub overload
 {
     my ($classname, $argument, $function) = @_;
+    my $result;
     warn "ClassName \'$classname\' Argument \'$argument\' Function \'$function\'\n";
     if (($classname eq "QCompleter") and ($argument eq "(QString)") and ($function eq "activated")) {
-       return "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
+       $result = "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
     } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
-       return "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
+       $result = "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
     } elsif (($classname eq "KComboBox") ) {
        if (($argument eq "(int)") and ($function eq "activated")) {
-          return "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";
+          $result = "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";
        } elsif (($argument eq "(QString)") and ($function eq "activated")) {
-          return "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::activated)";
+          $result = "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::activated)";
        } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
-          return "static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged)";
+          $result = "static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged)";
        } elsif (($argument eq "(QString)") and ($function eq "currentIndexChanged")) {
-          return "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::currentIndexChanged)";
+          $result = "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::currentIndexChanged)";
        }
     } elsif (($classname eq "QComboBox") ) {
        if (($argument eq "(int)") and ($function eq "activated")) {
-          return "static_cast<void (QComboBox::*)(int)>(&QComboBox::activated)";
+          $result = "static_cast<void (QComboBox::*)(int)>(&QComboBox::activated)";
        } elsif (($argument eq "(QString)") and ($function eq "activated")) {
-          return "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated)";
+          $result = "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated)";
        } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
-          return "static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged)";
+          $result = "static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged)";
        } elsif (($argument eq "(QString)") and ($function eq "currentIndexChanged")) {
-          return "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged)";
+          $result = "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged)";
        }
 
     } elsif ($classname eq "QButtonGroup") {
        if (($argument eq "(int)") and ($function eq "buttonReleased")) {
-          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonReleased)";
+          $result = "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonReleased)";
        } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonReleased")) {
-          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonReleased)";       
+          $result = "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonReleased)";       
        } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonClicked")) {
-          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonClicked)";
+          $result = "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonClicked)";
        } elsif (($argument eq "(int)") and ($function eq "buttonClicked")) {
-          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked)";
+          $result = "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked)";
        } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonPressed")) {
-          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonPressed)";
+          $result = "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonPressed)";
        } elsif (($argument eq "(int)") and ($function eq "buttonPressed")) {
-          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed)";
+          $result = "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed)";
        } elsif (($argument eq "(QAbstractButton*)") and ($function eq "buttonToggled")) {
-          return "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonToggled)";
+          $result = "static_cast<void (QButtonGroup::*)(QAbstractButton*)>(&QButtonGroup::buttonToggled)";
        } elsif (($argument eq "(int)") and ($function eq "buttonToggled")) {
-          return "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonToggled)";
+          $result = "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonToggled)";
        }
     } elsif (($classname eq "QSpinBox") or ($classname eq "KPluralHandlingSpinBox")) {
        if (($argument eq "(int)") and ($function eq "valueChanged")) {
-          return "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::valueChanged)";
+          $result = "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::valueChanged)";
        } elsif (($argument eq "(QString)") and ($function eq "valueChanged")) {
-          return "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::valueChanged)";
+          $result = "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::valueChanged)";
        }
     } elsif (($classname eq "KSelectAction") or ($classname eq "KFontAction")) {
        if (($argument eq "(QString)") and ($function eq "triggered")) {
-          return "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::triggered)";
+          $result = "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::triggered)";
        } elsif (($argument eq "(int)") and ($function eq "triggered")) {
-          return "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::triggered)";
-          return "static_cast<void (KSelectAction::*)(int)>(&KSelectAction::triggered)";
+          $result = "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::triggered)";
        } elsif(($argument eq "(QAction*)") and ($function eq "triggered")) {
-          return "static_cast<void ($classname" . "::*)(QAction*)>(&" . "$classname" . "::triggered)";
+          $result = "static_cast<void ($classname" . "::*)(QAction*)>(&" . "$classname" . "::triggered)";
        }
     } elsif ($classname eq "KUrlLabel") {
       if (($argument eq "(QString)") and ($function eq "leftClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::leftClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::leftClickedUrl)";
       } elsif (($argument eq "()") and ($function eq "leftClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::leftClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::leftClickedUrl)";
       } elsif (($argument eq "(QString)") and ($function eq "rightClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
       } elsif (($argument eq "()") and ($function eq "rightClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
       } elsif (($argument eq "(QString)") and ($function eq "rightClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)(const QString &)>(&KUrlLabel::rightClickedUrl)";
       } elsif (($argument eq "()") and ($function eq "rightClickedUrl")) {
-          return "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
+          $result = "static_cast<void (KUrlLabel::*)()>(&KUrlLabel::rightClickedUrl)";
       }
     } elsif ($classname eq "QTcpSocket") {
       if (($argument eq "(QAbstractSocket::SocketError)") and ($function eq "error")) {
-          return "static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error)";
+          $result = "static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error)";
       } elsif (($argument eq "()") and ($function eq "error")) {
-          return "static_cast<void (QTcpSocket::*)()>(&QTcpSocket::error)";
+          $result = "static_cast<void (QTcpSocket::*)()>(&QTcpSocket::error)";
       }
     } elsif ($classname eq "Akonadi::ChangeRecorder") {
       if ($function eq "collectionChanged") {
          if ($argument eq "(Akonadi::Collection)") {
-            return "static_cast<void ($classname" . "::*)(const Akonadi::Collection &)>(&" . "$classname" . "::$function)";
+            $result = "static_cast<void ($classname" . "::*)(const Akonadi::Collection &)>(&" . "$classname" . "::$function)";
          } elsif ($argument eq "(Akonadi::Collection,QSet<QByteArray>)") {
-            return "static_cast<void ($classname" . "::*)(const QSet<QByteArray &)>(&" . "$classname" . "::$function)";         
+            $result = "static_cast<void ($classname" . "::*)(const QSet<QByteArray &)>(&" . "$classname" . "::$function)";         
          }
       }
     }
-    return "";
+    
+    if ( defined $result ) {
+       return $result;
+    } else {
+       $result = "&" . "$classname::$function";
+       return $result;
+    }
 }
 
 # initialize variable before to parse new file
@@ -444,15 +450,8 @@ foreach my $file (@ARGV) {
                   my $notpossible;
                   my $classWithQPointer;
                   my $receiverWithQPointer;
-                  my $overloadFound;
                   if ( defined $varname{$sender} ) {
-                    my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
-                    if (not $overloadResult eq "") {
-                       $signal = $overloadResult;
-                       $overloadFound = 1;
-                    } else {
-                       $signal = "$varname{$sender}::$signal";
-                    }
+                    $signal = overload($varname{$sender}, $signalArgument, $signal);
                   } elsif ( defined $varnamewithpointer{$sender} ) {
                     $signal = "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
@@ -483,19 +482,13 @@ foreach my $file (@ARGV) {
                               if (defined $activateDebug) {
                                  warn "vartype found $varname{$varui} \n";
                               }
-                              $signal = "$varname{$varui}::$signal";
+                              $signal = overload($varname{$varui}, $signalArgument, $signal);
                            } else {
                              $notpossible = 1;
                            }
                        } elsif (defined $varname{$uivariable}) {
                            if ( defined $varname{$varui} ) {
-                              my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
-                              if (not $overloadResult eq "") {
-                                 $signal = $overloadResult;
-                                 $overloadFound = 1;
-                              } else {
-                                 $signal = "$varname{$varui}::$signal";
-                              }
+                              $signal = overload($varname{$varui}, $signalArgument, $signal);
 
                               if (defined $activateDebug) {
                                  warn "vartype found $varname{$varui} \n";
@@ -553,9 +546,6 @@ foreach my $file (@ARGV) {
                      if (defined $receiverWithQPointer) {
                         $receiver = addData($receiver);
                      }
-                     if (not defined $overloadFound) {
-                        $signal = "&" . $signal;
-                     }
                      if (defined $lastArgument) {
                         # lastArgument has ')'
                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
@@ -586,7 +576,6 @@ foreach my $file (@ARGV) {
 
                      $sender = cleanSender($sender);
                      my $signalArgument = extraArgumentFunctionName($signal);
-                     my $overloadFound;
                      $signal = extractFunctionName($signal);
                      $slot = extractFunctionName($slot);
                      my $localVariable;
@@ -607,13 +596,7 @@ foreach my $file (@ARGV) {
                      my $notpossible;                   
                      if ( defined $varname{$sender} ) {
                         $slot = "$headerclassname::$slot";
-                        my $overloadResult = overload($varname{$sender}, $signalArgument, $signal);
-                        if (not $overloadResult eq "") {
-                           $signal = $overloadResult;
-                           $overloadFound = 1;
-                        } else {
-                           $signal = "$varname{$sender}::$signal";
-                        }
+                        $signal = overload($varname{$sender}, $signalArgument, $signal);
                      } else {
                         $slot = "$headerclassname::$slot";
                         if ( $sender eq "this") {
@@ -642,13 +625,7 @@ foreach my $file (@ARGV) {
                     
                                 
                                 if ( defined $varname{$varui} ) {
-                                   my $overloadResult = overload($varname{$varui}, $signalArgument, $signal);
-                                   if (not $overloadResult eq "") {
-                                      $signal = $overloadResult;
-                                      $overloadFound = 1;
-                                   } else {
-                                      $signal = "$varname{$varui}::$signal";
-                                   }
+                                   $signal = overload($varname{$varui}, $signalArgument, $signal);
  
                                   warn "vartype found $varname{$varui} \n";
                                 } else {
@@ -666,9 +643,6 @@ foreach my $file (@ARGV) {
                         }
                         if ( defined $localVariable) {
                             $sender = "&" . $sender;
-                        }
-                        if (not defined $overloadFound) {
-                          $signal = "&" . $signal;
                         }
                         if (defined $lastArgument) {
                           $_ = $indent . "connect($sender, $signal, this, &$slot, $lastArgument;\n";
