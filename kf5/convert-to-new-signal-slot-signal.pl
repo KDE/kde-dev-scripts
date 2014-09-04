@@ -15,6 +15,7 @@ my $headerclassname;
 my $numberOfClassName=0;
 my %uiclassname = ();
 my %localuiclass = ();
+my %listOfClassName = ();
 
 sub addData
 {
@@ -132,6 +133,7 @@ sub initVariables
     $numberOfClassName=0;
     %uiclassname = ();
     %localuiclass = ();
+    %listOfClassName = ();
 }
 
 # add new variable with its type.
@@ -256,6 +258,7 @@ foreach my $file (@ARGV) {
               warn "FOUND Class \'$class\' parentClass: \'$parentClass\' $_\n";
            }
            $headerclassname = $class;
+           $listOfClassName{$headerclassname} = 1;
            $numberOfClassName++;
         }
         if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
@@ -395,7 +398,26 @@ foreach my $file (@ARGV) {
            addToVarName($classname, $var);
         }
 
-
+        if ( /^([:\w]+)::([~\w]+).*/ ) {
+	   my $currentClass = $1;
+	   my $currentFunctionName = $2;
+	   #warn "WE ARE IN CONSTRUCTOR :\'$currentClass\', function name \'$currentFunctionName\'\n";
+	   if (defined $listOfClassName{$currentClass}) {
+	       #warn "IT's A HEADER CLASS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+	       $headerclassname = $currentClass;
+	   }
+           
+        } elsif ( /^([:\w]+)\s*\*\s*(\w+)::([~\w]+)\.*/ || /^([:\w]+)\s*(\w+)::([~\w]+)\.*/) {
+	   my $currentClass = $2;
+	   my $currentFunctionName = $3;
+	   my $currentReturnFunction = $1;
+	   #warn "WE ARE IN CLASS :\'$currentClass\', function name \'$currentFunctionName\', return \'$currentReturnFunction\'\n";
+	   if (defined $listOfClassName{$currentClass}) {
+	       #warn "IT's A HEADER CLASS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+	       $headerclassname = $currentClass;
+	   }	   
+	}
+        
 
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
