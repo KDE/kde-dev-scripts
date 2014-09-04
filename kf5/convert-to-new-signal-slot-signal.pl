@@ -142,12 +142,12 @@ sub addToVarName
     my ($classname, $var) = @_;           
     if (not $classname eq ":" and not $classname eq "return") { 
       #If we found variable in header don't overwrite it
-      if (not defined $varname{$var}) {
+      #if (not defined $varname{$var}) {
           $varname{$var} = ${classname}; 
           if (defined $activateDebug) {
               warn "new variable added: \'$var\' className :\'$classname\'\n";
           }
-      }
+      #}
    }
 }
 
