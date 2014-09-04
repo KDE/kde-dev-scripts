@@ -34,27 +34,16 @@ sub overload
        $result = "static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated)";
     } elsif (($classname eq "KNotification") and ($argument eq "(uint)") and ($function eq "activated")) {
        $result = "static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated)";    
-    } elsif (($classname eq "KComboBox") ) {
+    } elsif (($classname eq "QComboBox") || ($classname eq "KComboBox") || ($classname eq "Akonadi::CollectionComboBox")) {
        if (($argument eq "(int)") and ($function eq "activated")) {
-          $result = "static_cast<void (KComboBox::*)(int)>(&KComboBox::activated)";
+          $result = "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::activated)";
        } elsif (($argument eq "(QString)") and ($function eq "activated")) {
-          $result = "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::activated)";
+          $result = "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::activated)";
        } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
-          $result = "static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged)";
+          $result = "static_cast<void ($classname" . "::*)(int)>(&" . "$classname" . "::currentIndexChanged)";
        } elsif (($argument eq "(QString)") and ($function eq "currentIndexChanged")) {
-          $result = "static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::currentIndexChanged)";
+          $result = "static_cast<void ($classname" . "::*)(const QString &)>(&" . "$classname" . "::currentIndexChanged)";
        }
-    } elsif (($classname eq "QComboBox") ) {
-       if (($argument eq "(int)") and ($function eq "activated")) {
-          $result = "static_cast<void (QComboBox::*)(int)>(&QComboBox::activated)";
-       } elsif (($argument eq "(QString)") and ($function eq "activated")) {
-          $result = "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated)";
-       } elsif (($argument eq "(int)") and ($function eq "currentIndexChanged")) {
-          $result = "static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged)";
-       } elsif (($argument eq "(QString)") and ($function eq "currentIndexChanged")) {
-          $result = "static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged)";
-       }
-
     } elsif ($classname eq "QButtonGroup") {
        if (($argument eq "(int)") and ($function eq "buttonReleased")) {
           $result = "static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonReleased)";
