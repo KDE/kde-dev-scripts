@@ -26,7 +26,11 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
-    
+
+        # convert KCategoryDrawerV2 and KCategoryDrawerV3 to KCategoryDrawer
+        s/KCategoryDrawerV3/KCategoryDrawer/g;
+        s/KCategoryDrawerV2/KCategoryDrawer/g;
+ 
         if ( /KLocale::global\(\)\-\>removeAcceleratorMarker/ ) {
            warn "removeAcceleratorMarker found \n";
            s,KLocale::global\(\)\-\>removeAcceleratorMarker\b,KLocalizedString::removeAcceleratorMarker,;
