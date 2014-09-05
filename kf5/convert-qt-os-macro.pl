@@ -15,7 +15,7 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
-        s/\bQ_WS_/Q_OS_/g;
+        s/\bQ_WS_WIN/Q_OS_WIN/g;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
