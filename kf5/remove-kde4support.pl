@@ -37,7 +37,6 @@ foreach my $file (@ARGV) {
            $needKlocalizedString = 1;
         }
    
-        s/\bQ_WS_/Q_OS_/g;
         if (/KToolInvocation::invokeHelp/) {
            s/KToolInvocation::invokeHelp/KHelpClient::invokeHelp/;
            $needKHelpClient = 1;
