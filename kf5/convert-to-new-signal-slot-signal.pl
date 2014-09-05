@@ -17,14 +17,6 @@ my %uiclassname = ();
 my %localuiclass = ();
 my %listOfClassName = ();
 
-sub addData
-{
-    my ($var) = @_;
-    $var = $var . ".data()";
-    return $var;
-}
-
-
 sub overload
 {
     my ($classname, $argument, $function) = @_;
@@ -114,12 +106,12 @@ sub overload
     }
 }
 
-# initialize variable before to parse new file
+# initialize variable before parsing a new file
 sub initVariables
 {
     %varname = ();
     $headerclassname = "";
-    $numberOfClassName=0;
+    $numberOfClassName = 0;
     %uiclassname = ();
     %localuiclass = ();
     %listOfClassName = ();
@@ -128,7 +120,7 @@ sub initVariables
 # add new variable with its type.
 sub addToVarName
 {
-    my ($classname, $var) = @_;           
+    my ($classname, $var) = @_;
     if (not $classname eq ":" and not $classname eq "return") { 
       #If we found variable in header don't overwrite it
       #if (not defined $varname{$var}) {
@@ -181,6 +173,60 @@ sub extractFunctionName
     return $line;
 }
 
+# Parse the current line for variable declarations
+sub parseLine
+{
+    my ($file) = @_;
+    if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
+        my $uiclass = $1;
+        my $uivariable = $2;
+        warn "$file: $uiclass :  $uivariable \n";
+        if (defined $uiclassname{$uiclass}) {
+            if (defined $activateDebug) {
+                warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
+            }
+            $localuiclass{$uivariable} = $uiclass;
+        }
+    }
+    # Foo toto;
+    if ( /^\s*([:\w]+)\s+(\w+);/) {
+        my $classname = $1;
+        my $var = $2;
+        if ($classname ne "delete" and $classname ne "class" and $classname ne "struct" and $classname ne "return") {
+            #print STDERR "CASE 1. classname='$classname'\n";
+            addToVarName($classname, $var);
+        }
+    }
+
+    # Foo toto =
+    if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
+        my $classname = $1;
+        my $var = $2;
+        #print STDERR "CASE 2. classname='$classname'\n";
+        addToVarName($classname, $var);
+    }
+
+    # Foo toto(...)
+    if ( /^\s*([:\w]+)\s+(\w+)\(/) {
+        my $classname = $1;
+        my $var = $2;
+        if ($classname ne "else") {
+            #print STDERR "CASE 3. classname='$classname'\n";
+            addToVarName($classname, $var);
+        }
+    }
+
+    # Private* d;
+    # Private* const d;
+    # AttachmentControllerBase *const q;
+    if (/^\s*(\w+)\s*\*\s*(?:const)?\s+(\w+);/ ) {
+        my $classname = $1;
+        my $var = $2;
+        #print STDERR "CASE 4. classname='$classname'\n";
+        addToVarName($classname, $var);
+    }
+}
+
 foreach my $file (@ARGV) {
     
     # 1) initialize variable before to parse file
@@ -201,7 +247,7 @@ foreach my $file (@ARGV) {
            my $className = $1;
            my $variableName = $2;
            if (defined $activateDebug) {
-	      warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
+               warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
            }
            $varname{$variableName} = ${className};
         }
@@ -250,51 +296,14 @@ foreach my $file (@ARGV) {
            $listOfClassName{$headerclassname} = 1;
            $numberOfClassName++;
         }
-        if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
-           my $uiclass = $1;
-           my $uivariable = $2;
-           warn "$file: $uiclass :  $uivariable \n";
-           if (defined $uiclassname{$uiclass}) {
-              if (defined $activateDebug) {
-                  warn "Found ui class \'$uiclass\' uivariable \'$uivariable\' \n";
-              }
-              $localuiclass{$uivariable} = $uiclass;
-           }
-        }
-        # Foo toto;        
-        if ( /([:\w]+)\s+(\w+);/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
 
-        # Foo toto = 
-        if ( /.*([:\w]+)\s+(\w+)\s*=/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-       }
-
-        # Foo toto(...)
-        if ( /.*([:\w]+)\s+(\w+)\(/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
-
-        # Private* const d;
-        if (/\s*(\w+)\s*\*\s*const\s+(\w+);/ ) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
+        parseLine($file);
 
         $_;
     } <$HEADERFILE>;
 
     warn "We have $numberOfClassName class in $header\n";
 
-    
     # 4) Parse cpp file
     my $modified;
     my %varnamewithpointer = ();
@@ -351,41 +360,8 @@ foreach my $file (@ARGV) {
            addToVarName($classname, $var);
         }
 
+        parseLine($file);
 
-        # Foo toto;        
-        if ( /^\s*([:\w]+)\s+(\w+);/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
-        # Foo *toto = 
-        if ( /^\s*([:\w]+)\s*\*\s*(\w+)\s*=/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
-
-
-        # Foo toto = 
-        if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
-
-        # Foo toto(...)
-        if ( /^\s*([:\w]+)\s+(\w+)\(/) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
-
-       #AttachmentControllerBase *const q;
-        if (/\s*(\w+)\s*\*const\s+(\w+);/ ) {
-           my $classname = $1;
-           my $var = $2;
-           addToVarName($classname, $var);
-        }
 
         if ( /^([:\w]+)::([~\w]+).*/ ) {
 	   my $currentClass = $1;
@@ -564,10 +540,10 @@ foreach my $file (@ARGV) {
                         $receiver = "&" . $receiver;
                      }
                      if ( defined $classWithQPointer) {
-                        $sender = addData($sender);
+                        $sender .= ".data()";
                      }
                      if (defined $receiverWithQPointer) {
-                        $receiver = addData($receiver);
+                        $receiver .= ".data()";
                      }
                      if (defined $lastArgument) {
                         # lastArgument has ')'
