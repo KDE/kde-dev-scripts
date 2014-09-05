@@ -440,7 +440,7 @@ foreach my $file (@ARGV) {
                   if ( defined $varname{$sender} ) {
                     $signal = overload($varname{$sender}, $signalArgument, $signal);
                   } elsif ( defined $varnamewithpointer{$sender} ) {
-                    $signal = "$varnamewithpointer{$sender}::$signal";
+                    $signal = "&" . "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
                   } elsif ( $sender eq "this") {
                     if ( $headerclassname eq "" ) {
