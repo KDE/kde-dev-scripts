@@ -467,6 +467,9 @@ foreach my $file (@ARGV) {
                     $signal = "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
                   } elsif ( $sender eq "this") {
+                    if ( $headerclassname eq "" ) {
+                       $notpossible = 1;
+                    }
                     $signal = "&" . "$headerclassname::$signal";
                   } elsif ( $sender eq "qApp") {
                      $signal = "&QApplication::$signal";
@@ -518,6 +521,9 @@ foreach my $file (@ARGV) {
                       $slot = "$varnamewithpointer{$receiver}::$slot";
                       $receiverWithQPointer = 1;
                     } elsif ( $receiver eq "this") {
+                      if ( $headerclassname eq "" ) {
+                         $notpossible = 1;
+                      }
                       $slot = "$headerclassname::$slot";
                     } else {
                        if ( $receiver =~ /(\w+)\.(.*)/  || $receiver =~ /(\w+)\-\>(.*)/) {
@@ -605,6 +611,11 @@ foreach my $file (@ARGV) {
 
                      # => we don't have receiver => slot and signal will have same parent.
                      my $notpossible;                   
+
+                     if ( $headerclassname eq "" ) {
+                        $notpossible = 1;
+                     }
+
                      if ( defined $varname{$sender} ) {
                         $slot = "$headerclassname::$slot";
                         $signal = overload($varname{$sender}, $signalArgument, $signal);
