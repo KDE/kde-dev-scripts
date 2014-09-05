@@ -17,7 +17,7 @@ my %uiclassname = ();
 my %localuiclass = ();
 my %listOfClassName = ();
 
-sub overload
+sub cast_overloaded_signal
 {
     my ($classname, $argument, $function) = @_;
     my $result;
@@ -438,7 +438,7 @@ foreach my $file (@ARGV) {
                   my $classWithQPointer;
                   my $receiverWithQPointer;
                   if ( defined $varname{$sender} ) {
-                    $signal = overload($varname{$sender}, $signalArgument, $signal);
+                    $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
                   } elsif ( defined $varnamewithpointer{$sender} ) {
                     $signal = "&" . "$varnamewithpointer{$sender}::$signal";
                     $classWithQPointer = 1;
@@ -472,13 +472,13 @@ foreach my $file (@ARGV) {
                               if (defined $activateDebug) {
                                  warn "vartype found $varname{$varui} \n";
                               }
-                              $signal = overload($varname{$varui}, $signalArgument, $signal);
+                              $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
                            } else {
                              $notpossible = 1;
                            }
                        } elsif (defined $varname{$uivariable}) {
                            if ( defined $varname{$varui} ) {
-                              $signal = overload($varname{$varui}, $signalArgument, $signal);
+                              $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
 
                               if (defined $activateDebug) {
                                  warn "vartype found $varname{$varui} \n";
@@ -600,7 +600,7 @@ foreach my $file (@ARGV) {
 
                      if ( defined $varname{$sender} ) {
                         $slot = "$headerclassname::$slot";
-                        $signal = overload($varname{$sender}, $signalArgument, $signal);
+                        $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
                      } else {
                         $slot = "$headerclassname::$slot";
                         if ( $sender eq "this") {
@@ -629,7 +629,7 @@ foreach my $file (@ARGV) {
                     
                                 
                                 if ( defined $varname{$varui} ) {
-                                   $signal = overload($varname{$varui}, $signalArgument, $signal);
+                                   $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
  
                                   warn "vartype found $varname{$varui} \n";
                                 } else {
