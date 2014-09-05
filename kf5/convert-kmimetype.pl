@@ -117,9 +117,29 @@ foreach my $file (@ARGV) {
           }
           s/KMimeType::findByUrl\s*\(/db.mimeTypeForUrl(/;
         }
+        #KMimeType::Ptr mime = KMimeType::findByContent( body );
+        my $regexFindByContent = qr/
+            ^(\s*)                        # (1) Indentation
+            (.*)\s+                          # (2) before
+            (\w+)\s*=\s*                  # (3) variable
+            KMimeType::findByContent\s*\(
+           (.*)$                          # (4) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $before, $variable, $afterreg) = $_ =~ $regexFindByContent) {
+            $varname{$variable} = 1;
+            warn "variable $variable before :$before $_\n";
+            my $addDataBase;
+            if (not defined $qmimedatabaseAdded) {
+               $addDataBase = $indent . "QMimeDatabase db;\n";
+            }
+            if (defined $addDataBase ) {
+               $_ = $addDataBase . $_;
+            } 
+            s/KMimeType::findByContent\s*\(/db.mimeTypeForData(/;
+        }
+
         s/KMimeType::findByPath\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
         s/KMimeType::findByPath\s*\(/db.mimeTypeForFile(/;
-        s/KMimeType::findByContent\s*\(/db.mimeTypeForData(/;
         s/KMimeType::findByNameAndContent\s*\(/db.mimeTypeForNameAndData(/;
         s/KMimeType::findByFileContent\s*\(\s*(\w+)\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchContent)/;
         s/(\w+)->name() == KMimeType::defaultMimeType/$1.isDefault/;
@@ -127,6 +147,12 @@ foreach my $file (@ARGV) {
         s/->name/\.name/ if (/\.mimeTypeFor/);
         s/KMimeType::extractKnownExtension/db.suffixForFileName/;
         s/KMimeType::allMimeTypes/db.allMimeTypes/;
+        if (/(\w+)->name\s*\(\)/) {
+           my $var = $1;
+           if (defined $varname{$var}) {
+              s/(\w+)\->name/$var\.name/;
+           }
+        }
 
         $modified ||= $orig ne $_;
         $_;
