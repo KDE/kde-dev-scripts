@@ -507,10 +507,14 @@ foreach my $file (@ARGV) {
                               if (defined $activateDebug) {
                                  warn "vartype found $varname{$varui} \n";
                               }
+                           } else {
+                             $notpossible = 1;
                            }
                        } else {
                          $notpossible = 1;
                        }
+                    } else {
+                       $notpossible = 1;
                     }
                   }
                   if (not defined $notpossible) {
