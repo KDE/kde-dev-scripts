@@ -21,11 +21,17 @@ foreach my $file (@ARGV) {
     my $needKComponentData;
     my $removeKdemacros;
     my $needQMimeDatabase;
+    my $needKHelpClient;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
        
-        s/\bQ_WS_/Q_OS_/g; 
+        s/\bQ_WS_/Q_OS_/g;
+        if (/KToolInvocation::invokeHelp/) {
+           s/KToolInvocation::invokeHelp/KHelpClient::invokeHelp/;
+           $needKHelpClient = 1;
+        }
+
         s,::self\(\)\-\>writeConfig\(\),::self\(\)\-\>save\(\),;
         s,::self\(\)->readConfig\(\),::self\(\)\-\>load\(\),;
         if (/KGlobalSettings::dndEventDelay/) {
@@ -206,6 +212,10 @@ foreach my $file (@ARGV) {
         if ($needQMimeDatabase) {
            functionUtilkde::addIncludeInFile($file, "QMimeDatabase");
         }
+        if ($needKHelpClient) {
+           functionUtilkde::addIncludeInFile($file, "KHelpClient");
+        }
+
     }
 }
 
