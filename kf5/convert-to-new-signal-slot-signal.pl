@@ -547,6 +547,8 @@ foreach my $file (@ARGV) {
                           } else {
                             $notpossible = 1;
                           }
+                       } else {
+                          $notpossible = 1;
                        }
                     }
                   }
@@ -635,12 +637,12 @@ foreach my $file (@ARGV) {
                         } else {
                           
                             if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
-                            my $uivariable = $1;
-                            my $varui = $2;
-                            if (defined $activateDebug) {
-                               warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
-                            }
-                            if (defined $localuiclass{$uivariable} ) {
+                              my $uivariable = $1;
+                              my $varui = $2;
+                              if (defined $activateDebug) {
+                                 warn "With Argument and no receiver: UI VARIABLE :$uivariable: variable name :$varui\n";
+                              }
+                              if (defined $localuiclass{$uivariable} ) {
                                 if (defined $activateDebug) {
                                    warn "With Argument and no receiver: variable defined  $varui\n";
                                 }
@@ -653,10 +655,12 @@ foreach my $file (@ARGV) {
                                 } else {
                                   $notpossible = 1;
                                 }
+                              } else {
+                                $notpossible = 1;
+                              }
                             } else {
-                              $notpossible = 1;
+                                $notpossible = 1;
                             }
-                          }
                         }
                       }
                       if (not defined $notpossible) {
