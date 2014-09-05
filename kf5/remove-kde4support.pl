@@ -22,10 +22,17 @@ foreach my $file (@ARGV) {
     my $removeKdemacros;
     my $needQMimeDatabase;
     my $needKHelpClient;
+    my $needKlocalizedString;
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
-       
+    
+        if ( /KLocale::global\(\)\-\>removeAcceleratorMarker/ ) {
+           warn "removeAcceleratorMarker found \n";
+           s,KLocale::global\(\)\-\>removeAcceleratorMarker\b,KLocalizedString::removeAcceleratorMarker,;
+           $needKlocalizedString = 1;
+        }
+   
         s/\bQ_WS_/Q_OS_/g;
         if (/KToolInvocation::invokeHelp/) {
            s/KToolInvocation::invokeHelp/KHelpClient::invokeHelp/;
@@ -215,7 +222,9 @@ foreach my $file (@ARGV) {
         if ($needKHelpClient) {
            functionUtilkde::addIncludeInFile($file, "KHelpClient");
         }
-
+        if ( $needKlocalizedString ) {
+           functionUtilkde::addIncludeInFile($file, "KLocalizedString");
+        }
     }
 }
 
