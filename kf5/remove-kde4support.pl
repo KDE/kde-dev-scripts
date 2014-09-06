@@ -27,6 +27,8 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
+        s/\bkasciistricmp\b/qstricmp/;
+
         # convert KCategoryDrawerV2 and KCategoryDrawerV3 to KCategoryDrawer
         s/KCategoryDrawerV3/KCategoryDrawer/g;
         s/KCategoryDrawerV2/KCategoryDrawer/g;
