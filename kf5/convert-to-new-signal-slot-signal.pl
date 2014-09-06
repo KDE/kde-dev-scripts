@@ -390,9 +390,9 @@ foreach my $file (@ARGV) {
         if ( /^([:\w]+)::([~\w]+).*/ ) {
 	   my $currentClass = $1;
 	   my $currentFunctionName = $2;
-	   #warn "WE ARE IN CONSTRUCTOR :\'$currentClass\', function name \'$currentFunctionName\'\n";
+	   #warn "We are in a constructor: currentClass: \'$currentClass\', function name \'$currentFunctionName\'\n";
 	   if (defined $listOfClassName{$currentClass}) {
-	       #warn "IT's A HEADER CLASS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+               #warn "it's an header class\n";
 	       $headerclassname = $currentClass;
 	   }
            
@@ -400,9 +400,9 @@ foreach my $file (@ARGV) {
 	   my $currentClass = $2;
 	   my $currentFunctionName = $3;
 	   my $currentReturnFunction = $1;
-	   #warn "WE ARE IN CLASS :\'$currentClass\', function name \'$currentFunctionName\', return \'$currentReturnFunction\'\n";
+	   #warn "We are in a function : currentClass: \'$currentClass\', function name \'$currentFunctionName\', return type \'$currentReturnFunction\'\n";
 	   if (defined $listOfClassName{$currentClass}) {
-	       #warn "IT's A HEADER CLASS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+               #warn "it's an header class\n";
 	       $headerclassname = $currentClass;
 	   }	   
 	}
