@@ -16,6 +16,7 @@ my $numberOfClassName=0;
 my %uiclassname = ();
 my %localuiclass = ();
 my %listOfClassName = ();
+my %overloadedSlots = ();
 
 sub cast_overloaded_signal
 {
@@ -115,6 +116,7 @@ sub initVariables
     %uiclassname = ();
     %localuiclass = ();
     %listOfClassName = ();
+    %overloadedSlots = ();
 }
 
 # add new variable with its type.
@@ -139,6 +141,18 @@ sub cleanSender($)
     $var =~ s/^\(//;
     $var = functionUtilkde::cleanSpace($var);
     return $var;
+}
+
+# input: class::slot
+# output: notpossible string if this slot has default values
+sub checkOverloadedSlot($)
+{
+    my ($fullslot) = @_;
+    if (my ($class, $slot) = $fullslot =~ m/(.*)::([_\w]+)/) {
+        return defined $overloadedSlots{$class}{$slot} ? "slot with default value(s)" : undef;
+    }
+    warn "Unparsable fullslot: $fullslot\n";
+    return undef;
 }
 
 # extract argument from signal
@@ -269,6 +283,7 @@ foreach my $file (@ARGV) {
 
     # 3) read header and parse it.
     my $header = functionUtilkde::headerName($file);
+    my $inslots = 0;
     warn "Parse header file: $header \n";
     # parse header file
     open(my $HEADERFILE, "<", $header) or warn "We can't open file $header:$!\n";
@@ -297,8 +312,32 @@ foreach my $file (@ARGV) {
               warn "FOUND Class \'$class\' parentClass: \'$parentClass\' $_\n";
            }
            $headerclassname = $class;
+           $overloadedSlots{$headerclassname} = ();
            $listOfClassName{$headerclassname} = 1;
            $numberOfClassName++;
+        }
+
+        # Parse slots, to detect overloads
+        if (/^\s*(?:public|protected|private|signals|Q_SIGNALS)\s*(?:slots|Q_SLOTS)?\s*:/) {
+            if (/slots/i) {
+                $inslots = 1;
+            } else {
+                $inslots = 0;
+            }
+        }
+        if ($inslots) {
+            my $function_regexp = qr/
+               ^(\s*)                                                         # (1) Indentation
+               ([:\w]+)\s*                                                    # (2) Return type
+               ([:\w]+)\s*                                                    # (3) Function name
+               ${functionUtilkde::paren_begin}4${functionUtilkde::paren_end}  # (4) (args)
+               /x; # /x Enables extended whitespace mode
+            if (my ($indent, $return, $function, $args) = $_ =~ $function_regexp) {
+                if ($args =~ /=/) { # slot with default values
+                    $overloadedSlots{$headerclassname}{$function} = 1;
+                }
+            }
+            # TODO also detect real overloads (seenSlots -> if already there, add to overloadedSlots)
         }
 
         parseLine($file);
@@ -427,6 +466,7 @@ foreach my $file (@ARGV) {
                    $localReceiverVariable = 1;
                 }
 
+                my $notpossible;
                 if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
                     $signal = "$varname{$sender}::$signal";
                     $slot = "$varname{$receiver}::$slot";
@@ -436,9 +476,13 @@ foreach my $file (@ARGV) {
                     if ( defined $localReceiverVariable) {
                        $receiver = "&" . $receiver;
                     }
-                    $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                    if (not defined $notpossible) {
+                        $notpossible = checkOverloadedSlot($slot);
+                    }
+                    if (not defined $notpossible) {
+                        $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                    }
                 } else {
-                  my $notpossible;
                   my $classWithQPointer;
                   my $receiverWithQPointer;
                   if ( defined $varname{$sender} ) {
@@ -535,6 +579,9 @@ foreach my $file (@ARGV) {
                           $notpossible = "receiver $receiver is unknown";
                        }
                     }
+                  }
+                  if (not defined $notpossible) {
+                      $notpossible = checkOverloadedSlot($slot);
                   }
                   if (not defined $notpossible) {
                      if ( defined $localSenderVariable) {
@@ -647,6 +694,9 @@ foreach my $file (@ARGV) {
                                 $notpossible = "unparsed sender $sender";
                             }
                         }
+                      }
+                      if (not defined $notpossible) {
+                          $notpossible = checkOverloadedSlot($slot);
                       }
                       if (not defined $notpossible) {
                         if ( defined $privateClass ) {
