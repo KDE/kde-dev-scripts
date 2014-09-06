@@ -133,7 +133,7 @@ sub addToVarName
 }
 
 # Clean sender variable
-sub cleanSender
+sub cleanSender($)
 {
     my ($var) = @_;
     $var =~ s/^\(//;
@@ -276,13 +276,15 @@ foreach my $file (@ARGV) {
         my $orig = $_;
         my $regexp = qr/
            ^(\s*)                        # (1) Indentation
-           (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
-           \*\s*([:\w]+)\s*                 # (3) variable name
-           ;/x; # /x Enables extended whitespace mode
+           ([:\w]+)                      # (2) Classname
+           \*\s*                         #     *
+           ([:\w]+)\s*                   # (3) variable name
+           ;                             #     ;
+           /x; # /x Enables extended whitespace mode
         if (my ($indent, $classname, $var) = $_ =~ $regexp) {
            $classname = functionUtilkde::cleanSpace($classname);
             if (defined $activateDebug) {
-               warn "$header file: found classname \'$classname\' variable: \'$var\' indent \'indent\'\n";
+               warn "$header file: found classname \'$classname\' variable: \'$var\'\n";
            }
            $varname{$var} = ${classname};
         }
