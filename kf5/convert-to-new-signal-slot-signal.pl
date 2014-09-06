@@ -189,7 +189,7 @@ sub parseLine
         }
     }
     # Foo toto;
-    if ( /^\s*([:\w]+)\s+(\w+);/) {
+    if ( /^\s*([:_\w]+)\s+([_\w]+);/) {
         my $classname = $1;
         my $var = $2;
         if ($classname ne "delete" and $classname ne "class" and $classname ne "struct" and $classname ne "return") {
@@ -199,7 +199,7 @@ sub parseLine
     }
 
     # Foo toto =
-    if ( /^\s*([:\w]+)\s+(\w+)\s*=/) {
+    if ( /^\s*([:_\w]+)\s+([_\w]+)\s*=/) {
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 2. classname='$classname'\n";
@@ -207,10 +207,12 @@ sub parseLine
     }
 
     # Foo toto(...)
-    if ( /^\s*([:\w]+)\s+(\w+)\(/) {
+    # Unfortunately this also catches function declarations in header files, they look pretty much the same.
+    # All we can do is filter out those that return void. But int a(5); and int a(int param); are not very different.
+    if ( /^\s*([:_\w]+)\s+([_\w]+)\(/) {
         my $classname = $1;
         my $var = $2;
-        if ($classname ne "else") {
+        if ($classname ne "else" and $classname ne "void") {
             #print STDERR "CASE 3. classname='$classname'\n";
             addToVarName($classname, $var);
         }
@@ -219,7 +221,7 @@ sub parseLine
     # Private* d;
     # Private* const d;
     # AttachmentControllerBase *const q;
-    if (/^\s*(\w+)\s*\*\s*(?:const)?\s+(\w+);/ ) {
+    if (/^\s*([:_\w]+)\s*\*\s*(?:const)?\s*([:_\w]+);/ ) {
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 4. classname='$classname'\n";
@@ -385,7 +387,7 @@ foreach my $file (@ARGV) {
         
 
         my $regexpConnect = qr/
-          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation, optional classname or variable name
           connect
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
           ;/x; # /x Enables extended whitespace mode
