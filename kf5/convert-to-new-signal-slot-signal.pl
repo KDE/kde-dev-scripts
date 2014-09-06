@@ -448,7 +448,7 @@ foreach my $file (@ARGV) {
                     $classWithQPointer = 1;
                   } elsif ( $sender eq "this") {
                     if ( $headerclassname eq "" ) {
-                       $notpossible = 1;
+                       $notpossible = "sender is 'this' but I don't know the current classname";
                     }
                     $signal = "&" . "$headerclassname::$signal";
                   } elsif ( $sender eq "qApp") {
@@ -478,7 +478,7 @@ foreach my $file (@ARGV) {
                               }
                               $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
                            } else {
-                             $notpossible = 1;
+                             $notpossible = "unknown variable $varui";
                            }
                        } elsif (defined $varname{$uivariable}) {
                            if ( defined $varname{$varui} ) {
@@ -488,13 +488,13 @@ foreach my $file (@ARGV) {
                                  warn "vartype found $varname{$varui} \n";
                               }
                            } else {
-                             $notpossible = 1;
+                             $notpossible = "unknown variable $varui";
                            }
                        } else {
-                         $notpossible = 1;
+                         $notpossible = "unknown variable $uivariable";
                        }
                     } else {
-                       $notpossible = 1;
+                       $notpossible = "unparsed sender $sender";
                     }
                   }
                   if (not defined $notpossible) {
@@ -506,7 +506,7 @@ foreach my $file (@ARGV) {
                       $receiverWithQPointer = 1;
                     } elsif ( $receiver eq "this") {
                       if ( $headerclassname eq "" ) {
-                         $notpossible = 1;
+                         $notpossible = "no current classname";
                       }
                       $slot = "$headerclassname::$slot";
                     } else {
@@ -526,13 +526,13 @@ foreach my $file (@ARGV) {
                                  }
                                  $slot = "$varname{$varui}::$slot";
                               } else {
-                                 $notpossible = 1;
+                                 $notpossible = "unknown variable $varui";
                               }
                           } else {
-                            $notpossible = 1;
+                            $notpossible = "no class for $uivariable";
                           }
                        } else {
-                          $notpossible = 1;
+                          $notpossible = "receiver $receiver is unknown";
                        }
                     }
                   }
@@ -556,7 +556,9 @@ foreach my $file (@ARGV) {
                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
                      }
                   } else {
-                     warn "Can not convert \'$_\' \n";
+                      my $line = $_;
+                      chomp $line;
+                      warn "Can not convert \'$line\' because $notpossible\n";
                   }
                 }
                 if (defined $activateDebug) {
@@ -596,10 +598,10 @@ foreach my $file (@ARGV) {
                      }
 
                      # => we don't have receiver => slot and signal will have same parent.
-                     my $notpossible;                   
+                     my $notpossible;
 
                      if ( $headerclassname eq "" ) {
-                        $notpossible = 1;
+                        $notpossible = "no current classname";
                      }
 
                      if ( defined $varname{$sender} ) {
@@ -619,7 +621,7 @@ foreach my $file (@ARGV) {
                           my $class = "&" . $1;
                           $signal = "$class::$signal";
                         } else {
-                          
+
                             if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                               my $uivariable = $1;
                               my $varui = $2;
@@ -630,20 +632,19 @@ foreach my $file (@ARGV) {
                                 if (defined $activateDebug) {
                                    warn "With Argument and no receiver: variable defined  $varui\n";
                                 }
-                    
-                                
+
                                 if ( defined $varname{$varui} ) {
                                    $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
  
                                   warn "vartype found $varname{$varui} \n";
                                 } else {
-                                  $notpossible = 1;
+                                  $notpossible = "unknown variable $varui";
                                 }
                               } else {
-                                $notpossible = 1;
+                                $notpossible = "unknown class for $uivariable";
                               }
                             } else {
-                                $notpossible = 1;
+                                $notpossible = "unparsed sender $sender";
                             }
                         }
                       }
@@ -660,7 +661,9 @@ foreach my $file (@ARGV) {
                           $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
                         }
                       } else {
-                         warn "Can not convert \'$_\' \n";
+                         my $line = $_;
+                         chomp $line;
+                         warn "Can not convert \'$line\' because $notpossible\n";
                       }
                   }
               }
