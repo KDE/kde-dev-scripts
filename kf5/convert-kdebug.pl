@@ -19,8 +19,8 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
-        s/kDebug\s*\(\s*\)/qDebug\(\)/;
-        s/kdDebug\s*\(\s*\)/qDebug\(\)/;
+        s/kDebug\s*\(\s*\)/\/\/qDebug\(\)/;
+        s/kdDebug\s*\(\s*\)/\/\/qDebug\(\)/;
         s/kWarning\s*\(\s*\)/qWarning\(\)/;
         s/kdWarning\s*\(\s*\)/qWarning\(\)/;
         s/kError\s*\(\s*\)/qCritical\(\)/;
