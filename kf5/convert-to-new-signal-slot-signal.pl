@@ -37,7 +37,11 @@ sub cast_overloaded_signal($$$)
     local $_;
     warn "ClassName \'$classname\' Argument \'$argument\' Function \'$function\'\n";
     if ($classname eq "QCompleter") {
-        checkOverloadedSignal($classname, $function, $argument, "activated", "(QString)");
+        checkOverloadedSignal($classname, $function, $argument, "activated", "(const QString &)");
+        checkOverloadedSignal($classname, $function, $argument, "activated", "(const QModelIndex &)");
+        checkOverloadedSignal($classname, $function, $argument, "highlighted", "(const QString &)");
+        checkOverloadedSignal($classname, $function, $argument, "highlighted", "(const QModelIndex &)");
+
     } elsif ($classname eq "KNotification") {
         checkOverloadedSignal($classname, $function, $argument, "activated", "(unsigned int)");
         checkOverloadedSignal($classname, $function, $argument, "activated", "(uint)");
