@@ -105,7 +105,7 @@ sub initVariables
 }
 
 # add new variable with its type.
-sub addToVarName
+sub addToVarName($$)
 {
     my ($classname, $var) = @_;
     if (not $classname eq ":" and not $classname eq "return") { 
@@ -141,7 +141,7 @@ sub checkOverloadedSlot($)
 }
 
 # extract argument from signal
-sub extraArgumentFunctionName
+sub extraArgumentFunctionName($)
 {
     my ($line) = @_;
     my $argument;
@@ -158,7 +158,7 @@ sub extraArgumentFunctionName
 }
 
 # extract function name
-sub extractFunctionName
+sub extractFunctionName($)
 {
     my ($line) = @_;
     my $regexpSignal = qr/
@@ -173,7 +173,7 @@ sub extractFunctionName
 }
 
 # Parse the current line for variable declarations
-sub parseLine
+sub parseLine($)
 {
     my ($file) = @_;
     if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
@@ -547,21 +547,21 @@ foreach my $file (@ARGV) {
                           }
                           if (defined $localuiclass{$uivariable} ) {
                               if (defined $activateDebug) {
-                                 warn "variable defined  $varui\n";
+                                  warn "variable defined  $varui\n";
                               }
                               if ( defined $varname{$varui} ) {
-                                 if (defined $activateDebug) {
-                                    warn "vartype found $varname{$varui} \n";
+                                  if (defined $activateDebug) {
+                                      warn "vartype found $varname{$varui} \n";
                                  }
                                  $slot = "$varname{$varui}::$slot";
                               } else {
                                  $notpossible = "unknown variable $varui";
                               }
                           } else {
-                            $notpossible = "no class for $uivariable";
+                             $notpossible = "no class for $uivariable";
                           }
                        } else {
-                          $notpossible = "receiver $receiver is unknown";
+                           $notpossible = "receiver $receiver is unknown";
                        }
                     }
                   }
@@ -570,31 +570,31 @@ foreach my $file (@ARGV) {
                   }
                   if (not defined $notpossible) {
                      if ( defined $localSenderVariable) {
-                        $sender = "&" . $sender;
+                         $sender = "&" . $sender;
                      }
                      if ( defined $localReceiverVariable) {
-                        $receiver = "&" . $receiver;
+                         $receiver = "&" . $receiver;
                      }
                      if ( defined $classWithQPointer) {
-                        $sender .= ".data()";
+                         $sender .= ".data()";
                      }
                      if (defined $receiverWithQPointer) {
-                        $receiver .= ".data()";
+                         $receiver .= ".data()";
                      }
                      if (defined $lastArgument) {
-                        # lastArgument has ')'
-                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
+                         # lastArgument has ')'
+                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
                      } else {
-                        $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
                      }
                   } else {
-                      my $line = $_;
-                      chomp $line;
-                      warn "Can not convert \'$line\' because $notpossible\n";
+                       my $line = $_;
+                       chomp $line;
+                       warn "Can not convert \'$line\' because $notpossible\n";
                   }
                 }
                 if (defined $activateDebug) {
-                   warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
+                    warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                 }
               }
            } else {
