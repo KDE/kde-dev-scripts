@@ -36,11 +36,14 @@ sub rewriteConnectFunction($$$$$$)
 sub checkOverloadedSignal($$$$$)
 {
     my ($classname, $function, $arguments, $testSignal, $testArguments) = @_;
-    my $initialArguments = $arguments; # hopefully includes the const-ref for a QString...
+    my $initialArguments = $arguments; # hopefully includes the const-ref for a QString..
+    my $initialTestArguments = $testArguments;
     $testArguments =~ s/const (.*)\s*&/$1/;
     $arguments =~ s/const (.*)\s*&/$1/;
+    # Be sure to remove space. I don't understand why const (.*)\s*&/$1/; keeps space in $testArguments
+    $testArguments =~ s, ,,g;
     if (($arguments eq $testArguments) and ($function eq $testSignal)) {
-        $_ = "static_cast<void ($classname" . "::*)$initialArguments>(&" . "$classname" . "::$function)";
+        $_ = "static_cast<void ($classname" . "::*)$initialTestArguments>(&" . "$classname" . "::$function)";
         print STDERR $_ . "\n";
     }
 }
