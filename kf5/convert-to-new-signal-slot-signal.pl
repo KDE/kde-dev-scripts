@@ -289,6 +289,7 @@ foreach my $file (@ARGV) {
     warn "Parse header file: $header \n";
     # parse header file
     open(my $HEADERFILE, "<", $header) or warn "We can't open file $header:$!\n";
+    my $currentLine = 1;
     my @lheader = map {
         my $orig = $_;
         my $regexp = qr/
@@ -602,7 +603,7 @@ foreach my $file (@ARGV) {
                   } else {
                        my $line = $_;
                        chomp $line;
-                       warn "Can not convert \'$line\' because $notpossible\n";
+                       warn "$file : line $currentLine : Can not convert \'$line\' because $notpossible\n";
                   }
                 }
                 if (defined $activateDebug) {
@@ -707,7 +708,7 @@ foreach my $file (@ARGV) {
                       } else {
                          my $line = $_;
                          chomp $line;
-                         warn "Can not convert \'$line\' because $notpossible\n";
+                         warn "$file : line $currentLine : Can not convert \'$line\' because $notpossible\n";
                       }
                   }
               }
@@ -716,6 +717,7 @@ foreach my $file (@ARGV) {
 
         $modified ||= $orig ne $_;
         $_;
+        $currentLine++;
     } <$FILE>;
 
     if ($modified) {
