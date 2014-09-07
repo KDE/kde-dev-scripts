@@ -714,10 +714,10 @@ foreach my $file (@ARGV) {
               }
            }
         }
+        $currentLine++;
 
         $modified ||= $orig ne $_;
         $_;
-        $currentLine++;
     } <$FILE>;
 
     if ($modified) {
