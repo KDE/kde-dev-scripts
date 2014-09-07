@@ -18,6 +18,20 @@ my %localuiclass = ();
 my %listOfClassName = ();
 my %overloadedSlots = ();
 
+sub rewriteConnectFunction($$$$$$)
+{
+    my ($indent, $sender, $signal, $receiver, $slot, $lastArgument) = @_;
+    my $myNewLine;
+    if (defined $lastArgument) {
+       # lastArgument has ')'
+       warn "last argument :$lastArgument\n";
+       $myNewLine = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
+    } else {
+       $myNewLine = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
+    }
+}
+ 
+
 # sets $_ if classname+function+arguments matches an overloaded signal (testSignal+testArguments)
 sub checkOverloadedSignal($$$$$)
 {
@@ -465,7 +479,7 @@ foreach my $file (@ARGV) {
                         $notpossible = checkOverloadedSlot($slot);
                     }
                     if (not defined $notpossible) {
-                        $_ = $indent . "connect($sender, &$signal, $receiver, &$slot);\n";
+                        $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
                     }
                 } else {
                   my $classWithQPointer;
@@ -581,12 +595,7 @@ foreach my $file (@ARGV) {
                      if (defined $receiverWithQPointer) {
                          $receiver .= ".data()";
                      }
-                     if (defined $lastArgument) {
-                         # lastArgument has ')'
-                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot, $lastArgument;\n";
-                     } else {
-                         $_ = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
-                     }
+                     $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
                   } else {
                        my $line = $_;
                        chomp $line;
@@ -690,11 +699,7 @@ foreach my $file (@ARGV) {
                         if ( defined $localVariable) {
                             $sender = "&" . $sender;
                         }
-                        if (defined $lastArgument) {
-                          $_ = $indent . "connect($sender, $signal, this, &$slot, $lastArgument;\n";
-                        } else {
-                          $_ = $indent . "connect($sender, $signal, this, &$slot);\n";
-                        }
+                        $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
                       } else {
                          my $line = $_;
                          chomp $line;
