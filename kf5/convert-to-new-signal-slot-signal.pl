@@ -699,6 +699,7 @@ foreach my $file (@ARGV) {
                         if ( defined $localVariable) {
                             $sender = "&" . $sender;
                         }
+                        my $receiver = "this";
                         $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
                       } else {
                          my $line = $_;
