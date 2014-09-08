@@ -100,6 +100,9 @@ sub cast_overloaded_signal($$$)
     } elsif ($classname eq "Akonadi::ChangeRecorder") {
         checkOverloadedSignal($classname, $function, $argument, "collectionChanged", "(const Akonadi::Collection &)");
         checkOverloadedSignal($classname, $function, $argument, "collectionChanged", "(const Akonadi::Collection &, const QSet<QByteArray &)");
+    } elsif ($classname eq "KUrlRequester" ) {
+        checkOverloadedSignal($classname, $function, $argument, "returnPressed", "(const QString &)");
+        checkOverloadedSignal($classname, $function, $argument, "returnPressed", "()");
     }
 
     if ( defined $_ ) {
