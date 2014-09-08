@@ -453,6 +453,47 @@ foreach my $file (@ARGV) {
            }
         }
 
+
+        my $regexSetButtonWhatsThis = qr/
+          ^(\s*)           # (1) Indentation
+          setButtonWhatsThis
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $args) = $_ =~ $regexSetButtonWhatsThis) {
+           warn "found setButtonWhatsThis $args\n";
+           my $extract_args_regexp = qr/
+                                 ^\(([^,]*)           # button
+                                 ,\s*([^,]*)        # i18n
+                                 (.*)$              # after
+                                 /x;
+           if ( my ($button, $i18n) = $args =~  $extract_args_regexp ) {
+              $button =~ s, ,,g;
+              $i18n =~ s,\),,g;
+              $button =~ s,^KDialog::,,;
+
+              warn "Found setButtonWhatsThis: \'$button\', i18n \'$i18n\'\n";
+              if (defined $dialogButtonType{$button}) {
+                 if ( $button eq "Ok" || $button eq "KDialog::Ok") {
+                    $_ = $left . "okButton->setWhatsThis($i18n));\n";
+                 } else {
+                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setWhatsThis($i18n));\n";
+                }
+              } else {
+                 if ($button eq "User1") {
+                    $_ = $left . "user1Button->setWhatsThis($i18n));\n";
+                 } elsif ($button eq "User2") {
+                    $_ = $left . "user2Button->setWhatsThis($i18n));\n";
+                 } elsif ($button eq "User3") {
+                    $_ = $left . "user3Button->setWhatsThis($i18n));\n";
+                 } else {
+                     warn "setButtonWhatsThis: unknown or not supported \'$button\'\n";
+                 }
+              }
+           }
+        }
+
+
+
         my $regexSetButtonToolTip = qr/
           ^(\s*)           # (1) Indentation
           setButtonToolTip
