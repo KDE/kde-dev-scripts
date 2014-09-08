@@ -432,7 +432,7 @@ foreach my $file (@ARGV) {
 
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation, optional classname or variable name
-          connect
+          connect\s*
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
           ;/x; # /x Enables extended whitespace mode
         if (my ($indent, $argument) = $_ =~ $regexpConnect ) {
