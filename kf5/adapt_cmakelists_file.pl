@@ -100,12 +100,26 @@ my @l = map {
      $_ =~ s/\${QT_QTXML_LIBRARY}/Qt5::Xml/;
      $modified = 1;
   }
+  if (/QT_QTXML_LIBRARIES/) {
+     $_ =~ s/\${QT_QTXML_LIBRARIES}/Qt5::Xml/;
+     $modified = 1;
+  }
+
   if (/QT_QTCORE_LIBRARY/) {
      $_ =~ s/\${QT_QTCORE_LIBRARY}/Qt5::Core/;
      $modified = 1;
   }
+  if (/QT_QTCORE_LIBRARIES/) {
+     $_ =~ s/\${QT_QTCORE_LIBRARIES}/Qt5::Core/;
+     $modified = 1;
+  }
+
   if (/QT_QTGUI_LIBRARY/) {
      $_ =~ s/\${QT_QTGUI_LIBRARY}/Qt5::Gui/;
+     $modified = 1;
+  }
+  if (/QT_QTGUI_LIBRARIES/) {
+     $_ =~ s/\${QT_QTGUI_LIBRARIES}/Qt5::Gui/;
      $modified = 1;
   }
   if (/QT_QTNETWORK_LIBRARY/) {
@@ -237,6 +251,11 @@ my @l = map {
      $_ =~ s/\${QT_QTDECLARATIVE_LIBRARY}/Qt5::Declarative/;
      $modified = 1;
   }
+  if (/QT_QTDECLARATIVE_LIBRARIES/) {
+     $_ =~ s/\${QT_QTDECLARATIVE_LIBRARIES}/Qt5::Declarative/;
+     $modified = 1;
+  }
+
   if (/KDE4_KPARTS_LIBS/) {
      $_ =~ s/\${KDE4_KPARTS_LIBS}/KF5::Parts/;
      $modified = 1;
