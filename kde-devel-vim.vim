@@ -136,7 +136,7 @@ function! SetCodingStyle()
         set sw=2
         set sts=2
         set et
-        set tw=100
+        "set tw=100
     elseif pathfn =~ 'xine-lib'
         call SmartParensOff()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
@@ -145,7 +145,7 @@ function! SetCodingStyle()
         set sts=2
         set ts=8
         set noet
-        set tw=100
+        "set tw=100
     elseif pathfn =~ 'kdemultimedia\/juk'
         call SmartParensOff()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
@@ -153,7 +153,7 @@ function! SetCodingStyle()
         set sw=4
         set sts=4
         set et
-        set tw=100
+        "set tw=100
     elseif pathfn =~ 'kdenetwork\/kopete'
         call SmartParensOff()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\|if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
@@ -161,8 +161,8 @@ function! SetCodingStyle()
         set sw=4
         set sts=4
         set noet
-        set tw=100
-    else "if pathfn =~ '\(kdelibs\|qt-copy\)'
+        "set tw=100
+    else   " kdelibs/kf5/qt coding style
         call SmartParensOff()
         inoremap ( <C-R>=SpaceBetweenKeywordAndParens()<CR>
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
@@ -170,7 +170,7 @@ function! SetCodingStyle()
         set sw=4
         set sts=4
         set et
-        set tw=100
+        "set tw=100
     endif
     if ( !exists("g:noautobrace") )
         call EnableSmartLineBreak()
@@ -497,7 +497,7 @@ function! SwitchHeaderImpl()
         execute( "set sw=4" )
         execute( "set sts=4" )
         execute( "set et" )
-        execute( "set tw=100" )
+        "execute( "set tw=100" )
     elseif fn =~ impl
         call AskToSave()
         let file = substitute( fn, impl, '.h', '' )
