@@ -279,6 +279,17 @@ foreach my $file (@ARGV) {
              $mainClassFound = 1;
            }
         }
+        # Special case buttongroup
+        if ( /\<buttongroup name=\"(.*)\"\/\>/ ) {
+           my $className = "QButtonGroup";
+           my $variableName = $1;
+           $varname{$variableName} = ${className};
+
+           if (defined $activateDebug) {
+              warn "Found QButtonGroup in file \'$uifile\': name \'$variableName\'\n";
+           }
+        }
+
         $_;
       } <$FILE>
     }
