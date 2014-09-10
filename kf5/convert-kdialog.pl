@@ -73,7 +73,7 @@ foreach my $file (@ARGV) {
            $varname{$var} = $var;
         }
         my $widget_regexp = qr/
-           ^(\s*(?:[\-\>:\w]+)?)            # (1) Indentation
+           ^(\s*)            # (1) Indentation
            (.*?)             # (2) Possibly "Classname *" (the ? means non-greedy)
            (\w+)             # (3) variable name
            \s*=\s*           #     assignment
