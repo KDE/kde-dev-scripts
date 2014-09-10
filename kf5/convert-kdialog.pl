@@ -35,6 +35,14 @@ my %dialogButtonType = (
 
 );
 
+sub removePrivateVariable($)
+{
+   my ($localLeft) =@_;
+   if ($localLeft =~ /\-\>/) {
+      $localLeft =~ s/(\w+)\-\>//;
+   }
+   return $localLeft;
+}
 
 foreach my $file (@ARGV) {
 
@@ -58,16 +66,13 @@ foreach my $file (@ARGV) {
           \);/x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexp) {
            warn "setMainWidget found :$left $var\n";
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if (defined $hasMainWidget) {
              $_ = $localLeft . "mainLayout->addWidget($var);\n";
            } else {
              $_ = $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
              $_ .= $localLeft . "mainLayout->addWidget($var);\n";
            }
            $varname{$var} = $var;
@@ -107,16 +112,14 @@ foreach my $file (@ARGV) {
          \(\s*mainWidget\(\)
          \s*\);/x; # /x Enables extended whitespace mode
         if ( my ($left, $widget) = $_ =~ $regexpMainWidget) {
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
+
 
            if (not defined $hasMainWidget) {
 
              $_ = $localLeft . "QWidget *mainWidget = new QWidget(this);\n";
              $_ .= $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
              $_ .= $localLeft . "mainLayout->addWidget(mainWidget);\n";
              $_ .= $localLeft . "$widget(mainWidget);\n";
            } else {
@@ -187,16 +190,13 @@ foreach my $file (@ARGV) {
               $hasUser3Button = 1;
            }
            my $resultList = join('|', @myNewDialogButton);
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            $_ = $localLeft . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
            if (not defined $hasMainWidget) {
              $_ .= $localLeft . "QWidget *mainWidget = new QWidget(this);\n";
              $_ .= $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $left . "setLayout(mainLayout);\n";
              $_ .= $localLeft . "mainLayout->addWidget(mainWidget);\n";
              #$_ .= $left . "$widget(mainWidget);\n";
              $hasMainWidget = 1;
@@ -272,10 +272,7 @@ foreach my $file (@ARGV) {
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)         # button
@@ -317,10 +314,7 @@ foreach my $file (@ARGV) {
         if ( my ($left, $defaultButtonType) = $_ =~ $regexDefaultButton ) {
            warn "Found default button type : $defaultButtonType\n";
            $defaultButtonType =~ s, ,,g;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if (defined $dialogButtonType{$defaultButtonType}) {
               if ( $defaultButtonType eq "Ok") {
@@ -348,10 +342,7 @@ foreach my $file (@ARGV) {
                                \s*\);/x; # /x Enables extended whitespace mode
         if ( my ($left, $defaultButtonType) = $_ =~ $regexButtonFocus ) {
            $defaultButtonType =~ s, ,,g;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            warn "Found default button focus : $defaultButtonType\n";
            if (defined $dialogButtonType{$defaultButtonType}) {
@@ -381,10 +372,7 @@ foreach my $file (@ARGV) {
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonText) {
            warn "found setButtonText $args\n";
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
@@ -423,10 +411,7 @@ foreach my $file (@ARGV) {
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonMenu) {
            warn "found setButtonMenu $args\n";
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
@@ -464,10 +449,7 @@ foreach my $file (@ARGV) {
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonIcon) {
            warn "found setButtonIcon $args\n";
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
@@ -512,10 +494,7 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # i18n
                                  (.*)$              # after
                                  /x;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if ( my ($button, $i18n) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
@@ -557,11 +536,7 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # i18n
                                  (.*)$              # after
                                  /x;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
-
+           my $localLeft = removePrivateVariable($left);
            if ( my ($button, $i18n) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
               $i18n =~ s,\),,g;
@@ -601,10 +576,7 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
@@ -647,10 +619,7 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
@@ -706,10 +675,7 @@ foreach my $file (@ARGV) {
            $button =~ s/\)//;
            $button =~ s, ,,g;
            $button =~ s,^KDialog::,,;
-           my $localLeft = $left;
-           if ($localLeft =~ /\-\>/) {
-               $localLeft =~ s/(\w+)\-\>//;
-           }
+           my $localLeft = removePrivateVariable($left);
 
            if (defined $dialogButtonType{$button}) {
               if ( $button eq "Ok" || $button eq "KDialog::Ok") {
