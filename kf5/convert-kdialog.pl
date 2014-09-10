@@ -52,23 +52,28 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
         my $regexp = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)
           setMainWidget\s*\(
           (\w+)            # (2) variable name
           \);/x; # /x Enables extended whitespace mode
         if (my ($left, $var) = $_ =~ $regexp) {
            warn "setMainWidget found :$left $var\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if (defined $hasMainWidget) {
-             $_ = $left . "mainLayout->addWidget($var);\n";
+             $_ = $localLeft . "mainLayout->addWidget($var);\n";
            } else {
-             $_ = $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $left . "setLayout(mainLayout);\n";
-             $_ .= $left . "mainLayout->addWidget($var);\n";
+             $_ = $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $localLeft . "mainLayout->addWidget($var);\n";
            }
            $varname{$var} = $var;
         }
         my $widget_regexp = qr/
-           ^(\s*)            # (1) Indentation
+           ^(\s*(?:[\-\>:\w]+)?)            # (1) Indentation
            (.*?)             # (2) Possibly "Classname *" (the ? means non-greedy)
            (\w+)             # (3) variable name
            \s*=\s*           #     assignment
@@ -97,19 +102,25 @@ foreach my $file (@ARGV) {
            }
         }
         my $regexpMainWidget =qr/
-         ^(\s*)           # (1) Indentation
+         ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
          (.*?)            # (2) (the ? means non-greedy)
          \(\s*mainWidget\(\)
          \s*\);/x; # /x Enables extended whitespace mode
         if ( my ($left, $widget) = $_ =~ $regexpMainWidget) {
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if (not defined $hasMainWidget) {
-             $_ = $left . "QWidget *mainWidget = new QWidget(this);\n";
-             $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $left . "setLayout(mainLayout);\n";
-             $_ .= $left . "mainLayout->addWidget(mainWidget);\n";
-             $_ .= $left . "$widget(mainWidget);\n";
+
+             $_ = $localLeft . "QWidget *mainWidget = new QWidget(this);\n";
+             $_ .= $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $localLeft . "mainLayout->addWidget(mainWidget);\n";
+             $_ .= $localLeft . "$widget(mainWidget);\n";
            } else {
-             $_ = $left . "$widget(mainWidget);\n";
+             $_ = $localLeft . "$widget(mainWidget);\n";
            }
            warn "found mainWidget \n";
            $needQBoxLayout = 1;
@@ -117,7 +128,7 @@ foreach my $file (@ARGV) {
         }
 
         my $regexpSetButtons = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtons\s*\(
           (.*?)            # (2) variable name
           \);/x; # /x Enables extended whitespace mode
@@ -176,13 +187,17 @@ foreach my $file (@ARGV) {
               $hasUser3Button = 1;
            }
            my $resultList = join('|', @myNewDialogButton);
-           warn " $resultList \n";
-           $_ = $left . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
+           $_ = $localLeft . "QDialogButtonBox *buttonBox = new QDialogButtonBox($resultList);\n";
            if (not defined $hasMainWidget) {
-             $_ .= $left . "QWidget *mainWidget = new QWidget(this);\n";
-             $_ .= $left . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
-             $_ .= $left . "setLayout(mainLayout);\n";
-             $_ .= $left . "mainLayout->addWidget(mainWidget);\n";
+             $_ .= $localLeft . "QWidget *mainWidget = new QWidget(this);\n";
+             $_ .= $localLeft . "QVBoxLayout *mainLayout = new QVBoxLayout;\n";
+             $_ .= $localLeft . "setLayout(mainLayout);\n";
+             $_ .= $localLeft . "mainLayout->addWidget(mainWidget);\n";
              #$_ .= $left . "$widget(mainWidget);\n";
              $hasMainWidget = 1;
              $needQBoxLayout = 1;
@@ -190,28 +205,28 @@ foreach my $file (@ARGV) {
            }
 
            if (defined $hasOkButton) {
-              $_ .= $left . "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
-              $_ .= $left . "okButton->setDefault(true);\n";
-              $_ .= $left . "okButton->setShortcut(Qt::CTRL | Qt::Key_Return);\n";
+              $_ .= $localLeft . "QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);\n";
+              $_ .= $localLeft . "okButton->setDefault(true);\n";
+              $_ .= $localLeft . "okButton->setShortcut(Qt::CTRL | Qt::Key_Return);\n";
            }
 
            if (defined $hasUser1Button) {
-              $_ .= $left . "QPushButton *user1Button = new QPushButton;\n";
-              $_ .= $left . "buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);\n";
+              $_ .= $localLeft . "QPushButton *user1Button = new QPushButton;\n";
+              $_ .= $localLeft . "buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);\n";
            }
            if (defined $hasUser2Button) {
-              $_ .= $left . "QPushButton *user2Button = new QPushButton;\n";
-              $_ .= $left . "buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);\n";
+              $_ .= $localLeft . "QPushButton *user2Button = new QPushButton;\n";
+              $_ .= $localLeft . "buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);\n";
            }
            if (defined $hasUser3Button) {
-              $_ .= $left . "QPushButton *user3Button = new QPushButton;\n";
-              $_ .= $left . "buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);\n";
+              $_ .= $localLeft . "QPushButton *user3Button = new QPushButton;\n";
+              $_ .= $localLeft . "buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);\n";
            }
 
            $_ .= $left . "connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));\n";
            $_ .= $left . "connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));\n";
-           $_ .= $left . "//PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.\n";
-           $_ .= $left . "mainLayout->addWidget(buttonBox);\n";
+           $_ .= $localLeft . "//PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.\n";
+           $_ .= $localLeft . "mainLayout->addWidget(buttonBox);\n";
 
            warn "WARNING we can't move this code at the end of constructor. Need to move it !!!!\n";
         }
@@ -251,17 +266,23 @@ foreach my $file (@ARGV) {
         }
 
         my $regexEnableButton = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           enableButton
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexEnableButton) {
            warn "found enableButton $args\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)         # button
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
+
            if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
               $defaultButtonType =~ s,^KDialog::,,;
@@ -269,17 +290,17 @@ foreach my $file (@ARGV) {
               $state =~ s,\),,g;
              if (defined $dialogButtonType{$defaultButtonType}) {
                 if ( $defaultButtonType eq "Ok") {
-                   $_ = $left . "okButton->setEnabled($state);\n";
+                   $_ = $localLeft . "okButton->setEnabled($state);\n";
                 } else {
-                   $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setEnabled($state);\n";
+                   $_ = $localLeft . "buttonBox->button($dialogButtonType{$defaultButtonType})->setEnabled($state);\n";
                 }
              } else {
                 if ($defaultButtonType eq "User1") {
-                   $_ = $left . "user1Button\->setEnabled($state);\n";
+                   $_ = $localLeft . "user1Button\->setEnabled($state);\n";
                 } elsif ($defaultButtonType eq "User2") {
-                   $_ = $left . "user2Button\->setEnabled($state);\n";
+                   $_ = $localLeft . "user2Button\->setEnabled($state);\n";
                 } elsif ($defaultButtonType eq "User3") {
-                   $_ = $left . "user3Button\->setEnabled($state);\n";
+                   $_ = $localLeft . "user3Button\->setEnabled($state);\n";
                 } else {
                    warn "Enable button: unknown or not supported \'$defaultButtonType\'\n";
                 }
@@ -296,19 +317,24 @@ foreach my $file (@ARGV) {
         if ( my ($left, $defaultButtonType) = $_ =~ $regexDefaultButton ) {
            warn "Found default button type : $defaultButtonType\n";
            $defaultButtonType =~ s, ,,g;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if (defined $dialogButtonType{$defaultButtonType}) {
               if ( $defaultButtonType eq "Ok") {
-                 $_ = $left . "okButton->setDefault(true);\n";
+                 $_ = $localLeft . "okButton->setDefault(true);\n";
               } else {
-                 $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setDefault(true);\n";
+                 $_ = $localLeft . "buttonBox->button($dialogButtonType{$defaultButtonType})->setDefault(true);\n";
               }
            } else {
               if ($defaultButtonType eq "User1") {
-                 $_ = $left . "user1Button\->setDefault(true);\n";
+                 $_ = $localLeft . "user1Button\->setDefault(true);\n";
               } elsif ($defaultButtonType eq "User2") {
-                 $_ = $left . "user2Button\->setDefault(true);\n";
+                 $_ = $localLeft . "user2Button\->setDefault(true);\n";
               } elsif ($defaultButtonType eq "User3") {
-                 $_ = $left . "user3Button\->setDefault(true);\n";
+                 $_ = $localLeft . "user3Button\->setDefault(true);\n";
               } else {
                 warn "Default button type unknown or not supported \'$defaultButtonType\'\n";
               }
@@ -316,26 +342,31 @@ foreach my $file (@ARGV) {
         }
 
         my $regexButtonFocus = qr/
-                               ^(\s*)           # (1) Indentation
+                               ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
                                setButtonFocus\s*\(
                                (.*)
                                \s*\);/x; # /x Enables extended whitespace mode
         if ( my ($left, $defaultButtonType) = $_ =~ $regexButtonFocus ) {
            $defaultButtonType =~ s, ,,g;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            warn "Found default button focus : $defaultButtonType\n";
            if (defined $dialogButtonType{$defaultButtonType}) {
               if ( $defaultButtonType eq "Ok") {
-                 $_ = $left . "okButton->setFocus();\n";
+                 $_ = $localLeft . "okButton->setFocus();\n";
               } else {
-                 $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setFocus();\n";
+                 $_ = $localLeft . "buttonBox->button($dialogButtonType{$defaultButtonType})->setFocus();\n";
               }
            } else {
               if ($defaultButtonType eq "User1") {
-                 $_ = $left . "user1Button\->setFocus();\n";
+                 $_ = $localLeft . "user1Button\->setFocus();\n";
               } elsif ($defaultButtonType eq "User2") {
-                 $_ = $left . "user2Button\->setFocus();\n";
+                 $_ = $localLeft . "user2Button\->setFocus();\n";
               } elsif ($defaultButtonType eq "User3") {
-                 $_ = $left . "user3Button\->setFocus();\n";
+                 $_ = $localLeft . "user3Button\->setFocus();\n";
               } else {
                 warn "Default button focus: unknown or not supported \'$defaultButtonType\'\n";
               }
@@ -344,12 +375,17 @@ foreach my $file (@ARGV) {
 
 
         my $regexSetButtonText = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonText
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonText) {
            warn "found setButtonText $args\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
                                  ,\s*([^,]*)        # state
@@ -362,17 +398,17 @@ foreach my $file (@ARGV) {
               $text =~ s,\),,g;
               if (defined $dialogButtonType{$defaultButtonType}) {
                  if ( $defaultButtonType eq "Ok") {
-                    $_ = $left . "okButton->setText($text));\n";
+                    $_ = $localLeft . "okButton->setText($text));\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setText($text));\n";
+                    $_ = $localLeft . "buttonBox->button($dialogButtonType{$defaultButtonType})->setText($text));\n";
                 }
               } else {
                  if ($defaultButtonType eq "User1") {
-                    $_ = $left . "user1Button\->setText($text));\n";
+                    $_ = $localLeft . "user1Button\->setText($text));\n";
                  } elsif ($defaultButtonType eq "User2") {
-                    $_ = $left . "user2Button\->setText($text));\n";
+                    $_ = $localLeft . "user2Button\->setText($text));\n";
                  } elsif ($defaultButtonType eq "User3") {
-                    $_ = $left . "user3Button\->setText($text));\n";
+                    $_ = $localLeft . "user3Button\->setText($text));\n";
                  } else {
                      warn "Set button Text: unknown or not supported \'$defaultButtonType\'\n";
                  }
@@ -381,12 +417,17 @@ foreach my $file (@ARGV) {
         }
 
         my $regexSetButtonMenu = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonMenu
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonMenu) {
            warn "found setButtonMenu $args\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
                                  ,\s*([^,]*)        # state
@@ -399,17 +440,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonMenu: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "okButton->setMenu($menuName);\n";
+                    $_ = $localLeft . "okButton->setMenu($menuName);\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setMenu($menuName);\n";
+                    $_ = $localLeft . "buttonBox->button($dialogButtonType{$button})->setMenu($menuName);\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "user1Button\->setMenu($menuName);\n";
+                    $_ = $localLeft . "user1Button\->setMenu($menuName);\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "user2Button\->setMenu($menuName);\n";
+                    $_ = $localLeft . "user2Button\->setMenu($menuName);\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "user3Button\->setMenu($menuName);\n";
+                    $_ = $localLeft . "user3Button\->setMenu($menuName);\n";
                  } else {
                      warn "Set Button Menu: unknown or not supported \'$button\'\n";
                  }
@@ -417,12 +458,17 @@ foreach my $file (@ARGV) {
            }
         }
         my $regexSetButtonIcon = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonIcon
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
         if (my ($left, $args) = $_ =~ $regexSetButtonIcon) {
            warn "found setButtonIcon $args\n";
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
                                  ,\s*([^,]*)        # state
@@ -435,17 +481,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonIcon: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "okButton->setIcon($menuName);\n";
+                    $_ = $localLeft . "okButton->setIcon($menuName);\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setIcon($menuName);\n";
+                    $_ = $localLeft . "buttonBox->button($dialogButtonType{$button})->setIcon($menuName);\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "user1Button\->setIcon($menuName);\n";
+                    $_ = $localLeft . "user1Button\->setIcon($menuName);\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "user2Button\->setIcon($menuName);\n";
+                    $_ = $localLeft . "user2Button\->setIcon($menuName);\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "user3Button\->setIcon($menuName);\n";
+                    $_ = $localLeft . "user3Button\->setIcon($menuName);\n";
                  } else {
                      warn "Set Button Icon: unknown or not supported \'$button\'\n";
                  }
@@ -455,7 +501,7 @@ foreach my $file (@ARGV) {
 
 
         my $regexSetButtonWhatsThis = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonWhatsThis
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
@@ -466,6 +512,11 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # i18n
                                  (.*)$              # after
                                  /x;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if ( my ($button, $i18n) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
               $i18n =~ s,\),,g;
@@ -474,17 +525,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonWhatsThis: \'$button\', i18n \'$i18n\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "okButton->setWhatsThis($i18n));\n";
+                    $_ = $localLeft . "okButton->setWhatsThis($i18n));\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setWhatsThis($i18n));\n";
+                    $_ = $localLeft . "buttonBox->button($dialogButtonType{$button})->setWhatsThis($i18n));\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "user1Button->setWhatsThis($i18n));\n";
+                    $_ = $localLeft . "user1Button->setWhatsThis($i18n));\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "user2Button->setWhatsThis($i18n));\n";
+                    $_ = $localLeft . "user2Button->setWhatsThis($i18n));\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "user3Button->setWhatsThis($i18n));\n";
+                    $_ = $localLeft . "user3Button->setWhatsThis($i18n));\n";
                  } else {
                      warn "setButtonWhatsThis: unknown or not supported \'$button\'\n";
                  }
@@ -495,7 +546,7 @@ foreach my $file (@ARGV) {
 
 
         my $regexSetButtonToolTip = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonToolTip
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
@@ -506,6 +557,11 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # i18n
                                  (.*)$              # after
                                  /x;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if ( my ($button, $i18n) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
               $i18n =~ s,\),,g;
@@ -514,17 +570,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonToolTip: \'$button\', i18n \'$i18n\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "okButton->setToolTip($i18n));\n";
+                    $_ = $localLeft . "okButton->setToolTip($i18n));\n";
                  } else {
-                    $_ = $left . "buttonBox->button($dialogButtonType{$button})->setToolTip($i18n));\n";
+                    $_ = $localLeft . "buttonBox->button($dialogButtonType{$button})->setToolTip($i18n));\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "user1Button->setToolTip($i18n));\n";
+                    $_ = $localLeft . "user1Button->setToolTip($i18n));\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "user2Button->setToolTip($i18n));\n";
+                    $_ = $localLeft . "user2Button->setToolTip($i18n));\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "user3Button->setToolTip($i18n));\n";
+                    $_ = $localLeft . "user3Button->setToolTip($i18n));\n";
                  } else {
                      warn "setButtonToolTip: unknown or not supported \'$button\'\n";
                  }
@@ -534,7 +590,7 @@ foreach my $file (@ARGV) {
 
 
         my $regexSetButtonGuiItem = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           setButtonGuiItem
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
@@ -545,6 +601,11 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
               #$menuName =~ s, ,,g;
@@ -555,17 +616,17 @@ foreach my $file (@ARGV) {
               warn "Found setButtonGuiItem: \'$button\', menu variable \'$menuName\'\n";
               if (defined $dialogButtonType{$button}) {
                  if ( $button eq "Ok" || $button eq "KDialog::Ok") {
-                    $_ = $left . "KGuiItem::assign(okButton, $menuName));\n";
+                    $_ = $localLeft . "KGuiItem::assign(okButton, $menuName));\n";
                  } else {
-                    $_ = $left . "KGuiItem::assign(buttonBox->button($dialogButtonType{$button}), $menuName));\n";
+                    $_ = $localLeft . "KGuiItem::assign(buttonBox->button($dialogButtonType{$button}), $menuName));\n";
                 }
               } else {
                  if ($button eq "User1") {
-                    $_ = $left . "KGuiItem::assign(user1Button, $menuName));\n";
+                    $_ = $localLeft . "KGuiItem::assign(user1Button, $menuName));\n";
                  } elsif ($button eq "User2") {
-                    $_ = $left . "KGuiItem::assign(user2Button, $menuName));\n";
+                    $_ = $localLeft . "KGuiItem::assign(user2Button, $menuName));\n";
                  } elsif ($button eq "User3") {
-                    $_ = $left . "KGuiItem::assign(user3Button, $menuName));\n";
+                    $_ = $localLeft . "KGuiItem::assign(user3Button, $menuName));\n";
                  } else {
                      warn "Set Button Gui Item: unknown or not supported \'$button\'\n";
                  }
@@ -575,7 +636,7 @@ foreach my $file (@ARGV) {
 
 
         my $regexShowButton = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           showButton
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
@@ -586,23 +647,28 @@ foreach my $file (@ARGV) {
                                  ,\s*([^,]*)        # state
                                  (.*)$              # after
                                  /x;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if ( my ($defaultButtonType, $state) = $args =~  $extract_args_regexp ) {
               $defaultButtonType =~ s, ,,g;
               $state =~ s, ,,g;
               $state =~ s,\),,g;
              if (defined $dialogButtonType{$defaultButtonType}) {
                 if ( $defaultButtonType eq "Ok") {
-                   $_ = $left . "okButton->setVisible($state);\n";
+                   $_ = $localLeft . "okButton->setVisible($state);\n";
                 } else {
-                   $_ = $left . "buttonBox->button($dialogButtonType{$defaultButtonType})->setVisible($state);\n";
+                   $_ = $localLeft . "buttonBox->button($dialogButtonType{$defaultButtonType})->setVisible($state);\n";
                 }
              } else {
                 if ($defaultButtonType eq "User1") {
-                   $_ = $left . "user1Button\->setVisible($state);\n";
+                   $_ = $localLeft . "user1Button\->setVisible($state);\n";
                 } elsif ($defaultButtonType eq "User2") {
-                   $_ = $left . "user2Button\->setVisible($state);\n";
+                   $_ = $localLeft . "user2Button\->setVisible($state);\n";
                 } elsif ($defaultButtonType eq "User3") {
-                   $_ = $left . "user3Button\->setVisible($state);\n";
+                   $_ = $localLeft . "user3Button\->setVisible($state);\n";
                 } else {
                    warn "Show button: unknown or not supported \'$defaultButtonType\'\n";
                 }
@@ -631,7 +697,7 @@ foreach my $file (@ARGV) {
         }
 
         my $regexButton = qr/
-          ^(\s*)           # (1) Indentation
+          ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
           button
           ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           /x; # /x Enables extended whitespace mode
@@ -640,6 +706,11 @@ foreach my $file (@ARGV) {
            $button =~ s/\)//;
            $button =~ s, ,,g;
            $button =~ s,^KDialog::,,;
+           my $localLeft = $left;
+           if ($localLeft =~ /\-\>/) {
+               $localLeft =~ s/(\w+)\-\>//;
+           }
+
            if (defined $dialogButtonType{$button}) {
               if ( $button eq "Ok" || $button eq "KDialog::Ok") {
                  s/button\s*\(\s*KDialog::Ok\s*\)/okButton/;
