@@ -17,6 +17,7 @@ my %uiclassname = ();
 my %localuiclass = ();
 my %listOfClassName = ();
 my %overloadedSlots = ();
+my %privateSlots = ();
 
 sub rewriteConnectFunction($$$$$$)
 {
@@ -88,7 +89,7 @@ sub cast_overloaded_signal($$$)
     } elsif (($classname eq "KSelectAction") or ($classname eq "KFontAction")) {
         checkOverloadedSignal($classname, $function, $argument, "triggered", "(const QString &)");
         checkOverloadedSignal($classname, $function, $argument, "triggered", "(int)");
-        checkOverloadedSignaledSignal($function, $argument, "triggered", "(QAction *)");
+        #checkOverloadedSignal($function, $argument, "triggered", "(QAction \*)");
     } elsif ($classname eq "KUrlLabel") {
         checkOverloadedSignal($classname, $function, $argument, "leftClickedUrl", "(const QString &)");
         checkOverloadedSignal($classname, $function, $argument, "leftClickedUrl", "()");
@@ -122,6 +123,7 @@ sub initVariables
     %localuiclass = ();
     %listOfClassName = ();
     %overloadedSlots = ();
+    %privateSlots = ();
 }
 
 # add new variable with its type.
@@ -158,6 +160,18 @@ sub checkOverloadedSlot($)
     }
     warn "Unparsable fullslot: $fullslot\n";
     return undef;
+}
+
+# input: class::slot
+# output: notpossible string if this slot is a Q_PRIVATE_SLOT
+sub checkPrivateSlot($)
+{
+    my ($fullslot) = @_;
+    if (my ($class, $slot) = $fullslot =~ m/(.*)::([_\w]+)/) {
+        return defined $privateSlots{$class}{$slot} ? "slot is a Q_PRIVATE_SLOT" : undef;
+    }
+    warn "Unparsable fullslot: $fullslot\n";
+    return undef;  
 }
 
 # extract argument from signal
@@ -357,11 +371,27 @@ foreach my $file (@ARGV) {
             # TODO also detect real overloads (seenSlots -> if already there, add to overloadedSlots)
         }
 
+        #Q_PRIVATE_SLOT( d, void attachmentRemoved( MessageCore::AttachmentPart::Ptr ) )
+
+        my $qprivateSlot = qr/
+           ^(\s*)                        # (1) Indentation
+           Q_PRIVATE_SLOT\s*\(\s*
+           ([:\w]+)\s*                   # (2) private variable
+           ,\s*([:\w]+)\s*               # (3) Return type
+           ([:\w]+)\s*                   # (4) Function name
+           ${functionUtilkde::paren_begin}5${functionUtilkde::paren_end}  # (5) (args)
+
+           (.*)$                         # (6) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $privateVariable, $return, $function, $args, $after) = $_ =~ $qprivateSlot) {
+           warn "found private slot  $args $_\n";
+           $privateSlots{$headerclassname}{$function} = $args;
+        }
+
         parseLine($file);
 
         $_;
     } <$HEADERFILE>;
-
     warn "We have $numberOfClassName class in $header\n";
 
     # 4) Parse cpp file
@@ -497,6 +527,9 @@ foreach my $file (@ARGV) {
                         $notpossible = checkOverloadedSlot($slot);
                     }
                     if (not defined $notpossible) {
+                        $notpossible = checkPrivateSlot($slot);
+                    }
+                    if (not defined $notpossible) {
                         $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
                     }
                 } else {
@@ -600,6 +633,10 @@ foreach my $file (@ARGV) {
                   if (not defined $notpossible) {
                       $notpossible = checkOverloadedSlot($slot);
                   }
+                  if (not defined $notpossible) {
+                      $notpossible = checkPrivateSlot($slot);
+                  }
+
                   if (not defined $notpossible) {
                      if ( defined $localSenderVariable) {
                          $sender = "&" . $sender;
@@ -709,6 +746,9 @@ foreach my $file (@ARGV) {
                       }
                       if (not defined $notpossible) {
                           $notpossible = checkOverloadedSlot($slot);
+                      }
+                      if (not defined $notpossible) {
+                          $notpossible = checkPrivateSlot($slot);
                       }
                       if (not defined $notpossible) {
                         if ( defined $privateClass ) {
