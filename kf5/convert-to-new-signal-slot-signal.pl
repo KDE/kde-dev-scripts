@@ -105,6 +105,8 @@ sub cast_overloaded_signal($$$)
     } elsif ($classname eq "KUrlRequester" ) {
         checkOverloadedSignal($classname, $function, $argument, "returnPressed", "(const QString &)");
         checkOverloadedSignal($classname, $function, $argument, "returnPressed", "()");
+    } elsif ($classname eq "QNetworkReply" ) {
+        checkOverloadedSignal($classname, $function, $argument, "error", "(QNetworkReply::NetworkError)");
     }
 
     if ( defined $_ ) {
@@ -238,6 +240,13 @@ sub parseLine($)
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 2. classname='$classname'\n";
+        addToVarName($classname, $var);
+    }
+    # Foo *toto =
+    if ( /^\s*([:_\w]+)\s*\*\s*([_\w]+)\s*=/) {
+        my $classname = $1;
+        my $var = $2;
+        #print STDERR "CASE 6. classname='$classname'\n";
         addToVarName($classname, $var);
     }
 
