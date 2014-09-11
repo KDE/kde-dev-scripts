@@ -18,6 +18,7 @@ my %localuiclass = ();
 my %listOfClassName = ();
 my %overloadedSlots = ();
 my %privateSlots = ();
+my %privateVariableWithPointer = ();
 
 sub rewriteConnectFunction($$$$$$)
 {
@@ -124,6 +125,7 @@ sub initVariables
     %listOfClassName = ();
     %overloadedSlots = ();
     %privateSlots = ();
+    %privateVariableWithPointer = ();
 }
 
 # add new variable with its type.
@@ -259,6 +261,17 @@ sub parseLine($)
         my $var = $2;
         #print STDERR "CASE 4. classname='$classname'\n";
         addToVarName($classname, $var);
+    }
+    if (/^\s*QPointer\<\s*([:_\w]+)\s*\>\s*([:_\w]+);/ ) {
+        my $classname = $1;
+        my $var = $2;
+        #print STDERR "CASE 5. classname='$classname'\n";
+        if (not defined $privateVariableWithPointer{$var}) {
+            if (defined $activateDebug) {
+                warn "Found private variable with QPointer class \'$classname\' variable \'$var\' \n";
+            }
+            $privateVariableWithPointer{$var} = $classname;
+        }
     }
 }
 
@@ -426,7 +439,7 @@ foreach my $file (@ARGV) {
            $classname = functionUtilkde::cleanSpace($classname); 
            $var = functionUtilkde::cleanSpace($var);
            #If we found variable in header don't overwrite it
-           if (not defined $varname{$var}) {
+           if (not defined $varname{$var} and not defined $privateVariableWithPointer{$var}) {
                 if (defined $activateDebug) {
                    warn "$file: cpp file: found classname \'$classname\' variable: \'$var\' $_\n";
                 }
@@ -537,6 +550,9 @@ foreach my $file (@ARGV) {
                   my $receiverWithQPointer;
                   if ( defined $varname{$sender} ) {
                     $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
+                  } elsif ( defined $privateVariableWithPointer{$sender} ) {
+                    $signal = cast_overloaded_signal($privateVariableWithPointer{$sender}, $signalArgument, $signal);
+                    $classWithQPointer = 1;                    
                   } elsif ( defined $varnamewithpointer{$sender} ) {
                     $signal = cast_overloaded_signal($varnamewithpointer{$sender}, $signalArgument, $signal);
                     $classWithQPointer = 1;
@@ -597,6 +613,9 @@ foreach my $file (@ARGV) {
                       $slot = "$varname{$receiver}::$slot";
                     } elsif ( defined $varnamewithpointer{$receiver} ) {
                       $slot = "$varnamewithpointer{$receiver}::$slot";
+                      $receiverWithQPointer = 1;
+                    } elsif ( defined $privateVariableWithPointer{$receiver} ) {
+                      $slot = "$privateVariableWithPointer{$receiver}::$slot";
                       $receiverWithQPointer = 1;
                     } elsif ( $receiver eq "this") {
                       if ( $headerclassname eq "" ) {
@@ -717,7 +736,6 @@ foreach my $file (@ARGV) {
                           my $class = "&" . $1;
                           $signal = "$class::$signal";
                         } else {
-
                             if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                               my $uivariable = $1;
                               my $varui = $2;
