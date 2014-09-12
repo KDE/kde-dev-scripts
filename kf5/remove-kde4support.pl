@@ -28,6 +28,7 @@ foreach my $file (@ARGV) {
         my $orig = $_;
 
         s/\bkasciistricmp\b/qstricmp/;
+        s/KGlobal::config\(\)/KSharedConfig::openConfig()/g;
 
         # convert KCategoryDrawerV2 and KCategoryDrawerV3 to KCategoryDrawer
         s/KCategoryDrawerV3/KCategoryDrawer/g;
