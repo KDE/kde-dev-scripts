@@ -293,7 +293,15 @@ my @l = map {
      $_ =~ s/\${KDE4_KFILE_LIBS}//;
      $modified = 1;
   }
-
+  if (/KDEPIMLIBS_AKONADI_NOTES_LIBS/) {
+     $_ =~ s/\${KDEPIMLIBS_AKONADI_NOTES_LIBS}/KF5::AkonadiNotes/;
+     $modified = 1;
+  }
+  if (/KDE4_KIO_LIBRARY/) {
+     $_ =~ s/\${KDE4_KIO_LIBRARY}/KF5::KIOCore/;
+     $modified = 1;
+  }
+ 
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
