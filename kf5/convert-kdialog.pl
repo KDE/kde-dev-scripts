@@ -653,6 +653,35 @@ foreach my $file (@ARGV) {
         if (/KDialog::marginHint/) {
            $_ = "//TODO PORT QT5 " .  $_;
         }
+        # if ( isButtonEnabled( KDialog::Apply ) ) {
+
+        my $regexIsButtonEnabled = qr/
+          (.*)           # (1) Indentation
+          isButtonEnabled\s*\(\s*([:\w]+)\s*\)   # (2) (args)
+          (.*)                            # (3) after
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $button, $after) = $_ =~ $regexIsButtonEnabled) {
+           $button =~ s, ,,g;
+           $button =~ s,^KDialog::,,;
+           if (defined $dialogButtonType{$button}) {
+              if ( $button eq "Ok") {
+                 $_ = $left . "okButton->isEnabled()" . $after . "\n";
+              } else {
+                 $_ = $left . "buttonBox->button($dialogButtonType{$button})->isEnabled()" . $after . "\n";
+              }
+             } else {
+                if ($button eq "User1") {
+                   $_ = $left . "user1Button\->isEnabled()" . $after . "\n";
+                } elsif ($button eq "User2") {
+                   $_ = $left . "user2Button\->isEnabled()" . $after . "\n";
+                } elsif ($button eq "User3") {
+                   $_ = $left . "user3Button\->isEnabled()" . $after . "\n";
+                } else {
+                   warn "Show button: unknown or not supported \'$button\'\n";
+                }
+             }
+
+        }
 
         if (/\bsetMainWidget\s*\(\s*(\w+)\s*\)/) {
            # remove setMainWidget doesn't exist now.
