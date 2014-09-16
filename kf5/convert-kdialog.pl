@@ -653,6 +653,36 @@ foreach my $file (@ARGV) {
         if (/KDialog::marginHint/) {
            $_ = "//TODO PORT QT5 " .  $_;
         }
+
+        my $regexSetEscapeButton = qr/
+          (.*)           # (1) Indentation
+          setEscapeButton\s*\(\s*([:\w]+)\s*\)   # (2) (args)
+          (.*)                            # (3) after
+          /x; # /x Enables extended whitespace mode
+        if (my ($left, $button, $after) = $_ =~ $regexSetEscapeButton) {
+           $button =~ s, ,,g;
+           $button =~ s,^KDialog::,,;
+           if (defined $dialogButtonType{$button}) {
+              if ( $button eq "Ok") {
+                 $_ = $left . "okButton->setShortcut(Qt::Key_Escape);\n";
+              } else {
+                 $_ = $left . "buttonBox->button($dialogButtonType{$button})->setShortcut(Qt::Key_Escape)" . $after . "\n";
+              }
+             } else {
+                if ($button eq "User1") {
+                   $_ = $left . "user1Button\->setShortcut(Qt::Key_Escape)" . $after . "\n";
+                } elsif ($button eq "User2") {
+                   $_ = $left . "user2Button\->setShortcut(Qt::Key_Escape)" . $after . "\n";
+                } elsif ($button eq "User3") {
+                   $_ = $left . "user3Button\->setShortcut(Qt::Key_Escape)" . $after . "\n";
+                } else {
+                   warn "Show button: unknown or not supported \'$button\'\n";
+                }
+             }
+
+        }
+
+
         # if ( isButtonEnabled( KDialog::Apply ) ) {
 
         my $regexIsButtonEnabled = qr/
