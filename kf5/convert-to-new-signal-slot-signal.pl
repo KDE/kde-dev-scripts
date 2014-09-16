@@ -107,6 +107,12 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "returnPressed", "()");
     } elsif ($classname eq "QNetworkReply" ) {
         checkOverloadedSignal($classname, $function, $argument, "error", "(QNetworkReply::NetworkError)");
+    } elsif ($classname eq "QSignalMapper" ) {
+        checkOverloadedSignal($classname, $function, $argument, "mapped", "(int)");
+        checkOverloadedSignal($classname, $function, $argument, "mapped", "(QWidget *)");
+        checkOverloadedSignal($classname, $function, $argument, "mapped", "(const QString &)");
+        checkOverloadedSignal($classname, $function, $argument, "mapped", "(QObject *)");
+
     }
 
     if ( defined $_ ) {
