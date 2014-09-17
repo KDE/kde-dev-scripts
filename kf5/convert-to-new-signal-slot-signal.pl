@@ -82,7 +82,7 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "buttonPressed", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "buttonToggled", "(QAbstractButton *)");
         checkOverloadedSignal($classname, $function, $argument, "buttonToggled", "(int)");
-    } elsif (($classname eq "QSpinBox") or ($classname eq "KPluralHandlingSpinBox")) {
+    } elsif (($classname =~ /SpinBox/) ) {
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(const QString &)");
     } elsif (($classname eq "KTabWidget") or ($classname =~ /Tab/)) { # has a virtual closeRequest(int) but that's not a signal
