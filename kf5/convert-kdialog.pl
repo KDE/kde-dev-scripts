@@ -307,7 +307,7 @@ foreach my $file (@ARGV) {
         }
 
         my $regexDefaultButton = qr/
-                               ^(\s*)           # (1) Indentation
+                               ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
                                setDefaultButton\s*\(
                                (.*)             # (2) button type
                                \);/x; # /x Enables extended whitespace mode
