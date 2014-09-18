@@ -302,6 +302,55 @@ my @l = map {
      $modified = 1;
   }
  
+  if (/KDEVPLATFORM_INTERFACES_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_INTERFACES_LIBRARIES}/KDev::Interfaces/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_SHELL_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_SHELL_LIBRARIES}/KDev::Shell/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_LANGUAGE_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_LANGUAGE_LIBRARIES}/KDev::Language/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_UTIL_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_UTIL_LIBRARIES}/KDev::Util/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_PROJECT_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_PROJECT_LIBRARIES}/KDev::Project/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_OUTPUTVIEW_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_OUTPUTVIEW_LIBRARIES}/KDev::OutputView/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_VCS_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_VCS_LIBRARIES}/KDev::Vcs/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_TESTS_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_TESTS_LIBRARIES}/KDev::Tests/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_JSONTESTS_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_JSONTESTS_LIBRARIES}/KDev::JsonTests/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_DOCUMENTATION_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_DOCUMENTATION_LIBRARIES}/KDev::Documentation/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_DEBUGGER_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_DEBUGGER_LIBRARIES}/KDev::Debugger/;
+     $modified = 1;
+  }
+  if (/KDEVPLATFORM_SUBLIME_LIBRARIES/) {
+     $_ =~ s/\${KDEVPLATFORM_SUBLIME_LIBRARIES}/KDev::Sublime/;
+     $modified = 1;
+  }
+
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
