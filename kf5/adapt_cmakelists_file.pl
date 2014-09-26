@@ -104,7 +104,6 @@ my @l = map {
      $_ =~ s/\${QT_QTXML_LIBRARIES}/Qt5::Xml/;
      $modified = 1;
   }
-
   if (/QT_QTCORE_LIBRARY/) {
      $_ =~ s/\${QT_QTCORE_LIBRARY}/Qt5::Core/;
      $modified = 1;
@@ -113,13 +112,16 @@ my @l = map {
      $_ =~ s/\${QT_QTCORE_LIBRARIES}/Qt5::Core/;
      $modified = 1;
   }
-
   if (/QT_QTGUI_LIBRARY/) {
      $_ =~ s/\${QT_QTGUI_LIBRARY}/Qt5::Gui/;
      $modified = 1;
   }
   if (/QT_QTGUI_LIBRARIES/) {
      $_ =~ s/\${QT_QTGUI_LIBRARIES}/Qt5::Gui/;
+     $modified = 1;
+  }
+  if (/QT_QTHELP_LIBRARIES/) {
+     $_ =~ s/\${QT_QTHELP_LIBRARIES}/Qt5::Help/;
      $modified = 1;
   }
   if (/QT_QTNETWORK_LIBRARY/) {
