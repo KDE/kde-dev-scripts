@@ -481,7 +481,7 @@ foreach my $file (@ARGV) {
         parseLine($file);
 
 
-        if ( /^([:\w]+)::([~\w]+).*/ ) {
+        if ( /^\s*([:\w]+)::([~\w]+).*/ ) {
 	   my $currentClass = $1;
 	   my $currentFunctionName = $2;
 	   #warn "We are in a constructor: currentClass: \'$currentClass\', function name \'$currentFunctionName\'\n";
