@@ -436,6 +436,7 @@ foreach my $file (@ARGV) {
 
     # 4) Parse cpp file
     my $modified;
+    my $tojoin;
     my %varnamewithpointer = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
@@ -513,7 +514,18 @@ foreach my $file (@ARGV) {
 	   }	   
 	}
         
-
+        # Verify comment
+        if ( defined $tojoin) {
+           
+           $tojoin =~ s/\s*\n$//; # remove any trailing space
+           $_ =~ s/^\s*/ /; # replace indent with single space
+           $_ = $tojoin . $_;
+           
+           if ( /;$/ || /;\s*\/\*\.*\*\// ) {
+             undef $tojoin;          
+           } 
+        }
+        
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation, optional classname or variable name
           connect\s*
@@ -812,8 +824,14 @@ foreach my $file (@ARGV) {
                   }
               }
            }
+           $currentLine++;
+        } else {
+          if ( /^(\s*(?:[\-\>:\w]+)?)connect\s*/) {
+             warn "It's perhaps a multi line " . $_ . "\n";
+             $tojoin = $_;
+             $_ = ""; 
+          } 
         }
-        $currentLine++;
 
         $modified ||= $orig ne $_;
         $_;
