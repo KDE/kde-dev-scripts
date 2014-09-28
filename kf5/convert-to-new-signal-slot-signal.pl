@@ -290,12 +290,8 @@ sub parseLine($)
     }
 }
 
-foreach my $file (@ARGV) {
-    
-    # 1) initialize variable before to parse file
-    initVariables();
-    
-    # 2) Search all ui file and parse them
+sub parseUiFile()
+{
     open(my $ALLFILE, "-|", qw(find . -type f));
     my $uifile;
     while ($uifile = <$ALLFILE>) {
@@ -338,14 +334,16 @@ foreach my $file (@ARGV) {
         $_;
       } <$FILE>
     }
+}
 
-    # 3) read header and parse it.
+sub parseHeaderFile($)
+{
+    my ($file) = @_;
     my $header = functionUtilkde::headerName($file);
     my $inslots = 0;
     warn "Parse header file: $header \n";
     # parse header file
     open(my $HEADERFILE, "<", $header) or warn "We can't open file $header:$!\n";
-    my $currentLine = 1;
     my @lheader = map {
         my $orig = $_;
         my $regexp = qr/
@@ -421,6 +419,20 @@ foreach my $file (@ARGV) {
         $_;
     } <$HEADERFILE>;
     warn "We have $numberOfClassName class in $header\n";
+}
+
+foreach my $file (@ARGV) {
+    
+    # 1) initialize variable before to parse file
+    initVariables();
+    
+    # 2) Search all ui file and parse them
+    parseUiFile();
+    
+    # 3) read header and parse it.
+    parseHeaderFile($file);
+
+    my $currentLine = 1;
 
     # 4) Parse cpp file
     my $modified;
