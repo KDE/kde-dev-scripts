@@ -826,7 +826,7 @@ foreach my $file (@ARGV) {
            }
            $currentLine++;
         } else {
-          if ( /^(\s*(?:[\-\>:\w]+)?)connect\s*/) {
+          if ( /^(\s*(?:[\-\>:\w]+)?)connect\b\s*/) {
              warn "It's perhaps a multi line " . $_ . "\n";
              $tojoin = $_;
              $_ = ""; 
