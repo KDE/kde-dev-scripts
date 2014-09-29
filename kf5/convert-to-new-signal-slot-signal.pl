@@ -610,6 +610,8 @@ foreach my $file (@ARGV) {
                      $signal = "&KApplication::$signal";
                   } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                     $signal = "&QPushButton::$signal";
+                  } elsif ( $sender =~ /actionCollection\(\)\-\>action\b/) {
+                    $signal = "&QAction::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
                     my $class = $1;
                     $signal = "&" . "$class::$signal";
@@ -780,6 +782,8 @@ foreach my $file (@ARGV) {
                           $signal = "&KApplication::$signal";
                         } elsif ( $sender =~ /button\(QDialogButtonBox::/) {
                           $signal = "&QPushButton::$signal";
+                        } elsif ( $sender =~ /actionCollection\(\)\-\>action\b/) {
+                           $signal = "&QAction::$signal";
                         } elsif ( $sender =~ /(.*)::self\(\)/) {
                           my $class = "&" . $1;
                           $signal = "$class::$signal";
