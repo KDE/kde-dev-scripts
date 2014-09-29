@@ -437,6 +437,7 @@ foreach my $file (@ARGV) {
     # 4) Parse cpp file
     my $modified;
     my $tojoin;
+    my $toorig;
     my %varnamewithpointer = ();
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
@@ -516,6 +517,8 @@ foreach my $file (@ARGV) {
         
         # Verify comment
         if ( defined $tojoin) {
+           
+           $toorig .= $_;
            
            $tojoin =~ s/\s*\n$//; # remove any trailing space
            $_ =~ s/^\s*/ /; # replace indent with single space
@@ -713,6 +716,10 @@ foreach my $file (@ARGV) {
                        my $line = $_;
                        chomp $line;
                        warn "$file : line $currentLine : Can not convert \'$line\' because $notpossible\n";
+                       if (defined $toorig) {
+                           $_ = $toorig;
+                           undef $toorig;
+                       }
                   }
                 }
                 if (defined $activateDebug) {
@@ -820,6 +827,10 @@ foreach my $file (@ARGV) {
                          my $line = $_;
                          chomp $line;
                          warn "$file : line $currentLine : Can not convert \'$line\' because $notpossible\n";
+                         if (defined $toorig) {
+                              $_ = $toorig;
+                              undef $toorig;
+                         }
                       }
                   }
               }
@@ -829,6 +840,7 @@ foreach my $file (@ARGV) {
           if ( /^(\s*(?:[\-\>:\w]+)?)connect\b\s*/) {
              warn "It's perhaps a multi line " . $_ . "\n";
              $tojoin = $_;
+             $toorig = $_;
              $_ = ""; 
           } 
         }
