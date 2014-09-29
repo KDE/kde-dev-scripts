@@ -523,8 +523,8 @@ foreach my $file (@ARGV) {
            $tojoin =~ s/\s*\n$//; # remove any trailing space
            $_ =~ s/^\s*/ /; # replace indent with single space
            $_ = $tojoin . $_;
-           
-           if ( /;$/ || /;\s*\/\*\.*\*\// ) {
+           warn "look at end ? \'$_\'\n";
+           if ( /;\s*$/ || /;\s*\/\*\.*\*\// ) {
              undef $tojoin;          
            } 
         }
@@ -586,6 +586,7 @@ foreach my $file (@ARGV) {
                     }
                     if (not defined $notpossible) {
                         $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        undef $toorig;
                     }
                 } else {
                   my $classWithQPointer;
@@ -712,6 +713,7 @@ foreach my $file (@ARGV) {
                          $receiver .= ".data()";
                      }
                      $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                     undef $toorig;
                   } else {
                        my $line = $_;
                        chomp $line;
@@ -823,6 +825,7 @@ foreach my $file (@ARGV) {
                         }
                         my $receiver = "this";
                         $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        undef $toorig;
                       } else {
                          my $line = $_;
                          chomp $line;
