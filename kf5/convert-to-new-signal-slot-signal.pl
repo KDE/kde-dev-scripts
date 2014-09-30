@@ -726,6 +726,7 @@ foreach my $file (@ARGV) {
                        }
                   }
                 }
+                
                 if (defined $activateDebug) {
                     warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                 }
@@ -842,6 +843,7 @@ foreach my $file (@ARGV) {
                   }
               }
            }
+           undef $toorig;
         } else {
           if ( /^(\s*(?:[\-\>:\w]+)?)connect\b\s*/) {
              warn "It's perhaps a multi line " . $_ . "\n";
