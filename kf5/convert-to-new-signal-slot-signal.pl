@@ -842,7 +842,6 @@ foreach my $file (@ARGV) {
                   }
               }
            }
-           $currentLine++;
         } else {
           if ( /^(\s*(?:[\-\>:\w]+)?)connect\b\s*/) {
              warn "It's perhaps a multi line " . $_ . "\n";
@@ -851,7 +850,7 @@ foreach my $file (@ARGV) {
              $_ = ""; 
           } 
         }
-
+        $currentLine++;
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
