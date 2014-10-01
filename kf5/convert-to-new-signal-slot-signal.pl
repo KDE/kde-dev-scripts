@@ -193,7 +193,7 @@ sub extraArgumentFunctionName($)
     my $regexpArgument = qr/
                     ^\(.*
                     ${functionUtilkde::paren_begin}1${functionUtilkde::paren_end}
-                    \).*$                        
+                    \s*\).*$                        
                     /x; # /x Enables extended whitespace mode
     if ( my ($argument2) = $line =~ $regexpArgument) {
        $argument = $argument2;
