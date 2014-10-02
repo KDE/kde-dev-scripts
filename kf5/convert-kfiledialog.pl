@@ -189,6 +189,53 @@ foreach my $file (@ARGV) {
            }
         }
 
+        my $regexgetOpenUrl = qr/
+           ^(\s*)                        # (1) Indentation
+           (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
+           (\w+)                         # (3) variable name
+           \s*=\s*                       #   assignment
+           KFileDialog::getOpenUrl\s*\((.*)\)  # (4)  KFileDialog::getOpenUrl(...)
+           (.*)$                         # (5) afterreg
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $left, $var, $argument, $afterreg) = $_ =~ $regexgetOpenUrl) {
+           warn "QFileDialog::getOpenUrl found\n";
+           my $constructor_regexp = qr/
+                                 ^([^,]*)           # (1) Url
+                                 (?:,\s*([^,]*))?   # (2) filter
+                                 (?:,\s*([^,]*))?   # (3) parent
+                                 (?:,\s*([^,]*))?   # (4) caption
+                                 (.*)$              # (5) after
+                                 /x;
+           my ($url, $filter, $parent, $caption, $after);
+           if ( ($url, $filter, $parent, $caption, $after) = $argument =~  $constructor_regexp ) {
+              $_ = $indent . $left . $var . " = QFileDialog::getOpenFileUrl(";
+              if (defined $parent) {
+                 $_ .= "$parent";
+              } else {
+                 $_ .= "0";
+              }
+              if (defined $caption) {
+                 $_ .= ", $caption";
+              } else {
+                 $_ .= ", QString()";
+              }
+              if (defined $url) {
+                 $url =~ s, ,,g;
+                 if ($url eq "KUrl()" || $url eq "QUrl()" || $url eq "") {
+                    $_ .= "QString()";
+                 } else {
+                    $_ .= ", $url";
+                 }
+              }
+              
+              if (defined $filter) {
+                 $_ .= ", $filter);" . $after . "\n";
+              } else {
+                 $_ .= ");" . $after . "\n";
+              }
+              $needQFileDialog = 1;
+           }
+        }
 
 
         $modified ||= $orig ne $_;
