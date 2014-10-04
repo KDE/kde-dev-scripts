@@ -82,6 +82,9 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "buttonPressed", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "buttonToggled", "(QAbstractButton *)");
         checkOverloadedSignal($classname, $function, $argument, "buttonToggled", "(int)");
+    } elsif ( $classname =~ /QDoubleSpinBox/ ) {
+        checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(double)");
+        checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(const QString &)");
     } elsif (($classname =~ /SpinBox/) ) {
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(const QString &)");
