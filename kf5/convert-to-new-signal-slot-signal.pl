@@ -115,7 +115,13 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "mapped", "(QWidget *)");
         checkOverloadedSignal($classname, $function, $argument, "mapped", "(const QString &)");
         checkOverloadedSignal($classname, $function, $argument, "mapped", "(QObject *)");
-
+    } elsif ($classname eq "KDirLister") {
+        checkOverloadedSignal($classname, $function, $argument, "completed", "(const QUrl &)");
+        checkOverloadedSignal($classname, $function, $argument, "completed", "()");
+        checkOverloadedSignal($classname, $function, $argument, "clear", "(const QUrl &)");
+        checkOverloadedSignal($classname, $function, $argument, "clear", "()");
+        checkOverloadedSignal($classname, $function, $argument, "canceled", "(const QUrl &)");
+        checkOverloadedSignal($classname, $function, $argument, "canceled", "()");
     }
 
     if ( defined $_ ) {
