@@ -41,6 +41,7 @@ foreach my $file (@ARGV) {
         open (my $OUT, ">", $file);
         print $OUT @l;
         close ($OUT);
+        functionUtilkde::addIncludeInFile($file, "QDebug");
     }
 }
 
