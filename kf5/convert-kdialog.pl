@@ -329,6 +329,8 @@ foreach my $file (@ARGV) {
                  $_ = $localLeft . "user2Button\->setDefault(true);\n";
               } elsif ($defaultButtonType eq "User3") {
                  $_ = $localLeft . "user3Button\->setDefault(true);\n";
+              } elsif ($defaultButtonType eq "NoButton") {
+                 $_ = "";
               } else {
                 warn "Default button type unknown or not supported \'$defaultButtonType\'\n";
               }
