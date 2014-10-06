@@ -122,6 +122,8 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "clear", "()");
         checkOverloadedSignal($classname, $function, $argument, "canceled", "(const QUrl &)");
         checkOverloadedSignal($classname, $function, $argument, "canceled", "()");
+    } elsif (($classname eq "KProcess") || ($classname eq "QProcess") ) {
+        checkOverloadedSignal($classname, $function, $argument, "finished", "(int, QProcess::ExitStatus)");
     }
 
     if ( defined $_ ) {
