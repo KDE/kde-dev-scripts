@@ -124,6 +124,11 @@ sub cast_overloaded_signal($$$)
         checkOverloadedSignal($classname, $function, $argument, "canceled", "()");
     } elsif (($classname eq "KProcess") || ($classname eq "QProcess") ) {
         checkOverloadedSignal($classname, $function, $argument, "finished", "(int, QProcess::ExitStatus)");
+        checkOverloadedSignal($classname, $function, $argument, "finished", "(int)");
+    } elsif ($classname eq "KRatingWidget") {
+        checkOverloadedSignal($classname, $function, $argument, "ratingChanged", "(int)");
+        checkOverloadedSignal($classname, $function, $argument, "ratingChanged", "(unsigned int)");
+        checkOverloadedSignal($classname, $function, $argument, "ratingChanged", "(uint)");
     }
 
     if ( defined $_ ) {
