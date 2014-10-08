@@ -77,6 +77,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KJobWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPIMTextEdit/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtSql/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtWidgets/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
