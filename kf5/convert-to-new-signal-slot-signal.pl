@@ -125,6 +125,7 @@ sub cast_overloaded_signal($$$)
     } elsif (($classname eq "KProcess") || ($classname eq "QProcess" || $classname eq "KPtyProcess") ) {
         checkOverloadedSignal($classname, $function, $argument, "finished", "(int, QProcess::ExitStatus)");
         checkOverloadedSignal($classname, $function, $argument, "finished", "(int)");
+        checkOverloadedSignal($classname, $function, $argument, "error", "(QProcess::ProcessError)");
     } elsif ($classname eq "KRatingWidget") {
         checkOverloadedSignal($classname, $function, $argument, "ratingChanged", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "ratingChanged", "(unsigned int)");
