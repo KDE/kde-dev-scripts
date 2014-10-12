@@ -331,10 +331,18 @@ do
                         QLoggingCategory)
                            number=`grep "Q_DECLARE_LOGGING_CATEGORY" $file|wc -l`;
                            if test $number = 0 ; then
+                              number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
+                              if test $number = 0 ; then
+                                  remove_include;
+                              fi
+                           fi
+                        ;;
+                        QScreen)
+                           number=`grep "physicalDotsPerInch()" $file|wc -l`;
+                           if test $number = 0 ; then
                               remove_include;
                            fi
                         ;;
-
                         KToolBar)
                            number=`grep "toolBar()" $file|wc -l`;
                            if test $number = 0 ; then
