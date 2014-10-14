@@ -15,7 +15,10 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or warn "We can't open file $file:$!\n";
     my @l = map {
         my $orig = $_;
-        s/\bKIcon\b\s*\(/QIcon::fromTheme(/;
+        if (/KIcon\(\s*\)/ ) {
+           s/KIcon\(\s*\)/QIcon()/;
+        }
+        s/\bKIcon\b\s*\(/QIcon::fromTheme(/g;
         s/\<KIcon\b\>/\<QIcon>/ =~ /#include/ ;
         s/\<kicon.h\b\>/\<QIcon>/ =~ /#include/ ;
 
