@@ -126,17 +126,6 @@ function! SetCodingStyle()
         set ts=4
         set noet
         set tw=100
-    elseif pathfn =~ 'kdepim'
-        if strlen(mapcheck('(','i')) > 0
-            iunmap (
-        endif
-        call SmartParensOn()
-        let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
-        let g:need_brace_on_same_line = '\<\(if\|else\|while\|switch\|do\|foreach\|forever\|enum\|for\|try\|catch\)\>'
-        set sw=2
-        set sts=2
-        set et
-        "set tw=100
     elseif pathfn =~ 'xine-lib'
         call SmartParensOff()
         let g:need_brace_on_next_line = '\<\(class\|namespace\|struct\)\>'
