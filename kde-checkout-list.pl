@@ -4,7 +4,7 @@
 # Parses the KDE Projects XML Database and prints project protocol-url lines  #
 # for each project in the specified component/module.                         #
 #                                                                             #
-# Copyright (C) 2011,2012 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2011,2012,2014 by Allen Winter <winter@kde.org>               #
 # Copyright (C) 2011 by David Faure <faure@kde.org>                           #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;		# used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.94';
+my($Version) = '0.95';
 
 my($help) = '';
 my($version) = '';
@@ -153,7 +153,11 @@ foreach $proj (sort keys %output) {
 
 	if ( $branch ) {
 	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
+	  if ( $subdir !~ m+/kdelibs+ ) {
+	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
+	  } else {
+	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
+	  }
 	} else {
 	  $command = "git clone $url $subdir";
 	}
