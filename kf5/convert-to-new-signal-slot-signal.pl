@@ -541,7 +541,7 @@ foreach my $file (@ARGV) {
            $_ =~ s/^\s*/ /; # replace indent with single space
            $_ = $tojoin . $_;
            warn "look at end ? \'$_\'\n";
-           if ( /;\s*$/ || /;\s*\/\*\.*\*\// ) {
+           if ( /;\s*$/ || /;\s*\/\*\.*\*\// || /;\s*\n$/) {
              undef $tojoin;          
            } 
         }
@@ -862,7 +862,7 @@ foreach my $file (@ARGV) {
            }
            undef $toorig;
         } else {
-          if ( /^(\s*(?:[\-\>:\w]+)?)connect\b\s*/) {
+          if ( /^(\s*(?:[\-\>:\w]+)?)\bconnect\b\s*/) {
              warn "It's perhaps a multi line " . $_ . "\n";
              $tojoin = $_;
              $toorig = $_;
