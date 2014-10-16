@@ -100,6 +100,20 @@ foreach my $file (@ARGV) {
                $_ = "";
             }
         }
+        if (/(\w+)\.setShowCancel\s*\(\s*false\s*\);/) {
+            my $variable = $1;
+            if (defined $varname{$variable}) {
+               s/$variable\.setShowCancel\s*\(\s*false\s*\);/$variable\.setCancelButton\(0\);/;
+            }
+        }
+
+        if (/(\w+)\-\>setShowCancel\s*\(\s*false\s*\);/) {
+            my $variable = $1;
+            if (defined $varname{$variable}) {
+               s/$variable\-\>setShowCancel\s*\(\s*false\s*\);/$variable\-\>setCancelButton\(0\);/;
+            }
+        }
+
 
         if (/(\w+)\-\>progressBar\(\)\-\>setMaximum\b/) {
             my $variable = $1;
