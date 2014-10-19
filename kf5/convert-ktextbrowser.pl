@@ -9,6 +9,9 @@ use File::Basename;
 use lib dirname($0);
 use functionUtilkde;
 
+#TODO :  * - setNotifyClick becomes setOpenLinks, isNotifyClick is set to openLinks.
+# * - use the signal QTextBrowser::anchorClicked for KTextBrowser::urlClick
+
 foreach my $file (@ARGV) {
 
     my $modified;
