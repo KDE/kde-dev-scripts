@@ -20,7 +20,7 @@ foreach my $file (@ARGV) {
            (.*?)                         # (2) Possibly "Classname *" (the ? means non-greedy)
            (\w+)                         # (3) variable name
            \s*=\s*                       #   assignment
-           new\s+KDoubleNumInput\s*\((.*)\)   # (4)  new KIntSpinBox(...,...,...,...);
+           new\s+KDoubleNumInput\s*\((.*)\)   # (4)  new KDoubleNumInput(...,...,...,...);
            (.*)$                         # (5) afterreg
            /x; # /x Enables extended whitespace mode
         if (my ($indent, $left, $var, $argument, $afterreg) = $_ =~ $regexp) {
@@ -84,9 +84,9 @@ foreach my $file (@ARGV) {
            }
         }
 
-        s/\bKDoubleNumInput\b/QSpinBox/g;
-        s/\<KDoubleNumInput\b\>/\<QSpinBox>/ if (/#include/);
-        s/\<kdoublenuminput.h\>/\<QSpinBox>/ if (/#include/);
+        s/\bKDoubleNumInput\b/QDoubleSpinBox/g;
+        s/\<KDoubleNumInput\b\>/\<QQDoubleSpinBox>/ if (/#include/);
+        s/\<kdoublenuminput.h\>/\<QDoubleSpinBox>/ if (/#include/);
 
         $modified ||= $orig ne $_;
         $_;
