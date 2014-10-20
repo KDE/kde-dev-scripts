@@ -79,6 +79,7 @@ do
        new=`echo "$new" |perl -pi -e 's!QtSql/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtPrintSupport/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtQuick/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
