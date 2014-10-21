@@ -80,6 +80,16 @@ do
        new=`echo "$new" |perl -pi -e 's!QtWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtPrintSupport/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtQuick/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtDBus/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtDeclarative/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtDesigner/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtQml/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtMultimedia/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtConcurrent/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g'`;
+
+
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
