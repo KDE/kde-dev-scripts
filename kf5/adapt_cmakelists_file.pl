@@ -9,20 +9,20 @@ open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
   my $orig = $_;
-  if (/kde4_install_icons/) {
-     $_ =~ s/kde4_install_icons/ecm_install_icons/;
+  if (/kde4_install_icons/i) {
+     $_ =~ s/kde4_install_icons/ecm_install_icons/i;
      $modified = 1;
   }
-  if (/kde4_add_library/) {
-     $_ =~ s/kde4_add_library/add_library/;
+  if (/kde4_add_library/i) {
+     $_ =~ s/kde4_add_library/add_library/i;
      $modified = 1;
   }
-  if (/kde4_add_ui_files/) {
-     $_ =~ s/kde4_add_ui_files/ki18n_wrap_ui/;
+  if (/kde4_add_ui_files/i) {
+     $_ =~ s/kde4_add_ui_files/ki18n_wrap_ui/i;
      $modified = 1;
   }
-  if (/kde4_add_kcfg_files/) {
-      $_ =~ s/kde4_add_kcfg_files/kconfig_add_kcfg_files/;
+  if (/kde4_add_kcfg_files/i) {
+      $_ =~ s/kde4_add_kcfg_files/kconfig_add_kcfg_files/i;
       $modified = 1;
   }
   if (/kde4_add_executable\s*\(\s*([\w_]+)/i) {
@@ -44,16 +44,16 @@ my @l = map {
       $_ .= "ecm_mark_as_test($target)\n";
   }
 
-  if (/KDE4_ENABLE_EXCEPTIONS/) {
-      $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/;
+  if (/KDE4_ENABLE_EXCEPTIONS/i) {
+      $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/i;
       $modified = 1;
   } 
-  if (/qt4_add_dbus_adaptor/) {
-      $_ =~ s/qt4_add_dbus_adaptor/qt5_add_dbus_adaptor/;
+  if (/qt4_add_dbus_adaptor/i) {
+      $_ =~ s/qt4_add_dbus_adaptor/qt5_add_dbus_adaptor/i;
       $modified = 1;
   }
-  if (/qt4_wrap_ui/) {
-      $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/;
+  if (/qt4_wrap_ui/i) {
+      $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/i;
       $modified = 1;
   }
   if (/KDE4_KMIME_LIBRARY/) {
@@ -229,8 +229,8 @@ my @l = map {
      $_ =~ s/\${KDE4_KTEXTEDITOR_LIBS}/KF5::TextEditor/;
      $modified = 1;
   }
-  if (/qt4_wrap_cpp/) {
-     $_ =~ s/qt4_wrap_cpp/qt5_wrap_cpp/;
+  if (/qt4_wrap_cpp/i) {
+     $_ =~ s/qt4_wrap_cpp/qt5_wrap_cpp/i;
      $modified = 1;
   }
   if (/KDEPIMLIBS_SYNDICATION_LIBS/) {
@@ -271,12 +271,12 @@ my @l = map {
      $modified = 1;
   }
 
-  if (/kde4_create_handbook/) {
-     $_ =~ s/kde4_create_handbook/kdoctools_create_handbook/;
+  if (/kde4_create_handbook/i) {
+     $_ =~ s/kde4_create_handbook/kdoctools_create_handbook/i;
      $modified = 1;
   }
-  if (/kde4_create_manpage/) {
-     $_ =~ s/kde4_create_manpage/kdoctools_create_manpage/;
+  if (/kde4_create_manpage/i) {
+     $_ =~ s/kde4_create_manpage/kdoctools_create_manpage/i;
      $modified = 1;
   }
   if (/KDEPIMLIBS_MICROBLOG_LIBS/) {
@@ -358,32 +358,32 @@ my @l = map {
   #   $modified = 1;
   #}
 
-  if (/qt4_add_dbus_interfaces/) {
-     $_ =~ s/qt4_add_dbus_interfaces/qt5_add_dbus_interfaces/;
+  if (/qt4_add_dbus_interfaces/i) {
+     $_ =~ s/qt4_add_dbus_interfaces/qt5_add_dbus_interfaces/i;
      $modified = 1;
   }
-  if (/qt4_add_dbus_interface/) {
-     $_ =~ s/qt4_add_dbus_interface/qt5_add_dbus_interface/;
+  if (/qt4_add_dbus_interface/i) {
+     $_ =~ s/qt4_add_dbus_interface/qt5_add_dbus_interface/i;
      $modified = 1;
   }
-  if (/qt4_generate_moc/) {
-     $_ =~ s/qt4_generate_moc/qt5_generate_moc/;
+  if (/qt4_generate_moc/i) {
+     $_ =~ s/qt4_generate_moc/qt5_generate_moc/i;
      $modified = 1;
   }
-  if (/qt4_generate_dbus_interface/) {
-     $_ =~ s/qt4_generate_dbus_interface/qt5_generate_dbus_interface/;
+  if (/qt4_generate_dbus_interface/i) {
+     $_ =~ s/qt4_generate_dbus_interface/qt5_generate_dbus_interface/i;
      $modified = 1;
   }
-  if (/kde4_install_auth_helper_files/) {
-     $_ =~ s/kde4_install_auth_helper_files/kauth_install_helper_files/;
+  if (/kde4_install_auth_helper_files/i) {
+     $_ =~ s/kde4_install_auth_helper_files/kauth_install_helper_files/i;
      $modified = 1;
   }
-  if (/kde4_install_auth_actions/) {
-     $_ =~ s/kde4_install_auth_actions/kauth_install_actions/;
+  if (/kde4_install_auth_actions/i) {
+     $_ =~ s/kde4_install_auth_actions/kauth_install_actions/i;
      $modified = 1;
   }
-  if (/qt4_add_resources/) {
-     $_ =~ s/qt4_add_resources/qt5_add_resources/;
+  if (/qt4_add_resources/i) {
+     $_ =~ s/qt4_add_resources/qt5_add_resources/i;
      $modified = 1;
   }
   if (/KDE4_INCLUDES/) {
@@ -394,8 +394,8 @@ my @l = map {
      $_ =~ s/akonadi-kde//;
      $modified = 1;
   }
-  if (/macro_optional_add_subdirectory/) {
-     $_ =~ s/macro_optional_add_subdirectory/ecm_optional_add_subdirectory/;
+  if (/macro_optional_add_subdirectory/i) {
+     $_ =~ s/macro_optional_add_subdirectory/ecm_optional_add_subdirectory/i;
      $modified = 1;
      warn "Need to add \'include(ECMOptionalAddSubdirectory)\' in $file \n";
   }
