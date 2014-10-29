@@ -275,12 +275,14 @@
    QBasicAtomicPointer
    Helgrind:Race
    # catch load*, store*, and the qt4 operators
+   ...
    fun:_*QBasicAtomicPointer*
 }
 {
    QBasicAtomicInt
    Helgrind:Race
    # catch Int and Integer, load, loadAcquire, store, storeRelease, testAndSet*, etc.
+   ...
    fun:_*QBasicAtomicInt*
 }
 
