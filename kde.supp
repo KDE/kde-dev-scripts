@@ -275,7 +275,7 @@
    QBasicAtomicPointer
    Helgrind:Race
    # catch load*, store*, and the qt4 operators
-   fun:_ZN19QBasicAtomicPointer*
+   fun:_*QBasicAtomicPointer*
 }
 {
    QBasicAtomicInt
