@@ -394,6 +394,10 @@ my @l = map {
      $_ =~ s/akonadi-kde//;
      $modified = 1;
   }
+  if (/KF5::KDE4Support/) {
+     $_ =~ s/KF5::KDE4Support/KF5::KDELibs4Support/;
+     $modified = 1;
+  }
   if (/macro_optional_add_subdirectory/i) {
      $_ =~ s/macro_optional_add_subdirectory/ecm_optional_add_subdirectory/i;
      $modified = 1;
