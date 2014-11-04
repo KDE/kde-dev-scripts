@@ -9,6 +9,11 @@ open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
   my $orig = $_;
+  if (/kde4_no_enable_final/) {
+     $_ = "";
+     $modified = 1;
+  }
+
   if (/kde4_install_icons/i) {
      $_ =~ s/kde4_install_icons/ecm_install_icons/i;
      $modified = 1;
