@@ -233,6 +233,31 @@
    fun:_ZN6QMutex4lockEv
 }
 {
+   # Qt5 in release mode doesn't see the atomic-operation calls inside QMutex
+   Qt5_release_lockInternal
+   Helgrind:Race
+   fun:_ZN11QBasicMutex12lockInternalEv
+}
+{
+   # Qt5 in release mode doesn't see the atomic-operation calls inside QMutex
+   Qt5_release_unlockInternal
+   Helgrind:Race
+   fun:_ZN11QBasicMutex14unlockInternalEv
+}
+{
+   # Qt5 in release mode doesn't see the atomic-operation calls inside RefCount
+   Qt5_release_refcount
+   Helgrind:Race
+   fun:_ZN9QtPrivate8RefCount3refEv
+}
+{
+   # Qt5 in release mode
+   Qt5_release_basicmutex_isrecursive
+   Helgrind:Race
+   fun:_ZN11QBasicMutex11isRecursiveEv
+}
+
+{
    # I don't really see a problem with fork+exit "exiting while still holding one mutex".
    # I think helgrind just doesn't notice that we forked before calling exit -> TODO: report hg bug
    Helgrind_Exit
