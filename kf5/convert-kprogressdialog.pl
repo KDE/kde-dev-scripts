@@ -47,10 +47,24 @@ foreach my $file (@ARGV) {
           ^(\s*)           # (1) Indentation
           KProgressDialog\s+
           (\w+)            # (2) variable name
-          .*/x; # /x Enables extended whitespace mode
-        if (my ($left, $var) = $_ =~ $regexpLocal) {
+          (.*)/x; # /x Enables extended whitespace mode
+        if (my ($left, $var, $args) = $_ =~ $regexpLocal) {
            $varname{$var} = 1;
-           s/KProgressDialog/QProgressDialog/;
+            my $constructor_regexp = qr/
+                                 ^([^,]*)\s*        # parent
+                                 (?:,\s([^,]*))?    # caption
+                                 (?:,\s([^,]*))?    # text
+                                 (.*)$              # after
+                                 /x;
+            if ( my ($parent, $caption, $text,  $after) = $args =~ $constructor_regexp ) {
+                $_ = $left . "QProgressDialog $var$parent);\n";
+                if (defined $caption) {
+                   $_ .= $left . "$var\.setWindowTitle($caption);\n";
+                }
+                if (defined $text) {
+                   $_ .= $left . "$var\.setLabelText($text\n";
+                }
+            }
         }
         if (/(\w+)\.progressBar\(\)\-\>setMaximum\b/) {
             my $variable = $1;
