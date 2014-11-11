@@ -19,8 +19,39 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
-        s/qFindChild<([^>]*)>\(\s*(\w+)\s*,\s*/$2->findChild<$1>(/;
-        s/qFindChildren<([^>]*)>\(\s*(\w+)\s*,\s*/$2->findChildren<$1>(/;
+        my $regexpqFindChild = qr/
+           ^(\s*)              # (1) Indentation
+           (.*?)\s*=\s*           # (2) before
+           qFindChild<([^>]*)> # (3) class name
+           \(\s*([&\w]+)\s*,\s*   # (4) variable
+           (.*)$               # (5) end              
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $before, $classname, $variable, $end) = $_ =~ $regexpqFindChild) {
+           warn "found qFindChild \n";
+           if ($variable =~ /^&/ ) {
+             $variable =~ s/^&//;
+             $_ = $indent . $before . " = " . $variable . ".findChild<$classname>(" . $end . "\n";
+           } else {
+             $_ = $indent . $before . " = " . $variable . "->findChild<$classname>(" . $end . "\n";
+           }
+        }
+
+        my $regexpqFindChilden = qr/
+           ^(\s*)              # (1) Indentation
+           (.*?)\s*=\s*           # (2) before
+           qFindChilden<([^>]*)> # (3) class name
+           \(\s*([&\w]+)\s*,\s*   # (4) variable
+           (.*)$               # (5) end              
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $before, $classname, $variable, $end) = $_ =~ $regexpqFindChild) {
+           warn "found qFindChilden \n";
+           if ($variable =~ /^&/ ) {
+             $variable =~ s/^&//;
+             $_ = $indent . $before . " = " . $variable . ".findChilden<$classname>(" . $end . "\n";
+           } else {
+             $_ = $indent . $before . " = " . $variable . "->findChilden<$classname>(" . $end . "\n";
+           }
+        }
 
         $modified ||= $orig ne $_;
         $_;
