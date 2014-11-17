@@ -296,6 +296,10 @@ my @l = map {
      $_ =~ s/\${QT_QTWEBKIT_LIBRARY}/Qt5::WebKitWidgets/;
      $modified = 1;
   }
+  if (/QT_QTSQL_LIBRARY/) {
+     $_ =~ s/\${QT_QTSQL_LIBRARY}/Qt5::Sql/;
+     $modified = 1;
+  }
   if (/KDE4_KFILE_LIBS/) {
      $_ =~ s/\${KDE4_KFILE_LIBS}//;
      $modified = 1;
