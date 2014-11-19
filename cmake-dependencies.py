@@ -65,6 +65,8 @@ if __name__ == "__main__":
     processedFiles = {}
     lookedUpPackages = {}
 
+    lastFile = ""
+    callingFile = ""
     for line in proc.stderr:
         theLine = line.decode("utf-8")
 
@@ -73,15 +75,20 @@ if __name__ == "__main__":
             if "$" not in m.group(2):
                 lookedUpPackages[m.group(1)] = m.group(2)
 
+        # match file names
+        # e.g./usr/share/cmake-3.0/Modules/FindPackageMessage.cmake(46):  set(...
         m = re.match("(^/.*?)\\(.*", theLine)
         if m is not None:
             currentFile = m.group(1)
+            if lastFile != currentFile:
+                callingFile = lastFile
+            lastFile = currentFile
             filePath, fileName = os.path.split(currentFile)
 
             if fileName == "CMakeLists.txt":
                 continue
 
-            m = re.match("(.*)Config.cmake", fileName)
+            m = re.match("(.*)Config(Version)?.cmake", fileName)
             m2 = re.match("Find(.*).cmake", fileName)
             if m2:
                 moduleName = m2.group(1)
@@ -91,12 +98,13 @@ if __name__ == "__main__":
                 continue
 
             if not moduleName in processedFiles:
-                processedFiles[moduleName] = { 'files': set() }
+                processedFiles[moduleName] = { 'files': set(), 'explicit': False }
 
             if not 'version' in processedFiles[moduleName]:
-                processedFiles[moduleName]['files'].add(fileName)
                 processedFiles[moduleName]['version'] = checkPackageVersion(moduleName)
 
+            processedFiles[moduleName]['files'].add(fileName)
+            processedFiles[moduleName]['explicit'] |= (callingFile.endswith("CMakeLists.txt"))
 
     print("[")
     first = True
