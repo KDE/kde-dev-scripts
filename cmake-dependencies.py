@@ -45,9 +45,9 @@ def checkPackageVersion(frameworkName):
     value = readCache("FIND_PACKAGE_MESSAGE_DETAILS_%s:INTERNAL" % frameworkName)
     if value is None:
         return None
-    m = re.match('.*\\]\\[v(.*?)\\]', value)
+    m = re.match('.*\\]\\[v(.*?)\\((.*?)\\)\\]', value)
     if m:
-        return m.group(1)
+        return { 'used': m.group(1), 'requested': m.group(2) }
     else:
         return None
 
