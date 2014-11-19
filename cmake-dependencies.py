@@ -103,7 +103,7 @@ if __name__ == "__main__":
             if not 'version' in processedFiles[moduleName]:
                 processedFiles[moduleName]['version'] = checkPackageVersion(moduleName)
 
-            processedFiles[moduleName]['files'].add(fileName)
+            processedFiles[moduleName]['files'].add(currentFile)
             processedFiles[moduleName]['explicit'] |= (callingFile.endswith("CMakeLists.txt"))
 
     print("[")
