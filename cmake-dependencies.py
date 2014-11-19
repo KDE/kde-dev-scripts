@@ -97,7 +97,6 @@ if __name__ == "__main__":
                 processedFiles[moduleName]['files'].add(fileName)
                 processedFiles[moduleName]['version'] = checkPackageVersion(moduleName)
 
-    proc.wait()
 
     print("[")
     first = True
@@ -112,9 +111,13 @@ if __name__ == "__main__":
         if v in lookedUpPackages:
             del lookedUpPackages[v]
 
-    if lookedUpPackages != {}:
+    # display missing packages
+    for v in lookedUpPackages:
         if not first:
             print(',\n', end='')
 
-        print("\t{ 'missingPackages': %s }" % json.dumps(lookedUpPackages), end='')
+        print("\t{ \"project\": \"%s\", \"missing\": true, \"files\": [], \"arguments\": \"%s\", \"explicit\": true }" % (v, lookedUpPackages[v]))
+
+
     print("\n]\n")
+    proc.wait()
