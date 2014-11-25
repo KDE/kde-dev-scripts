@@ -33,6 +33,8 @@ install(PROGRAMS
   adddebug
   build-progress.sh
   cheatmake
+  c++-rename-class-and-file
+  c++-copy-class-and-file
   create_cvsignore
   create_makefiles
   create_svnignore
