@@ -361,6 +361,26 @@ my @l = map {
      $_ =~ s/\${KDEVPLATFORM_SUBLIME_LIBRARIES}/KDev::Sublime/;
      $modified = 1;
   }
+  if (/KDE4_THREADWEAVER_LIBRARIES/) {
+     $_ =~ s/\${KDE4_THREADWEAVER_LIBRARIES}/KF5::ThreadWeaver/;
+     $modified = 1;
+  }
+  if (/QT_AND_KDECORE_LIBS/) {
+     $_ =~ s/\${QT_AND_KDECORE_LIBS}//;
+     $modified = 1;
+  }
+  if (/KIPI_LIBRARIES/) {
+     $_ =~ s/\${KIPI_LIBRARIES}/KF5::Kipi/;
+     $modified = 1;
+  }
+  if (/KEXIV2_LIBRARIES/) {
+     $_ =~ s/\${KEXIV2_LIBRARIES}/KF5::KExiv2/;
+     $modified = 1;     
+  }
+  if (/KDCRAW_LIBRARIES/) {
+     $_ =~ s/\${KDCRAW_LIBRARIES}/KF5::KDcraw/;
+     $modified = 1;
+  }
 
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
@@ -440,6 +460,17 @@ my @l = map {
      $_ = $indent . "add_library($libname MODULE " . $end . "\n";
      $modified = 1;
   }
+  my $regexpUpperCase = qr/
+               ^(\s*)                  # (1) Indentation
+               KDE4_ADD_PLUGIN\s*\(    # 
+               \s*([^ ]*)\s*           # (2) libname
+               (.*)$                   # (3) end
+               /x; # /x Enables extended whitespace mode
+  if (my ($indent, $libname, $end) = $_ =~ $regexpUpperCase) {
+     $_ = $indent . "add_library($libname MODULE " . $end . "\n";
+     $modified = 1;
+  }
+
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
