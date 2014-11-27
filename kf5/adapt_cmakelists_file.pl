@@ -9,7 +9,7 @@ open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
   my $orig = $_;
-  if (/kde4_no_enable_final/) {
+  if (/kde4_no_enable_final/i) {
      $_ = "";
      $modified = 1;
   }
@@ -51,6 +51,7 @@ my @l = map {
 
   if (/KDE4_ENABLE_EXCEPTIONS/i) {
       $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/i;
+      $_ =~ s/add_definitions\(\s*\$\{KDE4_ENABLE_EXCEPTIONS\}\s*\)/kde_enable_exceptions\(\)/i;
       $modified = 1;
   } 
   if (/qt4_add_dbus_adaptor/i) {
@@ -381,7 +382,10 @@ my @l = map {
      $_ =~ s/\${KDCRAW_LIBRARIES}/KF5::KDcraw/;
      $modified = 1;
   }
-
+  if (/KSANE_LIBRARY/) {
+     $_ =~ s/\${KSANE_LIBRARY}/KF5::Sane/;
+     $modified = 1;
+  }
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
