@@ -386,6 +386,10 @@ my @l = map {
      $_ =~ s/\${KSANE_LIBRARY}/KF5::Sane/;
      $modified = 1;
   }
+  if (/kdegames/) {
+     $_ =~ s/kdegames/KF5KDEGames/;
+     $modified = 1;
+  }
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
