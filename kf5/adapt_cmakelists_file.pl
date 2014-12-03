@@ -431,6 +431,10 @@ my @l = map {
      $_ =~ s/akonadi-kde//;
      $modified = 1;
   }
+  if (/QT_QTSVG_LIBRARY/) {
+     $_ =~ s/\${QT_QTSVG_LIBRARY}/Qt5::Svg/;
+     $modified = 1;
+  }
   if (/KF5::KDE4Support/) {
      $_ =~ s/KF5::KDE4Support/KF5::KDELibs4Support/;
      $modified = 1;
