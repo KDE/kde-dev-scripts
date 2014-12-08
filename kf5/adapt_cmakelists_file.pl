@@ -427,6 +427,11 @@ my @l = map {
      $_ =~ s/\${KDE4_INCLUDES}//;
      $modified = 1;
   }
+  if (/KDE4_KDNSSD_LIBS/) {
+     $_ =~ s/\${KDE4_KDNSSD_LIBS}/KF5::DNSSD/;
+     $modified = 1;
+  }
+
   if (/akonadi-kde/) {
      $_ =~ s/akonadi-kde//;
      $modified = 1;
