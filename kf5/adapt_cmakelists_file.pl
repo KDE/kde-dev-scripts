@@ -62,6 +62,10 @@ my @l = map {
       $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/i;
       $modified = 1;
   }
+  if (/KDE4_KCALCORE_LIBS/) {
+     $_ =~ s/\${KDE4_KCALCORE_LIBS}/KF5::CalendarCore/;
+     $modified = 1;
+  }
   if (/KDE4_KMIME_LIBRARY/) {
      $_ =~ s/\${KDE4_KMIME_LIBRARY}/KF5::Mime/;
      $modified = 1;
