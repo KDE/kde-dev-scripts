@@ -154,16 +154,14 @@ sub initVariables
 }
 
 # add new variable with its type.
-sub addToVarName($$)
+sub addToVarName($$$)
 {
-    my ($classname, $var) = @_;
+    my ($classname, $var, $ref_localvarname) = @_;
     if (not $classname eq ":" and not $classname eq "return") { 
       #If we found variable in header don't overwrite it
       #if (not defined $varname{$var}) {
-          $varname{$var} = ${classname}; 
-          if (defined $activateDebug) {
-              warn "new variable added: \'$var\' className :\'$classname\'\n";
-          }
+          ${$ref_localvarname}{$var} = ${classname}; 
+          warn "new variable added: \'$var\' className :\'$classname\'\n";
       #}
    }
 }
@@ -234,7 +232,7 @@ sub extractFunctionName($)
 }
 
 # Parse the current line for variable declarations
-sub parseLine($)
+sub extraVariableFromLine($)
 {
     my ($file) = @_;
     if (/Ui::(\w+)\s+(\w+);/ || /Ui::(\w+)\s*\*\s*(\w+);/ || /Ui_(\w+)\s*\*\s*(\w+)/) {
@@ -254,7 +252,7 @@ sub parseLine($)
         my $var = $2;
         if ($classname ne "delete" and $classname ne "class" and $classname ne "struct" and $classname ne "return") {
             #print STDERR "CASE 1. classname='$classname'\n";
-            addToVarName($classname, $var);
+            addToVarName($classname, $var, \%varname);
         }
     }
 
@@ -263,14 +261,14 @@ sub parseLine($)
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 2. classname='$classname'\n";
-        addToVarName($classname, $var);
+        addToVarName($classname, $var, \%varname);
     }
     # Foo *toto =
     if ( /^\s*([:_\w]+)\s*\*\s*([_\w]+)\s*=/) {
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 6. classname='$classname'\n";
-        addToVarName($classname, $var);
+        addToVarName($classname, $var, \%varname);
     }
 
     # Foo toto(...)
@@ -281,7 +279,7 @@ sub parseLine($)
         my $var = $2;
         if ($classname ne "else" and $classname ne "void") {
             #print STDERR "CASE 3. classname='$classname'\n";
-            addToVarName($classname, $var);
+            addToVarName($classname, $var, \%varname);
         }
     }
 
@@ -292,7 +290,7 @@ sub parseLine($)
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 4. classname='$classname'\n";
-        addToVarName($classname, $var);
+        addToVarName($classname, $var, \%varname);
     }
     if (/^\s*QPointer\<\s*([:_\w]+)\s*\>\s*([:_\w]+);/ ) {
         my $classname = $1;
@@ -385,7 +383,7 @@ sub parseHeaderFile($)
            $privateSlots{$headerclassname}{$function} = $args;
         }
 
-        parseLine($file);
+        extraVariableFromLine($file);
 
         $_;
     } <$HEADERFILE>;
@@ -453,17 +451,17 @@ foreach my $file (@ARGV) {
         if (/(\w+)\s*\*\s*(\w+)\s*=.*addAction\s*\(/) {
            my $classname = $1;
            my $var = $2;
-           addToVarName($classname, $var);
+           addToVarName($classname, $var, \%varname);
         }
 
         #QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         if (/(\w+)\s*\*\s*(\w+)\s*=.*buttonBox\-\>button\s*\(QDialogButtonBox\b/) {
            my $classname = $1;
            my $var = $2;
-           addToVarName($classname, $var);
+           addToVarName($classname, $var, \%varname);
         }
 
-        parseLine($file);
+        extraVariableFromLine($file);
 
 
         if ( /^\s*([:\w]+)::([~\w]+).*/ ) {
