@@ -307,52 +307,6 @@ sub parseLine($)
     }
 }
 
-sub parseUiFile()
-{
-    open(my $ALLFILE, "-|", qw(find . -type f));
-    my $uifile;
-    while ($uifile = <$ALLFILE>) {
-      next if not $uifile =~ /\.ui/;
-      chomp $uifile;
-      open(my $FILE, "<", $uifile) or warn "We can't open file $uifile:$!\n";
-      warn "Open file $uifile\n";
-      my $mainClassFound;
-      my @lui = map {
-        #<widget class="QProgressBar" name="progressBar" >
-        if (/\<widget class=\"(.*)\" name=\"(\w+)\"/) {
-           my $className = $1;
-           my $variableName = $2;
-           if (defined $activateDebug) {
-               warn "Found class in ui file \'$uifile\', className: \'$className\', variable: \'$variableName\'\n";
-           }
-           $varname{$variableName} = ${className};
-        }
-        if (/\<class\>(.*)\<\/class\>/) {
-           if (not defined $mainClassFound) {
-             my $name = $1;
-             $uiclassname{$name} = 1;
-             if (defined $activateDebug) {
-                 warn "Found Class Name in file \'$uifile\': name \'$name\'\n";
-             }
-             $mainClassFound = 1;
-           }
-        }
-        # Special case buttongroup
-        if ( /\<buttongroup name=\"(.*)\"\/\>/ ) {
-           my $className = "QButtonGroup";
-           my $variableName = $1;
-           $varname{$variableName} = ${className};
-
-           if (defined $activateDebug) {
-              warn "Found QButtonGroup in file \'$uifile\': name \'$variableName\'\n";
-           }
-        }
-
-        $_;
-      } <$FILE>
-    }
-}
-
 sub parseHeaderFile($)
 {
     my ($file) = @_;
@@ -444,7 +398,7 @@ foreach my $file (@ARGV) {
     initVariables();
     
     # 2) Search all ui file and parse them
-    parseUiFile();
+    functionUtilkde::extraVariableFromUiFile(\%varname, \%uiclassname);
     
     # 3) read header and parse it.
     parseHeaderFile($file);
