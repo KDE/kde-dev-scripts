@@ -78,8 +78,17 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qDebug\s*\(\s*\),qCDe
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qWarning\s*\(\s*\),qCWarning\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qFatal\s*\(\s*\),qCCritical\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qError\s*\(\s*\),qCCritical\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kDebug\s*\(\s*\),qCDebug\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kWarning\s*\(\s*\),qCWarning\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kFatal\s*\(\s*\),qCCritical\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kError\s*\(\s*\),qCCritical\($newcategoryname\),"
+
+
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<QDebug\>,#include \"$debugnamefile.h\","
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<qdebug.h\>,#include \"$debugnamefile.h\","
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<kdebug.h\>,#include \"$debugnamefile.h\","
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<KDebug\>,#include \"$debugnamefile.h\","
+
 
 git add $debugnamefile.cpp $debugnamefile.h
 
