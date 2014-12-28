@@ -191,6 +191,9 @@ foreach my $file (@ARGV) {
     if (`grep QStandardPaths $file | grep -v '#include'`) {
       functionUtilkde::addIncludeInFile($file, "QStandardPaths");
     }
+    if (`grep KSharedConfig $file | grep -v '#include'`) {
+      functionUtilkde::addIncludeInFile($file, "KSharedConfig");
+    }
 }
 
 functionUtilkde::diffFile( "@ARGV" );
