@@ -138,6 +138,10 @@ my @l = map {
      $_ =~ s/\${QT_QTNETWORK_LIBRARY}/Qt5::Network/;
      $modified = 1;
   }
+  if (/QT_QTSCRIPT_LIBRARY/) {
+     $_ =~ s/\${QT_QTSCRIPT_LIBRARY}/Qt5::Script/;
+     $modified = 1;
+  }
   if (/KDE4_KDECORE_LIBS/) {
      $_ =~ s/\${KDE4_KDECORE_LIBS}/KF5::KDELibs4Support/;
      $modified = 1;
