@@ -70,7 +70,13 @@ sub headerName
        unless ( -e $headerfile ) {
           $headerfile = $cppfile . "_p.h";
        }
-    } 
+    } elsif ( $cppfile =~ /.cc$/ ) {
+       $cppfile =~ s/.cc$//;
+       $headerfile = $cppfile . ".h";
+       unless ( -e $headerfile ) {
+          $headerfile = $cppfile . "_p.h";
+       }
+    }
     return $headerfile;
 }
 
