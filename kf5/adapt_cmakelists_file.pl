@@ -398,6 +398,10 @@ my @l = map {
      $_ =~ s/kdegames/KF5KDEGames/;
      $modified = 1;
   }
+  if (/LIBKONQ_LIBRARY/) {
+     $_ =~ s/\${LIBKONQ_LIBRARY}/KF5::Konq/;
+     $modified = 1;
+  }
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
