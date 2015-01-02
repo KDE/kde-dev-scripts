@@ -173,9 +173,15 @@ foreach my $file (@ARGV) {
         }
 
         # url.addPath(path)
-        if (my ($indent, $url, $path) = /^(\s*)(\w+)\.addPath\(\s*([^\)]*)\s*\)/) {
+        my $regexpAddPath = qr/
+          ^(\s*)           # (1) Indentation
+          (\w+)\.addPath   # (2) url
+          ${functionUtilkde::paren_begin}3${functionUtilkde::paren_end}  # (3) path
+          /x; # /x Enables extended whitespace mode
+        if (my ($indent, $url, $path) = $_ =~ $regexpAddPath ) {
             if (defined $urls{$url}) {
-                s/$url\.addPath\(\s*$path\s*\)\;/$url = $url\.adjusted(QUrl::StripTrailingSlash)\;\n$indent$url.setPath($url.path() + '\/' + $path)\;/;
+                $_ = $indent . "$url = $url" . ".adjusted(QUrl::StripTrailingSlash);\n" . $indent . "$url.setPath($url.path() + '\/' + $path);\n";
+                #s/$url\.addPath\(\s*$path\s*\)\;/$url = $url\.adjusted(QUrl::StripTrailingSlash)\;\n$indent$url.setPath($url.path() + '\/' + $path)\;/;
             }
         }
 
