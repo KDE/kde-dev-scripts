@@ -402,6 +402,10 @@ my @l = map {
      $_ =~ s/\${LIBKONQ_LIBRARY}/KF5::Konq/;
      $modified = 1;
   }
+  if (/QT_QTOPENGL_LIBRARY/) {
+     $_ =~ s/\${QT_QTOPENGL_LIBRARY}/Qt5::OpenGL/;
+     $modified = 1;
+  }
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
