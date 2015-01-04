@@ -14,6 +14,9 @@ newfile=`echo $newname | tr A-Z a-z`
 if [ ! -f $newfile.h ]; then
     git mv $oldfile.h $newfile.h
     git mv $oldfile.cpp $newfile.cpp
+    if [ -f ${oldfile}_p.h ]; then
+        git mv ${oldfile}_p.h ${newfile}_p.h
+    fi
 fi
 
 # Update buildsystem
@@ -21,6 +24,9 @@ perl -pi -e "s/$oldfile\.cpp/$newfile.cpp/" CMakeLists.txt
 
 # Rename class
 perl -pi -e "s/$oldname/$newname/g" $newfile.h $newfile.cpp
+if [ -f ${newfile}_p.h ]; then
+    perl -pi -e "s/$oldname/$newname/g" ${newfile}_p.h
+fi
 
 oldinclguard=`echo $oldname | tr a-z A-Z`
 newinclguard=`echo $newname | tr a-z A-Z`

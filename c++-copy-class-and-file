@@ -16,8 +16,15 @@ echo "Copying $oldfile.{cpp,h} to $newfile.{cpp,h}"
 if [ ! -f $newfile.h ]; then
     cp $oldfile.h $newfile.h
     cp $oldfile.cpp $newfile.cpp
+    if [ -f ${oldfile}_p.h ]; then
+        cp ${oldfile}_p.h ${newfile}_p.h
+    fi
+
     git add $newfile.h
     git add $newfile.cpp
+    if [ -f ${newfile}_p.h ]; then
+        git add ${newfile}_p.h
+    fi
 fi
 
 # Update build system
@@ -26,6 +33,9 @@ perl -pi -e '$_ .= "$1'$newfile.h'\n" if (m/^(\s*)'$oldfile'\.h/)' CMakeLists.tx
 
 # Rename class
 perl -pi -e "s/$oldname/$newname/g" $newfile.h $newfile.cpp
+if [ -f ${newfile}_p.h ]; then
+    perl -pi -e "s/$oldname/$newname/g" ${newfile}_p.h
+fi
 
 oldinclguard=`echo $oldname | tr a-z A-Z`
 newinclguard=`echo $newname | tr a-z A-Z`
