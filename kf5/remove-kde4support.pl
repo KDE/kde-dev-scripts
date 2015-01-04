@@ -114,6 +114,11 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::windowTitleFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::TitleFont\),g;
            $needQFontDatabase = 1;
         }
+        if (/KGlobalSettings::smallestReadableFont/) {
+           s,KGlobalSettings::smallestReadableFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::SmallestReadableFont\),g;
+           $needQFontDatabase = 1;
+        }
+
         if (/KGlobalSettings::contrast\b/) {
            s,KGlobalSettings::contrast\b,KColorScheme::contrast,g;
            $needKColorScheme = 1;
