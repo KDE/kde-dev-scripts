@@ -96,6 +96,7 @@ git add $debugnamefile.cpp $debugnamefile.h
 # end
 echo "1) Add $debugnamefile.cpp to CMakeLists.txt"
 echo "2) Add #include <QDebug> + #include \"$debugnamefile.h\" to each file which was changed"
-echo "3) Verify that it compiles :)"
-echo "4) If you find bugs fix them please"
+echo "3) Adjust name / email in $debugnamefile.cpp and $debugnamefile.h"
+echo "4) Verify that it compiles :)"
+echo "5) If you find bugs fix them please"
 
