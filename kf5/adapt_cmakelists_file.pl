@@ -207,6 +207,10 @@ my @l = map {
      $_ =~ s/\${KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
      $modified = 1;
   }
+  if (/KDE4_KNEWSTUFF3_LIBRARY/) {
+     $_ =~ s/\${KDE4_KNEWSTUFF3_LIBRARY}/KF5::NewStuff/;
+     $modified = 1;
+  }
   if (/KDEPIMLIBS_KLDAP_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_KLDAP_LIBS}/KF5::KLdap/;
      $modified = 1;
@@ -280,6 +284,11 @@ my @l = map {
      $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
   }
+  if (/KDE4_PHONON_LIBRARY/) {
+     $_ =~ s/\${KDE4_PHONON_LIBRARY}/Phonon::phonon4qt5/;
+     $modified = 1;
+  }
+
   if (/QT_QTTEST_LIBRARY/) {
      $_ =~ s/\${QT_QTTEST_LIBRARY}/Qt5::Test/;
      $modified = 1;
@@ -394,6 +403,11 @@ my @l = map {
      $_ =~ s/\${KSANE_LIBRARY}/KF5::Sane/;
      $modified = 1;
   }
+  if (/kdegamesprivate/) {
+     $_ =~ s/kdegamesprivate/KF5KDEGamesPrivate/;
+     $modified = 1;
+  }
+
   if (/kdegames/) {
      $_ =~ s/kdegames/KF5KDEGames/;
      $modified = 1;
