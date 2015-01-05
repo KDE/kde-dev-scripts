@@ -407,7 +407,10 @@ my @l = map {
      $_ =~ s/kdegamesprivate/KF5KDEGamesPrivate/;
      $modified = 1;
   }
-
+  if (/KDECLARATIVE_LIBRARIES/) {
+     $_ =~ s/\${KDECLARATIVE_LIBRARIES}/KF5::Declarative/;
+     $modified = 1;
+  }
   if (/kdegames/) {
      $_ =~ s/kdegames/KF5KDEGames/;
      $modified = 1;
