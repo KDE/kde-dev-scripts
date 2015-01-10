@@ -492,7 +492,7 @@ my @l = map {
      if (my ($begin, $end) = $_ =~ $regexp) {
         $_ = $begin . "\${KNOTIFYRC_INSTALL_DIR}" . $end . "\n";
         $modified = 1;
-     } elsif (not /KNOTIFYRC_INSTALL_DIR/) {
+     } elsif (not /KNOTIFYRC_INSTALL_DIR/ and not /_INSTALL_KNOTIFY5RCDIR/) {
         my $line = $_;
         $line =~ s/\s*$//;
         print "Could not fix a .notifyrc file installation call ($line)\n"
