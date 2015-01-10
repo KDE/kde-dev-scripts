@@ -76,13 +76,13 @@ my @l = map {
     # all variables we care about have "INSTALL" in their name
     if (/INSTALL/) {
         while (my ($oldvar,$suffix) = each(%old_var_map)) {
-            $updated =~ s/\b$oldvar\b/KDE_INSTALL_$suffix/;
+            $updated =~ s/\${$oldvar}/\${KDE_INSTALL_$suffix}/;
         }
         foreach (@new_var_suffixes) {
-            $updated =~ s/\bCMAKE_INSTALL_$_\b/KDE_INSTALL_$_/;
+            $updated =~ s/\${CMAKE_INSTALL_$_}/\${KDE_INSTALL_$_}/;
         }
         while (my ($oldvalue,$newvalue) = each(%extra_changes)) {
-            $updated =~ s/\b$oldvalue\b/$newvalue/;
+            $updated =~ s/\${$oldvalue}/\\\${$newvalue}/;
         }
     }
 
