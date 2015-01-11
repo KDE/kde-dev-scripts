@@ -15,7 +15,14 @@ my @l = map {
      $_ = "";
      $modified = 1;
   }
-
+  if (/KDE4_INCLUDE_DIR/) {
+     $_ =~ s/\${KDE4_INCLUDE_DIR}//;
+     $modified = 1;
+  }
+  if (/QT_INCLUDES/ ) {
+     $_ =~ s/\${QT_INCLUDES}//;
+     $modified = 1;
+  }
   if (/kde4_install_icons/i) {
      $_ =~ s/kde4_install_icons/ecm_install_icons/i;
      $modified = 1;
@@ -527,7 +534,11 @@ my @l = map {
      $_ = $indent . "add_library($libname MODULE " . $end . "\n";
      $modified = 1;
   }
-
+  # At the end include_directories can be empty
+  if (/include_directories\s*\(\s*\)/i) {
+     $_ = "";
+     $modified = 1;
+  }
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
