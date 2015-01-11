@@ -67,6 +67,7 @@ my %extra_changes = (
     INSTALL_TARGETS_DEFAULT_ARGS => 'KDE_INSTALL_TARGETS_DEFAULT_ARGS'
 );
 
+foreach my $file (@ARGV) {
 open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
@@ -94,5 +95,6 @@ if ($modified) {
     open (my $OUT, ">", $file);
     print $OUT @l;
     close ($OUT);
+}
 }
 # vi:et:sts=4:sw=4
