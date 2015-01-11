@@ -82,7 +82,7 @@ my @l = map {
             $updated =~ s/\${CMAKE_INSTALL_$_}/\${KDE_INSTALL_$_}/;
         }
         while (my ($oldvalue,$newvalue) = each(%extra_changes)) {
-            $updated =~ s/\${$oldvalue}/\\\${$newvalue}/;
+            $updated =~ s/\${$oldvalue}/\${$newvalue}/;
         }
     }
 
