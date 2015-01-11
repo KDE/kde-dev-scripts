@@ -7,9 +7,9 @@
 #
 # Do not use unless your project depends on extra-cmake-modules 1.6.0
 # or later.
+# find -iname "CMakeLists.txt" |xargs kde-dev-scripts/kf5/cmakelists_install_vars.pl
 
 use strict;
-my $file = "CMakeLists.txt";
 
 my %old_var_map = (
     BUNDLE_INSTALL_DIR => 'BUNDLEDIR',
