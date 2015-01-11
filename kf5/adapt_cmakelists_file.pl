@@ -282,6 +282,11 @@ my @l = map {
      $_ =~ s/\${KDE4_KPARTS_LIBS}/KF5::Parts/;
      $modified = 1;
   }
+  if (/KDE4_KPARTS_LIBRARY/) {
+     $_ =~ s/\${KDE4_KPARTS_LIBRARY}/KF5::Parts/;
+     $modified = 1;
+  }
+
   if (/KDE4_PHONON_LIBS/) {
      $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
