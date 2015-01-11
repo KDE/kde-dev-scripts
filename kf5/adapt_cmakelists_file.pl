@@ -1,10 +1,12 @@
 #!/usr/bin/perl -w
 
-# Laurent Montel <montel@kde.org> 2014
-# Modifies CMakeLists.txt in current directory to use kf5 macro
+# Laurent Montel <montel@kde.org> 2014-2015
+# Modifies CMakeLists.txt to use kf5 macro
+# find -iname "CMakeLists.txt" |xargs kde-dev-scripts/kf5/adapt_cmakelists_file.pl
 
 use strict;
-my $file = "CMakeLists.txt";
+
+foreach my $file (@ARGV) {
 open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
@@ -529,4 +531,5 @@ if ($modified) {
     open (my $OUT, ">", $file);
     print $OUT @l;
     close ($OUT);
+}
 }
