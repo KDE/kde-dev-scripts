@@ -195,7 +195,11 @@ foreach my $file (@ARGV) {
                 $negatedOptions{$name} = 1;
             }
             my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
-            $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << ${short}QLatin1String(\"$name\"), $translate$trail));\n";
+            if ($name =~ s/^\+//) {
+                $_ = "${prefix}parser.addPositionalArgument(QLatin1String(\"$name\"), $translate$trail);\n";
+            } else {
+                $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << ${short}QLatin1String(\"$name\"), $translate$trail));\n";
+            }
             $needQCommandLineOption = 1;
             $short = "";
         } elsif (/KCmdLineArgs\s*\*\s*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {
