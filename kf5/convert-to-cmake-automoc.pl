@@ -31,7 +31,7 @@ foreach my $file (@ARGV) {
     open(my $FILE, "<", $file) or die "We can't open file $file:$!\n";
     my $content = do { local $/; <$FILE> };
 
-    my $regexRequiresMoc = qr/(Q_OBJECT|Q_GADGET|K_PLUGIN_FACTORY|EXPORT_KONTACT_PLUGIN)/;
+    my $regexRequiresMoc = qr/(Q_OBJECT|Q_GADGET|K_PLUGIN_FACTORY|EXPORT_KONTACT_PLUGIN|_WITH_JSON|K_EXPORT_PLASMA_RUNNER)/;
 
     my ($filenameWithoutExtension, $dirs,) = fileparse($file, qr/\.[^.]*/);
 
