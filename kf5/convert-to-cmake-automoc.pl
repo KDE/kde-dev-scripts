@@ -40,7 +40,9 @@ foreach my $file (@ARGV) {
     # E.g. in case when the moc-generated file needs information about a class declared inside the .cpp file
     # Try to detect these cases and include '#include moc_<basename>.cpp' instead
     my $headerFile = $dirs . "$filenameWithoutExtension.h";
-    my $requiresHeaderMocInclude = `grep Q_PRIVATE_SLOT $headerFile &> /dev/null`;
+    my $requiresHeaderMocInclude = (-e $headerFile) ?
+        `grep Q_PRIVATE_SLOT -q $headerFile` :
+        0;
 
     my $sourceMocFilename = "$filenameWithoutExtension.moc";
     my $requiresSourceMocInclude = ($content =~ /$regexRequiresMoc/);
