@@ -27,6 +27,10 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
+        s/\bQ_WS_WIN/Q_OS_WIN/g;
+        s/\bQ_WS_MAC/Q_OS_MAC/g;
+
+
         s/\bkasciistricmp\b/qstricmp/;
         s/KGlobal::config\(\)/KSharedConfig::openConfig()/g;
 
