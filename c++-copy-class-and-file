@@ -16,8 +16,14 @@ echo "Copying $oldfile.{cpp,h} to $newfile.{cpp,h}"
 if [ ! -f $newfile.h ]; then
     cp $oldfile.h $newfile.h
     cp $oldfile.cpp $newfile.cpp
-    git add $newfile.h
-    git add $newfile.cpp
+    SVN_INFO=$(svn info 2>/dev/null)
+    if test -n "$SVN_INFO"; then
+        svn add $newfile.h
+        svn add $newfile.cpp
+    else
+        git add $newfile.h
+        git add $newfile.cpp
+    fi
 fi
 
 # Update build system

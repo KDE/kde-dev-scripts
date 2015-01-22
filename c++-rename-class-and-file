@@ -12,8 +12,14 @@ oldfile=`echo $oldname | tr A-Z a-z`
 newfile=`echo $newname | tr A-Z a-z`
 
 if [ ! -f $newfile.h ]; then
-    git mv $oldfile.h $newfile.h
-    git mv $oldfile.cpp $newfile.cpp
+    SVN_INFO=$(svn info 2>/dev/null)
+    if test -n "$SVN_INFO"; then
+        svn mv $oldfile.h $newfile.h
+        svn mv $oldfile.cpp $newfile.cpp
+    else
+        git mv $oldfile.h $newfile.h
+        git mv $oldfile.cpp $newfile.cpp
+    fi
 fi
 
 # Update buildsystem
