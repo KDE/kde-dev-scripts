@@ -31,13 +31,13 @@ perl -pi -e '$_ .= "$1'$newfile.cpp'\n" if (m/^(\s*)'$oldfile'\.cpp/)' CMakeList
 perl -pi -e '$_ .= "$1'$newfile.h'\n" if (m/^(\s*)'$oldfile'\.h/)' CMakeLists.txt
 
 # Rename class
-perl -pi -e "s/$oldname/$newname/g" $newfile.h $newfile.cpp
+perl -pi -e "s/\b$oldname/$newname/g" $newfile.h $newfile.cpp
 
 oldinclguard=`echo $oldname | tr a-z A-Z`
 newinclguard=`echo $newname | tr a-z A-Z`
 
 # Update include guard
-perl -pi -e "s/$oldinclguard/$newinclguard/g" $newfile.h
+perl -pi -e "s/\b$oldinclguard/$newinclguard/g" $newfile.h
 
 # Update includes in cpp file
 perl -pi -e 's/\b'$oldfile'\.h/'$newfile'\.h/' $newfile.cpp
