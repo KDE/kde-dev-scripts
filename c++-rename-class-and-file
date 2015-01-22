@@ -34,7 +34,7 @@ newinclguard=`echo $newname | tr a-z A-Z`
 # Update include guard
 perl -pi -e "s/\b$oldinclguard/$newinclguard/g" $newfile.h
 
-# Update include in cpp file
-perl -pi -e 's/\b'$oldfile'\.h/'$newfile'\.h/' $newfile.cpp
+# Update include in all relevant files
+perl -pi -e 's/\b'$oldfile'\.h/'$newfile'\.h/' `grep -l $oldfile.h *.cpp *.h`
 
 
