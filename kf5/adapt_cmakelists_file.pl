@@ -189,9 +189,14 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KABC_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Abc/;
+     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Contacts/;
      $modified = 1;
   }
+  if (/KF5::Abc/) {
+     $_ =~ s/KF5::Abc/KF5::Contacts/;
+     $modified = 1;
+  }
+
   if (/KDEPIMLIBS_AKONADI_CONTACT_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_AKONADI_CONTACT_LIBS}/KF5::AkonadiContact/;
      $modified = 1;
