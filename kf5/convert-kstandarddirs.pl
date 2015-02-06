@@ -24,7 +24,7 @@ my %otherResource = (
    "locale" => "locale",
    "wallpaper" => "wallpapers",
    "xdgdata-mime" => "mime",
-   "sound" => "sound"
+   "sound" => "sounds"
 );
 
 my %xdgconfResource = (
