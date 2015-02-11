@@ -87,7 +87,6 @@ foreach my $file (@ARGV) {
         s/\bKDoubleNumInput\b/QDoubleSpinBox/g;
         s/\<KDoubleNumInput\b\>/\<QQDoubleSpinBox>/ if (/#include/);
         s/\<kdoublenuminput.h\>/\<QDoubleSpinBox>/ if (/#include/);
-
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;

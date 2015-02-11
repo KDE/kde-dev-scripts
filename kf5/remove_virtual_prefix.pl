@@ -20,10 +20,10 @@ foreach my $file (@ARGV) {
            ^(\s*)                        # (1) Indentation
            virtual\s*                    # (2) virtual
            (.*)                          # (3) function
-           Q_DECL_OVERRIDE;$
+           Q_DECL_OVERRIDE(.*)$
            /x; # /x Enables extended whitespace mode
-        if (my ($indent, $function) = $_ =~ $regexp) {
-           $_ = $indent . $function . "Q_DECL_OVERRIDE;" . "\n";
+        if (my ($indent, $function, $end) = $_ =~ $regexp) {
+           $_ = $indent . $function . "Q_DECL_OVERRIDE" . $end . "\n";
         }
  
         $modified ||= $orig ne $_;
