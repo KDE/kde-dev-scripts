@@ -25,7 +25,17 @@ foreach my $file (@ARGV) {
         if (my ($indent, $function, $end) = $_ =~ $regexp) {
            $_ = $indent . $function . "Q_DECL_OVERRIDE" . $end . "\n";
         }
- 
+
+        my $regexpComment = qr/
+           ^(\s*)                        # (1) Indentation
+           \/\*\s*reimp\s*\*\/\s*                    # (2) reimp comment
+           (.*)                          # (3) function
+           Q_DECL_OVERRIDE(.*)$
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $function, $end) = $_ =~ $regexpComment) {
+           $_ = $indent . $function . "Q_DECL_OVERRIDE" . $end . "\n";
+        }
+
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
