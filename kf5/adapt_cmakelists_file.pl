@@ -518,6 +518,29 @@ my @l = map {
      }
   }
 
+
+  #kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
+  my $kde4AppIconRegexp = qr/
+               ^(\s*)                  # (1) Indentation
+               kde4_add_app_icon\s*\(    # 
+               (.*)\s+                   #source name
+               (.*)\)$                   #end
+               /x; # /x Enables extended whitespace mode
+  if (my ($indent, $sourcename, $icons) = $_ =~ $kde4AppIconRegexp) {
+     warn "found kde4_add_app_icon\n";
+     warn "You need to increase ecm to 1.7 and add include(ECMAddAppIcon)\n";
+     if ($icons =~ /\*/) {
+        $_ = $indent . "file(GLOB ICONS_SRCS " . "$icons" . ")\n";
+        $_ .= $indent . "ecm_add_app_icon($sourcename ICONS \${ICONS_SRCS})\n";
+        $modified = 1;
+     } else {
+        $_ = $indent . "ecm_add_app_icon($sourcename ICONS $icons)\n";
+        $modified = 1;
+     }
+  }
+
+
+
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
                ^(\s*)                  # (1) Indentation
