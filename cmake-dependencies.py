@@ -104,7 +104,7 @@ if __name__ == "__main__":
                 processedFiles[moduleName]['version'] = checkPackageVersion(moduleName)
 
             processedFiles[moduleName]['files'].add(currentFile)
-            processedFiles[moduleName]['explicit'] |= (callingFile.endswith("CMakeLists.txt"))
+            processedFiles[moduleName]['explicit'] |= (callingFile.endswith("CMakeLists.txt") or callingFile.endswith("Qt5/Qt5Config.cmake") or callingFile.endswith("FindKF5.cmake"))
 
     print("[")
     first = True
