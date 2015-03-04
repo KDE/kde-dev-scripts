@@ -115,9 +115,17 @@ if __name__ == "__main__":
 
         value['files'] = list(value['files'])
         value['project'] = v
-        print("\t%s" % (json.dumps(value)), end='')
         if v in lookedUpPackages:
+            if value['version'] is None:
+                line = lookedUpPackages[v]
+                isVersion = line[:line.find(' ')]
+
+                if len(isVersion)>0 and isVersion[0].isdigit():
+                    value['version'] = { 'used': None, 'requested': isVersion }
+
             del lookedUpPackages[v]
+
+        print("\t%s" % (json.dumps(value)), end='')
 
     # display missing packages
     for v in lookedUpPackages:
