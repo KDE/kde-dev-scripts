@@ -76,7 +76,7 @@ foreach my $cmakelists (@ARGV) {
         my %themehash = ();
 
         foreach my $file (<{*.png,*.svgz,*.mng}>) {
-            if ($file =~ /(br|ox|cr|lo|hi)(\d\d|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
+            if ($file =~ /(br|ox|cr|lo|hi)(\d+|sc)-(\w+)-([^\.]+)\.(png|svgz|mng)/) {
                 my $th = $1;
                 my $size = $2;
                 my $group = $3;
