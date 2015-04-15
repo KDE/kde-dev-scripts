@@ -88,7 +88,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMUTILS_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}/KF5::PimUtils/;
+     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}//;
      $modified = 1;
   }
   if (/KDEPIMLIBS_MAILTRANSPORT_LIBS/) {
