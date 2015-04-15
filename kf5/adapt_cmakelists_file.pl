@@ -502,6 +502,10 @@ my @l = map {
      warn "Need to add \'include(ECMOptionalAddSubdirectory)\' in $file \n";
   }
 
+  if (/kde4_moc_headers/i) {
+     $_ = "";
+     $modified = 1;
+  }
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
@@ -538,7 +542,7 @@ my @l = map {
         $modified = 1;
      }
   }
-
+ 
 
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
