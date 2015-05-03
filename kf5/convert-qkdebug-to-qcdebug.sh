@@ -78,6 +78,7 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qDebug\s*\(\s*\),qCDe
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qWarning\s*\(\s*\),qCWarning\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qFatal\s*\(\s*\),qCCritical\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qError\s*\(\s*\),qCCritical\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,qCritical\s*\(\s*\),qCCritical\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kDebug\s*\(\s*\),qCDebug\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kWarning\s*\(\s*\),qCWarning\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kFatal\s*\(\s*\),qCCritical\($newcategoryname\),"
