@@ -26,6 +26,7 @@ use strict;
 ### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
 
 my %license_table = (
+    'afiestas'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hubner'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'aacid'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'abryant'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
