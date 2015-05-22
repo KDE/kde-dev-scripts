@@ -27,6 +27,10 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
+        s/\bQ_WS_WIN/Q_OS_WIN/g;
+        s/\bQ_WS_MAC/Q_OS_MAC/g;
+
+
         s/\bkasciistricmp\b/qstricmp/;
         s/KGlobal::config\(\)/KSharedConfig::openConfig()/g;
 
@@ -114,6 +118,11 @@ foreach my $file (@ARGV) {
            s,KGlobalSettings::windowTitleFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::TitleFont\),g;
            $needQFontDatabase = 1;
         }
+        if (/KGlobalSettings::smallestReadableFont/) {
+           s,KGlobalSettings::smallestReadableFont\s*\(\s*\),QFontDatabase::systemFont\(QFontDatabase::SmallestReadableFont\),g;
+           $needQFontDatabase = 1;
+        }
+
         if (/KGlobalSettings::contrast\b/) {
            s,KGlobalSettings::contrast\b,KColorScheme::contrast,g;
            $needKColorScheme = 1;

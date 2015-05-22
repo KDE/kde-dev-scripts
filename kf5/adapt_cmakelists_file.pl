@@ -1,19 +1,28 @@
 #!/usr/bin/perl -w
 
-# Laurent Montel <montel@kde.org> 2014
-# Modifies CMakeLists.txt in current directory to use kf5 macro
+# Laurent Montel <montel@kde.org> 2014-2015
+# Modifies CMakeLists.txt to use kf5 macro
+# find -iname "CMakeLists.txt" |xargs kde-dev-scripts/kf5/adapt_cmakelists_file.pl
 
 use strict;
-my $file = "CMakeLists.txt";
+
+foreach my $file (@ARGV) {
 open(my $FILE, "<", $file) || die;
 my $modified = 0;
 my @l = map {
   my $orig = $_;
-  if (/kde4_no_enable_final/) {
+  if (/kde4_no_enable_final/i) {
      $_ = "";
      $modified = 1;
   }
-
+  if (/KDE4_INCLUDE_DIR/) {
+     $_ =~ s/\${KDE4_INCLUDE_DIR}//;
+     $modified = 1;
+  }
+  if (/QT_INCLUDES/ ) {
+     $_ =~ s/\${QT_INCLUDES}//;
+     $modified = 1;
+  }
   if (/kde4_install_icons/i) {
      $_ =~ s/kde4_install_icons/ecm_install_icons/i;
      $modified = 1;
@@ -51,6 +60,7 @@ my @l = map {
 
   if (/KDE4_ENABLE_EXCEPTIONS/i) {
       $_ =~ s/set\s*\(\s*CMAKE_CXX_FLAGS\s*\"\$\{CMAKE_CXX_FLAGS\} \$\{KDE4_ENABLE_EXCEPTIONS\}\"\s*\)/kde_enable_exceptions\(\)/i;
+      $_ =~ s/add_definitions\(\s*\$\{KDE4_ENABLE_EXCEPTIONS\}\s*\)/kde_enable_exceptions\(\)/i;
       $modified = 1;
   } 
   if (/qt4_add_dbus_adaptor/i) {
@@ -60,6 +70,10 @@ my @l = map {
   if (/qt4_wrap_ui/i) {
       $_ =~ s/qt4_wrap_ui/ki18n_wrap_ui/i;
       $modified = 1;
+  }
+  if (/KDE4_KCALCORE_LIBS/) {
+     $_ =~ s/\${KDE4_KCALCORE_LIBS}/KF5::CalendarCore/;
+     $modified = 1;
   }
   if (/KDE4_KMIME_LIBRARY/) {
      $_ =~ s/\${KDE4_KMIME_LIBRARY}/KF5::Mime/;
@@ -74,7 +88,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMUTILS_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}/KF5::PimUtils/;
+     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}//;
      $modified = 1;
   }
   if (/KDEPIMLIBS_MAILTRANSPORT_LIBS/) {
@@ -133,6 +147,10 @@ my @l = map {
      $_ =~ s/\${QT_QTNETWORK_LIBRARY}/Qt5::Network/;
      $modified = 1;
   }
+  if (/QT_QTSCRIPT_LIBRARY/) {
+     $_ =~ s/\${QT_QTSCRIPT_LIBRARY}/Qt5::Script/;
+     $modified = 1;
+  }
   if (/KDE4_KDECORE_LIBS/) {
      $_ =~ s/\${KDE4_KDECORE_LIBS}/KF5::KDELibs4Support/;
      $modified = 1;
@@ -171,9 +189,14 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KABC_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Abc/;
+     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Contacts/;
      $modified = 1;
   }
+  if (/KF5::Abc/) {
+     $_ =~ s/KF5::Abc/KF5::Contacts/;
+     $modified = 1;
+  }
+
   if (/KDEPIMLIBS_AKONADI_CONTACT_LIBS/) {
      $_ =~ s/\${KDEPIMLIBS_AKONADI_CONTACT_LIBS}/KF5::AkonadiContact/;
      $modified = 1;
@@ -196,6 +219,10 @@ my @l = map {
   }
   if (/KDE4_KNEWSTUFF3_LIBS/) {
      $_ =~ s/\${KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
+     $modified = 1;
+  }
+  if (/KDE4_KNEWSTUFF3_LIBRARY/) {
+     $_ =~ s/\${KDE4_KNEWSTUFF3_LIBRARY}/KF5::NewStuff/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KLDAP_LIBS/) {
@@ -267,10 +294,20 @@ my @l = map {
      $_ =~ s/\${KDE4_KPARTS_LIBS}/KF5::Parts/;
      $modified = 1;
   }
+  if (/KDE4_KPARTS_LIBRARY/) {
+     $_ =~ s/\${KDE4_KPARTS_LIBRARY}/KF5::Parts/;
+     $modified = 1;
+  }
+
   if (/KDE4_PHONON_LIBS/) {
      $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
   }
+  if (/KDE4_PHONON_LIBRARY/) {
+     $_ =~ s/\${KDE4_PHONON_LIBRARY}/Phonon::phonon4qt5/;
+     $modified = 1;
+  }
+
   if (/QT_QTTEST_LIBRARY/) {
      $_ =~ s/\${QT_QTTEST_LIBRARY}/Qt5::Test/;
      $modified = 1;
@@ -294,6 +331,10 @@ my @l = map {
   }
   if (/QT_QTWEBKIT_LIBRARY/) {
      $_ =~ s/\${QT_QTWEBKIT_LIBRARY}/Qt5::WebKitWidgets/;
+     $modified = 1;
+  }
+  if (/QT_QTSQL_LIBRARY/) {
+     $_ =~ s/\${QT_QTSQL_LIBRARY}/Qt5::Sql/;
      $modified = 1;
   }
   if (/KDE4_KFILE_LIBS/) {
@@ -357,7 +398,50 @@ my @l = map {
      $_ =~ s/\${KDEVPLATFORM_SUBLIME_LIBRARIES}/KDev::Sublime/;
      $modified = 1;
   }
-
+  if (/KDE4_THREADWEAVER_LIBRARIES/) {
+     $_ =~ s/\${KDE4_THREADWEAVER_LIBRARIES}/KF5::ThreadWeaver/;
+     $modified = 1;
+  }
+  if (/QT_AND_KDECORE_LIBS/) {
+     $_ =~ s/\${QT_AND_KDECORE_LIBS}//;
+     $modified = 1;
+  }
+  if (/KIPI_LIBRARIES/) {
+     $_ =~ s/\${KIPI_LIBRARIES}/KF5::Kipi/;
+     $modified = 1;
+  }
+  if (/KEXIV2_LIBRARIES/) {
+     $_ =~ s/\${KEXIV2_LIBRARIES}/KF5::KExiv2/;
+     $modified = 1;     
+  }
+  if (/KDCRAW_LIBRARIES/) {
+     $_ =~ s/\${KDCRAW_LIBRARIES}/KF5::KDcraw/;
+     $modified = 1;
+  }
+  if (/KSANE_LIBRARY/) {
+     $_ =~ s/\${KSANE_LIBRARY}/KF5::Sane/;
+     $modified = 1;
+  }
+  if (/kdegamesprivate/) {
+     $_ =~ s/kdegamesprivate/KF5KDEGamesPrivate/;
+     $modified = 1;
+  }
+  if (/KDECLARATIVE_LIBRARIES/) {
+     $_ =~ s/\${KDECLARATIVE_LIBRARIES}/KF5::Declarative/;
+     $modified = 1;
+  }
+  if (/kdegames/) {
+     $_ =~ s/kdegames/KF5KDEGames/;
+     $modified = 1;
+  }
+  if (/LIBKONQ_LIBRARY/) {
+     $_ =~ s/\${LIBKONQ_LIBRARY}/KF5::Konq/;
+     $modified = 1;
+  }
+  if (/QT_QTOPENGL_LIBRARY/) {
+     $_ =~ s/\${QT_QTOPENGL_LIBRARY}/Qt5::OpenGL/;
+     $modified = 1;
+  }
   #if (/macro_optional_add_subdirectory/) {
   #   $_ =~ s/macro_optional_add_subdirectory/add_subdirectory/;
   #   $modified = 1;
@@ -395,8 +479,17 @@ my @l = map {
      $_ =~ s/\${KDE4_INCLUDES}//;
      $modified = 1;
   }
+  if (/KDE4_KDNSSD_LIBS/) {
+     $_ =~ s/\${KDE4_KDNSSD_LIBS}/KF5::DNSSD/;
+     $modified = 1;
+  }
+
   if (/akonadi-kde/) {
      $_ =~ s/akonadi-kde//;
+     $modified = 1;
+  }
+  if (/QT_QTSVG_LIBRARY/) {
+     $_ =~ s/\${QT_QTSVG_LIBRARY}/Qt5::Svg/;
      $modified = 1;
   }
   if (/KF5::KDE4Support/) {
@@ -409,6 +502,10 @@ my @l = map {
      warn "Need to add \'include(ECMOptionalAddSubdirectory)\' in $file \n";
   }
 
+  if (/kde4_moc_headers/i) {
+     $_ = "";
+     $modified = 1;
+  }
   if (/\.notifyrc/) {
      my $regexp = qr/
                   ^(\s*install\s*\(\s*FILES\s+[^\s)]+\.notifyrc\s+DESTINATION\s+)
@@ -418,12 +515,35 @@ my @l = map {
      if (my ($begin, $end) = $_ =~ $regexp) {
         $_ = $begin . "\${KNOTIFYRC_INSTALL_DIR}" . $end . "\n";
         $modified = 1;
-     } elsif (not /KNOTIFYRC_INSTALL_DIR/) {
+     } elsif (not /KNOTIFYRC_INSTALL_DIR/ and not /_INSTALL_KNOTIFY5RCDIR/) {
         my $line = $_;
         $line =~ s/\s*$//;
         print "Could not fix a .notifyrc file installation call ($line)\n"
      }
   }
+
+
+  #kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
+  my $kde4AppIconRegexp = qr/
+               ^(\s*)                  # (1) Indentation
+               kde4_add_app_icon\s*\(    # 
+               (.*)\s+                   #source name
+               (.*)\)$                   #end
+               /x; # /x Enables extended whitespace mode
+  if (my ($indent, $sourcename, $icons) = $_ =~ $kde4AppIconRegexp) {
+     warn "found kde4_add_app_icon\n";
+     warn "You need to increase ecm to 1.7 and add include(ECMAddAppIcon)\n";
+     if ($icons =~ /\*/) {
+        $_ = $indent . "file(GLOB ICONS_SRCS " . "$icons" . ")\n";
+        $_ .= $indent . "ecm_add_app_icon($sourcename ICONS \${ICONS_SRCS})\n";
+        $modified = 1;
+     } else {
+        $_ = $indent . "ecm_add_app_icon($sourcename ICONS $icons)\n";
+        $modified = 1;
+     }
+  }
+ 
+
 
   #kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
   my $regexp = qr/
@@ -436,6 +556,21 @@ my @l = map {
      $_ = $indent . "add_library($libname MODULE " . $end . "\n";
      $modified = 1;
   }
+  my $regexpUpperCase = qr/
+               ^(\s*)                  # (1) Indentation
+               KDE4_ADD_PLUGIN\s*\(    # 
+               \s*([^ ]*)\s*           # (2) libname
+               (.*)$                   # (3) end
+               /x; # /x Enables extended whitespace mode
+  if (my ($indent, $libname, $end) = $_ =~ $regexpUpperCase) {
+     $_ = $indent . "add_library($libname MODULE " . $end . "\n";
+     $modified = 1;
+  }
+  # At the end include_directories can be empty
+  if (/include_directories\s*\(\s*\)/i) {
+     $_ = "";
+     $modified = 1;
+  }
   $modified ||= $orig ne $_;
   $_;
 } <$FILE>;
@@ -444,4 +579,5 @@ if ($modified) {
     open (my $OUT, ">", $file);
     print $OUT @l;
     close ($OUT);
+}
 }

@@ -38,7 +38,7 @@ foreach my $file (@ARGV) {
                                  (.*)$              # after
                                  /x;
           if ( ($lower, $upper, $singleStep, $value, $parent, $base, $after) = $argument =~ $constructor_regexp ) {
-             $_ = $indent . $left . $var . " = new QSpinBox($parent);" . $after . "\n";
+             $_ = $indent . $left . $var . " = new QDoubleSpinBox($parent);" . $after . "\n";
            
              $_ .= $indent . $var . "->setMaximum($upper);" . $after . "\n";
              $_ .= $indent . $var . "->setMinimum($lower);" . $after . "\n";
@@ -87,7 +87,6 @@ foreach my $file (@ARGV) {
         s/\bKDoubleNumInput\b/QDoubleSpinBox/g;
         s/\<KDoubleNumInput\b\>/\<QQDoubleSpinBox>/ if (/#include/);
         s/\<kdoublenuminput.h\>/\<QDoubleSpinBox>/ if (/#include/);
-
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;

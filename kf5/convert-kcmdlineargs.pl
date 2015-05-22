@@ -33,7 +33,7 @@ foreach my $file (@ARGV) {
     my $needQCommandLineOption;
     functionUtilkde::substInFile {
         if (defined $port_kapplicationAndK4AboutData) {
-           if (/KApplication app/) {
+           if (/KApplication a/) {
               $_ ="";
               $needRemoveKApplication = 1;
            }
@@ -69,8 +69,8 @@ foreach my $file (@ARGV) {
            }
 
 
-           s/K4AboutData::License_/KAboutLicense::/;
            s/K4AboutData/KAboutData/g;
+           s/KAboutData::License_/KAboutLicense::/;
         }
         if (/KCmdLineOptions (\w*)/) {
             $opt = $1;
@@ -81,7 +81,7 @@ foreach my $file (@ARGV) {
               $_ = "";
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ .= "    QApplication app(argc, argv);\n";
+                 $_ .= "    QApplication app(argc, argv); // TODO: move this to before the KAboutData initialization\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
               $_ .= "    parser.addVersionOption();\n";
@@ -169,12 +169,13 @@ foreach my $file (@ARGV) {
               }
             }
             $QCommandLineParserAdded = 1;
-        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*\)/) { # short option
+        } elsif (defined $opt && s/(.*)$opt\.add\s*\(\s*"([^\"]*)"\s*\)/$1$opt/) { # short option
 
-            $_ = "";
-            $short = "QLatin1String(\"$2\") <<";
+            $short = "QLatin1String(\"$2\") << ";
+            $_ = "" if (!/\.add/);
             warn "$file: Be sure that option is added \'$2\'\n";
-        } elsif (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*k(i18nc?)\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
+        }
+        if (defined $opt && /(.*)$opt.add\s*\(\s*"([^\"]*)"\s*,\s*k(i18nc?)\((.*)\)\s*(?:,\s*([^\)]*))?\)/) {
             my $prefix = $1; # e.g. indent
             my $name = $2;
             my $i18n = $3;
@@ -195,7 +196,11 @@ foreach my $file (@ARGV) {
                 $negatedOptions{$name} = 1;
             }
             my $translate = defined $use_tr ? "QCoreApplication::translate($context, $description)" : "$i18n($description)";
-            $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << $short QLatin1String(\"$name\"), $translate$trail));\n";
+            if ($name =~ s/^\+//) {
+                $_ = "${prefix}parser.addPositionalArgument(QLatin1String(\"$name\"), $translate$trail);\n";
+            } else {
+                $_ = "${prefix}parser.addOption(QCommandLineOption(QStringList() << ${short}QLatin1String(\"$name\"), $translate$trail));\n";
+            }
             $needQCommandLineOption = 1;
             $short = "";
         } elsif (/KCmdLineArgs\s*\*\s*(\w*)\s*=\s*KCmdLineArgs::parsedArgs\(\s*\)/) {

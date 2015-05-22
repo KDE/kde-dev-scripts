@@ -24,7 +24,7 @@ my %otherResource = (
    "locale" => "locale",
    "wallpaper" => "wallpapers",
    "xdgdata-mime" => "mime",
-   "sound" => "sound"
+   "sound" => "sounds"
 );
 
 my %xdgconfResource = (
@@ -190,6 +190,9 @@ foreach my $file (@ARGV) {
 
     if (`grep QStandardPaths $file | grep -v '#include'`) {
       functionUtilkde::addIncludeInFile($file, "QStandardPaths");
+    }
+    if (`grep KSharedConfig $file | grep -v '#include'`) {
+      functionUtilkde::addIncludeInFile($file, "KSharedConfig");
     }
 }
 

@@ -45,9 +45,9 @@ def checkPackageVersion(frameworkName):
     value = readCache("FIND_PACKAGE_MESSAGE_DETAILS_%s:INTERNAL" % frameworkName)
     if value is None:
         return None
-    m = re.match('.*\\]\\[v(.*?)\\]', value)
+    m = re.match('.*\\]\\[v(.*?)\\((.*?)\\)\\]', value)
     if m:
-        return m.group(1)
+        return { 'used': m.group(1), 'requested': m.group(2) }
     else:
         return None
 
@@ -65,6 +65,8 @@ if __name__ == "__main__":
     processedFiles = {}
     lookedUpPackages = {}
 
+    lastFile = ""
+    callingFile = ""
     for line in proc.stderr:
         theLine = line.decode("utf-8")
 
@@ -73,15 +75,20 @@ if __name__ == "__main__":
             if "$" not in m.group(2):
                 lookedUpPackages[m.group(1)] = m.group(2)
 
+        # match file names
+        # e.g./usr/share/cmake-3.0/Modules/FindPackageMessage.cmake(46):  set(...
         m = re.match("(^/.*?)\\(.*", theLine)
         if m is not None:
             currentFile = m.group(1)
+            if lastFile != currentFile:
+                callingFile = lastFile
+            lastFile = currentFile
             filePath, fileName = os.path.split(currentFile)
 
             if fileName == "CMakeLists.txt":
                 continue
 
-            m = re.match("(.*)Config.cmake", fileName)
+            m = re.match("(.*)Config(Version)?.cmake", fileName)
             m2 = re.match("Find(.*).cmake", fileName)
             if m2:
                 moduleName = m2.group(1)
@@ -91,13 +98,13 @@ if __name__ == "__main__":
                 continue
 
             if not moduleName in processedFiles:
-                processedFiles[moduleName] = { 'files': set() }
+                processedFiles[moduleName] = { 'files': set(), 'explicit': False }
 
             if not 'version' in processedFiles[moduleName]:
-                processedFiles[moduleName]['files'].add(fileName)
                 processedFiles[moduleName]['version'] = checkPackageVersion(moduleName)
 
-    proc.wait()
+            processedFiles[moduleName]['files'].add(currentFile)
+            processedFiles[moduleName]['explicit'] |= (callingFile.endswith("CMakeLists.txt") or callingFile.endswith("Qt5/Qt5Config.cmake") or callingFile.endswith("FindKF5.cmake"))
 
     print("[")
     first = True
@@ -108,13 +115,25 @@ if __name__ == "__main__":
 
         value['files'] = list(value['files'])
         value['project'] = v
-        print("\t%s" % (json.dumps(value)), end='')
         if v in lookedUpPackages:
+            if value['version'] is None:
+                line = lookedUpPackages[v]
+                isVersion = line[:line.find(' ')]
+
+                if len(isVersion)>0 and isVersion[0].isdigit():
+                    value['version'] = { 'used': None, 'requested': isVersion }
+
             del lookedUpPackages[v]
 
-    if lookedUpPackages != {}:
+        print("\t%s" % (json.dumps(value)), end='')
+
+    # display missing packages
+    for v in lookedUpPackages:
         if not first:
             print(',\n', end='')
 
-        print("\t{ 'missingPackages': %s }" % json.dumps(lookedUpPackages), end='')
+        print("\t{ \"project\": \"%s\", \"missing\": true, \"files\": [], \"arguments\": \"%s\", \"explicit\": true }" % (v, lookedUpPackages[v]))
+
+
     print("\n]\n")
+    proc.wait()

@@ -3,6 +3,9 @@ project(kde-dev-scripts)
 
 find_package(KF5DocTools)
 if(KF5DocTools_FOUND)
+  find_package(ECM 1.3.0 REQUIRED NO_MODULE)
+  set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+  include(KDEInstallDirs)
   function(create_manpage)
     kdoctools_create_manpage(${ARGN})
   endfunction()
@@ -33,6 +36,8 @@ install(PROGRAMS
   adddebug
   build-progress.sh
   cheatmake
+  c++-rename-class-and-file
+  c++-copy-class-and-file
   create_cvsignore
   create_makefiles
   create_svnignore
@@ -91,4 +96,3 @@ install(PROGRAMS
   kde-systemsettings-tree.py
   reviewboard-am
   DESTINATION ${BIN_INSTALL_DIR})
-

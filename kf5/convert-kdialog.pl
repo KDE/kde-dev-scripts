@@ -264,6 +264,10 @@ foreach my $file (@ARGV) {
              s/connect\s*\(\s*this,/connect(user3Button,/;
              s/SIGNAL\s*\(\s*user3Clicked\(\)/SIGNAL\(clicked()/;
         }
+        if (/resetClicked\(\)/) {
+             s/connect\s*\(\s*this,/connect(buttonBox->button(QDialogButtonBox::Reset),/;
+             s/SIGNAL\s*\(\s*resetClicked\(\)/SIGNAL\(clicked()/;
+        }
 
         my $regexEnableButton = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation
