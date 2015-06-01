@@ -40,7 +40,7 @@ cat > $debugnamefile.h <<EOF
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY($newcategoryname)
 
-#endif 
+#endif
 
 EOF
 
