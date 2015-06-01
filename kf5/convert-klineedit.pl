@@ -18,10 +18,12 @@ foreach my $file (@ARGV) {
         s/\bKLineEdit\b/QLineEdit/g;
         s/\<KLineEdit\b\>/\<QLineEdit>/ =~ /#include/ ;
         s/\<klineedit.h\>/\<QLineEdit>/ =~ /#include/ ;
-        s/\bsetClickMessage\b/setPlaceholderText/;
+        s/\bisClearButtonShown\b/isClearButtonEnabled/;
         s/\bsetClearButtonShown\b/setClearButtonEnabled/;
-        s/\"clickMessage\"/\"placeholderText\"/;
+        s/\bshowClearButton\b/clearButtonEnabled/;
         s/\"clearButtonShown\"/\"clearButtonEnabled\"/;
+        s/\bsetClickMessage\b/setPlaceholderText/;
+        s/\"clickMessage\"/\"placeholderText\"/;
 
         $modified ||= $orig ne $_;
         $_;
