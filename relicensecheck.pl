@@ -26,6 +26,7 @@ use strict;
 ### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
 
 my %license_table = (
+    'afiestas'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hubner'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'aacid'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'abryant'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -45,6 +46,7 @@ my %license_table = (
     'broulik'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'bruggie'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'bshah'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'capel'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'carewolf'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'cgiboudeaux'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'chehrlic'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -112,6 +114,7 @@ my %license_table = (
     'mssola'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mueller'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'mwolff'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'narvaez'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'nhasan'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'nsams'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'ogoffart'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],

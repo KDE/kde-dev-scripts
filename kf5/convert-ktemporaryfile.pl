@@ -60,7 +60,7 @@ foreach my $file (@ARGV) {
                warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
                
                $_ = "//code was $_";
-               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
+               $_ .= "//Add to constructor and adapt if necessary: $newContructor \n";
                
            }
         }
@@ -71,7 +71,7 @@ foreach my $file (@ARGV) {
                my $newContructor= $2 . "QLatin1String(\"/myapp_XXXXXX.txt\")";
                warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
                $_ = "//code was $_";
-               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
+               $_ .= "//Add to constructor and adapt if necessary: $newContructor \n";
            }
         }
         if (/(\w+)\.setSuffix\s*\((.*)\)/) {
@@ -80,7 +80,7 @@ foreach my $file (@ARGV) {
                my $newContructor= "QDir::tempPath() + QLatin1String(\"/myapp_XXXXXX\") + QLatin1String($2)";
                warn "$file : KTemporaryFile uses setPrefix add '$newContructor'\n";
                $_ = "//code was $_";
-               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
+               $_ .= "//Add to constructor and adapt if necessary: $newContructor \n";
            }
         }
 
@@ -90,7 +90,7 @@ foreach my $file (@ARGV) {
                my $newContructor= "QDir::tempPath() + QLatin1String(\"/myapp_XXXXXX\") + QLatin1String($2)";
                warn "$file :KTemporaryFile uses setPrefix add '$newContructor'\n";
                $_ = "//code was $_";
-               $_ .= "//Add to constructor and adapt if necessay: $newContructor \n";
+               $_ .= "//Add to constructor and adapt if necessary: $newContructor \n";
            }
         }
 
