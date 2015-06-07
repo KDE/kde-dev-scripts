@@ -90,6 +90,7 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<qdebug.h\>
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<kdebug.h\>,#include \"$debugnamefile.h\","
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<KDebug\>,#include \"$debugnamefile.h\","
 
+find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s/k_funcinfo/Q_FUNC_INFO/;"
 
 git add $debugnamefile.cpp $debugnamefile.h
 
