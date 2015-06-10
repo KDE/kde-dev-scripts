@@ -140,7 +140,7 @@ foreach my $file (@ARGV) {
 
         s/KMimeType::findByPath\s*\((.*),\s*0\s*,\s*true\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchExtension)/;
         s/KMimeType::findByPath\s*\(/db.mimeTypeForFile(/;
-        s/KMimeType::findByNameAndContent\s*\(/db.mimeTypeForNameAndData(/;
+        s/KMimeType::findByNameAndContent\s*\(/db.mimeTypeForFileNameAndData(/;
         s/KMimeType::findByFileContent\s*\(\s*(\w+)\s*\)/db.mimeTypeForFile($1, QMimeDatabase::MatchContent)/;
         s/(\w+)->name() == KMimeType::defaultMimeType/$1.isDefault/;
         s/allParentMimeTypes/allAncestors/;
