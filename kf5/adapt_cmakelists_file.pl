@@ -156,7 +156,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_KIMAP_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KIMAP_LIBS}/KF5::Imap/;
+     $_ =~ s/\${KDEPIMLIBS_KIMAP_LIBS}/KF5::IMAP/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_KMIME_LIBS/) {
