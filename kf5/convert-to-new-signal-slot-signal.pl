@@ -310,7 +310,11 @@ sub parseHeaderFile($)
     my ($file) = @_;
     my $header = functionUtilkde::headerName($file);
     my $inslots = 0;
-    warn "Parse header file: $header \n";
+    if (!defined $header) {
+       warn "new header found for file \'$file\'\n";
+    } else {
+       warn "Parse header file: $header \n";
+    }
     # parse header file
     open(my $HEADERFILE, "<", $header) or warn "We can't open file $header:$!\n";
     my @lheader = map {
