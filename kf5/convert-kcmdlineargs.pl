@@ -81,7 +81,7 @@ foreach my $file (@ARGV) {
               $_ = "";
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ .= "    QApplication app(argc, argv); // TODO: move this to before the KAboutData initialization\n";
+                 $_ .= "    QApplication app(argc, argv); // PORTING SCRIPT: move this to before the KAboutData initialization\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
               $_ .= "    parser.addVersionOption();\n";
@@ -90,7 +90,7 @@ foreach my $file (@ARGV) {
                 $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
                 $_ .= "    aboutData.setupCommandLine(&parser);\n";
               }
-              $_ .= "    parser.process(app);\n";
+              $_ .= "    parser.process(app); // PORTING SCRIPT: move this to after any parser.addOption\n";
               if ( defined $use_aboutdata) {
                 $_ .= "    aboutData.processCommandLine(&parser);\n";
               }
@@ -153,7 +153,7 @@ foreach my $file (@ARGV) {
                }
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ .= "    QApplication app(argc, argv);\n";
+                 $_ .= "    QApplication app(argc, argv); // PORTING SCRIPT: move this to before the KAboutData initialization\\n";
                  $_ .= "    QCommandLineParser parser;\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
@@ -163,7 +163,7 @@ foreach my $file (@ARGV) {
                 $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
                 $_ .= "    aboutData.setupCommandLine(&parser);\n";
               }
-              $_ .= "    parser.process(app);\n";
+              $_ .= "    parser.process(app); // PORTING SCRIPT: move this to after any parser.addOption\n";
               if ( defined $use_aboutdata) {
                 $_ .= "    aboutData.processCommandLine(&parser);\n";
               }
