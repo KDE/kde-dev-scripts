@@ -136,6 +136,7 @@ my %license_table = (
     'sars'          => ['gplv23', 'lgplv23',                      '+eV' ],
     'schwarzer'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'sping'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
+    'sune'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'taj'           => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'tenharmsel'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'teske'         => ['gplv23', 'lgplv23',                            ],
