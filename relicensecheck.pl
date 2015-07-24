@@ -297,7 +297,15 @@ my %secondary_mail_addresses = (
     'git@the-user.org' => 'schmidt-domine',
     'kde@randomguy3.me.uk' => 'alexmerry',
     'ABBAPOH@me.com' => 'ikomissarov',
-    'tsdgeos@terra.es' => 'aacid'
+    'tsdgeos@terra.es' => 'aacid',
+    'guy.maurel@kde.org' => 'guymaurel',
+    'sune@vuorela.dk' => 'sune',
+    'christoph@maxiom.de' => 'cfeck',
+    'lamarque@gmail.com' => 'lvsouza',
+    'faure+bluesystems@kde.org' => 'dfaure',
+    'ervin+bluesystems@kde.org' => 'ervin',
+    'john@layt.net' => 'jlayt',
+    'neoclust.kde@free.fr' => 'nlecureuil'
 );
 
 my %ruletable;
@@ -363,7 +371,7 @@ sub resolveEmail($) {
         $resolved = $secondary_mail_addresses{$email};
     }
     if (not defined $resolved) {
-        print STDERR "Could not find $email in $accountfile\n";
+        die "Could not find $email in $accountfile\n";
         return $email;
     }
     return $resolved;
