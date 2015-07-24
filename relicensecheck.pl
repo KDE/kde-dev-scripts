@@ -338,7 +338,9 @@ close CONFIG;
 defined $accountfile or die "Please write the path to kde-common/accounts in $configfile";
 
 my %authors = ();
-if ($accountfile) {
+sub parseAccountsFile($)
+{
+    my ($accountfile) = @_;
     open(ACCOUNTS, $accountfile) || die "Account file not found: $accountfile";
     while (<ACCOUNTS>) {
         # The format is nick name email.
@@ -349,21 +351,20 @@ if ($accountfile) {
         #    $authors{$1} = $2;
         #}
         else {
-            die "Couldn't parse $_";
+            die "$accountfile: couldn't parse $_";
         }
     }
+    close ACCOUNTS;
+}
+
+if ($accountfile) {
+    parseAccountsFile($accountfile);
 
     # Also read the "disabled accounts" file
     my $disabledaccountsfile = $accountfile;
     $disabledaccountsfile =~ s/accounts$/disabled-accounts/;
-    die if ($accountfile eq $disabledaccountsfile);
-    open(DISABLEDACCOUNTS, $disabledaccountsfile) || die "Disabled accounts file not found: $disabledaccountsfile";
-    while (<DISABLEDACCOUNTS>) {
-        # Copy/paste rules!!!
-        if (/([^\s]*)\s+([^\s].*[^\s])\s+([^\s]+)/) {
-            $authors{$3} = "$1";
-        }
-    }
+    die "I expected this to end with 'accounts': $accountfile" if ($accountfile eq $disabledaccountsfile);
+    parseAccountsFile($disabledaccountsfile);
 }
 
 sub resolveEmail($) {
