@@ -311,7 +311,8 @@ my %secondary_mail_addresses = (
     'ervin+bluesystems@kde.org' => 'ervin',
     'john@layt.net' => 'jlayt',
     'neoclust.kde@free.fr' => 'nlecureuil',
-    'kubito@gmail.com' => 'rkcosta'
+    'kubito@gmail.com' => 'rkcosta',
+    'bero@arklinux.org' => 'bero'
 );
 
 my %ruletable;
