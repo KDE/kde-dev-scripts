@@ -309,7 +309,8 @@ my %secondary_mail_addresses = (
     'faure+bluesystems@kde.org' => 'dfaure',
     'ervin+bluesystems@kde.org' => 'ervin',
     'john@layt.net' => 'jlayt',
-    'neoclust.kde@free.fr' => 'nlecureuil'
+    'neoclust.kde@free.fr' => 'nlecureuil',
+    'kubito@gmail.com' => 'rkcosta'
 );
 
 my %ruletable;
