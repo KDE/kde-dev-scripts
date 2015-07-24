@@ -402,7 +402,7 @@ if ($svn) {
     open(IN, "-|") || exec 'svn', 'log', '-q', $file;
 } else {
     # Format the git output to match the format of svn log.
-    open(IN, "-|") || exec 'git', 'log', '--abbrev-commit', '--pretty=format:r%h | %ae ', $file;
+    open(IN, "-|") || exec 'git', 'log', '--follow', '--abbrev-commit', '--pretty=format:r%h | %ae ', $file;
 }
 while(<IN>) {
 
