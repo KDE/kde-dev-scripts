@@ -295,6 +295,9 @@ my %secondary_mail_addresses = (
     'aleixpol@kde.org' => 'apol',
     'devel@the-user.org' => 'schmidt-domine',
     'git@the-user.org' => 'schmidt-domine',
+    'kde@randomguy3.me.uk' => 'alexmerry',
+    'ABBAPOH@me.com' => 'ikomissarov',
+    'tsdgeos@terra.es' => 'aacid'
 );
 
 my %ruletable;
@@ -338,6 +341,18 @@ if ($accountfile) {
             die "Couldn't parse $_";
         }
     }
+
+    # Also read the "disabled accounts" file
+    my $disabledaccountsfile = $accountfile;
+    $disabledaccountsfile =~ s/accounts$/disabled-accounts/;
+    die if ($accountfile eq $disabledaccountsfile);
+    open(DISABLEDACCOUNTS, $disabledaccountsfile) || die "Disabled accounts file not found: $disabledaccountsfile";
+    while (<DISABLEDACCOUNTS>) {
+        # Copy/paste rules!!!
+        if (/([^\s]*)\s+([^\s].*[^\s])\s+([^\s]+)/) {
+            $authors{$3} = "$1";
+        }
+    }
 }
 
 sub resolveEmail($) {
@@ -352,6 +367,15 @@ sub resolveEmail($) {
         return $email;
     }
     return $resolved;
+}
+
+sub skipCommitByAuthor($) {
+    my ($author) = @_;
+    return ($author eq "scripty" or
+            $author eq "(no" or
+            $author eq "nobody\@localhost" or
+            $author eq "not.committed.yet" or
+            $author eq "null\@kde.org");
 }
 
 my $file = $ARGV[0] || "";
@@ -372,12 +396,12 @@ while(<IN>) {
         my ($rev, $author) = ($1, $2);
         #print STDERR "rev=$rev author=$author\n";
 
+        next if skipCommitByAuthor($author);
+
         if (not $svn) {
             # Resolve email to account name
             $author = resolveEmail($author);
         }
-
-        next if ($author eq "scripty" or $author eq "(no");
 
         foreach my $license(keys %ruletable) {
             if (!defined($ruletable{$license}->{$author})) {
@@ -409,7 +433,7 @@ if (-f $file) {
             # b061712b kdecore/klockfile.cpp      (<faure@kde.org>   [...]
             if (m/^(\S+) (\S+) +\(<([^>]+)>/) {
                 my ($author) = $3;
-                next if ($author eq 'not.committed.yet');
+                next if skipCommitByAuthor($author);
                 $author = resolveEmail($author);
                 $loc_author{$author}++;
             } else {
