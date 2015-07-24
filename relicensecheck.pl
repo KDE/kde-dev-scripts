@@ -477,7 +477,7 @@ if (defined (keys %blacklist)) {
     print "Summary:\n";
 
     foreach my $license(sort { $stat{$a} <=> $stat{$b} } keys %stat) {
-        printf "%5d commits possibly violating %s\n", $stat{$license}, $license
+        printf "%5d commits preventing relicensing to %s\n", $stat{$license}, $license
     }
 }
 
