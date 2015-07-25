@@ -60,6 +60,7 @@ my %license_table = (
     'dakon'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'deller'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'denis'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'devriese'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'dfaure'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'dhaumann'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'dyp'           => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
