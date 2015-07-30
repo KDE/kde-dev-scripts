@@ -330,7 +330,8 @@ my %secondary_mail_addresses = (
     'john@layt.net' => 'jlayt',
     'neoclust.kde@free.fr' => 'nlecureuil',
     'kubito@gmail.com' => 'rkcosta',
-    'bero@arklinux.org' => 'bero'
+    'bero@arklinux.org' => 'bero',
+    'kde@rusu.info' => 'valir'
 );
 
 my %ruletable;
