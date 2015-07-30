@@ -111,8 +111,12 @@ dir=.
 cwd=$PWD
 
 # No CMakeList and no Makefile (and no .pro file either)? Maybe we need to go up then.
-while test ! -f CMakeLists.txt && test ! -f Makefile; do
+while test ! -f CMakeLists.txt && test ! -f Makefile ; do
     if test "`ls -1 *.pro 2>/dev/null`" && test -n "`ls -1 ../*.pro 2>/dev/null`"; then
+        break;
+    fi
+    if test -f build.ninja; then
+        file=build.ninja
         break;
     fi
     dir="$dir/`basename \"$PWD\"`"
@@ -173,12 +177,23 @@ if test ! -f "$file"; then
                 sed -e s,%ARCH%,\"$_arch\",g | \
                 sed -e s,%OS%,\"$_os\",g`"
       pwd="`echo $PWD | sed -e \"$OBJ_REPLACEMENT\"`"
+      if test ! -e $pwd; then
+         echo "no objdir found. Tried $pwd"
+         exit 1
+      fi
       if test ! -f "$pwd/$file"; then
-         # No objdir found. But if "make" will work in srcdir, then go ahead; might be a non-kde project.
+         # ninja requires building from the toplevel
+         cd -- "$pwd"
+         findup build.ninja
+         if test -n "$_hit"; then
+             pwd=`dirname $_hit`
+             file=build.ninja
+         fi
+         # No objdir with a Makefile found. But if "make" will work in srcdir, then go ahead; might be a non-kde project.
          test -f "$pwd/GNUmakefile" && file=GNUmakefile
          test -f "$pwd/makefile" && file=makefile
          if ! test -f "$pwd/$file"; then
-           echo "no objdir found. Tried $pwd"
+           echo "no Makefile or build.ninja found in $pwd"
            exit 1
          fi
       fi
@@ -199,13 +214,17 @@ if test -z "$MAKE"; then
     fi
     if test $using_new_unsermake -eq 1; then
         MAKE="`command -v unsermake`"
-	if test ! -x "$MAKE"; then
-		echo 'Makefile was created with unsermake, but there'
-		echo 'is no unsermake in $PATH'
-		exit 1
-	fi
-    else
+        if test ! -x "$MAKE"; then
+            echo 'Makefile was created with unsermake, but there'
+            echo 'is no unsermake in $PATH'
+            exit 1
+        fi
+    elif test -f "Makefile"; then
         MAKE="$GMAKE"
+    elif test -f "build.ninja"; then
+        MAKE="ninja"
+    else
+        echo "No Makefile or build.ninja found in $PWD!"
     fi
 fi
 LANG=en_US.UTF-8 $MAKE "${args[@]}"
