@@ -5,6 +5,8 @@
 
 use strict;
 
+use List::Util qw(any);
+
 ### Please add your KDE (svn/git) account name in *alphabetical* order to the list
 ### below, then answer the following questions:
 ###
@@ -205,8 +207,10 @@ my %license_table = (
     'woebbe'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'wstephens'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zack'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'zecke'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'zecke'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ]
+);
 
+my %old_license_table = (
     ### below is the older table -- from before we offered the +eV option.
     ### This means that in theory some of these contributors might accept
     ### to add the +eV if we ask them nicely. If they refuse, move the line
@@ -311,7 +315,7 @@ my %license_table = (
     'winterz'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'zachmann'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'zander'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ]
-    # Do not add anything here. Use the first half of the table.
+    # Do not add anything here. Use license_table instead.
 );
 
 my %secondary_mail_addresses = (
@@ -339,6 +343,11 @@ my %blacklist;
 my %whitelist;
 my @blacklist_revs;
 
+foreach my $who (keys %old_license_table) {
+    die "$who in both tables" if defined $license_table{$who};
+    $license_table{$who} = $old_license_table{$who};
+}
+
 foreach my $who (keys %license_table) {
     foreach my $license(@{$license_table{$who}}) {
         $ruletable{$license}->{$who} = 1;
@@ -361,6 +370,7 @@ close CONFIG;
 defined $accountfile or die "Please write the path to kde-common/accounts in $configfile";
 
 my %authors = ();
+my %authornames = ();
 sub parseAccountsFile($)
 {
     my ($accountfile) = @_;
@@ -369,6 +379,7 @@ sub parseAccountsFile($)
         # The format is nick name email.
         if (/([^\s]*)\s+([^\s].*[^\s])\s+([^\s]+)/) {
             $authors{$3} = "$1";
+            $authornames{$1} = "$2";
         }
         #elsif (/([^\s]*)\s+([^\s]*)/) {
         #    $authors{$1} = $2;
@@ -413,7 +424,75 @@ sub skipCommitByAuthor($) {
             $author eq "null\@kde.org");
 }
 
-my $file = $ARGV[0] || "";
+sub usage()
+{
+ print << "EOM";
+Usage:
+    relicensecheck.pl file
+
+    Output information on relicensing possibilities for <file>
+
+    relicensecheck.pl -g
+    relicensecheck.pl --generate-wiki
+
+    Generate the table for the wiki page
+EOM
+}
+
+my $generate_wiki = 0;
+my @arguments;
+sub parse_arguments(@)
+{
+    while (scalar @_) {
+        my $arg = shift @_;
+
+        if ($arg eq "-g" || $arg eq "--generate-wiki") {
+            $generate_wiki = 1;
+        } elsif ($arg eq "-?" || $arg eq "--?" || $arg eq "-h" || $arg eq "--help") {
+            usage();
+            exit 0;
+        } elsif ($arg eq "--") {
+            push @arguments, @_;
+            return;
+        } else {
+            push @arguments, $arg;
+        }
+    }
+}
+
+parse_arguments(@ARGV);
+
+if ($generate_wiki) {
+
+    print "{| border=\"1\"\n";
+    print "! Name !! GPLv2->GPLv2+ !! LGPLv2 -> LGPLv2+ !! GPLv2 -> GPLv2+v3 !! LGPLv2 -> LGPLv2+LGPLv3 || KDE e.V. decides\n";
+    print "|-\n";
+    my @lines = ();
+    foreach my $who (keys %license_table) {
+        if (!defined $authornames{$who}) {
+            die "ERROR: unknown author $who\n";
+        }
+        # Example: print "|Adam, Till || YES || YES || YES || YES || NO\n";
+        my @licenses = @{$license_table{$who}};
+        my %licensesHash = map { $_ => 1 } @licenses;
+        my $gplv23 = exists($licensesHash{'gplv23'}) ? "YES" : "NO";
+        my $lgplv23 = exists($licensesHash{'lgplv23'}) ? "YES" : "NO";
+        my $gplv2plus = exists($licensesHash{'gplv2+'}) ? "YES" : "NO";
+        my $lgplv2plus = exists($licensesHash{'lgplv2+'}) ? "YES" : "NO";
+        my $eV = exists($licensesHash{'+eV'}) ? "YES" : "NO";
+        $eV = "" if (exists $old_license_table{$who});
+        push @lines, "|$authornames{$who} || $gplv2plus || $lgplv2plus || $gplv23 || $lgplv23 || $eV\n";
+    }
+    use locale;
+    foreach my $line (sort @lines) {
+        print $line;
+        print "|-\n";
+    }
+    print "|}\n";
+
+    exit 0;
+}
+my $file = $arguments[0] || "";
 
 die "need existing file: $file" if (! -r $file);
 
