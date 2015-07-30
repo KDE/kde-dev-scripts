@@ -187,6 +187,7 @@ my %license_table = (
     'apaku'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'arendjr'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'aumuell'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
+    'bbroeksema'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'binner'        => ['gplv23', 'lgplv23'                      ],
     'bjacob'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'bmeyer'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
