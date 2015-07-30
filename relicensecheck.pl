@@ -203,6 +203,7 @@ my %license_table = (
     'whiting'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'willy'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'woebbe'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'wstephens'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zack'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zecke'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
 
@@ -308,7 +309,6 @@ my %license_table = (
     'trueg'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ], # NOTE: except k3b
     'wgreven'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'winterz'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
-    'wstephens'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'zachmann'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'zander'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ]
     # Do not add anything here. Use the first half of the table.
