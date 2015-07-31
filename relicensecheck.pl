@@ -35,6 +35,7 @@ my %license_table = (
     'afiestas'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'alexmerry'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'alund'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'amantia'       => ['gplv23', 'lgplv23'                     , '+eV' ],
     'amth'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'antlarr'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'apol'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -217,7 +218,6 @@ my %old_license_table = (
     ### to the above part of the table so that we don't ask them again.
     'adridg'        => ['gplv23', 'lgplv23'                      ],
     'ahartmetz'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
-    'amantia'       => ['gplv23', 'lgplv23'                      ],
     'annma'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'apaku'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'arendjr'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
