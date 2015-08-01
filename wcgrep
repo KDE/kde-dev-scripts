@@ -71,7 +71,7 @@ if [ $# -eq 0 ]; then
 	set -- .
 fi
 
-WCGREP_IGNORE=${WCGREP_IGNORE:-'.*~$\|\./\.git/.*\|.*/\.svn\(/\|$\)'}
+WCGREP_IGNORE=${WCGREP_IGNORE:-'.*~$\|.*/\.git/.*\|.*/\.svn\(/\|$\)'}
 WCGREP_GREPARGS="${WCGREP_GREPARGS:--HnI}"
 
 # Some OSes have GNU tools with "g" prefix, try that first
