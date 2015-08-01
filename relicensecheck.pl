@@ -142,6 +142,7 @@ my %license_table = (
     'martyn'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mbritton'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mbroadst'      => ['gplv23', 'lgplv23'                     , '+eV' ],
+    'mecir'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'michaelhowell' => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'michalhumpula' => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'milliams'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
