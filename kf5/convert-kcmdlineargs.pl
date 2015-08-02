@@ -153,7 +153,7 @@ foreach my $file (@ARGV) {
                }
             } else {
               if (defined $port_kapplicationAndK4AboutData) {
-                 $_ .= "    QApplication app(argc, argv); // PORTING SCRIPT: move this to before the KAboutData initialization\\n";
+                 $_ .= "    QApplication app(argc, argv); // PORTING SCRIPT: move this to before the KAboutData initialization\n";
                  $_ .= "    QCommandLineParser parser;\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
