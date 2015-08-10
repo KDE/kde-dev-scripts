@@ -76,23 +76,33 @@ sub removeObjectNameThreeArgument
     return $result;
 }
 
-sub addIncludeInFile
+sub addAfterAllIncludes($$)
 {
-   local *F;
-   my ($file, $includefile) = @_;
-   open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
-   my $str = join '', <F>;
-   if( $str !~ /#include <$includefile>/ ) {
-    # Add the include after all others
-    if (!($str =~ s!(#include <.*#include <[^\n]*)!$1\n#include <$includefile>!smig)) {
-       # This failed, maybe there is only one include
-       $str =~ s!(#include <[^\n]*)!$1\n#include <$includefile>!smig;
+    local *F;
+    my ( $file, $theline ) = @_;
+    open F, "+<", $file or do { print STDOUT "open($file) failed : \"$!\"\n"; next };
+    my $str = join '', <F>;
+    if ( $str !~ /$theline/ ) {
+
+        # Add the include after all others
+        if ( !( $str =~ s!(#include <.*#include <[^\r\n]*)!$1\n$theline!smig ) ) {
+
+            # This failed, maybe there is only one include
+            if ( ! ($str =~ s!(#include <[^\r\n]*)!$1\n$theline!smig ) ) {
+                warn "Couldn't add $theline\n in $file\n";
+            }
+        }
+        seek F, 0, 0;
+        print F $str;
+        truncate F, tell(F);
     }
-    seek F, 0, 0;
-    print F $str;
-    truncate F, tell(F);
-   }
-   close F;
+    close F;
+}
+
+sub addIncludeInFile($$)
+{
+    my ( $file, $includefile ) = @_;
+    addAfterAllIncludes($file, "#include <$includefile>");
 }
 
 sub removeIncludeInFile
