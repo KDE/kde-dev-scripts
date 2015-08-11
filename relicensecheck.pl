@@ -41,6 +41,7 @@ my %license_table = (
     'antlarr'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'apol'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'arnolddumas'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'asensi'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'aseigo'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'asserhal'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'beaulen'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -338,6 +339,7 @@ my %old_license_table = (
 
 my %secondary_mail_addresses = (
     'aleixpol@kde.org' => 'apol',
+    'asmond@gmx.com' => 'asensi',
     'devel@the-user.org' => 'schmidt-domine',
     'git@the-user.org' => 'schmidt-domine',
     'kde@randomguy3.me.uk' => 'alexmerry',
