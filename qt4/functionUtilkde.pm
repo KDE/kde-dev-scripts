@@ -15,6 +15,16 @@ sub diffFile
 	warn "files to commit: $@\n";
 }
 
+sub selectHeaderFile
+{
+    my ($newFile) = @_;
+    return 1 if -d $newFile;
+    if ( $newFile =~ /(\.h$)/ ) {
+       return 0;
+    }
+    return 1;
+}
+
 sub excludeFile
 {
     my ($newFile) = @_;
