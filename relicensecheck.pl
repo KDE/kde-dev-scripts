@@ -357,7 +357,8 @@ my %secondary_mail_addresses = (
     'neoclust.kde@free.fr' => 'nlecureuil',
     'kubito@gmail.com' => 'rkcosta',
     'bero@arklinux.org' => 'bero',
-    'kde@rusu.info' => 'valir'
+    'kde@rusu.info' => 'valir',
+    'devriese@kde.org' => 'domi'
 );
 
 my %ruletable;
