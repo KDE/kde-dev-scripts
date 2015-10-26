@@ -57,6 +57,7 @@ analyze()
         then
         echo "MAXDEPTH of $MAXDEPTH reached at file $IN."
         echo "Continuing with next file..."
+        DEPTH=$(($DEPTH - 1))
         return
     fi
  
