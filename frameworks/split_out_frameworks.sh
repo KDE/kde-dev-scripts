@@ -18,7 +18,7 @@ origbranch=frameworks
 origsha1=`git rev-parse HEAD`
 
 if [ ! -d tier1 ]; then
-  "echo Run this script from the toplevel of the monolithic repository, there must be a tier1 subdirectory"
+  echo "Run this script from the toplevel of the monolithic repository, there must be a tier1 subdirectory"
   exit 1
 fi
 
