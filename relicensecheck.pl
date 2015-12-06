@@ -361,7 +361,8 @@ my %secondary_mail_addresses = (
     'kubito@gmail.com' => 'rkcosta',
     'bero@arklinux.org' => 'bero',
     'kde@rusu.info' => 'valir',
-    'devriese@kde.org' => 'domi'
+    'devriese@kde.org' => 'domi',
+    'caleb@gentoo.org' => 'ctennis'
 );
 
 my %ruletable;
