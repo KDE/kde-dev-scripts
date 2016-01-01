@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(kde-dev-scripts)
+include(FeatureSummary)
 
 find_package(KF5DocTools)
 if(KF5DocTools_FOUND)
@@ -96,3 +97,5 @@ install(PROGRAMS
   kde-systemsettings-tree.py
   reviewboard-am
   DESTINATION ${BIN_INSTALL_DIR})
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
