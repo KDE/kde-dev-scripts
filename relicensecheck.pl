@@ -227,6 +227,7 @@ my %license_table = (
     'uwolfer'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'vandenoever'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'vhanda'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'vitters'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'vkrause'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'vonreth'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'vrusu'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -366,6 +367,7 @@ my %secondary_mail_addresses = (
     'kubito@gmail.com' => 'rkcosta',
     'bero@arklinux.org' => 'bero',
     'kde@rusu.info' => 'valir',
+    'olav@vitters.nl' => 'vitters',
     'devriese@kde.org' => 'domi',
     'caleb@gentoo.org' => 'ctennis'
 );
