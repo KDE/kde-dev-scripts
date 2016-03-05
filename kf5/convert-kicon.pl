@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Laurent Montel <montel@kde.org> (2014)
-# KIcon("...") => QIcon::fromTheme("...")
+# KIcon("...") => QIcon::fromTheme(QStringLiteral("..."))
 # find -iname "*.cpp" -o -iname "*.h"|xargs kde-dev-scripts/kf5/convert-kicon.pl
 
 use strict;
@@ -18,6 +18,9 @@ foreach my $file (@ARGV) {
         if (/KIcon\(\s*\)/ ) {
            s/KIcon\(\s*\)/QIcon()/;
         }
+        s/\bKIcon\b\s*\(\s*(\"[^\"]*\")\s*\)/QIcon::fromTheme(QStringLiteral($1))/g;
+        s/\bQIcon::fromTheme\b\s*\(\s*(\"[^\"]*\")\s*\)/QIcon::fromTheme(QStringLiteral($1))/g;
+
         s/\bKIcon\b\s*\(/QIcon::fromTheme(/g;
         s/\<KIcon\b\>/\<QIcon>/ =~ /#include/ ;
         s/\<kicon.h\b\>/\<QIcon>/ =~ /#include/ ;
