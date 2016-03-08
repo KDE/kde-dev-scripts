@@ -72,11 +72,10 @@ EOF
 
 #convert debug to new qCDebug/qCWarning/qCCritical
 
-find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kDebug\s*\(\s*$oldcategorynumber\s*\),qCDebug\($newcategoryname\),"
-find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kWarning\s*\(\s*$oldcategorynumber\s*\),qCWarning\($newcategoryname\),"
-find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kFatal\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
-find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kError\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
-find -iname "*.cpp" -o -iname "*.h" | xargs sed -ri "s|^(\s*#include\s+)<KDebug>|\1<QDebug>\n\1\"${debugnamefile}.h\"|"
+find -iname "*.cpp" -o -iname "*.h" | xargs sed -ri \
+		-e "s|^(\s*#include\s+)<KDebug>|\1<QDebug>\n\1\"${debugnamefile}.h\"|" \
+		-e "s,k(Debug|Warning)\s*\(\s*$oldcategorynumber\s*\),qC\1\($newcategoryname\)," \
+		-e "s,k(Fatal|Error)\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
 
 git add $debugnamefile.cpp $debugnamefile.h
 
