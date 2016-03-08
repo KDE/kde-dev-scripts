@@ -79,13 +79,14 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kDebug\s*\(\s*$oldcat
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kWarning\s*\(\s*$oldcategorynumber\s*\),qCWarning\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kFatal\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,kError\s*\(\s*$oldcategorynumber\s*\),qCCritical\($newcategoryname\),"
+find -iname "*.cpp" -o -iname "*.h" | xargs sed -ri "s|^(\s*#include\s+)<KDebug>|\1<QDebug>\n\1\"${debugnamefile}.h\"|"
 
 git add $debugnamefile.cpp $debugnamefile.h
 
 
 # end
 echo "1) Add $debugnamefile.cpp to CMakeLists.txt"
-echo "2) Add #include <QDebug> + #include \"$debugnamefile.h\" to each file which was changed"
+echo "2) Add #include <QDebug> + #include \"${debugnamefile}.h\" to each file which was changed and where it is missing"
 echo "3) Verify that it compiles :)"
 echo "4) If you find bugs fix them please"
 
