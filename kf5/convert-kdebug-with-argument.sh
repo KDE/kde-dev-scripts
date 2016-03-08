@@ -41,8 +41,7 @@ cat > $debugnamefile.h <<EOF
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY($newcategoryname)
 
-#endif 
-
+#endif
 EOF
 
 
@@ -69,8 +68,6 @@ cat > $debugnamefile.cpp <<EOF
 
 #include "$debugnamefile.h"
 Q_LOGGING_CATEGORY($newcategoryname, "$newlogname")
-
-
 EOF
 
 #convert debug to new qCDebug/qCWarning/qCCritical
