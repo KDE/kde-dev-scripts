@@ -4,6 +4,11 @@
 # KUrl -> QUrl
 # Usage: convert-kurl.pl *.h *.cpp
 
+# VERY IMPORTANT: add add_definitions(-DQT_NO_URL_CAST_FROM_STRING) to your CMakeLists.txt, to catch
+# passing a path to a QUrl via an implicit constructor (and port to QUrl(url) or QUrl::fromLocalFile(path)).
+
+# See https://community.kde.org/Frameworks/Porting_Notes#URL for more advice
+
 use strict;
 use File::Basename;
 use lib dirname($0);
