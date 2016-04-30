@@ -191,7 +191,7 @@ foreach my $file (@ARGV) {
     if (`grep QStandardPaths $file | grep -v '#include'`) {
       functionUtilkde::addIncludeInFile($file, "QStandardPaths");
     }
-    if (`grep KSharedConfig $file | grep -v '#include'`) {
+    if (`grep KSharedConfig $file | grep -v '#include'` and not `grep ksharedconfig\.h $file`) {
       functionUtilkde::addIncludeInFile($file, "KSharedConfig");
     }
 }
