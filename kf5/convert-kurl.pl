@@ -134,15 +134,17 @@ foreach my $file (@ARGV) {
             my $url = $1;
             s/$url\.directory\(\)/$url\.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()/g;
         }
+        # url.url(KUrl::RemoveTrailingSlash)
+        if (/\.url\([KQ]Url::RemoveTrailingSlash\)/) {
+            s/\.url\([KQ]Url::RemoveTrailingSlash\)/\.adjusted(QUrl::StripTrailingSlash).toString()/g;
+        }
         # url.path(KUrl::RemoveTrailingSlash)
-        if (/(\w+)\.path\(KUrl::RemoveTrailingSlash\)/ && defined $urls{$1}) {
-            my $url = $1;
-            s/$url\.path\(KUrl::RemoveTrailingSlash\)/$url\.adjusted(QUrl::StripTrailingSlash).path()/g;
+        if (/\.path\(KUrl::RemoveTrailingSlash\)/) {
+            s/\.path\(KUrl::RemoveTrailingSlash\)/\.adjusted(QUrl::StripTrailingSlash).path()/g;
         }
         # url.toLocalFile(KUrl::RemoveTrailingSlash)
-        if (/(\w+)\.toLocalFile\(KUrl::RemoveTrailingSlash\)/ && defined $urls{$1}) {
-            my $url = $1;
-            s/$url\.toLocalFile\(KUrl::RemoveTrailingSlash\)/$url\.adjusted(QUrl::StripTrailingSlash).toLocalFile()/g;
+        if (/\.toLocalFile\(KUrl::RemoveTrailingSlash\)/) {
+            s/\.toLocalFile\(KUrl::RemoveTrailingSlash\)/\.adjusted(QUrl::StripTrailingSlash).toLocalFile()/g;
         }
         # url.adjustPath(KUrl::RemoveTrailingSlash)
         if (/(\w+)\.adjustPath\(KUrl::RemoveTrailingSlash\)/ && defined $urls{$1}) {
