@@ -315,8 +315,7 @@ apps.each do |app|
         end
         i18nlangs = i18nlangsCleaned
 
-        Dir.mkdir( "doc-translations" )
-        topmakefile = File.new( "doc-translations/CMakeLists.txt", File::CREAT | File::RDWR | File::TRUNC )
+        Dir.mkdir( "po" )
 
         Dir.mkdir( "l10n" )
         Dir.chdir( "l10n" )
@@ -341,43 +340,16 @@ apps.each do |app|
 
                 print "    -> Copying #{lang}'s #{dg} documentation over...  "
                 if dg.include? "/"
-                    FileUtils.mkdir_p( "../doc-translations/#{lang}_#{dg}/#{dg}" )
-                    `cp -R #{dg}/* ../doc-translations/#{lang}_#{dg}/#{dg}`
+                    FileUtils.mkdir_p( "../po/#{lang}/docs/#{dg}" )
+                    `cp -R #{dg}/* ../po/#{lang}/docs/#{dg}`
                 else
-                    Dir.mkdir( "../doc-translations/#{lang}_#{dg}/" )
-                    `cp -R #{dg}/ ../doc-translations/#{lang}_#{dg}/#{dg}`
+                    FileUtils.mkdir_p( "../po/#{lang}/docs/#{dg}/" )
+                    `cp -R #{dg}/ ../po/#{lang}/docs`
                 end
-                topmakefile << "add_subdirectory( #{lang}_#{dg}/#{dg} )\n"
-
-                makefile = File.new( "../doc-translations/#{lang}_#{dg}/#{dg}/CMakeLists.txt", File::CREAT | File::RDWR | File::TRUNC )
-                makefile << "kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/#{lang} SUBDIR #{dg})\n"
-                # install also manpages if available
-                if FileTest.exists?( dg + "/man-#{dg}.1.docbook" )
-                    makefile << "kdoctools_create_manpage(man-#{dg}.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR}/#{lang})"
-                end
-                l10nroot=Dir.getwd
-                Dir.chdir( "../doc-translations/#{lang}_#{dg}/#{dg}")
-                `find -name ".svn" | xargs rm -rf`
-                Find.find( "." ) do |path|
-                    if File.basename(path)[0] == ?.
-                        # skip this one...
-                    else
-                        if FileTest.directory?(path)
-                            makefile << "add_subdirectory( " + File.basename(path) + " )\n"
-                            submakefile = File.new(  File.basename(path) + "/CMakeLists.txt", File::CREAT | File::RDWR | File::TRUNC )
-                            submakefile << "kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/#{lang} SUBDIR #{dg})\n"
-                            submakefile.close()
-                            Find.prune
-                        end
-                    end
-                end
-                Dir.chdir( l10nroot )
-                makefile.close()
 
                 puts( "done.\n" )
             end
         end
-        topmakefile.close()
 
         # app translations
         puts "-> Fetching l10n po for #{appdata["submodulepath"]}#{app}...\n"
@@ -385,7 +357,6 @@ apps.each do |app|
         Dir.chdir( ".." ) # in submodule now
 
         $subdirs = false
-        Dir.mkdir( "po" )
 
         for lang in i18nlangs
             lang.chomp!
@@ -437,7 +408,9 @@ apps.each do |app|
         `echo "ki18n_install(po)" >> CMakeLists.txt`
 
         if appdata["docs"] != "no"
-            `echo "add_subdirectory( doc-translations )" >> CMakeLists.txt`
+            # add docs to compilation.
+            `echo "find_package(KF5DocTools CONFIG REQUIRED)" >> CMakeLists.txt`
+            `echo "kdoctools_install(po)" >> CMakeLists.txt`
         end
     end
 
