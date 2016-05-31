@@ -1,7 +1,9 @@
 #!/usr/bin/ruby
 
 #
-# Ruby script for generating amaroK tarball releases from KDE SVN
+# Ruby script for generating tarball releases of KDE repositories (git or SVN).
+# This script can create tarballs with source code, translations and documentation
+# for the given KF5-based project(s). For KDE4-based projects, use create_tarball.
 #
 # (c) 2005 Mark Kretschmann <markey@web.de>
 # (c) 2006-2008 Tom Albers <tomalbers@kde.nl>
