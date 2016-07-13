@@ -96,7 +96,7 @@ install(PROGRAMS
   kde_generate_export_header
   kde-systemsettings-tree.py
   reviewboard-am
-  grantlee_strings_extractor
+  grantlee_strings_extractor.py
   DESTINATION ${BIN_INSTALL_DIR})
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
