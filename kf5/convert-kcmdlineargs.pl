@@ -182,7 +182,7 @@ foreach my $file (@ARGV) {
             my $description = $4;
             my $defaultValue = $5;
             my $trail = "";
-            if ($name =~ /(\w*) <(.*)>/) { # "stylesheet <xsl>"
+            if ($name =~ /([\w-_]*) <(.*)>/) { # "stylesheet <xsl>"
                 $name = $1;
                 $trail = ", QLatin1String(\"$2\")";
             }
@@ -217,7 +217,7 @@ foreach my $file (@ARGV) {
                 s/${args}\->usage\s*\(\)/parser.showHelp()/;
                 s/${args}\->clear\s*\(\);//;
                 s/KCmdLineArgs::usage\s*\(\)/parser.showHelp()/;
-                if (/arguments?\(\"(\w*)/ || /isSet\(\"(\w*)/) {
+                if (/arguments?\(\"([\w-_]*)/ || /isSet\(\"([\w-_]*)/) {
                     my $optionName = $1;
                     if (defined $negatedOptions{"no$optionName"}) {
                         s/$/\/\/ TODO: negate check (and ensure nobody passes the no-op --$optionName argument)/;
