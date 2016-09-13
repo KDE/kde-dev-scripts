@@ -15,6 +15,8 @@ functions defined in the header file, amongst other things.
 
 + Github: https://github.com/tuhdo/semantic-refactor/
 
+* Tutorials on setting up Emacs as an IDE for C/C++
++ http://tuhdo.github.io/c-ide.html
 * Copyright
 This file is Copyright (C) 2016 The KDE Development Team
 Released under GNU FDL or GNU GPL
