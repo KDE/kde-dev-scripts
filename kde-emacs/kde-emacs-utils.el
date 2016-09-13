@@ -368,16 +368,13 @@ This function does not do any hidden buffer changes."
     ;; returns the tag in the same file, not in the header file.So
     ;; we hack this by going to the function definition and then using
     ;; (semantic-idle-summary-current-symbol-info-context) etc.
-    (let* ((tag (or (semantic-stickyfunc-tag-to-stick)
-                    (error "No known tag at point")))
-           (pos (or (semantic-tag-start tag)
-                    (error "Tag definition not found")))
-           (destpos nil)
+    (let*  ((destpos nil)
            (desttag nil)
            (file nil))
       (push-mark)
       (save-excursion
-        (goto-char pos)
+        (end-of-line) ; This ensures that being at the beginning of the line does not take us to the previous function's declaration
+        (beginning-of-defun)
         (re-search-forward "(")
         (forward-char -1)
         (re-search-backward "\\S-")
