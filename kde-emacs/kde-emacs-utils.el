@@ -595,7 +595,8 @@ This function does not do any hidden buffer changes."
   (if (not (c-in-literal))
       (let ((n nil) (o nil)
             (spacep nil) (c nil)
-            (oneliner nil) (cxxlambda nil) (elsekeyword nil))
+            (oneliner nil) (cxxlambda nil)
+            (clausekeyword nil) (dokeyword nil))
         (save-excursion
 	  (save-excursion
 	    (if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
@@ -620,12 +621,17 @@ This function does not do any hidden buffer changes."
 		    (setq c (eq (car (car (c-guess-basic-syntax))) 'substatement)))
 		)
 	      ))
-	  (forward-char -3)
-	  (setq elsekeyword (looking-at "else"))
+
+          ; The following lines handle keywords 'else' and 'do' to insert a matching brace
+          ; if the keyword is 'do', we also insert a while.
+          (forward-char -1)
+          (setq dokeyword (looking-at "do"))
+          (setq clausekeyword (or dokeyword
+                                  (progn (forward-char -2) (looking-at "else"))))
           )
           (setq cxxlambda (looking-back "\\[.*\\]\\s-*(.*)\\(\\s-*->.*\\)?\\s-*"))
         (cond
-         ((or (or n elsekeyword) cxxlambda) (progn
+         ((or (or n clausekeyword) cxxlambda) (progn
               (if (not spacep) (insert " "))
               (self-insert-command (prefix-numeric-value arg))
               (if (not c) (newline-and-indent))
@@ -639,6 +645,7 @@ This function does not do any hidden buffer changes."
               (newline-and-indent)
               (insert "}")
               (if cxxlambda (insert ";"))
+              (if dokeyword (insert " while"))
               (c-indent-line))
               (c-indent-line)
 	     ))
