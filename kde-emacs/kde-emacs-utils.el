@@ -595,7 +595,7 @@ This function does not do any hidden buffer changes."
   (if (not (c-in-literal))
       (let ((n nil) (o nil)
             (spacep nil) (c nil)
-            (oneliner nil) (cxxlambda nil))
+            (oneliner nil) (cxxlambda nil) (elsekeyword nil))
         (save-excursion
 	  (save-excursion
 	    (if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
@@ -608,7 +608,7 @@ This function does not do any hidden buffer changes."
           (setq o (looking-at "()"))
           (forward-char 1)
           (setq n (looking-at ")"))
-	  (if (and 
+	  (save-excursion (if (and
 	       (not oneliner)
 	       (not (eq
 		    (count-lines (point-min) (point))
@@ -619,11 +619,13 @@ This function does not do any hidden buffer changes."
 		(if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
 		    (setq c (eq (car (car (c-guess-basic-syntax))) 'substatement)))
 		)
-	    )
+	      ))
+	  (forward-char -3)
+	  (setq elsekeyword (looking-at "else"))
           )
           (setq cxxlambda (looking-back "\\[.*\\]\\s-*(.*)\\(\\s-*->.*\\)?\\s-*"))
         (cond
-         ((or n cxxlambda) (progn
+         ((or (or n elsekeyword) cxxlambda) (progn
               (if (not spacep) (insert " "))
               (self-insert-command (prefix-numeric-value arg))
               (if (not c) (newline-and-indent))
