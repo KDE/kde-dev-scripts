@@ -1,0 +1,20 @@
+Use this to list useful packages for Emacs users developing using C++ / Qt / KDE Frameworks.
+
+Many of these packages supersede / offer similar functionality as provided by kde-emacs ???
+
+* CEDET -- the Emacs IDE for C/C++
+Includes everything you need to turn Emacs into an IDE for C++
+development. The second tutorial has some Qt-related information too.
+
++ Homepage: http://cedet.sourceforge.net/
++ Useful tutorials: https://www.logilab.org/blogentry/173886 and http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
+
+* Semantic Refactor
+Automatically generates templates in the source file for classes /
+functions defined in the header file, amongst other things.
+
++ Github: https://github.com/tuhdo/semantic-refactor/
+
+* Copyright
+This file is Copyright (C) 2016 The KDE Development Team
+Released under GNU FDL or GNU GPL
