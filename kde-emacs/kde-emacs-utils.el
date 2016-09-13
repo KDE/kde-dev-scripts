@@ -228,7 +228,7 @@ This function does not do any hidden buffer changes."
 ;; Switch between the declaration of a class member in .cc/.cpp/.C, and its definition in the .h file
 ;; Written by David and Reggie after much hair tearing
 ;; Found since, might be worth looking at: http://www.hendawi.com/emacs/sourcepair.el
-(defun switch-to-function-def ()
+(defun switch-to-function-def-xemacs ()
   (interactive)
   (let ((n (buffer-file-name))
         (namespace "")
@@ -305,7 +305,104 @@ This function does not do any hidden buffer changes."
               (if (string-match "(.*" sig) ; remove args
                   (setq sig (replace-match "" nil t sig)))
               (re-search-forward (concat "^[^()]*" (kde-function-regexp-quote sig) "[ \t]*(") nil t) ) )
-	    )))))
+	)))))
+
+(defun switch-to-def-semanticdb (arg)
+  ;; This below was shared by Emacs Wiki
+  ;; user nschum (Nikolaj Schumacher;
+  ;; https://www.emacswiki.org/emacs/nschum) on the Emacs Wiki page
+  ;; https://www.emacswiki.org/emacs/JumpToDefinition
+  ;;
+  ;; The work is licensed under version 2 of the GNU General Public License.
+  ;;
+  ;; Incorporated into this file by Akarsh Simha.
+  ;;
+  ;; Note that this is a more general method that finds the definition
+  ;; of any symbol, not just a function.
+
+  "Jump to the definition of the symbol, type or function at point.
+  With prefix arg, find in other window."
+    (interactive "P")
+    (let* ((tag (or (semantic-idle-summary-current-symbol-info-context)
+                    (semantic-idle-summary-current-symbol-info-brutish)
+                    (error "No known tag at point")))
+           (pos (or (semantic-tag-start tag)
+                    (error "Tag definition not found")))
+           (file (semantic-tag-file-name tag)))
+      (if file
+          (if arg (find-file-other-window file) (find-file file))
+        (if arg (switch-to-buffer-other-window (current-buffer))))
+      (push-mark)
+      (goto-char pos)
+      (end-of-line))
+    )
+
+(defun switch-to-function-def-semanticdb (arg)
+
+  ;; Modified switch-to-def-semanticdb to only find the current
+  ;; function -- asimha
+
+  "Jump to the definition of the function before point.
+  With prefix arg, find in other window."
+  (interactive "P")
+
+  (if
+      ;; Check if we are in a header file
+      (member (concat "." (file-name-extension (buffer-file-name)))
+      sourcepair-header-extensions)
+
+      ;; If we are in a header file, simply use (which-function) to
+      ;; find the function before point and (semantic-ia-fast-jump) to
+      ;; jump
+      (let* ((pos nil))
+        (save-excursion
+          (setq pos (search-backward (which-function))))
+        (push-mark)
+        (semantic-ia-fast-jump pos)
+        )
+
+    ;; We are in the source file.
+
+    ;; (semantic-stickyfunc-tag-to-stick) returns the sticky tag,
+    ;; which is the function before point in a source file, but it
+    ;; returns the tag in the same file, not in the header file.So
+    ;; we hack this by going to the function definition and then using
+    ;; (semantic-idle-summary-current-symbol-info-context) etc.
+    (let* ((tag (or (semantic-stickyfunc-tag-to-stick)
+                    (error "No known tag at point")))
+           (pos (or (semantic-tag-start tag)
+                    (error "Tag definition not found")))
+           (destpos nil)
+           (desttag nil)
+           (file nil))
+      (push-mark)
+      (save-excursion
+        (goto-char pos)
+        (re-search-forward "(")
+        (forward-char -1)
+        (re-search-backward "\\S-")
+        (setq desttag (or (semantic-idle-summary-current-symbol-info-context)
+                          (semantic-idle-summary-current-symbol-info-brutish)
+                          (error "No known tag at point")))
+        (setq destpos (or (semantic-tag-start desttag)
+                          (error "Tag definition not found")))
+        (setq file (semantic-tag-file-name desttag))
+        )
+      (if file
+          (if arg (find-file-other-window file) (find-file file))
+        (if arg (switch-to-buffer-other-window (current-buffer))))
+      (goto-char destpos)
+      (end-of-line)
+      )
+    )
+  )
+
+
+(if (eq kde-emacs-type 'xemacs)
+    (defun switch-to-function-def () (interactive) (switch-to-function-def-xemacs) )
+  (defun switch-to-function-def (arg) (interactive "P") (switch-to-function-def-semanticdb arg))
+  )
+
 
 (defun kde-remove-newline (str) 
     (replace-in-string str "\n" " "))
