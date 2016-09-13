@@ -594,8 +594,8 @@ This function does not do any hidden buffer changes."
 (defun insert-curly-brace (arg) (interactive "*P")
   (if (not (c-in-literal))
       (let ((n nil) (o nil)
-	    (spacep nil) (c nil)
-	    (oneliner nil))
+            (spacep nil) (c nil)
+            (oneliner nil) (cxxlambda nil))
         (save-excursion
 	  (save-excursion
 	    (if (re-search-forward "[a-zA-Z]" (point-at-eol) t)
@@ -621,20 +621,23 @@ This function does not do any hidden buffer changes."
 		)
 	    )
           )
+          (setq cxxlambda (looking-back "\\[.*\\]\\s-*(.*)\\(\\s-*->.*\\)?\\s-*"))
         (cond
-         (n (progn
+         ((or n cxxlambda) (progn
               (if (not spacep) (insert " "))
               (self-insert-command (prefix-numeric-value arg))
               (if (not c) (newline-and-indent))
 	      (if oneliner (end-of-line))
              (save-excursion
-	      (if c
-		  (progn
-		    (next-line 1)
-		    (end-of-line)
-		    ))
-	      (newline-and-indent)
-              (insert "}")(c-indent-line))
+              (if c
+                  (progn
+                    (next-line 1)
+                    (end-of-line)
+                    ))
+              (newline-and-indent)
+              (insert "}")
+              (if cxxlambda (insert ";"))
+              (c-indent-line))
               (c-indent-line)
 	     ))
          (o (progn
