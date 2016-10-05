@@ -22,6 +22,7 @@ options.help  = false
 options.https = false
 options.ask   = true
 options.translations = true
+options.sign  = false
 
 opts = OptionParser.new do |opts|
   opts.on("-u", "--user USERNAME", "svn account") do |u|
@@ -48,6 +49,9 @@ opts = OptionParser.new do |opts|
   end
   opts.on("-t", "--no-translations", "Don't include translations") do |t|
     options.translations = false
+  end
+  opts.on("-s", "--sign", "Sign tarball") do |s|
+    options.sign = true
   end
 end
 
@@ -477,5 +481,13 @@ apps.each do |app|
     puts ""
     print "md5sum: ", `md5sum #{appdata["folder"]}.tar.xz`
     print "sha256sum: ", `sha256sum #{appdata["folder"]}.tar.xz`
+
+    if (options.sign)
+        print "-> Signing ..  "
+        `gpg -a --output #{appdata["folder"]}.tar.xz.sig --detach-sign #{appdata["folder"]}.tar.xz`
+        puts " done."
+        puts ""
+        print "sha256sum: ", `sha256sum #{appdata["folder"]}.tar.xz.sig`
+    end
 end
 
