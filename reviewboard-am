@@ -117,6 +117,7 @@ def write_patch(fl, fullname, email, summary, description, diff):
     print("Subject:", summary.encode("utf-8"), file=fl)
     print(file=fl)
     print(description.encode("utf-8"), file=fl)
+    print("---", file=fl)
     print(file=fl)
     fl.write(diff)
 
