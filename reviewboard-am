@@ -33,14 +33,15 @@ either expressed or implied, of the copyright holders.
 from __future__ import print_function
 
 import sys
-if sys.version_info[0] != 2:
-    print("ERROR: This script must be run with Python 2", file=sys.stderr)
-    sys.exit(1)
-
 import json
 import os
 import subprocess
-import urllib2
+try:
+    from urllib.request import urlopen
+    from urllib.error import HTTPError
+except ImportError:
+    from urllib2 import urlopen, HTTPError
+    input = raw_input
 
 from argparse import ArgumentParser
 
@@ -48,12 +49,18 @@ RB_URL = "https://git.reviewboard.kde.org"
 
 DEBUG_JSON = "DEBUG_JSON" in os.environ
 
+def retrieve_text(url):
+    data = urlopen(url).read()
+    if type(data) != str:
+        data = data.decode('utf8')
+    return data
+
 
 def api_request(url):
     if DEBUG_JSON:
         print("DEBUG_JSON: Fetching", url)
-    fl = urllib2.urlopen(url)
-    dct = json.load(fl)
+    data = retrieve_text(url)
+    dct = json.loads(data)
     if DEBUG_JSON:
         print("DEBUG_JSON:")
         print(json.dumps(dct, sort_keys=True, indent=4))
@@ -77,7 +84,7 @@ class RBClient(object):
     def get_request_info(self, request_id):
         try:
             dct = api_request(self.url + "/api/review-requests/%d/" % request_id)
-        except urllib2.HTTPError, exc:
+        except HTTPError as exc:
             if exc.code == 404:
                 raise RBClientError("HTTP Error 404: there is probably no request with id %d." % request_id)
             raise
@@ -89,14 +96,13 @@ class RBClient(object):
         return dct["user"]
 
     def download_diff(self, request_id):
-        fl = urllib2.urlopen(self.url + "/r/%d/diff/raw/" % request_id)
-        return fl.read()
+        return retrieve_text(self.url + "/r/%d/diff/raw/" % request_id)
 
 
 def parse_author_info(author_info):
     def loop_raw_input(prompt):
         while True:
-            out = raw_input(prompt)
+            out = input(prompt)
             if out:
                 return out
             print("Invalid value.")
@@ -113,10 +119,10 @@ def parse_author_info(author_info):
 
 def write_patch(fl, fullname, email, summary, description, diff):
     author = "%s <%s>" % (fullname, email)
-    print("From:", author.encode("utf-8"), file=fl)
-    print("Subject:", summary.encode("utf-8"), file=fl)
+    print("From:", author, file=fl)
+    print("Subject:", summary, file=fl)
     print(file=fl)
-    print(description.encode("utf-8"), file=fl)
+    print(description, file=fl)
     print("---", file=fl)
     print(file=fl)
     fl.write(diff)
@@ -147,7 +153,7 @@ def main():
     print("Fetching request info")
     try:
         request_info = rb.get_request_info(request_id)
-    except RBClientError, exc:
+    except RBClientError as exc:
         print(exc)
         return 1
     author_info = rb.get_author_info(request_info["links"]["submitter"]["href"])
