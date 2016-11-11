@@ -19,18 +19,11 @@ require 'fileutils'
 # check command line parameters
 options = OpenStruct.new
 options.help  = false
-options.https = false
 options.ask   = true
 options.translations = true
 options.sign  = false
 
 opts = OptionParser.new do |opts|
-  opts.on("-u", "--user USERNAME", "svn account") do |u|
-    options.username = u
-  end
-  opts.on("-w", "--https", "Using https instead of svn+ssh") do |w|
-    options.https = w
-  end
   opts.on("-n", "--noaccount", "Using svn://anonsvn.kde.org/ instead of svn+ssh") do |n|
     options.anonsvn = n
   end
@@ -63,36 +56,15 @@ rescue Exception => e
   exit
 end
 
-if (options.username)
-  username = options.username + "@"
-end
-
 if (options.application)
   apps = Array.new
   apps << options.application
 end
 
-if (options.https)
-  if (username)
-    svnbase    = "https://#{username}svn.kde.org/home/kde"
-  else
-    puts opts
-    puts
-    puts "Username is mandatory with https"
-    exit
-  end
-else
-  svnbase    = "svn+ssh://#{username}svn.kde.org/home/kde"
-end
+svnbase = "svn+ssh://svn@svn.kde.org/home/kde"
 
 if (options.anonsvn)
-  if (options.https)
-     puts opts
-     puts
-     puts "https or anonsvn please, not both"
-     exit
-   end
-   svnbase    = "svn://anonsvn.kde.org/home/kde"
+   svnbase = "svn://anonsvn.kde.org/home/kde"
 end
 
 if (options.help)
