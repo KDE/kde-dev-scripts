@@ -61,7 +61,7 @@ if __name__ == "__main__":
         parser.print_help()
         sys.exit(1)
 
-    proc = subprocess.Popen(['cmake', '.', '--trace'], stdout=open(os.devnull, "w"), stderr=subprocess.PIPE)
+    proc = subprocess.Popen(['cmake', '.', '--trace-expand'], stdout=open(os.devnull, "w"), stderr=subprocess.PIPE)
     processedFiles = {}
     lookedUpPackages = {}
 
