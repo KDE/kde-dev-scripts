@@ -105,10 +105,10 @@ sub processFile() {
     if ( $line !~ m/\)\s*$/ || $line =~ m/"\s*$/ ) {
       $nextline = <IN>;
       if (defined($nextline)) {
-	$nextline =~ s/#.*$//; #remove comments
-	$linecnt++;
-	chomp($nextline);
-	$line .= $nextline;
+        $nextline =~ s/#.*$//; #remove comments
+        $linecnt++;
+        chomp($nextline);
+        $line .= $nextline;
       }
       redo unless eof(IN);
     }
@@ -129,164 +129,165 @@ sub processFile() {
 
     if ($in !~ m+kjsembed/qtonly/CMakeLists.txt+) {
       if ($line =~ m/macro_optional_find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
-	  $line =~ m/find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
-	  $line =~ m/find_program\s*\(\s*([a-zA-Z0-9_]*).*\)/i ||
-	  $line =~ m/find_path\s*\(\s*([a-zA-Z0-9_]*).*\)/i) {
-	$pack = lc($1);
-	$pack = "libusb" if ($pack eq "usb");
-	$pack = "mysql_embedded" if ($pack eq "mysql");
-	if ($pack !~ m/^(carbon|iokit|qt4|kde4internal|kde4|kdewin32|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2|kdesubversion|git_executable)/) {
-	  $optpacks{$pack}{'name'} = $pack;
-	  $optpacks{$pack}{'log'} = 0;
-	}
+          $line =~ m/find_package\s*\(\s*([a-zA-Z0-9]*).*\)/i ||
+          $line =~ m/find_program\s*\(\s*([a-zA-Z0-9_]*).*\)/i ||
+          $line =~ m/find_path\s*\(\s*([a-zA-Z0-9_]*).*\)/i) {
+        $pack = lc($1);
+        $pack = "libusb" if ($pack eq "usb");
+        $pack = "mysql_embedded" if ($pack eq "mysql");
+        if ($pack !~ m/^(carbon|iokit|qt4|qt5|kde4internal|kde4|kf|kdewin32|x11|kdepimlibs|kdevplatform|gpgme|kdcraw|kexiv2|kdesubversion|git_executable)/) {
+          $optpacks{$pack}{'name'} = $pack;
+          $optpacks{$pack}{'log'} = 0;
+        }
       }
       if ($line =~ m/macro_log_feature\(\s*([A-Z0-9_]*).*\)/i ||
-	  $line =~ m/set_package_properties\(\s*([A-Z0-9_]*).*\)/i) {
-	$pack = lc($1);
-	if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc_executable|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
-	    $pack !~ m/x11_.*_found/ &&
-	    $pack !~ m/true/i && $pack !~ m/false/i) {
-	  $pack =~ s/_xcb//;
-	  $pack =~ s/have_//;
-	  $pack =~ s/_found//;
-	  $pack =~ s/_video//;
-	  $pack =~ s/shared_mime_info/sharedmimeinfo/;
-	  if($pack eq "xsltproc_executable") {
-	    $pack = "libxslt";
-	  }
-	  if (!defined($optpacks{$pack}{'name'})) {
-#	    if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
-	      $issues++;
-	      &printIssue($line,$linecnt,"macro_log_feature($pack) used without a corresponding find_package");
-	    }
-#	  }
-	  $optpacks{$pack}{'log'} = 1;
-	}
+          $line =~ m/set_package_properties\(\s*([A-Z0-9_]*).*\)/i) {
+        $pack = lc($1);
+        if ($pack !~ m/^(compositing|strigiqtdbusclient|xsltproc_executable|qt_qtopengl|qt_qtxmlpatterns_library|qt_qtdeclarative|ggzconfig)_/ &&
+            $pack !~ m/x11_.*_found/ &&
+            $pack !~ m/true/i && $pack !~ m/false/i) {
+          $pack =~ s/_xcb//;
+          $pack =~ s/have_//;
+          $pack =~ s/_found//;
+          $pack =~ s/_video//;
+          $pack =~ s/shared_mime_info/sharedmimeinfo/;
+          if($pack eq "xsltproc_executable") {
+            $pack = "libxslt";
+          }
+          if (!defined($optpacks{$pack}{'name'})) {
+#           if ($pack !~ m/^(kwin_compositing|current_alsa)/) {
+              $issues++;
+              &printIssue($line,$linecnt,"macro_log_feature($pack) used without a corresponding find_package");
+            }
+#         }
+          $optpacks{$pack}{'log'} = 1;
+        }
       }
     }
 
     $issues += &checkLine($line,$linecnt,
-			  '[[:space:]]{\$',
-			  'replace "{$" with "${", or garbage detected');
+                          '[[:space:]]\{\$',
+                          'replace "{$" with "${", or garbage detected');
 
     $issues += &checkLine($line,$linecnt,
-			  '[[^:print:]]{\$',
-			  'non-printable characters detected');
+                          '[[^:print:]]\{\$',
+                          'non-printable characters detected');
 
     $issues += &checkLine($line,$linecnt,
-			  '[Kk][Dd][Ee]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
-			  'KDE4_AUTOMOC() is obsolete. Remove it.');
+                          '[Kk][Dd][Ee]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
+                          'KDE4_AUTOMOC() is obsolete. Remove it.');
 
     $issues += &checkLine($line,$linecnt,
                           '^[[:space:]]*[Qq][Tt]4_[Aa][Uu][Tt][Oo][Mm][Oo][Cc]',
                           'No need for QT4_AUTOMOC(). Remove it.');
 
     #$issues += &checkLine($line,$linecnt,
-    #			  '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
-    #			  'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
+    #                     '[Kk][Dd][Ee]3_[Aa][Dd][Dd]_[Kk][Pp][Aa][Rr][Tt]',
+    #                     'Use KDE4_ADD_PLUGIN() instead of KDE3_ADD_KPART()');
+
+    #ONLY KDE4
+    #$issues += &checkLine($line,$linecnt,
+    #                      '^[[:space:]]*[Aa][Dd][Dd]_[Ll][Ii][Bb][Rr][Aa][Rr][Yy]',
+    #                      'Use KDE4_ADD_LIBRARY() instead of ADD_LIBRARY()');
 
     $issues += &checkLine($line,$linecnt,
-			  '^[[:space:]]*[Aa][Dd][Dd]_[Ll][Ii][Bb][Rr][Aa][Rr][Yy]',
-			  'Use KDE4_ADD_LIBRARY() instead of ADD_LIBRARY()');
-
-    $issues += &checkLine($line,$linecnt,
-                          'DESTINATION[[:space:]]\${APPLNK_INSTALL_DIR}',
+                          'DESTINATION[[:space:]]\$\{APPLNK_INSTALL_DIR}',
                           'APPLNK_INSTALL_DIR is dead with kde4 replace "${APPLNK_INSTALL_DIR}" with "${XDG_APPS_INSTALL_DIR}" and convert desktop file to xdg format (add Categories)');
 
     $issues += &checkLine($line,$linecnt,
-                          'DESTINATION[[:space:]]\${MIME_INSTALL_DIR}',
+                          'DESTINATION[[:space:]]\$\{MIME_INSTALL_DIR}',
                           'Files installed into MIME_INSTALL_DIR will not read. Port them on freedesktop xdg mimetypes.');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
-			  'replace /lib/kde" with "${PLUGIN_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/lib/kde[[:digit:]]',
+                          'replace /lib/kde" with "$\{PLUGIN_INSTALL_DIR}"');
 
     if ($line !~ m/^\s*[Ss][Ee][Tt]\s*\(/) {
       $issues += &checkLine($line,$linecnt,
-			    'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR\}\s*\)',
-			    'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+                            'DESTINATION[[:space:]]\$\\{LIB_INSTALL_DIR\}\s*\)',
+                            'replace "DESTINATION ${LIB_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
       $issues += &checkLine($line,$linecnt,
-			    'DESTINATION[[:space:]]lib',
-			    'replace "DESTINATION lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+                            'DESTINATION[[:space:]]lib',
+                            'replace "DESTINATION lib" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     }
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${LIB_INSTALL_DIR}/\$',
-			  'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{LIB_INSTALL_DIR}/\$',
+                          'replace "${LIB_INSTALL_DIR}/${...}" with "${LIB_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*include/*',
-			  'replace "include" or "/include" with "${INCLUDE_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*include/*',
+                          'replace "include" or "/include" with "${INCLUDE_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${INCLUDE_INSTALL_DIR}/\$',
-			  'replace "${INCLUDE_INSTALL_DIR}/${...}" with "${INCLUDE_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{INCLUDE_INSTALL_DIR}/\$',
+                          'replace "${INCLUDE_INSTALL_DIR}/${...}" with "${INCLUDE_INSTALL_DIR}/realname"');
 
     if ($line !~ m/PROGRAMS/ && $line !~ m/FILES/ &&
-	$line !~ m/PERMISSIONS/ &&
-	$line !~ m/OWNER/ && $line !~ m/GROUP/ && $line !~ m/WORLD/) {
+        $line !~ m/PERMISSIONS/ &&
+        $line !~ m/OWNER/ && $line !~ m/GROUP/ && $line !~ m/WORLD/) {
       $issues += &checkLine($line,$linecnt,
-			    'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
-			    'replace "DESTINATION ${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+                            'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR\}\s*\)',
+                            'replace "DESTINATION ${BIN_INSTALL_DIR}" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
 
       $issues += &checkLine($line,$linecnt,
-			    'DESTINATION[[:space:]]/*bin/*',
-			    'replace "DESTINATION bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
+                            'DESTINATION[[:space:]]/*bin/*',
+                            'replace "DESTINATION bin" or "/bin" with "${INSTALL_TARGETS_DEFAULT_ARGS}"');
     }
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${BIN_INSTALL_DIR}/\$',
-			  'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{BIN_INSTALL_DIR}/\$',
+                          'replace "${BIN_INSTALL_DIR}/${...}" with "${BIN_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
                           'DESTINATION[[:space:]]/*share/doc/HTML/*',
                           'replace "share/doc/HTML/" or "/share/doc/HTML/" with "${HTML_INSTALL_DIR}"');
 
     $issues += &checkLine($line,$linecnt,
- 			  'DESTINATION[[:space:]]/*share/apps/*',
- 			  'replace "share/apps" or "/share/apps" with "${DATA_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/apps/*',
+                          'replace "share/apps" or "/share/apps" with "${DATA_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
- 			  'DESTINATION[[:space:]]\${DATA_INSTALL_DIR}/\$',
- 			  'replace "${DATA_INSTALL_DIR}/${...}" with "${DATA_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{DATA_INSTALL_DIR}/\$',
+                          'replace "${DATA_INSTALL_DIR}/${...}" with "${DATA_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
- 			  'DESTINATION[[:space:]]/*share/applications/*',
- 			  'replace "share/applications" or "/share/applications" with "${XDG_APPS_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/applications/*',
+                          'replace "share/applications" or "/share/applications" with "${XDG_APPS_INSTALL_DIR}"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*share/autostart/*',
-			  'replace "share/autostart" or "/share/autostart" with "${AUTOSTART_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/autostart/*',
+                          'replace "share/autostart" or "/share/autostart" with "${AUTOSTART_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${AUTOSTART_INSTALL_DIR}/\$',
-			  'replace "${AUTOSTART_INSTALL_DIR}/${...}" with "${AUTOSTART_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{AUTOSTART_INSTALL_DIR}/\$',
+                          'replace "${AUTOSTART_INSTALL_DIR}/${...}" with "${AUTOSTART_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*share/icons/*',
-			  'replace "share/icons" or "/share/icons" with "${ICON_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/icons/*',
+                          'replace "share/icons" or "/share/icons" with "${ICON_INSTALL_DIR}"');
     if ($in !~ m/IconThemes/) {
       $issues += &checkLine($line,$linecnt,
-			    'DESTINATION[[:space:]]\${ICON_INSTALL_DIR}/\$',
-			    'replace "${ICON_INSTALL_DIR}/${...}" with "${ICON_INSTALL_DIR}/realname"');
+                            'DESTINATION[[:space:]]\$\{ICON_INSTALL_DIR}/\$',
+                            'replace "${ICON_INSTALL_DIR}/${...}" with "${ICON_INSTALL_DIR}/realname"');
     }
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*share/locale/*',
-			  'replace "share/locale" or "/share/locale" with "${LOCALE_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/locale/*',
+                          'replace "share/locale" or "/share/locale" with "${LOCALE_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${LOCALE_INSTALL_DIR}/\$',
-			  'replace "${LOCALE_INSTALL_DIR}/${...}" with "${LOCALE_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{LOCALE_INSTALL_DIR}/\$',
+                          'replace "${LOCALE_INSTALL_DIR}/${...}" with "${LOCALE_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*share/services/*',
-			  'replace "share/services" or "/share/services" with "${SERVICES_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/services/*',
+                          'replace "share/services" or "/share/services" with "${SERVICES_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${SERVICES_INSTALL_DIR}/\$',
-			  'replace "${SERVICES_INSTALL_DIR}/${...}" with "${SERVICES_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{SERVICES_INSTALL_DIR}/\$',
+                          'replace "${SERVICES_INSTALL_DIR}/${...}" with "${SERVICES_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]/*share/sounds/*',
-			  'replace "share/sounds" or "/share/sounds" with "${SOUND_INSTALL_DIR}"');
+                          'DESTINATION[[:space:]]/*share/sounds/*',
+                          'replace "share/sounds" or "/share/sounds" with "${SOUND_INSTALL_DIR}"');
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION[[:space:]]\${SOUND_INSTALL_DIR}/\$',
-			  'replace "${SOUND_INSTALL_DIR}/${...}" with "${SOUND_INSTALL_DIR}/realname"');
+                          'DESTINATION[[:space:]]\$\{SOUND_INSTALL_DIR}/\$',
+                          'replace "${SOUND_INSTALL_DIR}/${...}" with "${SOUND_INSTALL_DIR}/realname"');
 
     $issues += &checkLine($line,$linecnt,
                           'install_targets[[:space:]]*\(',
@@ -296,31 +297,31 @@ sub processFile() {
                           'INSTALL_TARGETS[[:space:]]*\(',
                           'replace "install_targets" with "install(TARGETS...)');
     $issues += &checkLine($line,$linecnt,
-			  'install_files[[:space:]]*\(',
-			  'replace "install_files" with "install(FILES...)');
+                          'install_files[[:space:]]*\(',
+                          'replace "install_files" with "install(FILES...)');
     $issues += &checkLine($line,$linecnt,
-			  'INSTALL_FILES[[:space:]]*\(',
-			  'replace "install_files" with "install(FILES...)');
+                          'INSTALL_FILES[[:space:]]*\(',
+                          'replace "install_files" with "install(FILES...)');
     $issues += &checkLine($line,$linecnt,
-			  '\sFILES\sDESTINATION',
-			  'missing list of files between FILES and DESTINATION');
+                          '\sFILES\sDESTINATION',
+                          'missing list of files between FILES and DESTINATION');
     $issues += &checkLine($line,$linecnt,
-			  '\sTARGETS\sDESTINATION',
-			  'missing list of files between TARGETS and DESTINATION');
+                          '\sTARGETS\sDESTINATION',
+                          'missing list of files between TARGETS and DESTINATION');
 
     $issues += &checkLine($line,$linecnt,
-			  'DESTINATION\s\$\{INSTALL_TARGETS_DEFAULT_ARGS\}',
-			  'remove DESTINATION keyword before ${INSTALL_TARGETS_DEFAULT_ARGS}');
+                          'DESTINATION\s\$\{INSTALL_TARGETS_DEFAULT_ARGS\}',
+                          'remove DESTINATION keyword before ${INSTALL_TARGETS_DEFAULT_ARGS}');
 
     $issues += &checkLine($line,$linecnt,
-			  'macro_bool_to_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
-			  'do not use a digit as a variable');
+                          'macro_bool_to_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
+                          'do not use a digit as a variable');
     $issues += &checkLine($line,$linecnt,
-			  'MACRO_BOOL_TO_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
-			  'do not use a digit as a variable');
+                          'MACRO_BOOL_TO_01[[:space:]]*\(.*[[:space:]][[:digit:]][[:space:]]*\)',
+                          'do not use a digit as a variable');
     $issues += &checkLine($line,$linecnt,
-			  '-fexceptions',
-			  'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
+                          '-fexceptions',
+                          'replace "-fexceptions" with "${KDE4_ENABLE_EXCEPTIONS}"');
     if ($in !~ m+/(phonon|okular|kopete|kdevelop|libkdegames|kdgantt2)/+) {
       $issues +=
         &checkLine($line,$linecnt,
@@ -421,52 +422,52 @@ sub processFile() {
 
     $issues +=
       &checkLine($line,$linecnt,
-		 'install.*\([[:space:]]FILES[[:space:]].*\.desktop\s*DESTINATION\s*\${XDG_APPS_INSTALL_DIR}[\s/)]',
-		 'replace "FILES" with "PROGRAMS"');
+                 'install.*\([[:space:]]FILES[[:space:]].*\.desktop\s*DESTINATION\s*\$\{XDG_APPS_INSTALL_DIR}[\s/)]',
+                 'replace "FILES" with "PROGRAMS"');
 
     # kdelibs variables
     if (! $in_kdelibs) {
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdeui[\s/)]',
-		   'replace "kdeui" with "${KDE4_KDEUI_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kdeui[\s/)]',
+                   'replace "kdeui" with "${KDE4_KDEUI_LIBS}"');
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kio[\s/)]',
-		   'replace "kio" with "${KDE4_KIO_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kio[\s/)]',
+                   'replace "kio" with "${KDE4_KIO_LIBS}"');
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdesu[\s/)]',
-		   'replace "kdesu" with "${KDE4_KDESU_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kdesu[\s/)]',
+                   'replace "kdesu" with "${KDE4_KDESU_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]khtml[\s/)]',
-		   'replace "khtml" with "${KDE4_KHTML_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]khtml[\s/)]',
+                   'replace "khtml" with "${KDE4_KHTML_LIBS}"');
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kparts[\s/)]',
-		   'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kparts[\s/)]',
+                   'replace "kparts" with "${KDE4_KPARTS_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kde3support[\s/)]',
-		   'replace "kde3support" with "${KDE4_KDE3SUPPORT_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kde3support[\s/)]',
+                   'replace "kde3support" with "${KDE4_KDE3SUPPORT_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kutils[\s/)]',
-		   'replace "kutils" with "${KDE4_KUTILS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kutils[\s/)]',
+                   'replace "kutils" with "${KDE4_KUTILS_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kdnssd[\s/)]',
-		   'replace "kdnssd" with "${KDE4_KDNSSD_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kdnssd[\s/)]',
+                   'replace "kdnssd" with "${KDE4_KDNSSD_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]knewstuff2[\s/)]',
-		   'replace "knewstuff2" with "${KDE4_KNEWSTUFF2_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]knewstuff2[\s/)]',
+                   'replace "knewstuff2" with "${KDE4_KNEWSTUFF2_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -474,59 +475,59 @@ sub processFile() {
                    'replace "knewstuff3" with "${KDE4_KNEWSTUFF3_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]knotifyconfig[\s/)]',
-		   'replace "knotifyconfig" with "${KDE4_KNOTIFYCONFIG_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]knotifyconfig[\s/)]',
+                   'replace "knotifyconfig" with "${KDE4_KNOTIFYCONFIG_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]threadweaver[\s/)]',
-		   'replace "threadweaver" with "${KDE4_THREADWEAVER_LIBRARIES}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]threadweaver[\s/)]',
+                   'replace "threadweaver" with "${KDE4_THREADWEAVER_LIBRARIES}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]krosscore[\s/)]',
-		   'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]krosscore[\s/)]',
+                   'replace "krosscore" with "${KDE4_KROSSCORE_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]krossui[\s/)]',
-		   'replace "krossui" with "${KDE4_KROSSUI_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]krossui[\s/)]',
+                   'replace "krossui" with "${KDE4_KROSSUI_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]phonon[\s/)]',
-		   'replace "phonon" with "${PHONON_LIBRARY}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]phonon[\s/)]',
+                   'replace "phonon" with "${PHONON_LIBRARY}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kaudiodevicelist[\s/)]',
-		   'replace "kaudiodevicelist" with "${KDE4_KAUDIODEVICELIST_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kaudiodevicelist[\s/)]',
+                   'replace "kaudiodevicelist" with "${KDE4_KAUDIODEVICELIST_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]solidifaces[\s/)]',
-		   'replace "solidifaces" with "${KDE4_SOLIDIFACES_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]solidifaces[\s/)]',
+                   'replace "solidifaces" with "${KDE4_SOLIDIFACES_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]solid[\s/)]',
-		   'replace "solid" with "${KDE4_SOLID_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]solid[\s/)]',
+                   'replace "solid" with "${KDE4_SOLID_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]ktexteditor[\s/)]',
-		   'replace "ktexteditor" with "${KDE4_KTEXTEDITOR_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]ktexteditor[\s/)]',
+                   'replace "ktexteditor" with "${KDE4_KTEXTEDITOR_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kfile[\s/)]',
-		   'replace "kfile" with "${KDE4_KFILE_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kfile[\s/)]',
+                   'replace "kfile" with "${KDE4_KFILE_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]knepomuk[\s/)]',
-		   'replace "knepomuk" with "${KDE4_KNEPOMUK_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]knepomuk[\s/)]',
+                   'replace "knepomuk" with "${KDE4_KNEPOMUK_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -540,24 +541,24 @@ sub processFile() {
 
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kmetadata[\s/)]',
-		   'replace "kmetadata" with "${KDE4_KMETADATA_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kmetadata[\s/)]',
+                   'replace "kmetadata" with "${KDE4_KMETADATA_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kjs[\s/)]',
-		   'replace "kjs" with "${KDE4_KJS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kjs[\s/)]',
+                   'replace "kjs" with "${KDE4_KJS_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kjsapi[\s/)]',
-		   'replace "kjsapi" with "${KDE4_KJSAPI_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kjsapi[\s/)]',
+                   'replace "kjsapi" with "${KDE4_KJSAPI_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kformula[\s/)]',
-		   'replace "kformula" with "${KDE4_KFORMULA_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kformula[\s/)]',
+                   'replace "kformula" with "${KDE4_KFORMULA_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -599,89 +600,89 @@ sub processFile() {
     # kdepimlibs variables
     if (! $in_kdelibs && ! $in_kdepimlibs) {
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-kde[\s/)]',
-		   'replace "akonadi-kde" with "${KDEPIMLIBS_AKONADI_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-kde[\s/)]',
+                   'replace "akonadi-kde" with "${KDEPIMLIBS_AKONADI_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-calendar[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-calendar[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-contact[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CONTACT_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-contact[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_CONTACT_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-kabc[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KABC_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-kabc[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KABC_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-kcal[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KCAL_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-kcal[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KCAL_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-kmime[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KMIME_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-kmime[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_KMIME_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-notes[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_NOTES_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-notes[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_NOTES_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]akonadi-socialutils[\s/)]',
-		   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_SOCIALUTILS_LIBS}"');
-
-      $issues += 
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
-		   'replace "gpgmepp" with "${KDEPIMLIBS_GPGMEPP_LIBS}"');
-
-      $issues += 
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kabc[\s/)]',
-		   'replace "kabc" with "${KDEPIMLIBS_KABC_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]akonadi-socialutils[\s/)]',
+                   'replace "akonadi-kmime" with "${KDEPIMLIBS_AKONADI_SOCIALUTILS_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kalarmcal[\s/)]',
-		   'replace "kcalutils" with "${KDEPIMLIBS_KALARMCAL_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]gpgmepp[\s/)]',
+                   'replace "gpgmepp" with "${KDEPIMLIBS_GPGMEPP_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kblog[\s/)]',
-		   'replace "kblog" with "${KDEPIMLIBS_KBLOG_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kabc[\s/)]',
+                   'replace "kabc" with "${KDEPIMLIBS_KABC_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcal[\s/)]',
-		   'replace "kcal" with "${KDEPIMLIBS_KCAL_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kalarmcal[\s/)]',
+                   'replace "kcalutils" with "${KDEPIMLIBS_KALARMCAL_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcalcore[\s/)]',
-		   'replace "kcalcore" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kblog[\s/)]',
+                   'replace "kblog" with "${KDEPIMLIBS_KBLOG_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
-		   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kcal[\s/)]',
+                   'replace "kcal" with "${KDEPIMLIBS_KCAL_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
-		   'replace "kholidays" with "${KDEPIMLIBS_KHOLIDAYS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kcalcore[\s/)]',
+                   'replace "kcalcore" with "${KDEPIMLIBS_KCALCORE_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kimap[\s/)]',
-		   'replace "kimap" with "${KDEPIMLIBS_KIMAP_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kcalutils[\s/)]',
+                   'replace "kcalutils" with "${KDEPIMLIBS_KCALUTILS_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kholidays[\s/)]',
+                   'replace "kholidays" with "${KDEPIMLIBS_KHOLIDAYS_LIBS}"');
+
+      $issues +=
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kimap[\s/)]',
+                   'replace "kimap" with "${KDEPIMLIBS_KIMAP_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -694,44 +695,44 @@ sub processFile() {
                    'replace "kmbox" with "${KDEPIMLIBS_KMBOX_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kmime[\s/)]',
-		   'replace "kmime" with "${KDEPIMLIBS_KMIME_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kmime[\s/)]',
+                   'replace "kmime" with "${KDEPIMLIBS_KMIME_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kontactinterface[\s/)]',
-		   'replace "kontactinterface" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kontactinterface[\s/)]',
+                   'replace "kontactinterface" with "${KDEPIMLIBS_KONTACTINTERFACE_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
-		   'replace "kpimidentities" with "${KDEPIMLIBS_KPIMIDENTITIES_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kpimidentities[\s/)]',
+                   'replace "kpimidentities" with "${KDEPIMLIBS_KPIMIDENTITIES_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kpimtextedit[\s/)]',
-		   'replace "kpimtextedit" with "${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kpimtextedit[\s/)]',
+                   'replace "kpimtextedit" with "${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
-		   'replace "kpimutils" with "${KDEPIMLIBS_KPIMUTILS_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kpimutils[\s/)]',
+                   'replace "kpimutils" with "${KDEPIMLIBS_KPIMUTILS_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kresources[\s/)]',
-		   'replace "kresources" with "${KDEPIMLIBS_KRESOURCES_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kresources[\s/)]',
+                   'replace "kresources" with "${KDEPIMLIBS_KRESOURCES_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
-		   'replace "ktnef" with "${KDEPIMLIBS_KTNEF_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]ktnef[\s/)]',
+                   'replace "ktnef" with "${KDEPIMLIBS_KTNEF_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]kxmlrpcclient[\s/)]',
-		   'replace "kxmlrpcclient" with "${KDEPIMLIBS_KXMLRPCCLIENT_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]kxmlrpcclient[\s/)]',
+                   'replace "kxmlrpcclient" with "${KDEPIMLIBS_KXMLRPCCLIENT_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -744,9 +745,9 @@ sub processFile() {
                    'replace "microblog" with "${KDEPIMLIBS_MICROBLOG_LIBS}"');
 
       $issues +=
-	&checkLine($line,$linecnt,
-		   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
-		   'replace "qgpgme" with "${KDEPIMLIBS_QGPGME_LIBS}"');
+        &checkLine($line,$linecnt,
+                   'target_link_libraries.*[[:space:]]qgpgme[\s/)]',
+                   'replace "qgpgme" with "${KDEPIMLIBS_QGPGME_LIBS}"');
 
       $issues +=
         &checkLine($line,$linecnt,
@@ -765,17 +766,17 @@ sub processFile() {
     if ($line =~ m+macro_optional_add_subdirectory\s*\(\s*(\S*)\s*\)+) {
       $subdir = $1;
       if (!&canBeOptional($subdir) || ($top_of_module && ($in_kdelibs || $in_kdepimlibs))) {
-	if (!&mustBeOptional($subdir)) {
-	  $issues++;
-	  &printIssue($line,$linecnt,"Replace macro_optional_add_subdirectory($subdir) with add_subdirectory($subdir)");
-	}
+        if (!&mustBeOptional($subdir)) {
+          $issues++;
+          &printIssue($line,$linecnt,"Replace macro_optional_add_subdirectory($subdir) with add_subdirectory($subdir)");
+        }
       }
     }
     if ($line =~ m+^\s*add_subdirectory\s*\(\s*(\S*)\s*\)+) {
       $subdir = $1;
       if (&mustBeOptional($subdir)) {
-	$issues++;
-	&printIssue($line,$linecnt,"Replace add_subdirectory($subdir) with macro_optional_add_subdirectory($subdir)");
+        $issues++;
+        &printIssue($line,$linecnt,"Replace add_subdirectory($subdir) with macro_optional_add_subdirectory($subdir)");
       }
     }
     $prevline = $line;
@@ -868,7 +869,7 @@ sub canBeOptional {
   my($ret) = 1;
   $ret = 0
     if ($guy =~ m/^lib/ ||
-	$guy =~ m/lib$/ ||
+        $guy =~ m/lib$/ ||
         $guy =~ m/^cmake$/
        );
   return $ret;
