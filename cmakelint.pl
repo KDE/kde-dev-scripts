@@ -755,7 +755,7 @@ sub processFile() {
                    'replace "syndication" with "${KDEPIMLIBS_SYNDICATION_LIBS}"');
     }
 
-    if ($line !~ m+(Qt4|IOKit|KdeSubversion|KDE4|KDE4Internal|KDEWIN32|KdepimLibs|kdevplatform|Carbon|Gpgme)+ && $in !~ m+/(examples|qtonly)/+) {
+    if ($line !~ m+(Qt4|IOKit|KdeSubversion|KDE4|KDE4Internal|KDEWIN32|KdepimLibs|kdevplatform|Carbon|Gpgme|Perl|Wcecompat)+ && $in !~ m+/(examples|qtonly)/+) {
       $issues +=
        &checkLine($line,$linecnt,
                    '^\s*[Ff][Ii][Nn][Dd]_[Pp][Aa][Cc][Kk][Aa][Gg][Ee]\s*\(\s*[A-Za-z0-9_]*\sREQUIRED\s*\)',
