@@ -182,7 +182,7 @@ sub fix_captions($)
 	  my $caption = $1;
 	  print "$srcfile: caption='$caption' class='$class'\n" if ($verbose);
 	  if ( ( $caption eq $class && !defined $knowncaptions{$caption} ) ||
-		 ($caption =~ m/Form[0-9]*/) ) {
+		 ($caption =~ m/Form[0-9]*/) || ($caption =~ m/Frame[0-9]*/) ) {
 	      if ( $caption =~ m/^[A-Z][a-z]*$/ ) {
 		  print "$srcfile: removing caption '$caption' (warning! could be real caption)\n";
 	      } else {
