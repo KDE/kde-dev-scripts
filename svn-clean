@@ -43,7 +43,7 @@ sub check_confirm()
   open(TTY, "+< /dev/tty") or die "cannot open /dev/tty";
 
   print TTY "This will erase files and directories that aren't in Subversion\n".
-            "Are you sure you want to continue? (y/n) ";
+            "Are you sure you want to continue? (y/N) ";
   
   if (<TTY> =~ /^[Yy]/) {
     $force = 1;
