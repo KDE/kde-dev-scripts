@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Apply KF5 coding style to all c, cpp and header files in and below the current directory
+#
+# The coding style is defined in http://techbase.kde.org/Policies/Kdelibs_Coding_Style
+#
+# Requirements:
+# - installed uncrustify >= 0.63
+#          Do not use an older version, it will lead to bad reformatting.
+# - $QT_NORMALIZE_TOOL pointing to qtrepotools/util/normalize/normalize (after compiling it)
+#
+# Report bugs in uncrustify at https://github.com/uncrustify/uncrustify/issues
+#
+
+files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
+if [ -z "$files" ]; then
+  # nothing to do
+  exit 0
+fi
+
+if test -z "$QT_NORMALIZE_TOOL"; then
+  echo "Please export QT_NORMALIZE_TOOL=<qt5>/qtrepotools/util/normalize/normalize"
+  exit 1
+fi
+
+# Change this to uncrustify-qt.cfg to reformat Qt code (TODO: command-line option?)
+cfgfile=uncrustify-kf5.cfg
+
+cfg=`qtpaths --locate-file GenericDataLocation uncrustify/$cfgfile`
+if test -z "$cfg"; then
+  echo "Config file uncrustify/$cfgfile not found in prefix/share (GenericDataLocation). Check that XDG_DATA_DIRS contains the install prefix for kde-dev-scripts."
+  exit 1
+fi
+
+uncrustify --no-backup -c "$cfg" $files
+
+# Watch out for things that lead to method implementations being parsed as if inside other methods,
+# e.g. due to '{' inside #ifdef and #else and '}' outside.
+grep '^\S* \S*::.*) {$' $files && echo "WARNING: check for wrong '{' placement in method definitions, in above grep results"
+
+# Remove old emacs mode-lines
+perl -pi -e '$_ = "" if /c-basic-offset: [1-8]/' $files
+
+# Remove old kate mode-lines
+perl -pi -e '$_ = "" if /kate: .*indent-width/ || /kate:.*tab-width/' $files
+
+# Remove old vim mode-lines
+perl -pi -e '$_ = "" if /\/\/.* vim:/' $files
+# They are often in a two-liner C comment, so we need a bit of perl magic to remove these
+perl - $files <<EOF
+  foreach my \$file (@ARGV) {
+   open F, "+<", \$file or do { print STDERR "open(\$file) failed : \"\$!\"\n"; next };
+   my \$str = join '', <F>;
+   if( \$str =~ m/vim:/ ) {
+     #print STDERR "Removing multi-line vim modeline from \$file\n";
+     \$str =~ s!/\*\**\s*\**\s*vim:[^\n]*\n\s*\*/!!smg;
+     seek F, 0, 0;
+     print F \$str;
+     truncate F, tell(F);
+   }
+   close F;
+  }
+EOF
+
+# Remove consecutive blank lines
+perl - $files <<EOF
+  foreach my \$file (@ARGV) {
+   open F, "+<", \$file or do { print STDERR "open(\$file) failed : \"\$!\"\n"; next };
+   my \$str = join '', <F>;
+   if (\$str =~ s/\s*\n\s*\n\s*\n\n*/\n\n/smg ) {
+     seek F, 0, 0;
+     print F \$str;
+     truncate F, tell(F);
+   }
+   close F;
+  }
+EOF
+
+# Normalize signals/slots
+$QT_NORMALIZE_TOOL --modify .
+
+# TODO: add command-line option to trigger this
+# It's not wanted when working on a fix
+#git commit -q -a -m "Code reformatted using kde-dev-scripts/astyle-kdelibs.
+#Use git blame -w `git rev-parse --short HEAD` to show authorship as it was before this commit."
+
