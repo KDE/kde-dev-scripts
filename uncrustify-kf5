@@ -10,6 +10,7 @@
 # - $QT_NORMALIZE_TOOL pointing to qtrepotools/util/normalize/normalize (after compiling it)
 #
 # Report bugs in uncrustify at https://github.com/uncrustify/uncrustify/issues
+# Documentation of the uncrustify options at http://uncrustify.sourceforge.net/default.cfg
 #
 
 files=`find -type f -name '*.c' -or -name '*.cpp' -or -name '*.cc' -or -name '*.h'`
