@@ -62,15 +62,9 @@ install(PROGRAMS
   svngettags
   svnlastlog
   svnrevertlast
-  uncrustify-kf5
   wcgrep
   draw_lib_dependencies
   DESTINATION ${BIN_INSTALL_DIR})
-
-install(FILES
-  uncrustify-kf5.cfg
-  uncrustify-qt.cfg
-  DESTINATION ${DATA_INSTALL_DIR}/uncrustify)
 
 endif (UNIX)
 
