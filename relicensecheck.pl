@@ -185,6 +185,7 @@ my %license_table = (
     'nsams'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'ogoffart'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'orcsik'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'palant'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'palimaka'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'pdamsten'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'peifengyu'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
@@ -365,6 +366,7 @@ my %secondary_mail_addresses = (
     'git@the-user.org' => 'schmidt-domine',
     'kde@randomguy3.me.uk' => 'alexmerry',
     'ABBAPOH@me.com' => 'ikomissarov',
+    'trev@adblockplus.org' => 'palant',
     'tsdgeos@terra.es' => 'aacid',
     'guy.maurel@kde.org' => 'guymaurel',
     'sune@vuorela.dk' => 'sune',
@@ -382,7 +384,7 @@ my %secondary_mail_addresses = (
     'olav@vitters.nl' => 'vitters',
     'devriese@kde.org' => 'domi',
     'caleb@gentoo.org' => 'ctennis',
-    'malte@kde.org' => 'malte'
+    'malte@kde.org' => 'malte',
 );
 
 my %ruletable;
