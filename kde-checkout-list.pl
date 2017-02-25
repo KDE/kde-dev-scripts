@@ -4,7 +4,7 @@
 # Parses the KDE Projects XML Database and prints project protocol-url lines  #
 # for each project in the specified component/module.                         #
 #                                                                             #
-# Copyright (C) 2011,2012,2014 by Allen Winter <winter@kde.org>               #
+# Copyright (C) 2011,2012,2014,2017 by Allen Winter <winter@kde.org>          #
 # Copyright (C) 2011 by David Faure <faure@kde.org>                           #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -28,10 +28,10 @@
 use strict;
 use Getopt::Long;
 use XML::Parser;
-use LWP::Simple;		# used to fetch the xml db
+use LWP::Simple;                # used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.95';
+my($Version) = '0.96';
 
 my($help) = '';
 my($version) = '';
@@ -49,18 +49,18 @@ my($branch) = '';
 
 exit 1
 if (!GetOptions('help' => \$help, 'version' => \$version,
-		'component=s' => \$searchComponent,
-		'module=s' => \$searchModule,
-		'protocol=s' => \$searchProtocol,
+                'component=s' => \$searchComponent,
+                'module=s' => \$searchModule,
+                'protocol=s' => \$searchProtocol,
                 'all' => \$allmatches,
                 'desc' => \$printDesc,
-		'clone' => \$doClone,
-		'prune' => \$doPrune,
-		'dry-run' => \$dryRun,
-		'quit-on-error' => \$quitOnError,
-		'gitsuffix' => \$gitSuffix,
-		'branch=s' => \$branch
-	       ));
+                'clone' => \$doClone,
+                'prune' => \$doPrune,
+                'dry-run' => \$dryRun,
+                'quit-on-error' => \$quitOnError,
+                'gitsuffix' => \$gitSuffix,
+                'branch=s' => \$branch
+               ));
 
 &Help() if ($help);
 
@@ -101,7 +101,7 @@ my $inUrl = 0;
 my $inActive = 0;
 my $inDesc = 0;
 
-my @element_stack;		# remember which elements are open
+my @element_stack;              # remember which elements are open
 my %output;         # project name -> project data
 my %projectByPath;  # project path -> project name
 
@@ -117,11 +117,11 @@ if ($lines[0] !~ m/xml version/ || $lines[$#lines] !~ m+</kdeprojects>+) {
 
 # initialize the parser
 my $parser = XML::Parser->new( Handlers =>
-			       {
-				Start=>\&handle_start,
-				End=>\&handle_end,
-				Char=>\&char_handler,
-				});
+                               {
+                                Start=>\&handle_start,
+                                End=>\&handle_end,
+                                Char=>\&char_handler,
+                                });
 
 $parser->parse( $projects );
 
@@ -151,23 +151,23 @@ foreach $proj (sort keys %output) {
 # kdeexamples => No branches
 # superbuild => No branches
 
-	if ( $branch ) {
-	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  if ( $subdir !~ m+/kdelibs+ ) {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
-	  } else {
-	    $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
-	  }
-	} else {
-	  $command = "git clone $url $subdir";
-	}
+        if ( $branch ) {
+          next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
+          if ( $subdir !~ m+/kdelibs+ ) {
+            $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
+          } else {
+            $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
+          }
+        } else {
+          $command = "git clone $url $subdir";
+        }
       } else {
-	if ($branch) {
-	  next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
-	  $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
-	} else {
-	  $command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
-	}
+        if ($branch) {
+          next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
+          $command = "cd $subdir && git config remote.origin.url $url && git checkout $kdebranch && git pull --ff";
+        } else {
+          $command = "cd $subdir && git config remote.origin.url $url && git pull --ff";
+        }
       }
       $ret = &runCommand( $command );
       if ($ret) {
@@ -279,7 +279,7 @@ sub handle_start {
   if ( $curComponent && !$skipModule && $element eq "project" ) {
     $curProject = $attrs{"identifier"};
     if (!$curModule) {
-      print STDERR "project without a module! $curProject\n";
+      #print STDERR "project without a module! $curProject\n";
     }
     #print STDERR "BEGIN project $curProject\n";
   }
@@ -293,7 +293,7 @@ sub handle_start {
     } elsif ( $inRepo && $element eq "url" ) {
       my $value = $attrs{"protocol"};
       if ( $value eq $searchProtocol ) {
-	$inUrl = 1;
+        $inUrl = 1;
       }
     } elsif ( $inRepo && $element eq "active" ) {
       $inActive = 1;
@@ -346,9 +346,9 @@ sub handle_end {
       $projectByPath{$curPath} = $subdir;
     } else {
       if (!$curUrl) {
-	print STDERR "ERROR: repo without url! $curComponent $curModule $curProject $curPath\n";
+        print STDERR "ERROR: repo without url! $curComponent $curModule $curProject $curPath\n";
       } elsif (!$curPath) {
-	print STDERR "ERROR: repo without path! $curComponent $curModule $curProject $curUrl\n";
+        print STDERR "ERROR: repo without path! $curComponent $curModule $curProject $curUrl\n";
       }
     }
   }
