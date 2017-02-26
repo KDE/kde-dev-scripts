@@ -105,7 +105,7 @@ my @element_stack;              # remember which elements are open
 my %output;         # project name -> project data
 my %projectByPath;  # project path -> project name
 
-my $projects = get("http://projects.kde.org/kde_projects.xml");
+my $projects = get("https://projects.kde.org/kde_projects.xml");
 die "Failed to download kde_projects.xml" unless defined $projects;
 
 # sanity check
