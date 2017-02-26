@@ -31,7 +31,7 @@ use XML::Parser;
 use LWP::Simple;                # used to fetch the xml db
 
 my($Prog) = 'kde-checkout-list.pl';
-my($Version) = '0.96';
+my($Version) = '0.97';
 
 my($help) = '';
 my($version) = '';
@@ -154,7 +154,8 @@ foreach $proj (sort keys %output) {
         if ( $branch ) {
           next if ( $subdir =~ m+/kdeexamples+ || $subdir =~ m+/superbuild+ );
           if ( $subdir !~ m+/kdelibs+ ) {
-            $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
+            $command = "git clone -b $kdebranch --single-branch $url $subdir && cd $subdir && git checkout $kdebranch";
+#            $command = "git clone $url $subdir && cd $subdir && git checkout -b $kdebranch origin/$kdebranch";
           } else {
             $command = "git clone $url $subdir && cd $subdir && git checkout $kdebranch";
           }
