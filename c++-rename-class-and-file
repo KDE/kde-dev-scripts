@@ -11,13 +11,47 @@ fi
 oldfile=`echo $oldname | tr A-Z a-z`
 newfile=`echo $newname | tr A-Z a-z`
 
+findup() {
+  parg="$1"
+  _hit=""
+  spwd="$PWD"
+  if test -z "$parg"; then return 1; fi
+
+  while ! test -e "$parg"; do
+   cd ..
+   if test "$PWD" = "/"; then
+     cd "$spwd"
+     return 1
+   fi
+  done
+  _hit="$PWD/$parg"
+  cd "$spwd"
+}
+
+my_mv() {
+  _src="$1"
+  _dest="$2"
+  findup .svn
+  if test -n "$_hit"; then
+      svn mv "$_src" "$_dest" || mv "$_src" "$_dest"
+      return
+  fi
+  findup .git
+  if test -n "$_hit"; then
+      git mv "$_src" "$_dest" || mv "$_src" "$_dest"
+      return
+  fi
+  mv "$_src" "$_dest"
+}
+
+
 if [ ! -f $newfile.h ]; then
     if [ -f ${oldfile}.h ]; then
-        git mv $oldfile.h $newfile.h
+        my_mv $oldfile.h $newfile.h
     fi
-    git mv $oldfile.cpp $newfile.cpp
+    my_mv $oldfile.cpp $newfile.cpp
     if [ -f ${oldfile}_p.h ]; then
-        git mv ${oldfile}_p.h ${newfile}_p.h
+        my_mv ${oldfile}_p.h ${newfile}_p.h
     fi
 fi
 
