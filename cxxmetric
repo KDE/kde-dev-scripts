@@ -121,7 +121,7 @@ sub processFile
 
 sub buildFileList {
   my ( $dir ) = @_;
-  my @fileList = glob( "$dir/*" );
+  my @fileList = glob( "'$dir/*'" );
   my @cxxList;
 
   foreach my $file (@fileList) {
