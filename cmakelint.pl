@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Sanity checks CMakeLists.txt files.                                         #
-# Copyright (C) 2006-2012 by Allen Winter <winter@kde.org>                    #
+# Copyright (C) 2006-2012,2017 by Allen Winter <winter@kde.org>               #
 # Copyright (C) 2008-2010 by Laurent Montel <montel@kde.org>                  #
 #                                                                             #
 # This program is free software; you can redistribute it and/or modify        #
@@ -34,7 +34,7 @@ use Getopt::Long;
 use Cwd 'abs_path';
 
 my($Prog) = 'cmakelint.pl';
-my($Version) = '1.30';
+my($Version) = '1.31';
 
 my($help) = '';
 my($version) = '';
@@ -170,7 +170,7 @@ sub processFile() {
                           'replace "{$" with "${", or garbage detected');
 
     $issues += &checkLine($line,$linecnt,
-                          '[[^:print:]]\{\$',
+                          '[^[:print:]]\{\$',
                           'non-printable characters detected');
 
     $issues += &checkLine($line,$linecnt,
