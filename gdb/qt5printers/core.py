@@ -20,7 +20,7 @@
 
 import gdb.printing
 import itertools
-import typeinfo
+from qt5printers import typeinfo
 try:
     import urlparse
 except ImportError:
