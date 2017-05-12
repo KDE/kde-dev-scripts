@@ -19,7 +19,7 @@
 # this software.
 
 import gdb.printing
-import core
+from qt5printers import core
 
 """Qt5 Pretty Printers for GDB.
 
