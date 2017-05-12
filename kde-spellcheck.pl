@@ -323,7 +323,7 @@ Abbrevation            Abbreviation
 abbrevations           abbreviations
 abbriviate             abbreviate
 abbriviation           abbreviation
-abilties               abilities
+abilities               abilities
 Ablolute               Absolute
 abreviate              abbreviate
 acces                  access
