@@ -132,7 +132,7 @@ foreach my $file (@ARGV) {
         # url.adjustPath(KUrl::RemoveTrailingSlash) => url = url.adjusted(QUrl::StripTrailingSlash);
         if (/(\w*).adjustPath\(\s*KUrl::RemoveTrailingSlash\s*\)/) {
             my $urlvar = $1;
-            s/adjustPath\(\s*KUrl::RemoveTrailingSlash\s*/$urlvar = $urlvar\.adjusted(QUrl::StripTrailingSlash)/;
+            s/$urlvar\.adjustPath\(\s*KUrl::RemoveTrailingSlash\s*\)/$urlvar = $urlvar\.adjusted(QUrl::StripTrailingSlash)/;
         }
         # url.directory()
         if (/(\w+)\.directory\(\)/ && defined $urls{$1}) {
