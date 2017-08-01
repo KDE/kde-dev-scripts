@@ -25,9 +25,16 @@ use List::Util qw(any);
 ### 5. Include '+eV' if you are okay with the KDE e.V. deciding on a future
 ###    licensing change to your code if necessary.
 ###
+### 5. Include 'CCBYSA4+' if you are okay with contributions you've made under
+###    "GNU FDL" being relicensed as "Creative Commons Attribution-ShareAlike 4.0 International".
 ### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
 
 my %license_table = (
+    'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ]
+);
+
+my %old_license_table_2 = (
+    # From before CCBYSA4 was added, if you get an update for one of these people move it to %license_table
     'aacid'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'abryant'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'adawit'        => ['gplv23', 'lgplv23',                      '+eV' ],
@@ -138,7 +145,6 @@ my %license_table = (
     'johnflux'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'jones'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'jowenn'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'jschroeder'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'jtamate'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'kainhofe'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -159,7 +165,6 @@ my %license_table = (
     'lvsouza'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'lypanov'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'majewsky'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'maragato '     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mardelle'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'martyn'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mbritton'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -174,7 +179,6 @@ my %license_table = (
     'mludwig'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'mmrozowski'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mpyne'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'mrphantom'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mssola'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'mueller'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'mwolff'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
@@ -249,6 +253,7 @@ my %license_table = (
     'wstephens'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zack'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zecke'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ]
+    # Do not add anything here. Use license_table instead.
 );
 
 my %old_license_table = (
@@ -397,6 +402,11 @@ foreach my $who (keys %old_license_table) {
     $license_table{$who} = $old_license_table{$who};
 }
 
+foreach my $who (keys %old_license_table_2) {
+    die "$who in both tables" if defined $license_table{$who};
+    $license_table{$who} = $old_license_table_2{$who};
+}
+
 foreach my $who (keys %license_table) {
     foreach my $license(@{$license_table{$who}}) {
         $ruletable{$license}->{$who} = 1;
@@ -514,7 +524,7 @@ parse_arguments(@ARGV);
 if ($generate_wiki) {
 
     print "{| border=\"1\"\n";
-    print "! Name !! GPLv2->GPLv2+ !! LGPLv2 -> LGPLv2+ !! GPLv2 -> GPLv2+v3 !! LGPLv2 -> LGPLv2+LGPLv3 || KDE e.V. decides\n";
+    print "! Name !! GPLv2->GPLv2+ !! LGPLv2 -> LGPLv2+ !! GPLv2 -> GPLv2+v3 !! LGPLv2 -> LGPLv2+LGPLv3 !! KDE e.V. decides !! FDL -> CC-BY-SA 4.0 \n";
     print "|-\n";
     my @lines = ();
     foreach my $who (keys %license_table) {
@@ -530,7 +540,9 @@ if ($generate_wiki) {
         my $lgplv2plus = exists($licensesHash{'lgplv2+'}) ? "YES" : "NO";
         my $eV = exists($licensesHash{'+eV'}) ? "YES" : "NO";
         $eV = "" if (exists $old_license_table{$who});
-        push @lines, "|$authornames{$who} || $gplv2plus || $lgplv2plus || $gplv23 || $lgplv23 || $eV\n";
+        my $ccbysa4 = exists($licensesHash{'CCBYSA4'}) ? "YES" : "NO";
+        $ccbysa4 = "" if (exists $old_license_table_2{$who} || exists $old_license_table{$who});
+        push @lines, "|$authornames{$who} || $gplv2plus || $lgplv2plus || $gplv23 || $lgplv23 || $eV || $ccbysa4\n";
     }
     use locale;
     foreach my $line (sort @lines) {
