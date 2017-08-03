@@ -30,7 +30,8 @@ use List::Util qw(any);
 ### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
 
 my %license_table = (
-    'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ]
+    'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
+    'sitter'        => ['CCBYSA4']
 );
 
 my %old_license_table_2 = (
