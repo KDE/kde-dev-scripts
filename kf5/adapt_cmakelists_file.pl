@@ -16,11 +16,11 @@ my @l = map {
      $modified = 1;
   }
   if (/KDE4_INCLUDE_DIR/) {
-     $_ =~ s/\${KDE4_INCLUDE_DIR}//;
+     $_ =~ s/\$\{KDE4_INCLUDE_DIR\}//;
      $modified = 1;
   }
   if (/QT_INCLUDES/ ) {
-     $_ =~ s/\${QT_INCLUDES}//;
+     $_ =~ s/\$\{QT_INCLUDES\}//;
      $modified = 1;
   }
   if (/kde4_install_icons/i) {
@@ -72,124 +72,124 @@ my @l = map {
       $modified = 1;
   }
   if (/KDE4_KCALCORE_LIBS/) {
-     $_ =~ s/\${KDE4_KCALCORE_LIBS}/KF5::CalendarCore/;
+     $_ =~ s/\$\{KDE4_KCALCORE_LIBS\}/KF5::CalendarCore/;
      $modified = 1;
   }
   if (/KDE4_KMIME_LIBRARY/) {
-     $_ =~ s/\${KDE4_KMIME_LIBRARY}/KF5::Mime/;
+     $_ =~ s/\$\{KDE4_KMIME_LIBRARY\}/KF5::Mime/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_LIBS}/KF5::AkonadiCore/;
+     $_ =~ s/\$\{KDEPIMLIBS_AKONADI_LIBS\}/KF5::AkonadiCore/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KCALCORE_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KCALCORE_LIBS}/KF5::CalendarCore/;
+     $_ =~ s/\$\{KDEPIMLIBS_KCALCORE_LIBS\}/KF5::CalendarCore/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMUTILS_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMUTILS_LIBS}//;
+     $_ =~ s/\$\{KDEPIMLIBS_KPIMUTILS_LIBS\}//;
      $modified = 1;
   }
   if (/KDEPIMLIBS_MAILTRANSPORT_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_MAILTRANSPORT_LIBS}/KF5::MailTransport/;
+     $_ =~ s/\$\{KDEPIMLIBS_MAILTRANSPORT_LIBS\}/KF5::MailTransport/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KMIME_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KMIME_LIBS}/KF5::Mime/;
+     $_ =~ s/\$\{KDEPIMLIBS_KMIME_LIBS\}/KF5::Mime/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMIDENTITIES_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMIDENTITIES_LIBS}/KF5::PimIdentities/;
+     $_ =~ s/\$\{KDEPIMLIBS_KPIMIDENTITIES_LIBS\}/KF5::PimIdentities/;
      $modified = 1;
   }
   if (/KDE4_KIO_LIBS/) {
-     $_ =~ s/\${KDE4_KIO_LIBS}/KF5::KIOCore/;
+     $_ =~ s/\$\{KDE4_KIO_LIBS\}/KF5::KIOCore/;
      $modified = 1;
   }
   if (/KDE4_KROSSCORE_LIBS/) {
-     $_ =~ s/\${KDE4_KROSSCORE_LIBS}/KF5::KrossCore/;
+     $_ =~ s/\$\{KDE4_KROSSCORE_LIBS\}/KF5::KrossCore/;
      $modified = 1;
   }
   if (/QT_QTDBUS_LIBRARY/) {
-     $_ =~ s/\${QT_QTDBUS_LIBRARY}/Qt5::DBus/;
+     $_ =~ s/\$\{QT_QTDBUS_LIBRARY\}/Qt5::DBus/;
      $modified = 1;
   }
   if (/QT_QTXML_LIBRARY/) {
-     $_ =~ s/\${QT_QTXML_LIBRARY}/Qt5::Xml/;
+     $_ =~ s/\$\{QT_QTXML_LIBRARY\}/Qt5::Xml/;
      $modified = 1;
   }
   if (/QT_QTXML_LIBRARIES/) {
-     $_ =~ s/\${QT_QTXML_LIBRARIES}/Qt5::Xml/;
+     $_ =~ s/\$\{QT_QTXML_LIBRARIES\}/Qt5::Xml/;
      $modified = 1;
   }
   if (/QT_QTCORE_LIBRARY/) {
-     $_ =~ s/\${QT_QTCORE_LIBRARY}/Qt5::Core/;
+     $_ =~ s/\$\{QT_QTCORE_LIBRARY\}/Qt5::Core/;
      $modified = 1;
   }
   if (/QT_QTCORE_LIBRARIES/) {
-     $_ =~ s/\${QT_QTCORE_LIBRARIES}/Qt5::Core/;
+     $_ =~ s/\$\{QT_QTCORE_LIBRARIES\}/Qt5::Core/;
      $modified = 1;
   }
   if (/QT_QTGUI_LIBRARY/) {
-     $_ =~ s/\${QT_QTGUI_LIBRARY}/Qt5::Gui/;
+     $_ =~ s/\$\{QT_QTGUI_LIBRARY\}/Qt5::Gui/;
      $modified = 1;
   }
   if (/QT_QTGUI_LIBRARIES/) {
-     $_ =~ s/\${QT_QTGUI_LIBRARIES}/Qt5::Gui/;
+     $_ =~ s/\$\{QT_QTGUI_LIBRARIES\}/Qt5::Gui/;
      $modified = 1;
   }
   if (/QT_QTHELP_LIBRARIES/) {
-     $_ =~ s/\${QT_QTHELP_LIBRARIES}/Qt5::Help/;
+     $_ =~ s/\$\{QT_QTHELP_LIBRARIES\}/Qt5::Help/;
      $modified = 1;
   }
   if (/QT_QTNETWORK_LIBRARY/) {
-     $_ =~ s/\${QT_QTNETWORK_LIBRARY}/Qt5::Network/;
+     $_ =~ s/\$\{QT_QTNETWORK_LIBRARY\}/Qt5::Network/;
      $modified = 1;
   }
   if (/QT_QTSCRIPT_LIBRARY/) {
-     $_ =~ s/\${QT_QTSCRIPT_LIBRARY}/Qt5::Script/;
+     $_ =~ s/\$\{QT_QTSCRIPT_LIBRARY\}/Qt5::Script/;
      $modified = 1;
   }
   if (/KDE4_KDECORE_LIBS/) {
-     $_ =~ s/\${KDE4_KDECORE_LIBS}/KF5::KDELibs4Support/;
+     $_ =~ s/\$\{KDE4_KDECORE_LIBS}/KF5::KDELibs4Support/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KIMAP_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KIMAP_LIBS}/KF5::IMAP/;
+     $_ =~ s/\$\{KDEPIMLIBS_KIMAP_LIBS}/KF5::IMAP/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_KMIME_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_KMIME_LIBS}/KF5::AkonadiMime/;
+     $_ =~ s/\$\{KDEPIMLIBS_AKONADI_KMIME_LIBS}/KF5::AkonadiMime/;
      $modified = 1;
   }
   if (/KDE4_KNOTIFYCONFIG_LIBS/) {
-     $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBS}/KF5::NotifyConfig/;
+     $_ =~ s/\$\{KDE4_KNOTIFYCONFIG_LIBS}/KF5::NotifyConfig/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KPIMTEXTEDIT_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}/KF5::PimTextEdit/;
+     $_ =~ s/\$\{KDEPIMLIBS_KPIMTEXTEDIT_LIBS}/KF5::PimTextEdit/;
      $modified = 1;
   }
   if (/KDE4_KDEWEBKIT_LIBRARY/) {
-     $_ =~ s/\${KDE4_KDEWEBKIT_LIBRARY}/KF5::WebKit/;
+     $_ =~ s/\$\{KDE4_KDEWEBKIT_LIBRARY}/KF5::WebKit/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KMBOX_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KMBOX_LIBS}/KF5::Mbox/;
+     $_ =~ s/\$\{KDEPIMLIBS_KMBOX_LIBS}/KF5::Mbox/;
      $modified = 1;
   }
   if (/QT_QTUITOOLS_LIBRARY/) {
-     $_ =~ s/\${QT_QTUITOOLS_LIBRARY}/Qt5::UiTools/;
+     $_ =~ s/\$\{QT_QTUITOOLS_LIBRARY\}/Qt5::UiTools/;
      $modified = 1;
 
   }
   if (/KDEPIMLIBS_KALARMCAL_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KALARMCAL_LIBS}/KF5::AlarmCalendar/;
+     $_ =~ s/\$\{KDEPIMLIBS_KALARMCAL_LIBS}/KF5::AlarmCalendar/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KABC_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KABC_LIBS}/KF5::Contacts/;
+     $_ =~ s/\$\{KDEPIMLIBS_KABC_LIBS}/KF5::Contacts/;
      $modified = 1;
   }
   if (/KF5::Abc/) {
@@ -198,67 +198,67 @@ my @l = map {
   }
 
   if (/KDEPIMLIBS_AKONADI_CONTACT_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_CONTACT_LIBS}/KF5::AkonadiContact/;
+     $_ =~ s/\$\{KDEPIMLIBS_AKONADI_CONTACT_LIBS}/KF5::AkonadiContact/;
      $modified = 1;
   }
   if (/KDE4_KDEUI_LIBS/) {
-     $_ =~ s/\${KDE4_KDEUI_LIBS}//;
+     $_ =~ s/\$\{KDE4_KDEUI_LIBS}//;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KTNEF_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KTNEF_LIBS}/KF5::KTnef/;
+     $_ =~ s/\$\{KDEPIMLIBS_KTNEF_LIBS}/KF5::KTnef/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KBLOG_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KBLOG_LIBS}/KF5::Blog/;
+     $_ =~ s/\$\{KDEPIMLIBS_KBLOG_LIBS}/KF5::Blog/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_KABC_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_KABC_LIBS}/KF5::AkonadiAbc/;
+     $_ =~ s/\$\{KDEPIMLIBS_AKONADI_KABC_LIBS}/KF5::AkonadiAbc/;
      $modified = 1;
   }
   if (/KDE4_KNEWSTUFF3_LIBS/) {
-     $_ =~ s/\${KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
+     $_ =~ s/\$\{KDE4_KNEWSTUFF3_LIBS}/KF5::NewStuff/;
      $modified = 1;
   }
   if (/KDE4_KNEWSTUFF3_LIBRARY/) {
-     $_ =~ s/\${KDE4_KNEWSTUFF3_LIBRARY}/KF5::NewStuff/;
+     $_ =~ s/\$\{KDE4_KNEWSTUFF3_LIBRARY}/KF5::NewStuff/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KLDAP_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KLDAP_LIBS}/KF5::KLdap/;
+     $_ =~ s/\$\{KDEPIMLIBS_KLDAP_LIBS}/KF5::KLdap/;
      $modified = 1;
   }
   if (/BALOO_LIBRARIES/) {
-     $_ =~ s/\${BALOO_LIBRARIES}/Baloo/;
+     $_ =~ s/\$\{BALOO_LIBRARIES}/Baloo/;
      $modified = 1;
   }
   if (/KDE4_KCMUTILS_LIBS/) {
-     $_ =~ s/\${KDE4_KCMUTILS_LIBS}/KF5::KCMUtils/;
+     $_ =~ s/\$\{KDE4_KCMUTILS_LIBS}/KF5::KCMUtils/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KCALUTILS_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KCALUTILS_LIBS}/KF5::CalendarUtils/;
+     $_ =~ s/\$\{KDEPIMLIBS_KCALUTILS_LIBS}/KF5::CalendarUtils/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KHOLIDAYS_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KHOLIDAYS_LIBS}/KF5::Holidays/;
+     $_ =~ s/\$\{KDEPIMLIBS_KHOLIDAYS_LIBS}/KF5::Holidays/;
      $modified = 1;
   }
   if (/KDE4_KUTILS_LIBS/) {
-     $_ =~ s/\${KDE4_KUTILS_LIBS}//;
+     $_ =~ s/\$\{KDE4_KUTILS_LIBS}//;
      $modified = 1;
   }
   if (/KDE4_KDECORE_LIBRARY/) {
-     $_ =~ s/\${KDE4_KDECORE_LIBRARY}//;
+     $_ =~ s/\$\{KDE4_KDECORE_LIBRARY}//;
      $modified = 1;
   }
   if (/KDE4_KDEUI_LIBRARY/) {
-     $_ =~ s/\${KDE4_KDEUI_LIBRARY}//;
+     $_ =~ s/\$\{KDE4_KDEUI_LIBRARY}//;
      $modified = 1;
   }
   if (/KDE4_KTEXTEDITOR_LIBS/) {
-     $_ =~ s/\${KDE4_KTEXTEDITOR_LIBS}/KF5::TextEditor/;
+     $_ =~ s/\$\{KDE4_KTEXTEDITOR_LIBS}/KF5::TextEditor/;
      $modified = 1;
   }
   if (/qt4_wrap_cpp/i) {
@@ -266,50 +266,50 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_SYNDICATION_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_SYNDICATION_LIBS}/KF5::Syndication/;
+     $_ =~ s/\$\{KDEPIMLIBS_SYNDICATION_LIBS}/KF5::Syndication/;
      $modified = 1;
   }
   if (/KDE4_KHTML_LIBS/) {
-     $_ =~ s/\${KDE4_KHTML_LIBS}/KF5::KHtml/;
+     $_ =~ s/\$\{KDE4_KHTML_LIBS}/KF5::KHtml/;
      $modified = 1;
   }
   if (/KDEPIMLIBS_KONTACTINTERFACE_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_KONTACTINTERFACE_LIBS}/KF5::KontactInterface/;
+     $_ =~ s/\$\{KDEPIMLIBS_KONTACTINTERFACE_LIBS}/KF5::KontactInterface/;
      $modified = 1;
   }
   if (/KDE4_KNOTIFYCONFIG_LIBRARY/) {
-     $_ =~ s/\${KDE4_KNOTIFYCONFIG_LIBRARY}/KF5::NotifyConfig/;
+     $_ =~ s/\$\{KDE4_KNOTIFYCONFIG_LIBRARY}/KF5::NotifyConfig/;
      $modified = 1;
   }
   if (/QT_QTDECLARATIVE_LIBRARY/) {
-     $_ =~ s/\${QT_QTDECLARATIVE_LIBRARY}/Qt5::Declarative/;
+     $_ =~ s/\$\{QT_QTDECLARATIVE_LIBRARY\}/Qt5::Declarative/;
      $modified = 1;
   }
   if (/QT_QTDECLARATIVE_LIBRARIES/) {
-     $_ =~ s/\${QT_QTDECLARATIVE_LIBRARIES}/Qt5::Declarative/;
+     $_ =~ s/\$\{QT_QTDECLARATIVE_LIBRARIES\}/Qt5::Declarative/;
      $modified = 1;
   }
 
   if (/KDE4_KPARTS_LIBS/) {
-     $_ =~ s/\${KDE4_KPARTS_LIBS}/KF5::Parts/;
+     $_ =~ s/\$\{KDE4_KPARTS_LIBS}/KF5::Parts/;
      $modified = 1;
   }
   if (/KDE4_KPARTS_LIBRARY/) {
-     $_ =~ s/\${KDE4_KPARTS_LIBRARY}/KF5::Parts/;
+     $_ =~ s/\$\{KDE4_KPARTS_LIBRARY}/KF5::Parts/;
      $modified = 1;
   }
 
   if (/KDE4_PHONON_LIBS/) {
-     $_ =~ s/\${KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
+     $_ =~ s/\$\{KDE4_PHONON_LIBS}/Phonon::phonon4qt5/;
      $modified = 1;
   }
   if (/KDE4_PHONON_LIBRARY/) {
-     $_ =~ s/\${KDE4_PHONON_LIBRARY}/Phonon::phonon4qt5/;
+     $_ =~ s/\$\{KDE4_PHONON_LIBRARY}/Phonon::phonon4qt5/;
      $modified = 1;
   }
 
   if (/QT_QTTEST_LIBRARY/) {
-     $_ =~ s/\${QT_QTTEST_LIBRARY}/Qt5::Test/;
+     $_ =~ s/\$\{QT_QTTEST_LIBRARY\}/Qt5::Test/;
      $modified = 1;
   }
 
@@ -322,104 +322,104 @@ my @l = map {
      $modified = 1;
   }
   if (/KDEPIMLIBS_MICROBLOG_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_MICROBLOG_LIBS}/KF5::MicroBlog/;
+     $_ =~ s/\$\{KDEPIMLIBS_MICROBLOG_LIBS}/KF5::MicroBlog/;
      $modified = 1;
   }
   if (/KDE4_SOLID_LIBS/) {
-     $_ =~ s/\${KDE4_SOLID_LIBS}//;
+     $_ =~ s/\$\{KDE4_SOLID_LIBS}//;
      $modified = 1;     
   }
   if (/QT_QTWEBKIT_LIBRARY/) {
-     $_ =~ s/\${QT_QTWEBKIT_LIBRARY}/Qt5::WebKitWidgets/;
+     $_ =~ s/\$\{QT_QTWEBKIT_LIBRARY\}/Qt5::WebKitWidgets/;
      $modified = 1;
   }
   if (/QT_QTSQL_LIBRARY/) {
-     $_ =~ s/\${QT_QTSQL_LIBRARY}/Qt5::Sql/;
+     $_ =~ s/\$\{QT_QTSQL_LIBRARY\}/Qt5::Sql/;
      $modified = 1;
   }
   if (/KDE4_KFILE_LIBS/) {
-     $_ =~ s/\${KDE4_KFILE_LIBS}//;
+     $_ =~ s/\$\{KDE4_KFILE_LIBS}//;
      $modified = 1;
   }
   if (/KDEPIMLIBS_AKONADI_NOTES_LIBS/) {
-     $_ =~ s/\${KDEPIMLIBS_AKONADI_NOTES_LIBS}/KF5::AkonadiNotes/;
+     $_ =~ s/\$\{KDEPIMLIBS_AKONADI_NOTES_LIBS}/KF5::AkonadiNotes/;
      $modified = 1;
   }
   if (/KDE4_KIO_LIBRARY/) {
-     $_ =~ s/\${KDE4_KIO_LIBRARY}/KF5::KIOCore/;
+     $_ =~ s/\$\{KDE4_KIO_LIBRARY}/KF5::KIOCore/;
      $modified = 1;
   }
  
   if (/KDEVPLATFORM_INTERFACES_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_INTERFACES_LIBRARIES}/KDev::Interfaces/;
+     $_ =~ s/\$\{KDEVPLATFORM_INTERFACES_LIBRARIES}/KDev::Interfaces/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_SHELL_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_SHELL_LIBRARIES}/KDev::Shell/;
+     $_ =~ s/\$\{KDEVPLATFORM_SHELL_LIBRARIES}/KDev::Shell/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_LANGUAGE_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_LANGUAGE_LIBRARIES}/KDev::Language/;
+     $_ =~ s/\$\{KDEVPLATFORM_LANGUAGE_LIBRARIES}/KDev::Language/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_UTIL_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_UTIL_LIBRARIES}/KDev::Util/;
+     $_ =~ s/\$\{KDEVPLATFORM_UTIL_LIBRARIES}/KDev::Util/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_PROJECT_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_PROJECT_LIBRARIES}/KDev::Project/;
+     $_ =~ s/\$\{KDEVPLATFORM_PROJECT_LIBRARIES}/KDev::Project/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_OUTPUTVIEW_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_OUTPUTVIEW_LIBRARIES}/KDev::OutputView/;
+     $_ =~ s/\$\{KDEVPLATFORM_OUTPUTVIEW_LIBRARIES}/KDev::OutputView/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_VCS_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_VCS_LIBRARIES}/KDev::Vcs/;
+     $_ =~ s/\$\{KDEVPLATFORM_VCS_LIBRARIES}/KDev::Vcs/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_TESTS_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_TESTS_LIBRARIES}/KDev::Tests/;
+     $_ =~ s/\$\{KDEVPLATFORM_TESTS_LIBRARIES}/KDev::Tests/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_JSONTESTS_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_JSONTESTS_LIBRARIES}/KDev::JsonTests/;
+     $_ =~ s/\$\{KDEVPLATFORM_JSONTESTS_LIBRARIES}/KDev::JsonTests/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_DOCUMENTATION_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_DOCUMENTATION_LIBRARIES}/KDev::Documentation/;
+     $_ =~ s/\$\{KDEVPLATFORM_DOCUMENTATION_LIBRARIES}/KDev::Documentation/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_DEBUGGER_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_DEBUGGER_LIBRARIES}/KDev::Debugger/;
+     $_ =~ s/\$\{KDEVPLATFORM_DEBUGGER_LIBRARIES}/KDev::Debugger/;
      $modified = 1;
   }
   if (/KDEVPLATFORM_SUBLIME_LIBRARIES/) {
-     $_ =~ s/\${KDEVPLATFORM_SUBLIME_LIBRARIES}/KDev::Sublime/;
+     $_ =~ s/\$\{KDEVPLATFORM_SUBLIME_LIBRARIES}/KDev::Sublime/;
      $modified = 1;
   }
   if (/KDE4_THREADWEAVER_LIBRARIES/) {
-     $_ =~ s/\${KDE4_THREADWEAVER_LIBRARIES}/KF5::ThreadWeaver/;
+     $_ =~ s/\$\{KDE4_THREADWEAVER_LIBRARIES}/KF5::ThreadWeaver/;
      $modified = 1;
   }
   if (/QT_AND_KDECORE_LIBS/) {
-     $_ =~ s/\${QT_AND_KDECORE_LIBS}//;
+     $_ =~ s/\$\{QT_AND_KDECORE_LIBS}//;
      $modified = 1;
   }
   if (/KIPI_LIBRARIES/) {
-     $_ =~ s/\${KIPI_LIBRARIES}/KF5::Kipi/;
+     $_ =~ s/\$\{KIPI_LIBRARIES}/KF5::Kipi/;
      $modified = 1;
   }
   if (/KEXIV2_LIBRARIES/) {
-     $_ =~ s/\${KEXIV2_LIBRARIES}/KF5::KExiv2/;
+     $_ =~ s/\$\{KEXIV2_LIBRARIES}/KF5::KExiv2/;
      $modified = 1;     
   }
   if (/KDCRAW_LIBRARIES/) {
-     $_ =~ s/\${KDCRAW_LIBRARIES}/KF5::KDcraw/;
+     $_ =~ s/\$\{KDCRAW_LIBRARIES}/KF5::KDcraw/;
      $modified = 1;
   }
   if (/KSANE_LIBRARY/) {
-     $_ =~ s/\${KSANE_LIBRARY}/KF5::Sane/;
+     $_ =~ s/\$\{KSANE_LIBRARY}/KF5::Sane/;
      $modified = 1;
   }
   if (/kdegamesprivate/) {
@@ -427,7 +427,7 @@ my @l = map {
      $modified = 1;
   }
   if (/KDECLARATIVE_LIBRARIES/) {
-     $_ =~ s/\${KDECLARATIVE_LIBRARIES}/KF5::Declarative/;
+     $_ =~ s/\$\{KDECLARATIVE_LIBRARIES}/KF5::Declarative/;
      $modified = 1;
   }
   if (/kdegames/) {
@@ -435,11 +435,11 @@ my @l = map {
      $modified = 1;
   }
   if (/LIBKONQ_LIBRARY/) {
-     $_ =~ s/\${LIBKONQ_LIBRARY}/KF5::Konq/;
+     $_ =~ s/\$\{LIBKONQ_LIBRARY}/KF5::Konq/;
      $modified = 1;
   }
   if (/QT_QTOPENGL_LIBRARY/) {
-     $_ =~ s/\${QT_QTOPENGL_LIBRARY}/Qt5::OpenGL/;
+     $_ =~ s/\$\{QT_QTOPENGL_LIBRARY\}/Qt5::OpenGL/;
      $modified = 1;
   }
   #if (/macro_optional_add_subdirectory/) {
@@ -476,11 +476,11 @@ my @l = map {
      $modified = 1;
   }
   if (/KDE4_INCLUDES/) {
-     $_ =~ s/\${KDE4_INCLUDES}//;
+     $_ =~ s/\$\{KDE4_INCLUDES}//;
      $modified = 1;
   }
   if (/KDE4_KDNSSD_LIBS/) {
-     $_ =~ s/\${KDE4_KDNSSD_LIBS}/KF5::DNSSD/;
+     $_ =~ s/\$\{KDE4_KDNSSD_LIBS}/KF5::DNSSD/;
      $modified = 1;
   }
 
@@ -489,7 +489,7 @@ my @l = map {
      $modified = 1;
   }
   if (/QT_QTSVG_LIBRARY/) {
-     $_ =~ s/\${QT_QTSVG_LIBRARY}/Qt5::Svg/;
+     $_ =~ s/\$\{QT_QTSVG_LIBRARY\}/Qt5::Svg/;
      $modified = 1;
   }
   if (/KF5::KDE4Support/) {
