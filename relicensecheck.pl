@@ -31,6 +31,8 @@ use List::Util qw(any);
 
 my %license_table = (
     'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
+    'ltoscano'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
+    'lueck'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'sitter'        => ['CCBYSA4']
 );
 
@@ -161,8 +163,6 @@ my %old_license_table_2 = (
     'leonhard'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'lilachaze'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'lliehu'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'ltoscano'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
-    'lueck'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'lvsouza'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'lypanov'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'majewsky'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
