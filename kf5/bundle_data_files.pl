@@ -20,7 +20,7 @@ open(my $FILE, "<", $file) || die;
 my @l = map {
   my $orig = $_;
 
-  if (/install\s*\(\s*FILES \s*([\w\s]*\.rc)\s*DESTINATION \$\{KDE_INSTALL_KXMLGUI5DIR\}\/(\w+)/i) {
+  if (/install\s*\(\s*FILES \s*([\w\-\/\s]*\.rc)\s*DESTINATION \s*\$\{KDE_INSTALL_KXMLGUI5DIR\}\/(\w+)/i) {
       $xmlgui_files = $1;
       my $appname = $2;
       print STDERR "Found xmlgui files " . $xmlgui_files . " in $appname\n";
