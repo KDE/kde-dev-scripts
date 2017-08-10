@@ -233,21 +233,38 @@
    fun:_ZN6QMutex4lockEv
 }
 {
-   # Qt5 in release mode doesn't see the atomic-operation calls inside QMutex
-   Qt5_release_lockInternal
+   # Qt5: helgrind doesn't understand the atomic-operation calls inside QMutex
+   Qt5_lockInternal
    Helgrind:Race
+   ...
    fun:_ZN11QBasicMutex12lockInternalEv
 }
 {
-   # Qt5 in release mode doesn't see the atomic-operation calls inside QMutex
-   Qt5_release_unlockInternal
+   # Qt5: helgrind doesn't understand the atomic-operation calls inside QMutex
+   Qt5_unlockInternal
    Helgrind:Race
+   ...
    fun:_ZN11QBasicMutex14unlockInternalEv
 }
 {
-   # Qt5 in release mode doesn't see the atomic-operation calls inside RefCount
+   # Qt5: helgrind doesn't understand the atomic-operation calls inside QMutex
+   Qt5_QMutex_unlock
+   Helgrind:Race
+   ...
+   fun:_ZN6QMutex6unlockEv
+}
+{
+   # Qt5: helgrind doesn't understand the atomic-operation calls inside QMutex
+   Qt5_QMutex_lock
+   Helgrind:Race
+   ...
+   fun:_ZN6QMutex4lockEv
+}
+{
+   # Qt5: helgrind doesn't understand the atomic-operation calls
    Qt5_release_refcount
    Helgrind:Race
+   ...
    fun:_ZN9QtPrivate8RefCount3refEv
 }
 {
