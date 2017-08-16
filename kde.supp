@@ -327,6 +327,12 @@
    ...
    fun:_*QBasicAtomicInt*
 }
+{
+   Qt_5_9_atomic_ops
+   Helgrind:Race
+   ...
+   fun:loadAcquire
+}
 
 # Additional helgrind suppressions: these are actual atomic operations,
 # but if they conflict with a suppressed store(), helgrind will warn anyway -- https://bugs.kde.org/show_bug.cgi?id=317381
