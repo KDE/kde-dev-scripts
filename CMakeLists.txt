@@ -1,28 +1,13 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.12)
 project(kde-dev-scripts)
+
+find_package(ECM 1.3.0 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+
 include(FeatureSummary)
+include(KDEInstallDirs)
 
-find_package(KF5DocTools)
-if(KF5DocTools_FOUND)
-  find_package(ECM 1.3.0 REQUIRED NO_MODULE)
-  set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
-  include(KDEInstallDirs)
-  function(create_manpage)
-    kdoctools_create_manpage(${ARGN})
-  endfunction()
-else()
-  find_package(KDE4)
-  function(create_manpage)
-    kde4_create_manpage(${ARGN})
-  endfunction()
-endif()
-
-if (KDE4_FOUND)
-  include(KDE4Defaults)
-  include(MacroLibrary)
-else()
-  set(BIN_INSTALL_DIR   "${CMAKE_INSTALL_PREFIX}/bin"  CACHE PATH "The install dir for executables")
-endif()
+find_package(KF5 COMPONENTS DocTools)
 
 # Note that all of these files should be *scripts* that do not require
 # compilation, therefore we simply install them. We split out Bourne shell
@@ -30,9 +15,13 @@ endif()
 # ones behave well on Mac or Windows just because we don't elide those too.
 
 ########### install files ###############
-if (UNIX)
+if(UNIX)
 #shell program
-add_subdirectory( doc )
+
+if(KF5DocTools_FOUND)
+  add_subdirectory(doc)
+endif()
+
 install(PROGRAMS
   adddebug
   build-progress.sh
@@ -65,14 +54,14 @@ install(PROGRAMS
   uncrustify-kf5
   wcgrep
   draw_lib_dependencies
-  DESTINATION ${BIN_INSTALL_DIR})
+  DESTINATION ${KDE_INSTALL_BINDIR})
 
 install(FILES
   uncrustify-kf5.cfg
   uncrustify-qt.cfg
-  DESTINATION ${DATA_INSTALL_DIR}/uncrustify)
+  DESTINATION ${KDE_INSTALL_DATADIR}/uncrustify)
 
-endif (UNIX)
+endif()
 
 install(PROGRAMS
   create_makefile
@@ -104,6 +93,6 @@ install(PROGRAMS
   kde-systemsettings-tree.py
   reviewboard-am
   grantlee_strings_extractor.py
-  DESTINATION ${BIN_INSTALL_DIR})
+  DESTINATION ${KDE_INSTALL_BINDIR})
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
