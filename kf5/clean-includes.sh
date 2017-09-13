@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Laurent Montel <montel@kde.org> (2014)
+# Laurent Montel <montel@kde.org> (2014-2017)
 # cd <directory> ; kde-dev-scripts/kf5/clean-includes.sh
 
 
@@ -88,6 +88,8 @@ do
        new=`echo "$new" |perl -pi -e 's!QtConcurrent/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KContacts/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KIdentityManagement/!!g'`;
 
 
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
