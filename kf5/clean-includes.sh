@@ -89,9 +89,10 @@ do
        new=`echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KContacts/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIdentityManagement/!!g'`
-       new=`echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g'`
-       new=`echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g'`
+       new=`echo "$new" |perl -pi -e 's!KIdentityManagement/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!QGpgME/!!g'`;
        
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
