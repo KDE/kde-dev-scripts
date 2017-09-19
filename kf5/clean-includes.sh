@@ -93,6 +93,8 @@ do
        new=`echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QGpgME/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KDAV/!!g'`;
+
        
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
