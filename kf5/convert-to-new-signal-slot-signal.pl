@@ -19,6 +19,26 @@ my %listOfClassName = ();
 my %overloadedSlots = ();
 my %privateSlots = ();
 my %privateVariableWithPointer = ();
+my $activateSlotPrivatePorting;
+
+sub rewriteConnectPrivateFunction($$$$$$$)
+{
+    if (defined $activateSlotPrivatePorting) {
+      my ($indent, $sender, $signal, $receiver, $slot, $slotArgument, $lastArgument) = @_;
+      my $myNewLine;
+      if ($slotArgument eq "()") {
+        if (defined $lastArgument) {
+           # lastArgument has ')'
+           warn "last argument :$lastArgument\n";
+           $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$slotArgument { d->$slot$slotArgument; }$lastArgument;\n";
+        } else {
+            $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$slotArgument { d->$slot$slotArgument; });\n";
+        }
+        return $myNewLine;
+      }
+    }
+    return undef;
+}
 
 sub rewriteConnectFunction($$$$$$)
 {
@@ -529,7 +549,9 @@ foreach my $file (@ARGV) {
                 $sender = cleanSender($sender);
                 my $signalArgument = extraArgumentFunctionName($signal);
                 $signal = extractFunctionName($signal);
+                my $slotArgument = extraArgumentFunctionName($slot);
                 $slot = extractFunctionName($slot);
+                my $originalSlot = $slot;
                 my $localSenderVariable;
                 my $localReceiverVariable;
                 if ( $sender =~ /^&/) {
@@ -542,6 +564,7 @@ foreach my $file (@ARGV) {
                 }
 
                 my $notpossible;
+                my $isPrivateSlot;
                 if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
                     $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
                     $slot = "$varname{$receiver}::$slot";
@@ -555,10 +578,17 @@ foreach my $file (@ARGV) {
                         $notpossible = checkOverloadedSlot($slot);
                     }
                     if (not defined $notpossible) {
-                        $notpossible = checkPrivateSlot($slot);
+                        $isPrivateSlot = checkPrivateSlot($slot);
                     }
                     if (not defined $notpossible) {
-                        $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        if (not defined $isPrivateSlot) {
+                            $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        } else {
+                            my $localChanges = rewriteConnectPrivateFunction($indent, $sender, $signal, $receiver, $originalSlot, $slotArgument, $lastArgument);
+                            if (defined $localChanges) {
+                                $_ = $localChanges;
+                            }
+                        }
                         undef $toorig;
                     }
                 } else {
@@ -671,7 +701,7 @@ foreach my $file (@ARGV) {
                       $notpossible = checkOverloadedSlot($slot);
                   }
                   if (not defined $notpossible) {
-                      $notpossible = checkPrivateSlot($slot);
+                      $isPrivateSlot = checkPrivateSlot($slot);
                   }
 
                   if (not defined $notpossible) {
@@ -687,7 +717,14 @@ foreach my $file (@ARGV) {
                      if (defined $receiverWithQPointer) {
                          $receiver .= ".data()";
                      }
-                     $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                     if (not defined $isPrivateSlot) {
+                         $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                     } else {
+                         my $localChanges = rewriteConnectPrivateFunction($indent, $sender, $signal, $receiver, $originalSlot, $slotArgument, $lastArgument);
+                         if (defined $localChanges) {
+                            $_ = $localChanges;
+                         }
+                     }
                      undef $toorig;
                   } else {
                        my $line = $_;
@@ -721,8 +758,10 @@ foreach my $file (@ARGV) {
                      $sender = cleanSender($sender);
                      my $signalArgument = extraArgumentFunctionName($signal);
                      $signal = extractFunctionName($signal);
+                     my $slotArgument = extraArgumentFunctionName($slot);
                      $slot = extractFunctionName($slot);
                      my $localVariable;
+                     my $originalSlot = $slot;
                      if ( $sender =~ /^&/) {
                        $sender =~ s/^&//;
                        $localVariable = 1;
@@ -738,6 +777,7 @@ foreach my $file (@ARGV) {
 
                      # => we don't have receiver => slot and signal will have same parent.
                      my $notpossible;
+                     my $isPrivateSlot;
 
                      if ( $headerclassname eq "" ) {
                         $notpossible = "no current classname";
@@ -792,7 +832,7 @@ foreach my $file (@ARGV) {
                           $notpossible = checkOverloadedSlot($slot);
                       }
                       if (not defined $notpossible) {
-                          $notpossible = checkPrivateSlot($slot);
+                          $isPrivateSlot = checkPrivateSlot($slot);
                       }
                       if (not defined $notpossible) {
                         if ( defined $privateClass ) {
@@ -802,7 +842,14 @@ foreach my $file (@ARGV) {
                             $sender = "&" . $sender;
                         }
                         my $receiver = "this";
-                        $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        if (not defined $isPrivateSlot) {
+                            $_ = rewriteConnectFunction($indent, $sender, $signal, $receiver, $slot, $lastArgument);
+                        } else {
+                            my $localChanges = rewriteConnectPrivateFunction($indent, $sender, $signal, $receiver, $originalSlot, $slotArgument, $lastArgument);
+                            if (defined $localChanges) {
+                                $_ = $localChanges;
+                            }
+                        }
                         undef $toorig;
                       } else {
                          my $line = $_;
