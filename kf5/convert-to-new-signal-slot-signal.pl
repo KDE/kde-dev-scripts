@@ -26,16 +26,28 @@ sub rewriteConnectPrivateFunction($$$$$$$)
     if (defined $activateSlotPrivatePorting) {
       my ($indent, $sender, $signal, $receiver, $slot, $slotArgument, $lastArgument) = @_;
       my $myNewLine;
+      my $localSlotArgument;
+      my $localSlotVariable;
       if ($slotArgument eq "()") {
-        if (defined $lastArgument) {
-           # lastArgument has ')'
-           warn "last argument :$lastArgument\n";
-           $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$slotArgument { d->$slot$slotArgument; }$lastArgument;\n";
-        } else {
-            $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$slotArgument { d->$slot$slotArgument; });\n";
-        }
-        return $myNewLine;
+          $localSlotArgument = "()";
+          $localSlotVariable = "()";
+      } elsif ($slotArgument eq "(QUrl)") {
+          $localSlotArgument = "(const QUrl &url)";
+          $localSlotVariable = "(url)";         
+      } elsif ($slotArgument eq "(KJob*)") {
+          $localSlotArgument = "(KJob *job)";
+          $localSlotVariable = "(job)";         
+      } else {
+         return undef;
       }
+      if (defined $lastArgument) {
+         # lastArgument has ')'
+         warn "last argument :$lastArgument\n";
+         $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$localSlotArgument { d->$slot$localSlotVariable; }$lastArgument;\n";
+      } else {
+          $myNewLine = $indent . "connect($sender, $signal, $receiver, [this]$localSlotArgument { d->$slot$localSlotVariable; });\n";
+      }
+      return $myNewLine;
     }
     return undef;
 }
