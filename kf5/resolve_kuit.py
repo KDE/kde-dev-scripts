@@ -358,7 +358,7 @@ def get_language_data (lang):
 
     langdata.transform = {}
     for spec in _kuit_transforms.items():
-        ktrkey, (msgctxt, msgid, subsmap, textmodf) = spec
+        ktrkey, (msgctxt, msgid, subsmap, prepend, postpend, textmodf) = spec
         pattern = msgid
         if kl4cat is not None:
             msgs = kl4cat.select_by_key(msgctxt, msgid)
@@ -372,6 +372,8 @@ def get_language_data (lang):
         tr = Data()
         tr.pattern = pattern
         tr.subsmap = subsmap
+        tr.prepend = prepend
+        tr.postpend = postpend
         tr.textmodf = textmodf
         langdata.transform[ktrkey] = tr
 
@@ -521,7 +523,7 @@ def resolve_ccall (fstr, path):
                         ret = resolve_kuit(mctxt, msarg, quote,
                                            langdata, path, lno,
                                            toxi18n=toxi18n)
-                        res_mctxt, res_msarg, xi18n = ret
+                        res_mctxt, res_msarg, xi18n = ret[:3]
                         if xi18n and not res_callname:
                             if callname.startswith("i"):
                                 res_callname = "x" + callname
@@ -792,29 +794,18 @@ def resolve_po (path):
         raise StandardError(
             "%s: Cannot determine language of PO file." % path)
     langdata_trn = get_language_data(lang)
-    toxi18n = _po_options.switch_to_xi18n
+    toxi18n_global = _po_options.switch_to_xi18n
 
     seen_keys = set()
     for ind, msg in enumerate(cat):
-        # Previous original fields.
-        ctxt_prev = msg.msgctxt_previous
-        has_previous = False
-        if msg.msgid_previous is not None:
-            has_previous = True
-            ret = resolve_kuit(ctxt_prev, msg.msgid_previous, None,
-                               langdata_src, path, msg.refline,
-                               toxi18n=toxi18n)
-            msg.msgid_previous = ret[1]
-            if ctxt_prev is not None:
-                msg.msgctxt_previous = ret[0]
-            if msg.msgid_plural_previous is not None:
-                ret = resolve_kuit(ctxt_prev, msg.msgid_plural_previous, None,
-                                   langdata_src, path, msg.refline,
-                                   toxi18n=toxi18n)
-                msg.msgid_plural_previous = ret[1]
+        toxi18n = toxi18n_global
+        # Override resolution setting by message xi18n flag.
+        if "kde-kuit-format" in msg.flag:
+            toxi18n = 2
+        # Original fields.
         ctxt = msg.msgctxt
+        forcerich = False
         if not _po_options.post_merge:
-            # Original fields.
             ret = resolve_kuit(ctxt, msg.msgid, None,
                                langdata_src, path, msg.refline,
                                toxi18n=toxi18n)
@@ -826,17 +817,52 @@ def resolve_po (path):
                                    langdata_src, path, msg.refline,
                                    toxi18n=toxi18n)
                 msg.msgid_plural = ret[1]
+        else:
+            # Check if to not touch existing KUIT or
+            # to force rich text in non-original fields.
+            if not forcerich:
+                ret = resolve_kuit(ctxt, msg.msgid, None,
+                                   langdata_src, path, msg.refline,
+                                   toxi18n=toxi18n)
+                has_any_html_tag, has_any_kuit_tag = ret[3:5]
+                if has_any_kuit_tag:
+                    toxi18n = 2
+                else:
+                    forcerich = has_any_html_tag
+            if not forcerich:
+                ret = resolve_entities(msg.msgid, path, msg.refline)
+                any_entity_resolved = ret[1]
+                forcerich = any_entity_resolved
+        # Previous original fields.
+        ctxt_prev = msg.msgctxt_previous
+        has_previous = False
+        if msg.msgid_previous is not None:
+            has_previous = True
+            ret = resolve_kuit(ctxt_prev, msg.msgid_previous, None,
+                               langdata_src, path, msg.refline,
+                               toxi18n=toxi18n, forcerich=forcerich)
+            msg.msgid_previous = ret[1]
+            if ctxt_prev is not None:
+                msg.msgctxt_previous = ret[0]
+            if msg.msgid_plural_previous is not None:
+                ret = resolve_kuit(ctxt_prev, msg.msgid_plural_previous, None,
+                                   langdata_src, path, msg.refline,
+                                   toxi18n=toxi18n, forcerich=forcerich)
+                msg.msgid_plural_previous = ret[1]
         # Translation fields.
         ctxt_trn = ctxt if (not msg.fuzzy or not has_previous) else ctxt_prev
         for i in range(len(msg.msgstr)):
             ret = resolve_kuit(ctxt_trn, msg.msgstr[i], None,
                                langdata_trn, path, msg.refline,
-                               toxi18n=toxi18n)
+                               toxi18n=toxi18n, forcerich=forcerich)
             msg.msgstr[i] = ret[1]
-            if msg.msgid.endswith("\n") and not msg.msgstr[i].endswith("\n"):
-                msg.msgstr[i] += "\n"
+            if msg.translated:
+                if msg.msgid.endswith("\n") and not msg.msgstr[i].endswith("\n"):
+                    msg.msgstr[i] += "\n"
+                elif not msg.msgid.endswith("\n") and msg.msgstr[i].endswith("\n"):
+                    msg.msgstr[i] = msg.msgstr[i][:-1]
         # In post-merge mode, maybe it can be unfuzzied now.
-        if _po_options.post_merge and msg.fuzzy:
+        if _po_options.post_merge and msg.fuzzy and all(list(msg.msgstr)):
             if (    msg.msgctxt == msg.msgctxt_previous
                 and msg.msgid == msg.msgid_previous
                 and msg.msgid_plural == msg.msgid_plural_previous
@@ -950,7 +976,7 @@ def textmod_shortcut (text, quote, fmt, langdata):
 # KUIT UI path delimiters and lookup key in PO files, as
 # format: (msgctxt, msgid).
 # According to kuitsemantics.cpp from kdecore.
-_kuit_raw_guipath_delimiter_rx = re.compile(r"->|\|", re.U)
+_kuit_raw_guipath_delimiter_rx = re.compile(r"->", re.U)
 _kuit_guipath_delimiters = {
     "plain": (u"gui-path-delimiter/plain", u"→"),
     "rich": (u"gui-path-delimiter/rich", u"→"),
@@ -984,298 +1010,354 @@ def textmod_interface (text, quote, fmt, langdata):
 
 
 # KUIT transformation patterns and lookup key in PO files, as
-# (tag, attributes, format): (msgctxt, msgid, subsmap, textmodf).
+# (tag, attributes, format): (msgctxt, msgid, subsmap, prepend, postpend, textmodf).
 # According to kuitsemantics.cpp from kdecore.
 _kuit_transforms = {
     (u"title", frozenset([]), "plain"):
         (u"@title/plain",
          u"== %1 ==",
          {"%1": "title"},
+         "", "\n",
          None),
     (u"title", frozenset([]), "rich"):
         (u"@title/rich",
          u"<h2>%1</h2>",
          {"%1": "title"},
+         "", "",
          None),
     (u"subtitle", frozenset([]), "plain"):
         (u"@subtitle/plain",
          u"~ %1 ~",
          {"%1": "subtitle"},
+         "", "\n",
          None),
     (u"subtitle", frozenset([]), "rich"):
         (u"@subtitle/rich",
          u"<h3>%1</h3>",
          {"%1": "subtitle"},
+         "", "",
          None),
     (u"para", frozenset([]), "plain"):
         (u"@para/plain",
          u"%1",
          {"%1": "para"},
+         "", "\n",
          None),
     (u"para", frozenset([]), "rich"):
         (u"@para/rich",
          u"<p>%1</p>",
          {"%1": "para"},
+         "", "",
          None),
     (u"list", frozenset([]), "plain"):
         (u"@list/plain",
          u"%1",
          {"%1": "list"},
+         "\n", "",
          None),
     (u"list", frozenset([]), "rich"):
         (u"@list/rich",
          u"<ul>%1</ul>",
          {"%1": "list"},
+         "", "",
          None),
     (u"item", frozenset([]), "plain"):
         (u"@item/plain",
          u"  * %1",
          {"%1": "item"},
+         "", "\n",
          None),
     (u"item", frozenset([]), "rich"):
         (u"@item/rich",
          u"<li>%1</li>",
          {"%1": "item"},
+         "", "",
          None),
     (u"note", frozenset([]), "plain"):
         (u"@note/plain",
          u"Note: %1",
          {"%1": "note"},
+         "", "",
          None),
     (u"note", frozenset([]), "rich"):
         (u"@note/rich",
          u"<i>Note</i>: %1",
          {"%1": "note"},
+         "", "",
          None),
     (u"note", frozenset([u"label"]), "plain"):
         (u"@note-with-label/plain\n"
          u"%1 is the note label, %2 is the text",
          u"%1: %2",
          {"%1": "label", "%2": "note"},
+         "", "",
          None),
     (u"note", frozenset([u"label"]), "rich"):
         (u"@note-with-label/rich\n"
          u"%1 is the note label, %2 is the text",
          u"<i>%1</i>: %2",
          {"%1": "label", "%2": "note"},
+         "", "",
          None),
     (u"warning", frozenset([]), "plain"):
         (u"@warning/plain",
          u"WARNING: %1",
          {"%1": "warning"},
+         "", "",
          None),
     (u"warning", frozenset([]), "rich"):
         (u"@warning/rich",
          u"<b>Warning</b>: %1",
          {"%1": "warning"},
+         "", "",
          None),
     (u"warning", frozenset([u"label"]), "plain"):
         (u"@warning-with-label/plain\n"
          u"%1 is the warning label, %2 is the text",
          u"%1: %2",
          {"%1": "label", "%2": "warning"},
+         "", "",
          None),
     (u"warning", frozenset([u"label"]), "rich"):
         (u"@warning-with-label/rich\n"
          u"%1 is the warning label, %2 is the text",
          u"<b>%1</b>: %2",
          {"%1": "label", "%2": "warning"},
+         "", "",
          None),
     (u"link", frozenset([]), "plain"):
         (u"@link/plain",
          u"%1",
          {"%1": "link"},
+         "", "",
          None),
     (u"link", frozenset([]), "rich"):
         (u"@link/rich",
          u"<a href=\"%1\">%1</a>",
          {"%1": "link"},
+         "", "",
          None),
     (u"link", frozenset([u"url"]), "plain"):
         (u"@link-with-description/plain\n"
          u"%1 is the URL, %2 is the descriptive text",
          u"%2 (%1)",
          {"%2": "link", "%1": "url"},
+         "", "",
          None),
     (u"link", frozenset([u"url"]), "rich"):
         (u"@link-with-description/rich\n"
          u"%1 is the URL, %2 is the descriptive text",
          u"<a href=\"%1\">%2</a>",
          {"%2": "link", "%1": "url"},
+         "", "",
          None),
     (u"filename", frozenset([]), "plain"):
         (u"@filename/plain",
          u"‘%1’",
          {"%1": "filename"},
+         "", "",
          None),
     (u"filename", frozenset([]), "rich"):
         (u"@filename/rich",
          u"<tt>%1</tt>",
          {"%1": "filename"},
+         "", "",
          None),
     (u"application", frozenset([]), "plain"):
         (u"@application/plain",
          u"%1",
          {"%1": "application"},
+         "", "",
          None),
     (u"application", frozenset([]), "rich"):
         (u"@application/rich",
          u"%1",
          {"%1": "application"},
+         "", "",
          None),
     (u"command", frozenset([]), "plain"):
         (u"@command/plain",
          u"%1",
          {"%1": "command"},
+         "", "",
          None),
     (u"command", frozenset([]), "rich"):
         (u"@command/rich",
          u"<tt>%1</tt>",
          {"%1": "command"},
+         "", "",
          None),
     (u"command", frozenset([u"section"]), "plain"):
         (u"@command-with-section/plain\n"
          u"%1 is the command name, %2 is its man section",
          u"%1(%2)",
          {"%1": "command", "%2": "section"},
+         "", "",
          None),
     (u"command", frozenset([u"section"]), "rich"):
         (u"@command-with-section/rich\n"
          u"%1 is the command name, %2 is its man section",
          u"<tt>%1(%2)</tt>",
          {"%1": "command", "%2": "section"},
+         "", "",
          None),
     (u"resource", frozenset([]), "plain"):
         (u"@resource/plain",
          u"“%1”",
          {"%1": "resource"},
+         "", "",
          None),
     (u"resource", frozenset([]), "rich"):
         (u"@resource/rich",
          u"“%1”",
          {"%1": "resource"},
+         "", "",
          None),
     (u"icode", frozenset([]), "plain"):
         (u"@icode/plain",
          u"“%1”",
          {"%1": "icode"},
+         "", "",
          None),
     (u"icode", frozenset([]), "rich"):
         (u"@icode/rich",
          u"<tt>%1</tt>",
          {"%1": "icode"},
+         "", "",
          None),
     (u"bcode", frozenset([]), "plain"):
         (u"@bcode/plain",
          u"\n%1\n",
          {"%1": "bcode"},
+         "", "",
          None),
     (u"bcode", frozenset([]), "rich"):
         (u"@bcode/rich",
          u"<pre>%1</pre>",
          {"%1": "bcode"},
+         "", "",
          None),
     (u"shortcut", frozenset([]), "plain"):
         (u"@shortcut/plain",
          u"%1",
          {"%1": "shortcut"},
+         "", "",
          textmod_shortcut),
     (u"shortcut", frozenset([]), "rich"):
         (u"@shortcut/rich",
          u"<b>%1</b>",
          {"%1": "shortcut"},
+         "", "",
          textmod_shortcut),
     (u"interface", frozenset([]), "plain"):
         (u"@interface/plain",
          u"|%1|",
          {"%1": "interface"},
+         "", "",
          textmod_interface),
     (u"interface", frozenset([]), "rich"):
         (u"@interface/rich",
          u"<i>%1</i>",
          {"%1": "interface"},
+         "", "",
          textmod_interface),
     (u"emphasis", frozenset([]), "plain"):
         (u"@emphasis/plain",
          u"*%1*",
          {"%1": "emphasis"},
+         "", "",
          None),
     (u"emphasis", frozenset([]), "rich"):
         (u"@emphasis/rich",
          u"<i>%1</i>",
          {"%1": "emphasis"},
+         "", "",
          None),
     (u"emphasis", frozenset([u"strong"]), "plain"):
         (u"@emphasis-strong/plain",
          u"**%1**",
          {"%1": "emphasis"},
+         "", "",
          None),
     (u"emphasis", frozenset([u"strong"]), "rich"):
         (u"@emphasis-strong/rich",
          u"<b>%1</b>",
          {"%1": "emphasis"},
+         "", "",
          None),
     (u"placeholder", frozenset([]), "plain"):
         (u"@placeholder/plain",
          u"&lt;%1&gt;",
          {"%1": "placeholder"},
+         "", "",
          None),
     (u"placeholder", frozenset([]), "rich"):
         (u"@placeholder/rich",
          u"&lt;<i>%1</i>&gt;",
          {"%1": "placeholder"},
+         "", "",
          None),
     (u"email", frozenset([]), "plain"):
         (u"@email/plain",
          u"&lt;%1&gt;",
          {"%1": "email"},
+         "", "",
          None),
     (u"email", frozenset([]), "rich"):
         (u"@email/rich",
          u"&lt;<a href=\"mailto:%1\">%1</a>&gt;",
          {"%1": "email"},
+         "", "",
          None),
     (u"email", frozenset([u"address"]), "plain"):
         (u"@email-with-name/plain\n"
          u"%1 is name, %2 is address",
          u"%1 &lt;%2&gt;",
          {"%1": "email", "%2": "address"},
+         "", "",
          None),
     (u"email", frozenset([u"address"]), "rich"):
         (u"@email-with-name/rich\n"
          u"%1 is name, %2 is address",
          u"<a href=\"mailto:%2\">%1</a>",
          {"%1": "email", "%2": "address"},
+         "", "",
          None),
     (u"envar", frozenset([]), "plain"):
         (u"@envar/plain",
          u"$%1",
          {"%1": "envar"},
+         "", "",
          None),
     (u"envar", frozenset([]), "rich"):
         (u"@envar/rich",
          u"<tt>$%1</tt>",
          {"%1": "envar"},
+         "", "",
          None),
     (u"message", frozenset([]), "plain"):
         (u"@message/plain",
          u"/%1/",
          {"%1": "message"},
+         "", "",
          None),
     (u"message", frozenset([]), "rich"):
         (u"@message/rich",
          u"<i>%1</i>",
          {"%1": "message"},
+         "", "",
          None),
     (u"nl", frozenset([]), "plain"):
         (u"@nl/plain",
          u"%1\n",
          {"%1": "nl"},
+         "", "",
          None),
     (u"nl", frozenset([]), "rich"):
         (u"@nl/rich",
          u"%1<br/>",
          {"%1": "nl"},
+         "", "",
          None),
 }
 
@@ -1320,16 +1402,22 @@ _cmarker_to_format = {
 _top_tag_rx = re.compile(r"<\s*(qt|html)\b[^>]*>(.*)<\s*/\s*qt\s*>",
                          re.U | re.S | re.I)
 
-def resolve_kuit (ctxt, text, quote, langdata, path, lno, toxi18n=0):
+def resolve_kuit (ctxt, text, quote, langdata, path, lno,
+                  toxi18n=0, forcerich=False):
 
     xi18n = False
 
     fmt_cm, fmt_rc, res_ctxt, has_cmarker = format_from_cmarker(ctxt, quote)
+    if forcerich:
+        fmt_cm = "rich"
+        fmt_rc = "rich"
     if fmt_cm and fmt_cm not in _known_formats:
         warning("%s:%d: Unknown format modifier '%s' in context marker. "
                 "The string will not be resolved until this is fixed."
                 % (path, lno, fmt_cm))
-        return ctxt, text, xi18n
+        has_any_html_tag = False
+        has_any_kuit_tag = False
+        return ctxt, text, xi18n, has_any_html_tag, has_any_kuit_tag
     if toxi18n in (1, 2) and fmt_cm != fmt_rc and not path.endswith(".po"):
         warning("%s:%d: Manual format modifier '%s' does not match "
                 "the implicit format modifier '%s' based on context marker. "
@@ -1349,7 +1437,7 @@ def resolve_kuit (ctxt, text, quote, langdata, path, lno, toxi18n=0):
                     "This should be changed to all-KUIT tags."
                     % (path, lno))
         xi18n = True
-        return res_ctxt, text, xi18n
+        return res_ctxt, text, xi18n, has_any_html_tag, has_any_kuit_tag
 
     if fmt_cm != "rich" and not has_any_html_tag:
         ret = resolve_entities(res_text, path, lno)
@@ -1360,7 +1448,7 @@ def resolve_kuit (ctxt, text, quote, langdata, path, lno, toxi18n=0):
     if not has_cmarker and not has_any_kuit_tag and not any_entity_resolved:
         # In this case the resolution should have been no-op,
         # so return the original input just in case.
-        return ctxt, text, xi18n
+        return ctxt, text, xi18n, has_any_html_tag, has_any_kuit_tag
 
     if has_top_tag or fmt_cm == "rich":
         # What to do with top tag in rich text.
@@ -1393,7 +1481,7 @@ def resolve_kuit (ctxt, text, quote, langdata, path, lno, toxi18n=0):
             raise StandardError(
                 "Unknown top tag resolution choice '%d'." % top_tag_res)
 
-    return res_ctxt, res_text, xi18n
+    return res_ctxt, res_text, xi18n, has_any_html_tag, has_any_kuit_tag
 
 
 _element_rx = re.compile(r"<\s*(\w+)(?:([^>]*)>(.*?)<\s*/\s*\1|\s*/)\s*>",
@@ -1467,6 +1555,7 @@ def _resolve_kuit_r (text, quote, fmt, langdata, path, lno):
                         csegs.append("%")
                         p1a = p2a + 1
                 res_span = "".join(csegs)
+                res_span = tr.prepend + res_span + tr.postpend
             else:
                 warning("%s:%d: No transformation for tag '%s' and format '%s'."
                         % (path, lno, tag, fmt))
