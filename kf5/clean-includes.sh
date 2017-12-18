@@ -94,6 +94,9 @@ do
        new=`echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g'`;
        new=`echo "$new" |perl -pi -e 's!QGpgME/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KDAV/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!Qt3DCore/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!Qt3DRender/!!g'`;
 
        
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
