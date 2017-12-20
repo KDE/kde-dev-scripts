@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008 Stefano Zacchiroli <zack@debian.org>
-# Copyright (C) 2017 Sandro Knauß <hefee@debian.org>
+# Copyright (C) 2017 Sandro Knauß <sknauss@kde.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
