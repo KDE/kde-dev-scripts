@@ -1,3 +1,4 @@
+
 #!/usr/bin/perl -w
 # vim:sw=4:et
 # (c) Dirk Mueller. GPLv2+
@@ -32,6 +33,7 @@ use List::Util qw(any);
 my %license_table = (
     'flherne'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
+    'kleag'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', 'CCBYSA4' ],
     'ltoscano'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'lueck'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'notmart'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
@@ -311,7 +313,6 @@ my %old_license_table = (
     'jens'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'jlayt'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'johach'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
-    'kleag'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'krake'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'laidig'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'lunakl'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
