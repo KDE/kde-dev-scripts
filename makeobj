@@ -177,7 +177,7 @@ if test ! -f "$file"; then
                 sed -e s,%ARCH%,\"$_arch\",g | \
                 sed -e s,%OS%,\"$_os\",g`"
       pwd="`echo $PWD | sed -e \"$OBJ_REPLACEMENT\"`"
-      if test ! -e $pwd; then
+      if test ! -e "$pwd"; then
          echo "no objdir found. Tried $pwd"
          exit 1
       fi
