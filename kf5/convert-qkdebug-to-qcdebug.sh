@@ -33,12 +33,10 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s,#include \<KDebug\>,#
 
 find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s/k_funcinfo/Q_FUNC_INFO/;"
 
-echo "add ecm_qt_declare_logging_category(<file>_SRCS HEADER $debugnamefile.h IDENTIFIER $newcategoryname CATEGORY_NAME $newlogname) to CMakeLists.txt";
-
 
 # end
-echo "1) Add $debugnamefile.cpp to CMakeLists.txt"
+echo "1) ecm_qt_declare_logging_category(<file>_SRCS HEADER $debugnamefile.h IDENTIFIER $newcategoryname CATEGORY_NAME $newlogname) to CMakeLists.txt"
 echo "2) Add #include \"$debugnamefile.h\" to each file which was changed"
 echo "3) Verify that it compiles :)"
-echo "4) If you find bugs fix them please"
+echo "4) If you find bugs fix them please me"
 
