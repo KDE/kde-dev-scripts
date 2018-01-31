@@ -384,14 +384,14 @@ do
                            fi
                         ;;
                         QTest)
-                          number=`egrep "QCOMPARE|QVERIFY" $file|wc -l`;
+                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
                            if test $number = 0 ; then
                               remove_include;
                            fi
                         ;;
 
                         QtTest)
-                           number=`egrep "QCOMPARE|QVERIFY" $file|wc -l`;
+                           number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
                            if test $number = 0 ; then
                               remove_include;
                            fi
