@@ -60,7 +60,7 @@ def main():
 
     line = re.compile(r"^([^#^:]+):\s*([^#]+)\s*(#.*)?$")
     graph = {}
-    for i in open('kde-build-metadata/dependency-data-stable-kf5-qt5').readlines():
+    for i in open('kde-build-metadata/dependency-data-kf5-qt5').readlines():
          if not i.strip():
              continue
          m = line.match(i)
@@ -68,11 +68,7 @@ def main():
              continue
          pkg = m.group(1).strip()
          dep = m.group(2).strip()
-         if pkg == "kde/kdepim-runtime":
-             pkg = "kdepim-runtime"
-         elif pkg == "extragear/libs/libkgapi":
-             pkg = "libkgapi"
-         elif not pkg.startswith("kde/pim/"):
+         if not pkg.startswith("kde/pim/"):
              continue
          else:
              pkg = pkg[len("kde/pim/"):]
@@ -80,9 +76,7 @@ def main():
          if not pkg in graph:
              graph[pkg] = set()
 
-         if dep == "extragear/libs/libkgapi":
-             dep = "libkgapi"
-         elif not dep.startswith("kde/pim/"):
+         if not dep.startswith("kde/pim/"):
              continue
          else:
              dep = dep[len("kde/pim/"):]
