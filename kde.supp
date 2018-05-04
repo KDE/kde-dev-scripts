@@ -400,11 +400,11 @@
    atomic_store
    Helgrind:Race
    fun:store
-   fun:_ZNSt*atomic*
+   fun:_ZN*St*atomic*
 }
 {
    atomic_load
    Helgrind:Race
    fun:load
-   fun:_ZNSt*atomic*
+   fun:_ZN*St*atomic*
 }
