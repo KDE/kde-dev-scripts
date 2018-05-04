@@ -393,3 +393,18 @@
    Helgrind:Race
    fun:AO_compare_and_swap
 }
+
+# C++ atomic operations
+
+{
+   atomic_store
+   Helgrind:Race
+   fun:store
+   fun:_ZNSt*atomic*
+}
+{
+   atomic_load
+   Helgrind:Race
+   fun:load
+   fun:_ZNSt*atomic*
+}
