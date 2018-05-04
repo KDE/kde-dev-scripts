@@ -375,3 +375,21 @@
    drd:ConflictingAccess
    fun:_ZN15QBasicAtomicOps*testAndSet*
 }
+
+# C atomic operations
+
+{
+   AO_store
+   Helgrind:Race
+   fun:AO_store
+}
+{
+   AO_load
+   Helgrind:Race
+   fun:AO_load
+}
+{
+   AO_compare_and_swap
+   Helgrind:Race
+   fun:AO_compare_and_swap
+}
