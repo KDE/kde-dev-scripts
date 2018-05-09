@@ -95,4 +95,6 @@ install(PROGRAMS
   grantlee_strings_extractor.py
   DESTINATION ${KDE_INSTALL_BINDIR})
 
+# SKIP_PO_INSTALL
+
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
