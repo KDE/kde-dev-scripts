@@ -9,13 +9,12 @@ Author: Lukas Tinkl <lukas@kde.org>, 2002
 
 import sys
 import fileinput
-import string
 
 def makePOT(_file):
   for line in fileinput.input(_file):
     if (line[0]=='#'): #skip comments
       continue
-    section=string.split(string.strip(line), '\t')[2] #third field, tab separated
+    section=line.strip().split('\t')[2] #third field, tab separated
     newline='msgid \"' + section+ '\"\n' #msgid
     newline+='msgstr \"\"\n' #msgstr
     print(newline) #output to stdout
