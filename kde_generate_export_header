@@ -3,7 +3,7 @@
 import os, sys, string
 
 def help():
-        print "Usage: %s foo_export.h FOO_EXPORT libname" % sys.argv[0]
+        print("Usage: %s foo_export.h FOO_EXPORT libname" % sys.argv[0])
 
 if len(sys.argv) < 4:
         help()
