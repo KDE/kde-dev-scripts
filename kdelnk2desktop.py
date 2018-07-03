@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import os, sys, string
+import os, sys
 
 def help():
 	print("Usage: %s <filename>.kdelnk ..." % sys.argv[0])
@@ -13,7 +13,7 @@ for fn in sys.argv[1:]:
 	print("Doing %s ..." % fn)
 	f = open(fn, 'r').readlines()
 
-	if string.find(f[0], "# KDE Config") == 0:
+	if f[0].find("# KDE Config") == 0:
 		p = open(fn, 'w')
 		p.writelines(f[1:])
 		p.close()
