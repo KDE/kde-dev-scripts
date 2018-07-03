@@ -54,11 +54,11 @@ proj_data = ET.parse(args.file)
 # <foo identifier="name"><repo>...</repo>...</foo>
 element_list = proj_data.findall(".//repo/..[@identifier='%s']" % (args.name))
 if len(element_list) < 1 or element_list[0] is None:
-    print "No project known by the name %s!" % (args.name)
+    print("No project known by the name %s!" % (args.name))
     sys.exit(1)
 
 if len(element_list) > 1:
-    print "Found %d elements, was only expecting 1." % (len(element_list))
+    print("Found %d elements, was only expecting 1." % (len(element_list)))
     sys.exit(1)
 
 # At this point we've found the XML element for our one project, now break out
@@ -67,7 +67,7 @@ element = element_list[0]
 
 if args.print_path:
     path = element.find('path').text
-    print path
+    print(path)
 elif args.print_description:
     desc = element.find('description').text
-    print desc
+    print(desc)
