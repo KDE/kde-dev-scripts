@@ -274,11 +274,11 @@ class TranslationOutputter:
     def get_contextual_strings(self, token):
         split = []
         _bits = smart_split(token.contents)
-        _bit = _bits.next()
+        _bit = next(_bits)
         if _bit =="i18n" or _bit == "i18n_var":
             # {% i18n "A one %1, a two %2, a three %3" var1 var2 var3 %}
             # {% i18n_var "A one %1, a two %2, a three %3" var1 var2 var3 as result %}
-            _bit = _bits.next()
+            _bit = next(_bits)
             if not _bit.startswith("'") and not _bit.startswith('"'):
                 return
 
@@ -293,7 +293,7 @@ class TranslationOutputter:
         elif _bit =="i18nc" or _bit == "i18nc_var":
             # {% i18nc "An email send operation failed." "%1 Failed!" var1 %}
             # {% i18nc_var "An email send operation failed." "%1 Failed!" var1 as result %}
-            _bit = _bits.next()
+            _bit = next(_bits)
             if not _bit.startswith("'") and not _bit.startswith('"'):
                 return
 
@@ -303,14 +303,14 @@ class TranslationOutputter:
 
             translatable_string = TranslatableString()
             translatable_string.context = _bit[1:-1]
-            _bit = _bits.next()
+            _bit = next(_bits)
             translatable_string._string = _bit[1:-1]
             translatable_string.line_number = self.line_number
             self.translatable_strings.append(translatable_string)
         elif _bit =="i18np" or _bit =="i18np_var":
             # {% i18np "An email send operation failed." "%1 email send operations failed. Error : % 2." count count errorMsg %}
             # {% i18np_var "An email send operation failed." "%1 email send operations failed. Error : % 2." count count errorMsg as result %}
-            _bit = _bits.next()
+            _bit = next(_bits)
             if not _bit.startswith("'") and not _bit.startswith('"'):
                 return
 
@@ -320,7 +320,7 @@ class TranslationOutputter:
 
             translatable_string = TranslatableString()
             translatable_string._string = _bit[1:-1]
-            _bit = _bits.next()
+            _bit = next(_bits)
             translatable_string.plural = _bit[1:-1]
             translatable_string.line_number = self.line_number
             self.translatable_strings.append(translatable_string)
@@ -328,7 +328,7 @@ class TranslationOutputter:
             # {% i18np "The user tried to send an email, but that failed." "An email send operation failed." "%1 email send operation failed." count count %}
             # {% i18np_var "The user tried to send an email, but that failed." "An email send operation failed." "%1 email send operation failed." count count as result %}
 
-            _bit = _bits.next()
+            _bit = next(_bits)
             if not _bit.startswith("'") and not _bit.startswith('"'):
                 return
 
@@ -338,9 +338,9 @@ class TranslationOutputter:
 
             translatable_string = TranslatableString()
             translatable_string.context = _bit[1:-1]
-            _bit = _bits.next()
+            _bit = next(_bits)
             translatable_string._string = _bit[1:-1]
-            _bit = _bits.next()
+            _bit = next(_bits)
             translatable_string.plural = _bit[1:-1]
             translatable_string.line_number = self.line_number
             self.translatable_strings.append(translatable_string)
