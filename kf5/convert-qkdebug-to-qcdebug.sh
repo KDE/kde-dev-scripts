@@ -37,6 +37,9 @@ find -iname "*.cpp" -o -iname "*.h" | xargs perl -pi -e "s/k_funcinfo/Q_FUNC_INF
 # end
 echo "1) ecm_qt_declare_logging_category(<file>_SRCS HEADER $debugnamefile.h IDENTIFIER $newcategoryname CATEGORY_NAME $newlogname) to CMakeLists.txt"
 echo "2) Add #include \"$debugnamefile.h\" to each file which was changed"
-echo "3) Verify that it compiles :)"
-echo "4) If you find bugs fix them please me"
+echo "3) Add include(ECMQtDeclareLoggingCategory) to CMakeLists.txt"
+echo "4) Add '$newlogname <description> IDENTIFIER [$newcategoryname]' to <name>.categories"
+echo "4) install( FILES <name>.categories DESTINATION ${KDE_INSTALL_CONFDIR} ) to CMakeLists.txt"
+echo "5) Verify that it compiles :)"
+echo "6) If you find bugs fix them please me"
 
