@@ -36,6 +36,27 @@ foreach my $file (@ARGV) {
            $_ = $indent . $function . "Q_DECL_OVERRIDE" . $end . "\n";
         }
 
+        my $regexp2 = qr/
+           ^(\s*)                        # (1) Indentation
+           virtual\s*                    # (2) virtual
+           (.*)                          # (3) function
+           override(.*)$
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $function, $end) = $_ =~ $regexp2) {
+           $_ = $indent . $function . "override" . $end . "\n";
+        }
+
+        my $regexpComment2 = qr/
+           ^(\s*)                        # (1) Indentation
+           \/\*\s*reimp\s*\*\/\s*                    # (2) reimp comment
+           (.*)                          # (3) function
+           override(.*)$
+           /x; # /x Enables extended whitespace mode
+        if (my ($indent, $function, $end) = $_ =~ $regexpComment2) {
+           $_ = $indent . $function . "override" . $end . "\n";
+        }
+        
+        
         $modified ||= $orig ne $_;
         $_;
     } <$FILE>;
