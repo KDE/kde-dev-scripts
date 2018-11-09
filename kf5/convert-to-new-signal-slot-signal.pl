@@ -167,7 +167,7 @@ sub cast_overloaded_signal($$$)
     if ( defined $_ ) {
        return $_;
     } else {
-       return "&" . "$classname::$function";
+       return "&" . "$classname" . "::" . "$function";
     }
 }
 
@@ -579,7 +579,7 @@ foreach my $file (@ARGV) {
                 my $isPrivateSlot;
                 if ( (defined $varname{$sender}) and (defined $varname{$receiver}) ) {
                     $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
-                    $slot = "$varname{$receiver}::$slot";
+                    $slot = "$varname{$receiver}" . "::" . "$slot";
                     if ( defined $localSenderVariable) {
                        $sender = "&" . $sender;
                     }
@@ -629,7 +629,7 @@ foreach my $file (@ARGV) {
                     $signal = "&QAction::$signal";
                   } elsif ( $sender =~ /(.*)::self\(\)/) {
                     my $class = $1;
-                    $signal = "&" . "$class::$signal";
+                    $signal = "&" . "$class" . "::" . "$signal";
                   } else {
                     # It's not specific to ui class. It can be a private class too
                     if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
@@ -672,16 +672,16 @@ foreach my $file (@ARGV) {
                     if ( defined $varname{$receiver} ) {
                       $slot = "$varname{$receiver}::$slot";
                     } elsif ( defined $varnamewithpointer{$receiver} ) {
-                      $slot = "$varnamewithpointer{$receiver}::$slot";
+                      $slot = "$varnamewithpointer{$receiver}" . "::" ." $slot";
                       $receiverWithQPointer = 1;
                     } elsif ( defined $privateVariableWithPointer{$receiver} ) {
-                      $slot = "$privateVariableWithPointer{$receiver}::$slot";
+                      $slot = "$privateVariableWithPointer{$receiver}" . "::". "$slot";
                       $receiverWithQPointer = 1;
                     } elsif ( $receiver eq "this") {
                       if ( $headerclassname eq "" ) {
                          $notpossible = "no current classname";
                       }
-                      $slot = "$headerclassname::$slot";
+                      $slot = "$headerclassname" . "::" . "$slot";
                     } else {
                        if ( $receiver =~ /(\w+)\.(.*)/  || $receiver =~ /(\w+)\-\>(.*)/) {
                           my $uivariable = $1;
@@ -697,7 +697,7 @@ foreach my $file (@ARGV) {
                                   if (defined $activateDebug) {
                                       warn "vartype found $varname{$varui} \n";
                                  }
-                                 $slot = "$varname{$varui}::$slot";
+                                 $slot = "$varname{$varui}" . "::" ." $slot";
                               } else {
                                  $notpossible = "unknown variable $varui";
                               }
@@ -794,12 +794,11 @@ foreach my $file (@ARGV) {
                      if ( $headerclassname eq "" ) {
                         $notpossible = "no current classname";
                      }
-
                      if ( defined $varname{$sender} ) {
-                        $slot = "$headerclassname::$slot";
+                        $slot = "$headerclassname" . "::" . "$slot";
                         $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
                      } else {
-                        $slot = "$headerclassname::$slot";
+                        $slot = "$headerclassname" . "::" . "$slot";
                         if ( $sender eq "this") {
                             $signal = cast_overloaded_signal($headerclassname, $signalArgument, $signal);
                         } elsif ( $sender eq "qApp") {
@@ -812,7 +811,7 @@ foreach my $file (@ARGV) {
                            $signal = "&QAction::$signal";
                         } elsif ( $sender =~ /(.*)::self\(\)/) {
                           my $class = "&" . $1;
-                          $signal = "$class::$signal";
+                          $signal = "$class" . "::" . "$signal";
                         } else {
                             if ( $sender =~ /(\w+)\.(.*)/  || $sender =~ /(\w+)\-\>(.*)/) {
                               my $uivariable = $1;
