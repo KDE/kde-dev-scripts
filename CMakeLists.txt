@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
 project(kde-dev-scripts)
 
 find_package(ECM 1.3.0 REQUIRED NO_MODULE)
