@@ -412,6 +412,7 @@ my %secondary_mail_addresses = (
 my %ruletable;
 my %blacklist;
 my %whitelist;
+my %unknown_authors;
 my @blacklist_revs;
 
 foreach my $who (keys %old_license_table) {
@@ -485,7 +486,7 @@ sub resolveEmail($) {
         $resolved = $secondary_mail_addresses{$email};
     }
     if (not defined $resolved) {
-        die "Could not find $email in $accountfile\n";
+        $unknown_authors{$email} = 1;
         return $email;
     }
     return $resolved;
@@ -634,6 +635,14 @@ if (-f $file) {
         }
         close(IN);
     }
+}
+
+if (%unknown_authors) {
+    print "The following emails do not appear in the accounts file:\n\n";
+    foreach my $who(keys %unknown_authors) {
+        print "$who\n";
+    }
+    print "\n";
 }
 
 if (defined (keys %blacklist)) {
