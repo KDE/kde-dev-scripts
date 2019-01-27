@@ -403,6 +403,7 @@ my %secondary_mail_addresses = (
     'olav@vitters.nl' => 'vitters',
     'richard@goteborg.utfors.se' => 'larkang',
     'sune@vuorela.dk' => 'sune',
+    'thb@net-bembel.de' => 'tbaumgart',
     'trev@adblockplus.org' => 'palant',
     'tsdgeos@terra.es' => 'aacid',
 );
