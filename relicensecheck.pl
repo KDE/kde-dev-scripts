@@ -399,6 +399,7 @@ my %secondary_mail_addresses = (
     'kubito@gmail.com' => 'rkcosta',
     'lamarque@gmail.com' => 'lvsouza',
     'malte@kde.org' => 'malte',
+    'mk-lists@email.de' => 'kaning'
     'neoclust.kde@free.fr' => 'nlecureuil',
     'olav@vitters.nl' => 'vitters',
     'richard@goteborg.utfors.se' => 'larkang',
