@@ -25,6 +25,9 @@ if [ ! -f $newfile.h ]; then
     if [ -f ${newfile}_p.h ]; then
         git add ${newfile}_p.h
     fi
+    if [ -f ${newfile}.ui ]; then
+        git add ${newfile}.ui
+    fi
 fi
 
 # Update build system
@@ -36,12 +39,16 @@ fi
 if test -n "$buildsystemfile"; then
     perl -pi -e '$_ .= "$1'$newfile.cpp'\n" if (m/^(\s*)'$oldfile'\.cpp/)' $buildsystemfile
     perl -pi -e '$_ .= "$1'$newfile.h'\n" if (m/^(\s*)'$oldfile'\.h/)' $buildsystemfile
+    perl -pi -e '$_ .= "$1'$newfile.ui'\n" if (m/^(\s*)'$oldfile'\.ui/)' $buildsystemfile
 fi
 
 # Rename class
 perl -pi -e "s/$oldname/$newname/g" $newfile.h $newfile.cpp
 if [ -f ${newfile}_p.h ]; then
     perl -pi -e "s/$oldname/$newname/g" ${newfile}_p.h
+fi
+if [ -f ${newfile}.ui ]; then
+    perl -pi -e "s/$oldname/$newname/g" ${newfile}.ui
 fi
 
 oldinclguard=`echo $oldname | tr a-z A-Z`

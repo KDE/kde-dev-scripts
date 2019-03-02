@@ -53,6 +53,9 @@ if [ ! -f $newfile.h ]; then
     if [ -f ${oldfile}_p.h ]; then
         my_mv ${oldfile}_p.h ${newfile}_p.h
     fi
+    if [ -f ${oldfile}.ui ]; then
+        my_mv ${oldfile}.ui ${newfile}.ui
+    fi
 fi
 
 # Update buildsystem
@@ -62,7 +65,7 @@ else
     buildsystemfile=`ls -1 *.pro 2>/dev/null | head -n 1`
 fi
 if test -n "$buildsystemfile"; then
-    perl -pi -e "s/\b$oldfile\.cpp/$newfile.cpp/;s/\b$oldfile\.h/$newfile\.h/" $buildsystemfile
+    perl -pi -e "s/\b$oldfile\.cpp/$newfile.cpp/;s/\b$oldfile\.h/$newfile\.h/;s/\b$oldfile\.ui/$newfile\.ui/" $buildsystemfile
 fi
 
 # Rename class
@@ -72,6 +75,9 @@ fi
 perl -pi -e "s/$oldname/$newname/g" $newfile.cpp
 if [ -f ${newfile}_p.h ]; then
     perl -pi -e "s/$oldname/$newname/g" ${newfile}_p.h
+fi
+if [ -f ${newfile}.ui ]; then
+    perl -pi -e "s/$oldname/$newname/g" ${newfile}.ui
 fi
 
 oldinclguard=`echo $oldname | tr a-z A-Z`
