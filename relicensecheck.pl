@@ -399,6 +399,7 @@ my %secondary_mail_addresses = (
     'john@layt.net' => 'jlayt',
     'kde@randomguy3.me.uk' => 'alexmerry',
     'kde@rusu.info' => 'valir',
+    'keziolio123@gmail.com' => 'kezik',
     'kubito@gmail.com' => 'rkcosta',
     'lamarque@gmail.com' => 'lvsouza',
     'malte@kde.org' => 'malte',
