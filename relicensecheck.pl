@@ -32,6 +32,7 @@ use List::Util qw(any);
 my %license_table = (
     'acrouthamel'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'aheinecke'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
+    'athurhfree'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'cgerloff'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'flherne'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'huoni'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
@@ -387,6 +388,7 @@ my %secondary_mail_addresses = (
     'aetf@unlimitedcodeworks.xyz' => 'peifengyu',
     'aleixpol@kde.org' => 'apol',
     'asmond@gmx.com' => 'asensi',
+    'athurh@gmail.com' => 'athurhfree',
     'bero@arklinux.org' => 'bero',
     'caleb@gentoo.org' => 'ctennis',
     'christoph@maxiom.de' => 'cfeck',
