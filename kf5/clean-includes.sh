@@ -101,7 +101,7 @@ do
        new=`echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g'`;
        new=`echo "$new" |perl -pi -e 's!Qt3DRender/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KSieveUi/!!g'`;
-       
+       new=`echo "$new" |perl -pi -e 's!KTNEF/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
@@ -362,6 +362,12 @@ do
                         ;;
                         QScreen)
                            number=`grep "physicalDotsPerInch()" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
+			QMimeData)
+                           number=`grep "mimeData()" $file|wc -l`;
                            if test $number = 0 ; then
                               remove_include;
                            fi
