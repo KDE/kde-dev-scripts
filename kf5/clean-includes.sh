@@ -106,6 +106,10 @@ do
        new=`echo "$new" |perl -pi -e 's!KSMTP/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KGAPI/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KItinerary/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KRunner/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KIMAP/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KLDAP/!!g'`;
+
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
