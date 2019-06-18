@@ -103,7 +103,8 @@ do
        new=`echo "$new" |perl -pi -e 's!KSieveUi/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KTNEF/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KCodecs/!!g'`;
-
+       new=`echo "$new" |perl -pi -e 's!KSMTP/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KGAPI/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
