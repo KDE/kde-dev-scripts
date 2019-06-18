@@ -38,6 +38,9 @@ file_header() {
 test_include() {
 for file in $path/* ;
 do
+   if [[ $file == *"build"* ]]; then
+     continue;
+   fi
    #echo $file;
    if test -d $file ; then
           echo "Check include into directory : $file";
@@ -97,7 +100,7 @@ do
        new=`echo "$new" |perl -pi -e 's!Qt3DCore/!!g'`;
        new=`echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g'`;
        new=`echo "$new" |perl -pi -e 's!Qt3DRender/!!g'`;
-
+       new=`echo "$new" |perl -pi -e 's!KSieveUi/!!g'`;
        
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
