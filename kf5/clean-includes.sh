@@ -363,7 +363,7 @@ do
                            #fi
                         ;;
                         QLoggingCategory)
-                           number=`grep "Q_DECLARE_LOGGING_CATEGORY" $file|wc -l`;
+                           number=`egrep "Q_DECLARE_LOGGING_CATEGORY|Q_LOGGING_CATEGORY" $file|wc -l`;
                            if test $number = 0 ; then
                               number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
                               if test $number = 0 ; then
@@ -409,7 +409,6 @@ do
                               remove_include;
                            fi
                         ;;
-
                         QtTest)
                            number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
                            if test $number = 0 ; then
