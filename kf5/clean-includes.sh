@@ -69,6 +69,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KMime/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KParts/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KNS3/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KNSCore/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPIMIdentities/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KCalCore/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPIMUtils/!!g'`;
