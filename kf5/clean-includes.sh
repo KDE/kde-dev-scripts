@@ -112,6 +112,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KLDAP/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KCoreAddons/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KdepimDBusInterfaces/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KScreen/!!g'`;
 
 
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
