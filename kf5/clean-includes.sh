@@ -113,7 +113,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KCoreAddons/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KdepimDBusInterfaces/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KScreen/!!g'`;
-
+       new=`echo "$new" |perl -pi -e 's!KQuickAddons/!!g'`;
 
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
