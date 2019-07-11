@@ -116,7 +116,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KQuickAddons/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KIPI/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KIOWidgets/!!g'`;
-
+       new=`echo "$new" |perl -pi -e 's!KActivities/Stats/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
@@ -150,7 +150,13 @@ do
                                 remove_include;
                            fi
                         ;;
-
+			QGuiApplication)
+                           number=`grep qGuiApp  $file|wc -l`;
+                           echo "qApp $number";
+                           if test $number = 0 ; then
+                                remove_include;
+                           fi
+                        ;;
                         QDesktopWidget)
                            number=`grep "Application::desktop"  $file|wc -l`;
                            if test $number = 0 ; then
