@@ -117,6 +117,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KIPI/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KIOWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KActivities/Stats/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KI18n/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
