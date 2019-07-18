@@ -118,6 +118,9 @@ do
        new=`echo "$new" |perl -pi -e 's!KIOWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KActivities/Stats/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KI18n/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KPackage/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KPeople/!!g'`;
+
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
@@ -373,6 +376,20 @@ do
                            #     fi
                            #fi
                         ;;
+                        QtDebug)
+                           number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
+                           if test $number = 0 ; then
+                               remove_include;
+                           fi
+                           #number=`grep "qDebug"  $file|wc -l`;
+                           #if test $number = 0 ; then
+                           #     number=`grep "qWarning"  $file|wc -l`;
+                           #     if test $number = 0 ; then
+                           #        remove_include;
+                           #     fi
+                           #fi
+                        ;;
+			
                         QLoggingCategory)
                            number=`egrep "Q_DECLARE_LOGGING_CATEGORY|Q_LOGGING_CATEGORY" $file|wc -l`;
                            if test $number = 0 ; then
@@ -420,6 +437,13 @@ do
                               remove_include;
                            fi
                         ;;
+                        QtTestGui)
+                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
+			
                         QtTest)
                            number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
                            if test $number = 0 ; then
