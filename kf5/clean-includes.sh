@@ -118,9 +118,11 @@ do
        new=`echo "$new" |perl -pi -e 's!KIOWidgets/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KActivities/Stats/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KI18n/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KTextEditor/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPackage/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KPeople/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KActivities/!!g'`;
+
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
@@ -170,6 +172,13 @@ do
                                 fi
                            fi
                         ;;
+            		QDBusMetaType)
+                           number=`grep "qDBusRegisterMetaType"  $file|wc -l`;
+                           if test $number = 0 ; then
+                               remove_include;
+                           fi
+                        ;;
+
                         QScrollBar)
                            number=`grep "verticalScrollBar()"  $file|wc -l`;
                            if test $number = 0 ; then
