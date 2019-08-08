@@ -452,7 +452,12 @@ do
                               remove_include;
                            fi
                         ;;
-			
+                        QtTestWidgets)
+                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
+                           if test $number = 0 ; then
+                              remove_include;
+                           fi
+                        ;;
                         QtTest)
                            number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
                            if test $number = 0 ; then
