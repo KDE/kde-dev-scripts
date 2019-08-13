@@ -123,6 +123,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KPeople/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KActivities/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KFileMetaData/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KCalendarCore/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
