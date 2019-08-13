@@ -172,6 +172,19 @@ do
                                 fi
                            fi
                         ;;
+         		QDBusArgument)
+                           number=`grep "qdbus_cast"  $file|wc -l`;
+                           if test $number = 0 ; then
+                               remove_include;
+                           fi
+                        ;;
+			QDBusPendingCall)
+                           number=`grep "QDBusConnection::sessionBus().asyncCall"  $file|wc -l`;
+                           if test $number = 0 ; then
+                               remove_include;
+                           fi
+                        ;;
+
             		QDBusMetaType)
                            number=`grep "qDBusRegisterMetaType"  $file|wc -l`;
                            if test $number = 0 ; then
