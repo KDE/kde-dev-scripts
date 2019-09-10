@@ -22,9 +22,9 @@ foreach my $file (@ARGV) {
         my $regexpqFindChild = qr/
            ^(\s*)              # (1) Indentation
            (.*?)\s*=\s*           # (2) before
-           qFindChild<([^>]*)> # (3) class name
+           qFindChild<([^>]*)>    # (3) class name
            \(\s*([&\w]+)\s*,\s*   # (4) variable
-           (.*)$               # (5) end              
+           (.*)$               # (5) end
            /x; # /x Enables extended whitespace mode
         if (my ($indent, $before, $classname, $variable, $end) = $_ =~ $regexpqFindChild) {
            warn "found qFindChild \n";
@@ -36,20 +36,20 @@ foreach my $file (@ARGV) {
            }
         }
 
-        my $regexpqFindChilden = qr/
+        my $regexpqFindChildren = qr/
            ^(\s*)              # (1) Indentation
-           (.*?)\s*=\s*           # (2) before
-           qFindChilden<([^>]*)> # (3) class name
-           \(\s*([&\w]+)\s*,\s*   # (4) variable
-           (.*)$               # (5) end              
+           (.*?)                  # (2) before
+           qFindChildren<([^>]*)> # (3) class name
+           \(\s*([&\w]+)\s*\)    # (4) variable
+           (.*)$               # (5) end
            /x; # /x Enables extended whitespace mode
-        if (my ($indent, $before, $classname, $variable, $end) = $_ =~ $regexpqFindChild) {
-           warn "found qFindChilden \n";
+        if (my ($indent, $before, $classname, $variable, $end) = $_ =~ $regexpqFindChildren) {
+           warn "found qFindChildren \n";
            if ($variable =~ /^&/ ) {
              $variable =~ s/^&//;
-             $_ = $indent . $before . " = " . $variable . ".findChilden<$classname>(" . $end . "\n";
+             $_ = $indent . $before . $variable . ".findChildren<$classname>()" . $end . "\n";
            } else {
-             $_ = $indent . $before . " = " . $variable . "->findChilden<$classname>(" . $end . "\n";
+             $_ = $indent . $before . $variable . "->findChildren<$classname>()" . $end . "\n";
            }
         }
 
