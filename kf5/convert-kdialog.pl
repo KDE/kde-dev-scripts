@@ -579,15 +579,13 @@ foreach my $file (@ARGV) {
            warn "found setButtonGuiItem $args\n";
            my $extract_args_regexp = qr/
                                  ^\(([^,]*)           # button
-                                 ,\s*([^,]*)        # state
-                                 (.*)$              # after
+                                 ,\s*(.*)             # KGuiItem argument
+                                 \)$
                                  /x;
            my $localLeft = removePrivateVariable($left);
 
            if ( my ($button, $menuName) = $args =~  $extract_args_regexp ) {
               $button =~ s, ,,g;
-              #$menuName =~ s, ,,g;
-              $menuName =~ s,\),,g;
               $button =~ s,^KDialog::,,;
 
               $needKGuiItem = 1;
