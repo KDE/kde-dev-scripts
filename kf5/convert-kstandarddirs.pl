@@ -2,6 +2,8 @@
 
 # David Faure <faure@kde.org>
 # KStandardDirs -> QStandardPaths
+#
+# https://community.kde.org/Frameworks/Porting_Notes/KStandardDirs
 
 use strict;
 use File::Basename;
@@ -17,8 +19,10 @@ my %easyResource = (
    "socket" =>   "QStandardPaths::RuntimeLocation"
 );
 
+# subdirs of QStandardPaths::GenericDataLocation
 my %otherResource = (
    "services" => "kde5/services",
+   "xdgdata-dirs" => "desktop-directories",
    "xdgdata-icon" => "icons",
    "icon" => "icons",
    "locale" => "locale",
@@ -27,6 +31,7 @@ my %otherResource = (
    "sound" => "sounds"
 );
 
+# subdirs of QStandardPaths::ConfigLocation
 my %xdgconfResource = (
    "xdgconf-menu" => "menus",
    "xdgconf-autostart" => "autostart",
