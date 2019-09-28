@@ -82,7 +82,7 @@ uncrustify --no-backup -c "$cfg" $files
 grep '^\S* \S*::.*) {$' $files && echo "WARNING: check for wrong '{' placement in method definitions, in above grep results"
 
 # Remove old emacs mode-lines
-perl -pi -e '$_ = "" if /c-basic-offset: [1-8]/' $files
+perl -pi -e 's/ *-\*- c-basic-offset: [1-8] -\*-//' $files
 
 # Remove old kate mode-lines
 perl -pi -e '$_ = "" if /kate: .*indent-width/ || /kate:.*tab-width/' $files
