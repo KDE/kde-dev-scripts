@@ -19,7 +19,7 @@ foreach my $file (@ARGV) {
     my @l = map {
         my $orig = $_;
 
-        # see http://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes
+        # see https://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes
         if (/KMimeType::Ptr\s+(\w+)/) {
            my $var = $1;
            $varname{$var} = 1;

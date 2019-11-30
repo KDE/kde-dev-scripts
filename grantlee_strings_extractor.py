@@ -26,7 +26,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##
 
-## Parts of this file are reproduced from the Django framework. The Django licence appears below.
+## Parts of this file are reproduced from the Django framework. The Django license appears below.
 
 ##
 # Copyright (c) Django Software Foundation and individual contributors.
@@ -129,7 +129,7 @@ import os.path
 
 
 # The original context of much of this script is in the django template system:
-# http://code.djangoproject.com/browser/django/trunk/django/template/base.py
+# https://github.com/django/django/blob/master/django/template/base.py
 
 
 TOKEN_TEXT = 0

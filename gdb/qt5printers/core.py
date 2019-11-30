@@ -33,7 +33,7 @@ except ImportError:
 
 def _format_jd(jd):
     """Format a Julian Day in YYYY-MM-DD format."""
-    # maths from http://www.tondering.dk/claus/cal/julperiod.php
+    # maths from https://www.tondering.dk/claus/cal/julperiod.php
     a = jd + 32044
     b = (4 * a + 3) // 146097
     c = a - ( (146097 * b) // 4 )

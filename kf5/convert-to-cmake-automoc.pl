@@ -15,7 +15,7 @@
 # "foo.cpp:0: Note: No relevant classes found. No output generated."
 # => Remove the include in this case
 #
-# More info: http://www.cmake.org/cmake/help/v3.0/manual/cmake-qt.7.html#automoc
+# More info: https://cmake.org/cmake/help/v3.0/manual/cmake-qt.7.html#automoc
 #
 # Usual invocation:
 #   find -iname "*.cpp" | xargs kde-dev-scripts/kf5/convert-to-cmake-automoc.pl

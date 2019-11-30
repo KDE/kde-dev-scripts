@@ -50,7 +50,7 @@
 # are looked up in its kdelibs4.po. The pattern path to kdelibs4.po files,
 # which contains @lang@ placeholder, is given with -t PATTERN option.
 # This can be a local path or a HTTP URL (e.g.
-# http://websvn.kde.org/*checkout*/trunk/l10n-kde4/@lang@/messages/kdelibs/kdelibs4.po ).
+# https://websvn.kde.org/*checkout*/trunk/l10n-kde4/@lang@/messages/kdelibs/kdelibs4.po ).
 # Language of processed PO file is determined from its Language: header field.
 # If only PO files of one language are processed and they do not reliably
 # contain this field, the language can be forced with -l LANG option.
@@ -66,7 +66,7 @@
 # For a given i18n string, the decision of whether to resolve KUIT markup
 # into plain or Qt rich text is made based on the context marker,
 # as described in KUIT documentation at
-# http://techbase.kde.org/Development/Tutorials/Localization/i18n_Semantics .
+# https://techbase.kde.org/Development/Tutorials/Localization/i18n_Semantics .
 # Target formats can also be manually specified for certain context markers
 # by repeating the -f option. E.g. -f @info:progress=rich would override
 # the default resolution into plain text for @info:progress i18n strings.

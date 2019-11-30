@@ -27,7 +27,7 @@ use List::Util qw(any);
 ###
 ### 5. Include 'CCBYSA4+' if you are okay with contributions you've made under
 ###    "GNU FDL" being relicensed as "Creative Commons Attribution-ShareAlike 4.0 International".
-### For more information, see http://techbase.kde.org/Projects/KDE_Relicensing
+### For more information, see https://community.kde.org/Guidelines_and_HOWTOs/Relicensing/KDE_Relicensing
 
 my %license_table = (
     'acrouthamel'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
