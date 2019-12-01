@@ -396,6 +396,7 @@ my %secondary_mail_addresses = (
     'ABBAPOH@me.com' => 'ikomissarov',
     'aetf@unlimitedcodeworks.xyz' => 'peifengyu',
     'aleixpol@kde.org' => 'apol',
+    'arichardson.kde@googlemail.com' => 'arichardson',
     'asmond@gmx.com' => 'asensi',
     'athurh@gmail.com' => 'athurhfree',
     'bero@arklinux.org' => 'bero',
