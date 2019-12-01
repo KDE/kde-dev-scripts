@@ -419,6 +419,7 @@ my %secondary_mail_addresses = (
     'neoclust.kde@free.fr' => 'nlecureuil',
     'olav@vitters.nl' => 'vitters',
     'richard@goteborg.utfors.se' => 'larkang',
+    'schwarzerf@gmail.com' => 'schwarzer',
     'sune@vuorela.dk' => 'sune',
     'thb@net-bembel.de' => 'tbaumgart',
     'trev@adblockplus.org' => 'palant',
