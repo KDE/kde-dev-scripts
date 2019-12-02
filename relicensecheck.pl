@@ -280,6 +280,7 @@ my %old_license_table_2 = (
     'willy'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'woebbe'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'wstephens'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
+    'yurchor'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zack'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'zecke'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ]
     # Do not add anything here. Use license_table instead.
