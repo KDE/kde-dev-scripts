@@ -259,6 +259,7 @@ my %old_license_table_2 = (
     'staniek'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'sune'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'taj'           => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
+    'tanton'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
     'tenharmsel'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'teske'         => ['gplv23', 'lgplv23',                            ],
     'tfry'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+'        ],
