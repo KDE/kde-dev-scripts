@@ -159,6 +159,7 @@ my %old_license_table_2 = (
     'harris'        => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hausmann'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'heikobecker'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+',       ],
+    'hein'          => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hdhoang'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hindenburg'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
     'hoelzer'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV' ],
