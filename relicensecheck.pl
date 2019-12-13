@@ -424,6 +424,7 @@ my %secondary_mail_addresses = (
     'majewsky@gmx.net' => 'majewsky',
     'malte@kde.org' => 'malte',
     'mk-lists@email.de' => 'kaning',
+    'mklapetek@kde.org' => 'mklapetek',
     'neoclust.kde@free.fr' => 'nlecureuil',
     'olav@vitters.nl' => 'vitters',
     'richard@goteborg.utfors.se' => 'larkang',
