@@ -84,8 +84,6 @@ foreach my $file (@ARGV) {
                  $_ .= "    QApplication app(argc, argv); // PORTING SCRIPT: move this to before the KAboutData initialization\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
-              $_ .= "    parser.addVersionOption();\n";
-              $_ .= "    parser.addHelpOption();\n";
               if ( defined $use_aboutdata) {
                 $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
                 $_ .= "    aboutData.setupCommandLine(&parser);\n";
@@ -157,8 +155,6 @@ foreach my $file (@ARGV) {
                  $_ .= "    QCommandLineParser parser;\n";
                  $_ .= "    KAboutData::setApplicationData(aboutData);\n";
               }
-              $_ .= "    parser.addVersionOption();\n";
-              $_ .= "    parser.addHelpOption();\n";
               if ( defined $use_aboutdata) {
                 $_ .= "    //PORTING SCRIPT: adapt aboutdata variable if necessary\n";
                 $_ .= "    aboutData.setupCommandLine(&parser);\n";
