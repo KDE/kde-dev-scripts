@@ -256,6 +256,7 @@ ALIASES = \
 	"qpl=<a href=\"http://www.trolltech.com/products/qt/licenses\">QPL</a>"
 
 PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
+        K_DOXYGEN \
         AKONADI_CONTACT_EXPORT="" \
         AKONADI_CONTACT_TESTS_EXPORT="" \
         AKONADI_EXPORT="" \
