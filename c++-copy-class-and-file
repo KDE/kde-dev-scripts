@@ -8,8 +8,13 @@ fi
 oldname=$1
 newname=$2
 
-oldfile=`echo $oldname | tr A-Z a-z`
-newfile=`echo $newname | tr A-Z a-z`
+if [ -f $oldname.cpp ]; then
+    oldfile=$oldname
+    newfile=$newname
+else
+    oldfile=`echo $oldname | tr A-Z a-z`
+    newfile=`echo $newname | tr A-Z a-z`
+fi
 
 echo "Copying $oldfile.{cpp,h} to $newfile.{cpp,h}"
 
