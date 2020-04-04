@@ -404,6 +404,18 @@
    fun:_ZN19QOrderedMutexLocker6relockEv
 }
 
+# glib event loop integration, alternatively use QT_NO_GLIB=1
+
+{
+   glib_event_loop
+   Helgrind:Race
+   fun:g_private_get
+   obj:/usr/lib/libglib-*
+   fun:g_main_context_dispatch
+   obj:/usr/lib/libglib-*
+   fun:g_main_context_iteration
+}
+
 # C atomic operations
 
 {
