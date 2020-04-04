@@ -376,6 +376,34 @@
    fun:_ZN15QBasicAtomicOps*testAndSet*
 }
 
+# fixup QOrderedMutexLocker, see https://bugs.kde.org/show_bug.cgi?id=243232
+{
+   QOrderedMutexLocker_relock_tryLock
+   Helgrind:LockOrder
+   fun:QMutex_tryLock_int_WRK
+   fun:_ZN19QOrderedMutexLocker6relockEP6QMutexS1_
+}
+
+{
+   QOrderedMutexLocker_relock_lock
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN19QOrderedMutexLocker6relockEP6QMutexS1_
+}
+
+{
+   QOrderedMutexLocker_relock2_tryLock
+   Helgrind:LockOrder
+   fun:QMutex_tryLock_int_WRK
+   fun:_ZN19QOrderedMutexLocker6relockEv
+}
+{
+   QOrderedMutexLocker_relock2_lock
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN19QOrderedMutexLocker6relockEv
+}
+
 # C atomic operations
 
 {
