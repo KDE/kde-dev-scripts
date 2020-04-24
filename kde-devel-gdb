@@ -38,13 +38,20 @@ document printq5string
 end
 
 define printqstringdata
-    set $i=0
     set $d = (QStringData *)($arg0)
-    while $i < $d->len
-        printf "%c", (char)($d->unicode[$i++].ucs & 0xff)
+    printf "(QString)0x%x (length=%i): \"", &$arg0, $d->size
+    set $i=0
+    while $i < $d->size
+        set $c=$d->data()[$i++]
+        if $c < 32 || $c > 127
+                printf "\\u0x%04x", $c
+        else
+                printf "%c", (char)$c
+        end
     end
-    printf "\n"
+    printf "\"\n"
 end
+
 document printqstringdata
   Prints the contents of a QStringData
   This is useful when the output of another command (e.g. printqmap)
