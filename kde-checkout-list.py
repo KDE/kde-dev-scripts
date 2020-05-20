@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import argparse
-from git import Repo
 from pathlib import Path
 import requests
 import typing as tp
