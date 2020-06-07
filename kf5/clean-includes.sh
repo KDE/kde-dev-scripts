@@ -126,6 +126,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KCalendarCore/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KDeclarative/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KUserFeedback/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KAlarmCal/!!g'`;
        newname=`echo "$new" |perl -pi -e 's!.h!!'`;
 
        #echo "before go : $new";
