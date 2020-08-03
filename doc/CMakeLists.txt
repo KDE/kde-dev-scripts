@@ -16,5 +16,4 @@ kdoctools_create_manpage(man-fixincludes.1.docbook 1 INSTALL_DESTINATION ${KDE_I
 kdoctools_create_manpage(man-pruneemptydirs.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR})
 kdoctools_create_manpage(man-qtdoc.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR})
 kdoctools_create_manpage(man-reportview.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR})
-kdoctools_create_manpage(man-transxx.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR})
 kdoctools_create_manpage(man-zonetab2pot.py.1.docbook 1 INSTALL_DESTINATION ${KDE_INSTALL_MANDIR})
