@@ -8,8 +8,8 @@
 # - installed astyle, with patches below
 # - $QT_NORMALIZE_TOOL pointing to qtrepotools/util/normalize/normalize (after compiling it)
 #
-# IMPORTANT: astyle misparses the Qt "keywords" like foreach and Q_FOREACH, which
-# makes it style wrongly not just the space after the keyword, but also everything
+# IMPORTANT: use astyle 2.05 or later. Patch astyle if you use older version.
+# Older versions of astyle misparse the Qt "keywords" like foreach and Q_FOREACH, which
 # inside the parenthesis, leading to things like:
 # Q_FOREACH(const QString & it, l) // note the space after the '&'.
 #
