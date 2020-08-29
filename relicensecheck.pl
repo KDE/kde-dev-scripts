@@ -445,6 +445,7 @@ my %secondary_mail_addresses = (
     'thb@net-bembel.de' => 'tbaumgart',
     'trev@adblockplus.org' => 'palant',
     'tsdgeos@terra.es' => 'aacid',
+    'nicolas.fella@kdab.com' => 'nicolasfella',
 );
 
 my %ruletable;
