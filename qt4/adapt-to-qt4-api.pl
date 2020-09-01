@@ -132,7 +132,7 @@ while ($file = <$F>) {
 
     s!QMouseEvent::LeftButton!Qt::LeftButton!;
     s!QMouseEvent::RightButton!Qt::RightButton!;
-    s!QMouseEvent::MidButton!Qt::MiddleButton!;
+    s!QMouseEvent::MidButton!Qt::MidButton!;
 
     s!QWidget::NoFocus!Qt::NoFocus!g;
 
@@ -172,7 +172,7 @@ while ($file = <$F>) {
     s!\bSHIFT\b!Qt::SHIFT!g unless (/Qt::SHIFT/);
     s!\bLeftButton\b!Qt::LeftButton!g unless (/Qt::LeftButton/);
     s!\bRightButton\b!Qt::RightButton!g unless (/Qt::RightButton/);
-    s!\bMidButton\b!Qt::MiddleButton!g unless (/Qt::MidButton/);
+    s!\bMidButton\b!Qt::MidButton!g unless (/Qt::MidButton/);
     s!QWidget::TabFocus!Qt::TabFocus!;
     s!\bTabFocus\b!Qt::TabFocus!g unless (/Qt::TabFocus/);
    
