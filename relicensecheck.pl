@@ -424,6 +424,7 @@ my %secondary_mail_addresses = (
     'asmond@gmx.com' => 'asensi',
     'athurh@gmail.com' => 'athurhfree',
     'bero@arklinux.org' => 'bero',
+    'bhush94@gmail.com' => 'bshah',
     'caleb@gentoo.org' => 'ctennis',
     'cgiboudeaux@gmx.com' => 'cgiboudeaux',
     'christoph@maxiom.de' => 'cfeck',
