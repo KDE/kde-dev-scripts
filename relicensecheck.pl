@@ -434,6 +434,7 @@ my %secondary_mail_addresses = (
     'caleb@gentoo.org' => 'ctennis',
     'cgiboudeaux@gmx.com' => 'cgiboudeaux',
     'christoph@maxiom.de' => 'cfeck',
+    'kde@davidedmundson.co.uk' => 'davidedmundson',
     'devel@the-user.org' => 'schmidt-domine',
     'devriese@kde.org' => 'domi',
     'dvratil@redhat.com' => 'dvratil',
