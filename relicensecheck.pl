@@ -464,6 +464,7 @@ my %secondary_mail_addresses = (
     'richard@goteborg.utfors.se' => 'larkang',
     'schwarzerf@gmail.com' => 'schwarzer',
     'iamsergio@gmail.com' => 'smartins',
+    'sandsmark@samfundet.no' => 'sandsmark',
     'sune@vuorela.dk' => 'sune',
     'thb@net-bembel.de' => 'tbaumgart',
     'trev@adblockplus.org' => 'palant',
