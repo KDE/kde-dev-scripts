@@ -455,6 +455,7 @@ my %secondary_mail_addresses = (
     'knauss@kolabsys.com' => 'knauss',
     'kubito@gmail.com' => 'rkcosta',
     'lamarque@gmail.com' => 'lvsouza',
+    'lukas@kde.org' => 'lukas',
     'majewsky@gmx.net' => 'majewsky',
     'malte@kde.org' => 'malte',
     'mk-lists@email.de' => 'kaning',
