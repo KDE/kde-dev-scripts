@@ -87,10 +87,13 @@ fi
 
 oldinclguard=`echo $oldname | tr a-z A-Z`
 newinclguard=`echo $newname | tr a-z A-Z`
+oldinclguard_lower=`echo $oldname | tr A-Z a-z`
+newinclguard_lower=`echo $newname | tr A-Z a-z`
 
 # Update include guard
 if [ -f ${newfile}.h ]; then
     perl -pi -e "s/$oldinclguard/$newinclguard/g" $newfile.h
+    perl -pi -e "s/$oldinclguard_lower/$newinclguard_lower/g" $newfile.h
 fi
 if [ -f ${newfile}_p.h ]; then
     perl -pi -e "s/$oldinclguard/$newinclguard/g" ${newfile}_p.h
