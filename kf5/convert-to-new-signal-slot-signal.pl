@@ -33,10 +33,10 @@ sub rewriteConnectPrivateFunction($$$$$$$)
           $localSlotVariable = "()";
       } elsif ($slotArgument eq "(QUrl)") {
           $localSlotArgument = "(const QUrl &url)";
-          $localSlotVariable = "(url)";         
+          $localSlotVariable = "(url)";
       } elsif ($slotArgument eq "(KJob*)") {
           $localSlotArgument = "(KJob *job)";
-          $localSlotVariable = "(job)";         
+          $localSlotVariable = "(job)";
       } else {
          return undef;
       }
@@ -64,7 +64,7 @@ sub rewriteConnectFunction($$$$$$)
        $myNewLine = $indent . "connect($sender, $signal, $receiver, &$slot);\n";
     }
 }
- 
+
 
 # sets $_ if classname+function+arguments matches an overloaded signal (testSignal+testArguments)
 sub checkOverloadedSignal($$$$$)
@@ -189,10 +189,10 @@ sub initVariables
 sub addToVarName($$$)
 {
     my ($classname, $var, $ref_localvarname) = @_;
-    if (not $classname eq ":" and not $classname eq "return") { 
+    if (not $classname eq ":" and not $classname eq "return") {
       #If we found variable in header don't overwrite it
       #if (not defined $varname{$var}) {
-          ${$ref_localvarname}{$var} = ${classname}; 
+          ${$ref_localvarname}{$var} = ${classname};
           warn "new variable added: \'$var\' className :\'$classname\'\n";
       #}
    }
@@ -228,7 +228,7 @@ sub checkPrivateSlot($)
         return defined $privateSlots{$class}{$slot} ? "slot is a Q_PRIVATE_SLOT" : undef;
     }
     warn "Unparsable fullslot: $fullslot\n";
-    return undef;  
+    return undef;
 }
 
 # extract argument from signal
@@ -240,7 +240,7 @@ sub extraArgumentFunctionName($)
     my $regexpArgument = qr/
                     ^\(.*
                     ${functionUtilkde::paren_begin}1${functionUtilkde::paren_end}
-                    \s*\).*$                        
+                    \s*\).*$
                     /x; # /x Enables extended whitespace mode
     if ( my ($argument2) = $line =~ $regexpArgument) {
        $argument = $argument2;
@@ -255,7 +255,7 @@ sub extractFunctionName($)
     my $regexpSignal = qr/
                     ^\(\s*
                     (\w+)                      # (1) functionname
-                    .*$                        
+                    .*$
                     /x; # /x Enables extended whitespace mode
     if ( my ($functionname) = $line =~ $regexpSignal) {
        $line = $1;
@@ -343,7 +343,8 @@ sub parseHeaderFile($)
     my $header = functionUtilkde::headerName($file);
     my $inslots = 0;
     if (!defined $header) {
-       warn "new header found for file \'$file\'\n";
+       warn "no header found for file \'$file\'\n";
+       return;
     } else {
        warn "Parse header file: $header \n";
     }
@@ -427,13 +428,13 @@ sub parseHeaderFile($)
 }
 
 foreach my $file (@ARGV) {
-    
-    # 1) initialize variable before to parse file
+
+    # 1) initialize variables before parsing files
     initVariables();
-    
+
     # 2) Search all ui file and parse them
     functionUtilkde::extraVariableFromUiFile(\%varname, \%uiclassname);
-    
+
     # 3) read header and parse it.
     parseHeaderFile($file);
 
@@ -470,7 +471,7 @@ foreach my $file (@ARGV) {
            (.*)$                         # (5) afterreg
            /x; # /x Enables extended whitespace mode
         if (my ($indent, $left, $var, $classname, $afterreg) = $_ =~ $regexp) {
-           $classname = functionUtilkde::cleanSpace($classname); 
+           $classname = functionUtilkde::cleanSpace($classname);
            $var = functionUtilkde::cleanSpace($var);
            #If we found variable in header don't overwrite it
            if (not defined $varname{$var} and not defined $privateVariableWithPointer{$var}) {
@@ -501,43 +502,43 @@ foreach my $file (@ARGV) {
 
 
         if ( /^\s*([:\w]+)::([~\w]+).*/ ) {
-	   my $currentClass = $1;
-	   my $currentFunctionName = $2;
-	   #warn "We are in a constructor: currentClass: \'$currentClass\', function name \'$currentFunctionName\'\n";
-	   if (defined $listOfClassName{$currentClass}) {
-               #warn "it's an header class\n";
-	       $headerclassname = $currentClass;
-	   }
-           
+            my $currentClass = $1;
+            my $currentFunctionName = $2;
+            #warn "We are in a constructor: currentClass: \'$currentClass\', function name \'$currentFunctionName\'\n";
+            if (defined $listOfClassName{$currentClass}) {
+                #warn "it's an header class\n";
+                $headerclassname = $currentClass;
+            }
+
         } elsif ( /^([:\w]+)\s*\*\s*(\w+)::([~\w]+)\.*/ || /^([:\w]+)\s*(\w+)::([~\w]+)\.*/) {
-	   my $currentClass = $2;
-	   my $currentFunctionName = $3;
-	   my $currentReturnFunction = $1;
-	   #warn "We are in a function : currentClass: \'$currentClass\', function name \'$currentFunctionName\', return type \'$currentReturnFunction\'\n";
-	   if (defined $listOfClassName{$currentClass}) {
-               #warn "it's an header class\n";
-	       $headerclassname = $currentClass;
-	   }	   
-	}
-        
+            my $currentClass = $2;
+            my $currentFunctionName = $3;
+            my $currentReturnFunction = $1;
+            #warn "We are in a function : currentClass: \'$currentClass\', function name \'$currentFunctionName\', return type \'$currentReturnFunction\'\n";
+            if (defined $listOfClassName{$currentClass}) {
+                #warn "it's an header class\n";
+                $headerclassname = $currentClass;
+            }
+        }
+
         # Verify comment
         if ( defined $tojoin) {
-           
+
            $toorig .= $_;
-           
+
            $tojoin =~ s/\s*\n$//; # remove any trailing space
            $_ =~ s/^\s*/ /; # replace indent with single space
            $_ = $tojoin . $_;
            warn "look at end ? \'$_\'\n";
            if ( /;\s*$/ || /;\s*\/\*\.*\*\// || /;\s*\n$/) {
-             undef $tojoin;          
-           } 
+             undef $tojoin;
+           }
         }
-        
+
         my $regexpConnect = qr/
           ^(\s*(?:[\-\>:\w]+)?)           # (1) Indentation, optional classname or variable name
           connect\s*
-          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)         
+          ${functionUtilkde::paren_begin}2${functionUtilkde::paren_end}  # (2) (args)
           ;/x; # /x Enables extended whitespace mode
         if (my ($indent, $argument) = $_ =~ $regexpConnect ) {
            if (defined $activateDebug) {
@@ -554,7 +555,7 @@ foreach my $file (@ARGV) {
                                  (.*)$                       # (7) after
                                  /x;
            if ( ($sender, $signal, $receiver, $signalorslot, $slot, $lastArgument, $after) = $argument =~ $connectArgument_regexp) {
-           
+
               # We can have SIGNAL/SIGNAL or SIGNAL/SLOT
               if (($signalorslot eq "SIGNAL") or ($signalorslot eq "SLOT")) {
                 warn "11Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
@@ -610,7 +611,7 @@ foreach my $file (@ARGV) {
                     $signal = cast_overloaded_signal($varname{$sender}, $signalArgument, $signal);
                   } elsif ( defined $privateVariableWithPointer{$sender} ) {
                     $signal = cast_overloaded_signal($privateVariableWithPointer{$sender}, $signalArgument, $signal);
-                    $classWithQPointer = 1;                    
+                    $classWithQPointer = 1;
                   } elsif ( defined $varnamewithpointer{$sender} ) {
                     $signal = cast_overloaded_signal($varnamewithpointer{$sender}, $signalArgument, $signal);
                     $classWithQPointer = 1;
@@ -748,7 +749,7 @@ foreach my $file (@ARGV) {
                        }
                   }
                 }
-                
+
                 if (defined $activateDebug) {
                     warn "AFTER Without arguments: SENDER: \'$sender\'  SIGNAL: \'$signal\' RECEIVER: \'$receiver\' SLOT: \'$slot\' \n";
                 }
@@ -826,7 +827,7 @@ foreach my $file (@ARGV) {
 
                                 if ( defined $varname{$varui} ) {
                                    $signal = cast_overloaded_signal($varname{$varui}, $signalArgument, $signal);
- 
+
                                   warn "vartype found $varname{$varui} \n";
                                 } else {
                                   $notpossible = "unknown variable $varui";
@@ -880,8 +881,8 @@ foreach my $file (@ARGV) {
              warn "It's perhaps a multi line " . $_ . "\n";
              $tojoin = $_;
              $toorig = $_;
-             $_ = ""; 
-          } 
+             $_ = "";
+          }
         }
         $currentLine++;
         $modified ||= $orig ne $_;
