@@ -296,7 +296,8 @@ sub extraVariableFromLine($)
         addToVarName($classname, $var, \%varname);
     }
     # Foo *toto =
-    if ( /^\s*([:_\w]+)\s*\*\s*([_\w]+)\s*=/) {
+    # Foo *const var =
+    if ( /^\s*([:_\w]+)\s*\*\s*(?:const )?([_\w]+)\s*=/) {
         my $classname = $1;
         my $var = $2;
         #print STDERR "CASE 6. classname='$classname'\n";
