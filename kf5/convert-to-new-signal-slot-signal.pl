@@ -117,7 +117,7 @@ sub cast_overloaded_signal($$$)
     } elsif ( $classname =~ /QDoubleSpinBox/ ) {
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(double)");
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(const QString &)");
-    } elsif (($classname =~ /SpinBox/) ) {
+    } elsif (($classname =~ /QSpinBox/) ) {
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(int)");
         checkOverloadedSignal($classname, $function, $argument, "valueChanged", "(const QString &)");
     } elsif (($classname eq "KTabWidget") or ($classname =~ /Tab/)) { # has a virtual closeRequest(int) but that's not a signal
