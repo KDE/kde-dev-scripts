@@ -25,7 +25,7 @@ use List::Util qw(any);
 ### 5. Include '+eV' if you are okay with the KDE e.V. deciding on a future
 ###    licensing change to your code if necessary.
 ###
-### 5. Include 'CCBYSA4' if you are okay with contributions you've made under
+### 6. Include 'CCBYSA4' if you are okay with contributions you've made under
 ###    "GNU FDL" being relicensed as "Creative Commons Attribution-ShareAlike 4.0 International".
 ### For more information, see https://community.kde.org/Guidelines_and_HOWTOs/Relicensing/KDE_Relicensing
 
