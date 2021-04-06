@@ -484,6 +484,7 @@ my %secondary_mail_addresses = (
     'neoclust.kde@free.fr' => 'nlecureuil',
     'nyblom@kde.org' => 'tnyblom',
     'olav@vitters.nl' => 'vitters',
+    'pointedstick@zoho.com' => 'ngraham',
     'richard@goteborg.utfors.se' => 'larkang',
     'schwarzerf@gmail.com' => 'schwarzer',
     'iamsergio@gmail.com' => 'smartins',
