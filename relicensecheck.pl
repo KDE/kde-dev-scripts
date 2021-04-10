@@ -455,6 +455,7 @@ my %secondary_mail_addresses = (
     'devel@the-user.org' => 'schmidt-domine',
     'devriese@kde.org' => 'domi',
     'dvratil@redhat.com' => 'dvratil',
+    'elvis.angelaccio@kdemail.net' => 'elvisangelaccio',
     'ervin+bluesystems@kde.org' => 'ervin',
     'faure+bluesystems@kde.org' => 'dfaure',
     'git@the-user.org' => 'schmidt-domine',
