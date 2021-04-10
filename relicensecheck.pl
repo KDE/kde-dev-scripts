@@ -64,6 +64,7 @@ my %license_table = (
     'jriddell'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'kezik'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'kleag'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', 'CCBYSA4' ],
+    'lesliezhai'    => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'lnj'           => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'logixoul'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
     'lorendb'       => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+', '+eV', 'CCBYSA4' ],
@@ -495,6 +496,7 @@ my %secondary_mail_addresses = (
     'trev@adblockplus.org' => 'palant',
     'tsdgeos@terra.es' => 'aacid',
     'nicolas.fella@kdab.com' => 'nicolasfella',
+    'xiangzhai83@gmail.com' => 'lesliezhai',
 );
 
 my %ruletable;
