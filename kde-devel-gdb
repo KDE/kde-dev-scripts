@@ -321,6 +321,11 @@ define identifyq4object
 end
 
 # You print QString's too often to type the long name :-)
+# Change when Qt6 is the default
+define qs
+  printq5string $arg0
+end
+
 define qs5
   printq5string $arg0
 end
