@@ -18,12 +18,6 @@ set history filename ~/.gdb_history
 # Show the real classname of object instances - e.g. (Kded *) 0x8073440 instead of (class QObject *) 0x8073440
 set print object
 
-define printqstring
-    printqstringdata ($arg0).d
-end
-document printqstring
-  Prints the contents of a Qt3 QString
-end
 define printq4string
     printq4stringdata ($arg0).d
 end
@@ -35,22 +29,6 @@ define printq5string
 end
 document printq5string
   Prints the contents of a Qt5 QString
-end
-
-define printqstringdata
-    set $i=0
-    set $d = (QStringData *)($arg0)
-    while $i < $d->len
-        printf "%c", (char)($d->unicode[$i++].ucs & 0xff)
-    end
-    printf "\n"
-end
-document printqstringdata
-  Prints the contents of a QStringData
-  This is useful when the output of another command (e.g. printqmap)
-  shows {d = 0xdeadbeef} for a QString, i.e. the qstringdata address
-  instead of the QString object itself.
-  printqstring $s and printqstringdata $s.d are equivalent.
 end
 
 define printq4stringdata
@@ -111,20 +89,6 @@ define print_utf8_char
 end
 document print_utf8_char
   Prints a unicode value (stored as an unsigned short) as UTF-8.
-end
-
-define printqstring_utf8
-   set $i=0
-   set $s = $arg0
-   while $i < $s.d->len
-     set $uc = (unsigned short) $s.d->unicode[$i++].ucs
-     print_utf8_char $uc
-   end
-   printf "\n"
-end
-document printqstring_utf8
-  Prints the contents of a Qt3 QString encoded in utf8.
-  Nice if you run your debug session in a utf8 enabled terminal.
 end
 
 define printq4string_utf8
@@ -237,30 +201,6 @@ document printqptrvectoritem
   Usage: printqptrvectoritem vector type index
 end
 
-define printq3map
-    set $map = $arg0
-    set $len = $map.sh->node_count
-    output $len
-    printf " items in the map\n"
-    set $header = $map.sh->header
-    # How to parse the key and value types from whatis?
-    set $it = (QMapNode<$arg1,$arg2> *)($header->left)
-    while $it != $header
-        printf " key="
-        output $it->key
-        printf " value="
-        output $it->data
-        printf "\n"
-        _qmapiterator_inc $it
-        set $it = (QMapNode<$arg1,$arg2> *)($ret)
-    end
-end
-document printq3map
-  Prints the full contents of a Qt 3 QMap
-  Usage: 'printq3map map keytype valuetype'
-end
-
-
 define printq4map
     set $map = $arg0
     set $len = $map.d->size
@@ -289,28 +229,6 @@ end
 document printq4map
   Prints the full contents of a Qt 4 QMap
   Usage: 'printq4map map keytype valuetype'
-end
-
-define _qmapiterator_inc
-    set $ret = $arg0
-    if $ret->right != 0
-        set $ret = $ret->right
-        while $ret->left != 0
-            set $ret = $ret->left
-        end
-    else
-        set $y = $ret->parent
-        while $ret == $y->right
-            set $ret = $y
-            set $y = $y->parent
-        end
-        if $ret->right != $y
-            set $ret = $y
-        end
-    end
-end
-document _qmapiterator_inc
-  Increment a qmap iterator (internal method, used by printq3map)
 end
 
 define printqptrlist
@@ -411,10 +329,6 @@ define qs4
   printq4string $arg0
 end
 
-define qs3
-  printqstring $arg0
-end
-
 define printqdatetime
   printqdate ($arg0).d
   printqtime ($arg0).t
@@ -444,4 +358,3 @@ define fs
        finish
        step
 end
-
