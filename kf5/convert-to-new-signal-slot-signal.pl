@@ -523,6 +523,7 @@ foreach my $file (@ARGV) {
         } elsif ( /^\s*class ([:\w]+)/) {
             # class defined in the .cpp file
             $headerclassname = $1;
+            $listOfClassName{$headerclassname} = 1;
         }
 
         # Verify comment
