@@ -38,13 +38,15 @@ fi
 # Update build system
 if test -f CMakeLists.txt; then
     buildsystemfile=CMakeLists.txt
+    separator=
 else
     buildsystemfile=`ls -1 *.pro 2>/dev/null | head -n 1`
+    separator=' \\'
 fi
 if test -n "$buildsystemfile"; then
-    perl -pi -e '$_ .= "$1'$newfile.cpp'\n" if (m/^(\s*)'$oldfile'\.cpp/)' $buildsystemfile
-    perl -pi -e '$_ .= "$1'$newfile.h'\n" if (m/^(\s*)'$oldfile'\.h/)' $buildsystemfile
-    perl -pi -e '$_ .= "$1'$newfile.ui'\n" if (m/^(\s*)'$oldfile'\.ui/)' $buildsystemfile
+    perl -pi -e '$_ .= "$1'$newfile.cpp"$separator"'\n" if (m/^(\s*)'$oldfile'\.cpp/)' $buildsystemfile
+    perl -pi -e '$_ .= "$1'$newfile.h"$separator"'\n" if (m/^(\s*)'$oldfile'\.h/)' $buildsystemfile
+    perl -pi -e '$_ .= "$1'$newfile.ui"$separator"'\n" if (m/^(\s*)'$oldfile'\.ui/)' $buildsystemfile
 fi
 
 # Rename class
