@@ -67,6 +67,7 @@ do
        new=`echo "$new" |perl -pi -e 's!KIO/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KABC/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KMime/!!g'`;
+       new=`echo "$new" |perl -pi -e 's!KMBox/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KParts/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KNS3/!!g'`;
        new=`echo "$new" |perl -pi -e 's!KNSCore/!!g'`;
