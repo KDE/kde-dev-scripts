@@ -27,6 +27,13 @@
 }
 
 {
+    addr8/dl_catch_error
+    MemCheck:Addr8
+    ...
+    fun:_dl_catch_error*
+}
+
+{
     strchr/libc/_dl_catch_error
     MemCheck:Cond
     fun:strchr
@@ -177,6 +184,15 @@
    obj:/*lib*/libz.so.1.2.*
    ...
    fun:inflateInit2*
+}
+
+# Qt uses the waitid syscall in strange ways, to detect forkfd support
+{
+   sys_waitid from qtbase/src/3rdparty/forkfd/forkfd_linux.c
+   Memcheck:Param
+   waitid(infop)
+   fun:syscall
+   fun:_ZL10sys_waitidiiP9siginfo_tiP6rusage
 }
 
 # Leakcheck suppressions
