@@ -1,4 +1,3 @@
-
 Stuff in this directory:
 
 === DEBUGGING SUPPORT
@@ -28,7 +27,7 @@ create_makefile Create the Makefile in a directory containing a Makefile.am
 
 create_makefiles The recursive version of it - needs create_makefile.
 
-fixheaders      Adds header files as it recognices make error output
+fixheaders      Adds header files as it recognises make error output
 
 fixkdeincludes	Tries to reduce the number of includes in KDE source files
 
@@ -62,15 +61,15 @@ qt4/		Directory containing scripts used to automatically convert
 
 === USEFUL DATA FOR EXTERNAL PROGRAMS
 
-kde-devel-emacs.el An emacs file that contains many helpful functions and keybindings
+kde-devel-emacs.el An emacs file that contains many helpful functions and key bindings
 		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
 
 kde-devel-gdb	A gdb macro definition file, to e.g. print QStrings from gdb.
 
-kde-devel-vim.vim A vim script that contains many helpful functions and keybindings
+kde-devel-vim.vim A vim script that contains many helpful functions and key bindings
 		for vim-using KDE developers.
 
-kde.supp	Some valgrind suppressions handy for ignoring stuff we don't
+kde.supp	Some valgrind suppressions handy for ignoring stuff we do not
 		care about when valgrinding kde applications
 
 completions/	Contains useful scripts to enhance the auto-complete feature of some shells.
@@ -84,7 +83,7 @@ alldcop.rb	Shows an pseudo-XML representation of the DCOP interfaces for
 authors2xml.pl	Extract author information from C++ files and print it out
 		in DocBook format as a list
 
-makeobj		Script around make which basicly checks if it's in srcdir
+makeobj		Script around make which basically checks if it is in srcdir
 		or in builddir and changes to the right directory for
 		calling /usr/bin/make
 
@@ -95,7 +94,7 @@ extractattr	Same as extractrc, but for use by Scripty.
 findmissingcrystal Looks at Crystal icons to find ones which are still
 		unchanged from kdeclassic.
 
-zonetab2pot.py  Reads timezone list as its first argument or from
+zonetab2pot.py  Reads a time zone list as its first argument or from
 		/usr/share/zoneinfo/zone.tab, and converts it to a PO file
 		template.
 
@@ -129,17 +128,17 @@ rename_source_files Python script to automatically rename a file in Subversion,
 === SOURCE CONTROL UTILITIES (CVS and Subversion)
 === All CVS utilities have a corresponding svn version.
 
-colorcvs        Colorizes cvs commands.
+colorcvs        Colourises CVS commands.
 
 create_cvsignore Create a .cvsignore file (using the contents of Makefile.am)
 
 cvs-clean	Recursively wipes out everything not registered in the CVS
 		server, starting from the current directory.
 
-cvs2dist	Create a standalone source distribution tarball for an app
+cvs2dist	Create a stand-alone source distribution tarball for an app
 		in a KDE CVS module.
 
-cvsaddcurrentdir Add all files in and below the current dir to cvs.
+cvsaddcurrentdir Add all files in and below the current dir to CVS.
                  *.c, *.h, *.C, *.cpp, *.cc are added automatically,
                  *~, *.o, *.so, *.lo, *.la, .libs/, .deps/, .#* are ignored.
                  You will be asked for the remaining files.
@@ -171,23 +170,23 @@ cvsremovealltags Remove all tags from a CVS file. Use with care, and for instanc
 cvsrevertlast	Reverts all the files given on the command by one version, then
 		you can commit them.
 
-cvsbackport	Backport the last commit in HEAD, to a branch.
+cvsbackport	Back-port the last commit in HEAD, to a branch.
 
-cvsforwardport  Forwardport the last commit in a branch to HEAD
+cvsforwardport  Forward-port the last commit in a branch to HEAD
 
 pruneemptydirs	Detects stale source dirs in a CVS tree
 
 cvslastreferenced Goes through the whole history of a file to find all modifications
-                referencing a specific string.  It's useful if you want to know
+                referencing a specific string.  It is useful if you want to know
                 when a function has been removed/modified/added to a file if a
-                recent cvs annotate doesn't reference it anymore. 
+                recent cvs annotate does not reference it any more. 
 
-wcgrep Useful for grep'ing in a subversion working copy.
+wcgrep Useful for grepping in a subversion working copy.
 
 === KDE BUILD SCRIPTS
 
 build-progress.sh Displays the progress of kde-build, times needed to complete each
-		step. And sets the titlebar of the terminal to the directory that
+		step. And sets the title bar of the terminal to the directory that
 		make is processing 
 
 kdesrc-build	Updates and recompiles a local KDE source tree.
@@ -200,7 +199,7 @@ gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
 ----------------
 Looking to add a script?
 
-Just add it to this README. For easy man pages see the perlpod manpage; the
+Just add it to this README. For easy man pages see the perlpod man page; the
 man page for many of these tools is in the script itself.
 
 $Id$
