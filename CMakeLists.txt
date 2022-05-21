@@ -20,6 +20,7 @@ if(UNIX)
 
 if(KF5DocTools_FOUND)
   add_subdirectory(doc)
+  kdoctools_install(po)
 endif()
 
 install(PROGRAMS
