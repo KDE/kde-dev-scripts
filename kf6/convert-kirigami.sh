@@ -9,4 +9,4 @@ perl -0777 -p -i -e 's/(BasicListItem \{[^\}]*?)(icon): /\1icon.name: /sg' $1
 # rename import
 perl -p -i -e 's/import QtGraphicalEffects 1\.\d+/import Qt5Compat.GraphicalEffects 6.0/' $1
 # remove obsolete samples: property
-perl -0777 -p -i -e 's/(DropShadow \{[^\}].*?)\n\s*samples: \d+/\1/sg' $1
+perl -0777 -p -i -e 's/((?:DropShadow|GaussianBlur) \{[^\}].*?)\n\s*samples: .*?\n/\1\n/sg' $1
