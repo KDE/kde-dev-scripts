@@ -13,7 +13,10 @@ QQC2_NS=`cat $1 | grep '^import QtQuick.Controls 2' | grep ' as ' | perl -p -e '
 #
 
 # platform dialogs
-perl -p -i -e 's/^import QtQuick.Dialogs 1.0/import Qt.labs.platform 1.1/' $1
+perl -p -i -e 's/^import QtQuick.Dialogs 1.\d/import Qt.labs.platform 1.1/' $1
+perl -0777 -p -i -e 's/(MessageDialog \{[^\}]*?on(:?Apply|Discard)): /\1Clicked: /sg' $1
+perl -0777 -p -i -e 's/(MessageDialog \{[^\}]*?)(standardButtons): /\1buttons: /sg' $1
+perl -p -i -e 's/StandardButton\./MessageDialog./g' $1
 
 # migrate from ApplicationWindow.overlay to Overlay.overlay
 # (needs current QQC2 import version!)
