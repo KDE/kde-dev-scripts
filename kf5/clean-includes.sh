@@ -10,25 +10,25 @@ remove_include() {
 }
 
 file_header() {
-    filewithoutext=`echo "$file" |perl -pi -e 's!\.h!!'`;
-    if test $filewithoutext != $file ; then
+    filewithoutext=$(echo "$file" |perl -pi -e 's!\.h!!');
+    if test "$filewithoutext" != "$file" ; then
        echo "$file is a header file";
-       existInclude=`grep $newname $file|grep "#include"|wc -l`;
+       existInclude=$(grep -c "$newname" "$file"|grep "#include");
        echo "$newname : $existInclude";
-       if test $existInclude != 0 ; then 
-           newNameClass=`grep "$newname\s*\*"  $file|wc -l`;
+       if test "$existInclude" != 0 ; then
+           newNameClass=$(grep -c "$newname\s*\*"  "$file");
            echo "number $number ";
            echo "newNameClass $newNameClass";
-           number=$(expr $number - 1);
-           if test $number = $newNameClass; then
+           number=$(expr "$number" - 1);
+           if test "$number" = "$newNameClass"; then
               remove_include;
-              classNumber=`grep "class"  $file|wc -l`;
-              if test $classNumber != 0 ; then
-                 perl -pi  -e "s!class!class $newname;\nclass!g" $file;
-                 perl -pi -e "s!#include!#include <$newname>\n#include!g" $filewithoutext.cpp;
+              classNumber=$(grep -c "class"  "$file");
+              if test "$classNumber" != 0 ; then
+                 perl -pi  -e "s!class!class $newname;\nclass!g" "$file";
+                 perl -pi -e "s!#include!#include <$newname>\n#include!g" "$filewithoutext".cpp;
               else
-                 perl -pi -e "s!#include!class $newname;\n#include!g" $file;
-                 perl -pi -e "s!#include!#include <$newname>\n#include!g" $filewithoutext.cpp;
+                 perl -pi -e "s!#include!class $newname;\n#include!g" "$file";
+                 perl -pi -e "s!#include!#include <$newname>\n#include!g" "$filewithoutext".cpp;
               fi
            fi
        fi
@@ -42,204 +42,204 @@ do
      continue;
    fi
    #echo $file;
-   if test -d $file ; then
+   if test -d "$file" ; then
           echo "Check include into directory : $file";
           path=$file;
           test_include;
    else
        #echo "search in file $file";
-       include=`grep "#include" $file`;
+       include=$(grep "#include" "$file");
        #echo "$include ";
-       new=`echo "$include" |perl -pi -e 's!#include !!'`;
-       new=`echo "$new" |perl -pi -e 's!\\"!!g'`;
-       new=`echo "$new" |perl -pi -e 's!<!!g'`;
-       new=`echo "$new" |perl -pi -e 's!>!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtCore/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtGui/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!Qt3Support/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtDBus/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KDE/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtTest/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtSvg/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtXml/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!Plasma/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KNS/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIO/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KABC/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KMime/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KMBox/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KParts/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KNS3/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KNSCore/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KPIMIdentities/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KCalCore/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KPIMUtils/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KCalUtils/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KontactInterface/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KHolidays/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KWallet/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtNetwork/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KJobWidgets/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KPIMTextEdit/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtSql/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtWidgets/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtPrintSupport/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtQuick/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtDBus/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtDeclarative/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtDesigner/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtQml/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtMultimedia/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtConcurrent/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KContacts/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIdentityManagement/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!QGpgME/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KDAV/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!Qt3DCore/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!Qt3DRender/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KSieveUi/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KTNEF/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KCodecs/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KSMTP/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KGAPI/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KItinerary/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KRunner/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIMAP/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KLDAP/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KCoreAddons/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KdepimDBusInterfaces/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KScreen/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KQuickAddons/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIPI/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KIOWidgets/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KActivities/Stats/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KI18n/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KTextEditor/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KPackage/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KPeople/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KActivities/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KFileMetaData/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KCalendarCore/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KDeclarative/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KUserFeedback/!!g'`;
-       new=`echo "$new" |perl -pi -e 's!KAlarmCal/!!g'`;
-       newname=`echo "$new" |perl -pi -e 's!.h!!'`;
+       new=$(echo "$include" |perl -pi -e 's!#include !!');
+       new=$(echo "$new" |perl -pi -e 's!\\"!!g');
+       new=$(echo "$new" |perl -pi -e 's!<!!g');
+       new=$(echo "$new" |perl -pi -e 's!>!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtCore/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtGui/!!g');
+       new=$(echo "$new" |perl -pi -e 's!Qt3Support/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtDBus/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KDE/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtTest/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtSvg/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtXml/!!g');
+       new=$(echo "$new" |perl -pi -e 's!Plasma/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KNS/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KIO/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KABC/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KMime/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KMBox/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KParts/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KNS3/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KNSCore/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KPIMIdentities/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KCalCore/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KPIMUtils/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KCalUtils/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KontactInterface/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KHolidays/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KWallet/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtNetwork/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KJobWidgets/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KPIMTextEdit/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtSql/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtWidgets/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtPrintSupport/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtQuick/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtDBus/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtDeclarative/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtDesigner/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtQml/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtMultimedia/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtConcurrent/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KContacts/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KIdentityManagement/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g');
+       new=$(echo "$new" |perl -pi -e 's!QGpgME/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KDAV/!!g');
+       new=$(echo "$new" |perl -pi -e 's!Qt3DCore/!!g');
+       new=$(echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g');
+       new=$(echo "$new" |perl -pi -e 's!Qt3DRender/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KSieveUi/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KTNEF/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KCodecs/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KSMTP/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KGAPI/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KItinerary/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KRunner/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KIMAP/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KLDAP/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KCoreAddons/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KdepimDBusInterfaces/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KScreen/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KQuickAddons/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KIPI/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KIOWidgets/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KActivities/Stats/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KI18n/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KTextEditor/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KPackage/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KPeople/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KActivities/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KFileMetaData/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KCalendarCore/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KDeclarative/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KUserFeedback/!!g');
+       new=$(echo "$new" |perl -pi -e 's!KAlarmCal/!!g');
+       newname=$(echo "$new" |perl -pi -e 's!.h!!');
 
        #echo "before go : $new";
        for i in $new ;
        do
           #echo $i;
-          newname=`echo "$i" |perl -pi -e 's!.h!!'`;
-   
-          if test $newname = $i ; then
+          newname=$(echo "$i" |perl -pi -e 's!.h!!');
+
+          if test "$newname" = "$i" ; then
              #echo "egal $i";
-             number=`grep $i $file|wc -l`;
+             number=$(grep -c "$i" "$file");
              #echo "number $number";
-             if test $number = 1 ; then
+             if test "$number" = 1 ; then
                 #echo "$file" |xargs perl -pi -e "s!#include <$newname>\n!!";
                 echo "number = 1 $newname class $file";
-                firstCar=`echo "$i" | perl -pi -e "s/^(.)(.*)(.)$/\1/"`;
+                firstCar=$(echo "$i" | perl -pi -e "s/^(.)(.*)(.)$/\1/");
 		echo "first car : $firstCar";
-		if test $firstCar = "Q" || test $firstCar = "K" ; then
+		if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
                         case $newname in
                         QtDBus)
-                           number=`grep QDBusInterface  $file|wc -l`;
+                           number=$(grep -c QDBusInterface  "$file");
                            echo "QDBusInterface $number";
-                           if test $number = 0 ; then
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QApplication)
-                           number=`grep qApp  $file|wc -l`;
+                           number=$(grep -c qApp  "$file");
                            echo "qApp $number";
-                           if test $number = 0 ; then
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
 			QGuiApplication)
-                           number=`grep qGuiApp  $file|wc -l`;
+                           number=$(grep -c qGuiApp  "$file");
                            echo "qApp $number";
-                           if test $number = 0 ; then
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QDesktopWidget)
-                           number=`grep "Application::desktop"  $file|wc -l`;
-                           if test $number = 0 ; then
-				number=`egrep "qApp->desktop()|kApp->desktop()"  $file|wc -l`;
-                                if test $number = 0 ; then
+                           number=$(grep -c "Application::desktop"  "$file");
+                           if test "$number" = 0 ; then
+				number=$(grep -Ec "qApp->desktop()|kApp->desktop()"  "$file");
+                                if test "$number" = 0 ; then
                                    remove_include;
                                 fi
                            fi
                         ;;
          		QDBusArgument)
-                           number=`grep "qdbus_cast"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -c "qdbus_cast"  "$file");
+                           if test "$number" = 0 ; then
                                remove_include;
                            fi
                         ;;
 			QDBusPendingCall)
-                           number=`grep "QDBusConnection::sessionBus().asyncCall"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -c "QDBusConnection::sessionBus().asyncCall"  "$file");
+                           if test "$number" = 0 ; then
                                remove_include;
                            fi
                         ;;
 
             		QDBusMetaType)
-                           number=`grep "qDBusRegisterMetaType"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -c "qDBusRegisterMetaType"  "$file");
+                           if test "$number" = 0 ; then
                                remove_include;
                            fi
                         ;;
 
                         QScrollBar)
-                           number=`grep "verticalScrollBar()"  $file|wc -l`;
-                           if test $number = 0 ; then
-                                number=`grep "horizontalScrollBar()"  $file|wc -l`;
-                                if test $number = 0 ; then
+                           number=$(grep -c "verticalScrollBar()"  "$file");
+                           if test "$number" = 0 ; then
+                                number=$(grep -c  "horizontalScrollBar()"  "$file");
+                                if test "$number" = 0 ; then
                                    remove_include;
                                 fi
                            fi
                         ;;
                         QClipboard)
-                           number=`egrep "Application::clipboard|clipboard()"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -Ec "Application::clipboard|clipboard()"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QMetaType)
-                           number=`grep "Q_DECLARE_METATYPE"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -c "Q_DECLARE_METATYPE"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         KLocale)
-                           number=`grep "i18n"  $file|wc -l`;
-                           if test $number = 0 ; then
-                                number=`grep "locale()"  $file|wc -l`;
-                                if test $number = 0 ; then
+                           number=$(grep  -c "i18n"  "$file");
+                           if test "$number" = 0 ; then
+                                number=$(grep  -c "locale()"  "$file");
+                                if test "$number" = 0 ; then
                                    remove_include;
                                 fi
                            fi
                         ;;
                         KActionCollection)
-                           number=`grep "actionCollection"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "actionCollection"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         KApplication)
-                           number=`grep '\bkapp\b'  $file|wc -l`;
+                           number=$(grep  -c '\bkapp\b'  "$file");
                            echo "qApp $number";
-                           if test $number = 0 ; then
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
-                        ;;			
+                        ;;
                         KDebug)
                         ;;
                         KPluginFactory)
@@ -247,49 +247,46 @@ do
                         KPluginLoader)
                         ;;
                         KXMLGUIFactory)
-                           number=`grep "factory()"  $file|wc -l`;
-                           if test $number = 0 ; then
-                                remove_include;
+                           number=$(grep  -c "factory()"  "$file");
+                           if test "$number" = 0 ; then
+                                number=$(grep  -c "guiFactory()"  "$file");
+                                if test "$number" = 0 ; then
+                                     remove_include;
+                                fi
                            fi
                         ;;
                         KGenericFactory)
-                           number=`grep "K_EXPORT_PLUGIN"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "K_EXPORT_PLUGIN"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QCoreApplication)
-                           number=`grep "qApp"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "qApp"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QTreeView)
                         ;;
-                        
-                        KToolBar)
-                           number=`grep "toolbar()"  $file|wc -l`;
-                           if test $number = 0 ; then
-                                remove_include;
-                           fi
-                        ;;
+
                         QDateTime)
-                           number=`grep "QDate::currentDate"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "QDate::currentDate"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         KLineEdit)
-                           number=`grep "lineEdit()"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "lineEdit()"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QDBusConnectionInterface)
                         ;;
                         KLocalizedString)
-                           number=`egrep "i18n|I18N_NOOP"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -E "i18n|I18N_NOOP"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
@@ -298,101 +295,101 @@ do
                         QAbstractItemView)
                         ;;
                         QMetaEnum)
-                           number=`grep "enumerator"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "enumerator"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
- 
+
                         QLayout)
-                           number=`grep "layout()"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "layout()"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QAction)
-                           number=`grep "\baddAction\b"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "\baddAction\b"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QTextDocument)
-                           number=`grep "Qt::escape"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "Qt::escape"  "$file");
+                           if test "$number" = 0 ; then
                                 remove_include;
                            fi
                         ;;
                         QHeaderView)
-                           number=`grep "header()"  $file|wc -l`;
-                           if test $number = 0 ; then
-                                number=`grep "horizontalHeader()" $file|wc -l`;
-                                if test $number = 0 ; then
-                                   number=`grep "verticalHeader()" $file|wc -l`;
-                                   if test $number = 0 ; then
+                           number=$(grep  -c "header()"  "$file");
+                           if test "$number" = 0 ; then
+                                number=$(grep  -c "horizontalHeader()" "$file");
+                                if test "$number" = 0 ; then
+                                   number=$(grep  -c "verticalHeader()" "$file");
+                                   if test "$number" = 0 ; then
                                       remove_include;
                                    fi
                                fi
                            fi
                         ;;
                         KRecentFilesAction)
-                           number=`grep "KStandardAction::openRecent" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "KStandardAction::openRecent" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         KStatusBar)
-                           number=`grep "statusBar()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "statusBar()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QStatusBar)
-                           number=`grep "statusBar()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "statusBar()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         KGlobal)
-                           number=`grep "K_GLOBAL_STATIC" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "K_GLOBAL_STATIC" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         KStandardDirs)
-                           number=`grep "KGlobal::dirs()->" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "KGlobal::dirs()->" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QTabBar)
-                           number=`grep "tabBar()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "tabBar()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         KCompletionBox)
-                           number=`grep "completionBox()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "completionBox()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
 
                         KIconLoader)
-                           number=`grep "SmallIcon" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -c  "SmallIcon" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
 
                         KZip)
-                           number=`grep "archive()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "archive()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QDebug)
-                           number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -Ec "qDebug|qWarning|qCritical"  "$file");
+                           if test "$number" = 0 ; then
                                remove_include;
                            fi
                            #number=`grep "qDebug"  $file|wc -l`;
@@ -404,8 +401,8 @@ do
                            #fi
                         ;;
                         QtDebug)
-                           number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -Ec "qDebug|qWarning|qCritical"  "$file");
+                           if test "$number" = 0 ; then
                                remove_include;
                            fi
                            #number=`grep "qDebug"  $file|wc -l`;
@@ -416,78 +413,78 @@ do
                            #     fi
                            #fi
                         ;;
-			
+
                         QLoggingCategory)
-                           number=`egrep "Q_DECLARE_LOGGING_CATEGORY|Q_LOGGING_CATEGORY" $file|wc -l`;
-                           if test $number = 0 ; then
-                              number=`egrep "qDebug|qWarning|qCritical"  $file|wc -l`;
-                              if test $number = 0 ; then
+                           number=$(grep -Ec "Q_DECLARE_LOGGING_CATEGORY|Q_LOGGING_CATEGORY" "$file");
+                           if test "$number" = 0 ; then
+                              number=$(grep -Ec "qDebug|qWarning|qCritical"  "$file");
+                              if test "$number" = 0 ; then
                                   remove_include;
                               fi
                            fi
                         ;;
                         QScreen)
-                           number=`grep "physicalDotsPerInch()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "physicalDotsPerInch()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
 			QMimeData)
-                           number=`grep "mimeData()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "mimeData()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         KToolBar)
-                           number=`grep "toolBar()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "toolBar()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QPixmap)
-                           number=`grep "SmallIcon" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "SmallIcon" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QHostAddress)
                         ;;
                         QMenuBar)
-                           number=`grep "menuBar()" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep  -c "menuBar()" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QTest)
-                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
-                           if test $number = 0 ; then
+                          number=$(grep -Ec "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QtTestGui)
-                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
-                           if test $number = 0 ; then
+                          number=$(grep -Ec "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QtTestWidgets)
-                          number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
-                           if test $number = 0 ; then
+                          number=$(grep -Ec "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         QtTest)
-                           number=`egrep "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" $file|wc -l`;
-                           if test $number = 0 ; then
+                           number=$(grep -Ec "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" "$file");
+                           if test "$number" = 0 ; then
                               remove_include;
                            fi
                         ;;
                         *)
-                           remove_include; 
+                           remove_include;
                         ;;
                         esac
 		fi
-	     elif test $number > 1 ; then
+	     elif [ "$number" -gt 1 ]; then
 		#file_header;
                 echo "tot";
              fi
