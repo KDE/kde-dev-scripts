@@ -5,8 +5,8 @@
 
 
 remove_include() {
-	echo "$file" |xargs perl -pi -e "s!#include <$newname>\n!!"
-	echo "$file" |xargs perl -pi -e "s!#include \"$newname\"\n!!"
+	echo "$file" |xargs perl -pi -e "s!#include <$originalStr>\n!!"
+	echo "$file" |xargs perl -pi -e "s!#include \"$originalStr\"\n!!"
 }
 
 file_header() {
@@ -47,102 +47,31 @@ test_include() {
 			path=$file;
 			test_include;
 		else
-			#echo "search in file $file";
+			# echo "search in file $file";
 			include=$(grep "#include" "$file");
-			#echo "$include ";
 			new=$(echo "$include" |perl -pi -e 's!#include !!');
+
 			new=$(echo "$new" |perl -pi -e 's!\\"!!g');
 			new=$(echo "$new" |perl -pi -e 's!<!!g');
 			new=$(echo "$new" |perl -pi -e 's!>!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtCore/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtGui/!!g');
-			new=$(echo "$new" |perl -pi -e 's!Qt3Support/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtDBus/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KDE/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtTest/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtSvg/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtXml/!!g');
-			new=$(echo "$new" |perl -pi -e 's!Plasma/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KNS/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KIO/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KABC/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KMime/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KMBox/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KParts/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KNS3/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KNSCore/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KPIMIdentities/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KCalCore/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KPIMUtils/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KCalUtils/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KontactInterface/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KHolidays/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KWallet/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtNetwork/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KJobWidgets/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KPIMTextEdit/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtSql/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtWidgets/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtPrintSupport/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtQuick/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtDBus/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtDeclarative/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtDesigner/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtQml/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtMultimedia/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtConcurrent/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtQuickWidgets/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QtXmlPatterns/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KContacts/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KIdentityManagement/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KAddressBookImportExport/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KaddressbookGrantlee/!!g');
-			new=$(echo "$new" |perl -pi -e 's!QGpgME/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KDAV/!!g');
-			new=$(echo "$new" |perl -pi -e 's!Qt3DCore/!!g');
-			new=$(echo "$new" |perl -pi -e 's!Qt3DAnimation/!!g');
-			new=$(echo "$new" |perl -pi -e 's!Qt3DRender/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KSieveUi/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KTNEF/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KCodecs/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KSMTP/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KGAPI/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KItinerary/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KRunner/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KIMAP/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KLDAP/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KCoreAddons/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KdepimDBusInterfaces/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KScreen/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KQuickAddons/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KIPI/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KIOWidgets/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KActivities/Stats/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KI18n/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KTextEditor/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KPackage/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KPeople/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KActivities/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KFileMetaData/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KCalendarCore/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KDeclarative/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KUserFeedback/!!g');
-			new=$(echo "$new" |perl -pi -e 's!KAlarmCal/!!g');
+
 			newname=$(echo "$new" |perl -pi -e 's!.h!!');
 
-       #echo "before go : $new";
+
+       echo "before go : $new";
        for i in $new ;
        do
-	       #echo $i;
-	       newname=$(echo "$i" |perl -pi -e 's!.h!!');
+			originalStr=$i;
+			newname=$(echo "$i" | sed 's,.*/,,');
 
-	       if test "$newname" = "$i" ; then
-		       #echo "egal $i";
+	       newname=$(echo "$newname" |perl -pi -e 's!.h!!');
+           if test 1 ; then
+		       echo "egal $i";
 		       number=$(grep -c "$i" "$file");
-		       #echo "number $number";
+		       echo "number $number";
 		       if test "$number" = 1 ; then
 			       #echo "$file" |xargs perl -pi -e "s!#include <$newname>\n!!";
-			       echo "number = 1 $newname class $file";
+			       # echo "number = 1 $newname class $file";
 			       firstCar=$(echo "$i" | perl -pi -e "s/^(.)(.*)(.)$/\1/");
 			       echo "first car : $firstCar";
 			       if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
@@ -480,6 +409,7 @@ test_include() {
 						       fi
 						       ;;
 					       *)
+					       echo "remove it !!!!!";
 						       remove_include;
 						       ;;
 				       esac
