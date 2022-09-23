@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Laurent Montel <montel@kde.org> (2014-2017)
+# Laurent Montel <montel@kde.org> (2014-2022)
 # cd <directory> ; kde-dev-scripts/kf5/clean-includes.sh
 
 
