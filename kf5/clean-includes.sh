@@ -67,7 +67,7 @@ test_include() {
 	       newname=$(echo "$newname" |perl -pi -e 's!.h!!');
            if test 1 ; then
 		       echo "egal $i";
-		       number=$(grep -c "$i" "$file");
+		       number=$(grep -c "$newname" "$file");
 		       echo "number $number";
 		       if test "$number" = 1 ; then
 			       #echo "$file" |xargs perl -pi -e "s!#include <$newname>\n!!";
@@ -355,7 +355,10 @@ test_include() {
 					       QScreen)
 						       number=$(grep  -c "physicalDotsPerInch()" "$file");
 						       if test "$number" = 0 ; then
-							       remove_include;
+						           number=$(grep  -c "screen()" "$file");
+						           if test "$number" = 0 ; then
+							         remove_include;
+								   fi
 						       fi
 						       ;;
 					       QMimeData)
