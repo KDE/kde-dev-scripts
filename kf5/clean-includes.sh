@@ -193,7 +193,10 @@ test_include() {
 					       QCoreApplication)
 						       number=$(grep  -c "qApp"  "$file");
 						       if test "$number" = 0 ; then
-							       remove_include;
+						           number=$(grep  -c "qAddPostRoutine"  "$file");
+						           if test "$number" = 0 ; then
+							           remove_include;
+							       fi
 						       fi
 						       ;;
 					       QTreeView)
