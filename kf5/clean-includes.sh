@@ -99,6 +99,14 @@ test_include() {
 							       remove_include;
 						       fi
 						       ;;
+						   QScopeGuard)
+						       number=$(grep -c "qScopeGuard()"  "$file");
+						       echo "QScopeGuard $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
+
 					       QtDBus)
 						       number=$(grep -c QDBusInterface  "$file");
 						       echo "QDBusInterface $number";
