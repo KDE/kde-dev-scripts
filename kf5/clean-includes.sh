@@ -76,6 +76,14 @@ test_include() {
 			       echo "first car : $firstCar";
 			       if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
 				       case $newname in
+				           QtConcurrentRun)
+						       number=$(grep -c "QtConcurrent::run"  "$file");
+						       echo "QtConcurrentRun $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
+
 				           QObject)
 						       number=$(grep -c "QT_VERSION_CHECK"  "$file");
 						       echo "QObject $number";
