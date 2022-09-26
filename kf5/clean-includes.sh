@@ -76,6 +76,21 @@ test_include() {
 			       echo "first car : $firstCar";
 			       if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
 				       case $newname in
+				           QObject)
+						       number=$(grep -c "QT_VERSION_CHECK"  "$file");
+						       echo "QObject $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
+
+				           KJobUiDelegate)
+						       number=$(grep -c "uiDelegate()"  "$file");
+						       echo "KJobUiDelegate $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
 					       QtDBus)
 						       number=$(grep -c QDBusInterface  "$file");
 						       echo "QDBusInterface $number";
