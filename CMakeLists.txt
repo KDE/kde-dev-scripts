@@ -94,6 +94,8 @@ install(PROGRAMS
   kde-systemsettings-tree.py
   reviewboard-am
   grantlee_strings_extractor.py
+  clean-forward-declaration.sh
+  clean-includes.sh
   DESTINATION ${KDE_INSTALL_BINDIR})
 
 # SKIP_PO_INSTALL
