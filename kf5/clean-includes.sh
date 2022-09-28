@@ -76,6 +76,20 @@ test_include() {
 			       echo "first car : $firstCar";
 			       if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
 				       case $newname in
+				           QQmlContext)
+						       number=$(grep -c "rootContext()"  "$file");
+						       echo "rootContext() $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
+						   QtQuickTest)
+						       number=$(grep -c "QUICK_TEST_MAIN"  "$file");
+						       echo "QUICK_TEST_MAIN $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
 				           QtConcurrentRun)
 						       number=$(grep -c "QtConcurrent::run"  "$file");
 						       echo "QtConcurrentRun $number";
@@ -100,7 +114,7 @@ test_include() {
 						       fi
 						       ;;
 						   QScopeGuard)
-						       number=$(grep -c "qScopeGuard()"  "$file");
+						       number=$(grep -c "qScopeGuard"  "$file");
 						       echo "QScopeGuard $number";
 						       if test "$number" = 0 ; then
 							       remove_include;
