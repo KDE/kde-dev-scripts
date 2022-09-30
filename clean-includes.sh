@@ -76,6 +76,14 @@ test_include() {
 			       echo "first car : $firstCar";
 			       if test "$firstCar" = "Q" || test "$firstCar" = "K" ; then
 				       case $newname in
+				           QtMath)
+						       number=$(grep -c "qPow"  "$file");
+						       echo "qPow $number";
+						       if test "$number" = 0 ; then
+							       remove_include;
+						       fi
+						       ;;
+
 				           QQmlContext)
 						       number=$(grep -c "rootContext()"  "$file");
 						       echo "rootContext() $number";
