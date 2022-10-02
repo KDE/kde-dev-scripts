@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % Galician  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de marzo de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Cria de novo todos os ficheiros <filename
+>Makefile</filename
+> dun directorio</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrición</title>
+
+<para
+>&create_makefiles; cria de novo todos os <filename
+>Makefile</filename
+>s en <replaceable
+>dir</replaceable
+> e non seus subdirectorios (recursivamente) a partir dos modelos <filename
+>Makefile.am</filename
+> correspondentes.</para>
+
+<para
+>Este guión debe ser executado desde o directorio raíz (o que conte o "configure". Aforra tempo comparado con executar "configure" por enteiro.</para>
+
+<para
+>Se o directorio das fontes é diferentes do do código obxecto (consulte as variábeis de contorno en baixo), asumirase que cada <filename
+>Makefile.am</filename
+> e <filename
+>Makefile.in</filename
+> pertencen baixo os directorio das fontes e que os <filename
+>Makefile</filename
+> ao de compilación.</para>
+
+<para
+>Esta utilidade forma parte do Kit de Desenvolvimento de Sóftware de &kde;.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Ambiente</title>
+<para
+>Unha das seguintes variábeis (pero non ambas as dúas) debe ser configurada se o directorio das fontes é diferente ao do código obxecto. Se o do código obxecto é un subdirectorio do das fontes, debe usarse a variábel <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que o directorio do código obxecto está no subdirectorio especificado baixo o directorio das fontes. Por exemplo, se o directorio das fontes é <filename class="directory"
+>kdesdk</filename
+> e o do código obxecto é <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, entón <envar
+>OBJ_SUBDIR</envar
+> debe axustarse a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Unha expresión de <command
+>sed</command
+> que é usada para transformar o directorio das fontes no de código obxecto. Por exemplo, se o directorio das fontes é <filename class="directory"
+>kdesdk</filename
+>, entón <envar
+>OBJ_REPLACEMENT</envar
+> debe ser <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Consulte tamén</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>&create_makefiles; foi escrito por &David.Faure; &David.Faure.mail;.</para>
+
+<para
+>Esta páxina de manual foi elaborada escrita <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema Debian GNU/Linux (pero pode ser usada por outros).</para>
+ 
+</refsect1>
+
+</refentry>

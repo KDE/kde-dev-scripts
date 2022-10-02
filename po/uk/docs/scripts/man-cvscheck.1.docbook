@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 березня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Створює звіт про стан файлів у модулі сховища &CVS; без мережевого з’єднання.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>каталог</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>&cvscheck; виводить відомості щодо стану вашого локального сховища &CVS; без з’єднання з сервером. Це означає, що цей інструмент є надзвичайно швидкісним і не потребує мережевого з’єднання.</para>
+
+<para
+>Інструмент рекурсивно обробляє вказаних каталог і всі його підкаталоги. Якщо не буде вказано жодного каталогу, буде оброблено відомості з поточного каталогу і всіх його підкаталогів.</para>
+
+<para
+>Буде виведено відомості щодо всіх файлів зі зміненим станом, перед назвою файла буде виведено символ стану. Ось перелік можливих символів стану:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл не зазначено у &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл точно змінено локально</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>У файлі <emphasis
+>можуть</emphasis
+> бути локальні зміни. Щоб це перевірити, вам слід скористатися командою <command
+>diff</command
+> з зазначенням сервера.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл конфліктує зі сховищем &CVS;, тому його не можна вивантажувати.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Цей файл є у &CVS;, але відсутній у локальному сховищі.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Цей файл має незвичайний липкий теґ &CVS;.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Ви виконали команду <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> для цього файла, але ще не вивантажували його до сховища.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Ви виконали команду <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> для цього файла, але ще не вилучали файл зі сховища.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Прочитайте також</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+
+<para
+>Авторами cvscheck є &Dirk.Mueller; &Dirk.Mueller.mail; і &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Автором цієї сторінки довідника є <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+>, цю сторінку було створено для системи Debian GNU/Linux (але нею можна користуватися і у інших системах). </para>
+</refsect1>
+
+</refentry>

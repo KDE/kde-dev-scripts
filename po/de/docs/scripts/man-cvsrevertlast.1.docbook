@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2005-02-02</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>Setzt Dateien im CVS auf die vorletzte Version zurück</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>filename</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+>cvsrevertlast wird dazu benutzt, alle Dateien, die auf der Befehlszeile angegeben wurden auf die vorletzte Version im CVS zurückzusetzen. Die Dateien werden nicht eingespielt.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Siehe auch</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

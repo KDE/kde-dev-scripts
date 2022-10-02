@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>6. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>Skriver logindgangen ud for den sidste arkivering af en fil.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>filnavn</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>cvslastlog</command
+> viser loggen som hører sammen med den seneste arkivering i CVS for den givne fil. Den afhænger af versionen af den lokale fil, ikke den på serveren. </para>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+</refentry>

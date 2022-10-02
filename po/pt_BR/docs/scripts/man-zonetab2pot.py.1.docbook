@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>7 de abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Converte uma lista de fusos horários para um modelo de um arquivo PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>lista-fusos-horários</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>zonetab2pot.py</command
+> lê a lista de fusos horários na linha de comando e converte-a para um arquivo modelo de mensagens do 'gettext' (arquivo PO), contendo os nomes dos fusos horários individualmente. </para>
+
+<para
+>A lista de fusos horários indicada deverá estar no mesmo formato que a tabela de zonas do sistema. Se não for indicada qualquer lista na linha de comando, é usado o arquivo <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>O novo modelo de arquivo PO será gravado no 'standard output'.</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software do KDE. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>O zonetab2pot.py foi criado por <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Esta página de manual foi preparada por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

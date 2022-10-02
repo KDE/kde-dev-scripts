@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 березня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Створює файли <filename
+>Makefile.in</filename
+> і <filename
+>Makefile</filename
+> з файла <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>відносний_шлях/Makefile</replaceable
+></group
+> <group
+><replaceable
+>відносний_шлях</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>Команда <command
+>create_makefile</command
+> створює файли <filename
+>Makefile.in</filename
+> і <filename
+>Makefile</filename
+> у підкаталозі, що містить файл <filename
+>Makefile.am</filename
+>. За допомогою цього скрипту ви можете зекономити час, порівняно з повторним запуском configure</para>
+
+<para
+>Зауважте, що вам слід вказувати шлях до бажаного <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> (але другий параметр, <filename
+>/Makefile</filename
+> можна не вказувати).</para>
+
+<para
+>Цей скрипт можна запускати з каталогу найвищого рівня (того, де міститься файл <filename
+>configure</filename
+>) або з будь-якого з його підкаталогів.</para>
+
+<para
+>Якщо каталог кодів відрізняється від каталогу збирання (див. змінні середовища), програма припускатиме, що файли <filename
+>Makefile.am</filename
+> і <filename
+>Makefile.in</filename
+> належать до підкаталогу каталогу source, а файл <filename
+>Makefile</filename
+> належить до підкаталогу каталогу build. </para>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Середовище</title>
+
+<para
+>Якщо каталог кодів відрізняється від каталогу збирання, слід встановити одну з наведених нижче змінних (але не дві одночасно). Якщо каталог збирання є простим підкаталогом каталогу кодів, слід використовувати простішу змінну — <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Вказує, що каталог збирання знаходиться у підкаталозі каталогу кодів. Наприклад, якщо каталогом кодів є <filename class="directory"
+>kdesdk</filename
+>, а каталогом збирання — <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, змінній <envar
+>OBJ_SUBDIR</envar
+> слід встановити значення <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Вираз <command
+>sed</command
+>, який буде використано для перетворення назви каталогу кодів на назву каталогу збирання. Наприклад, якщо каталогом кодів є <filename class="directory"
+>~/src/kdesdk</filename
+>, а каталогом збирання — <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, змінній <envar
+>OBJ_REPLACEMENT</envar
+> слід встановити значення <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Прочитайте також</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Автори</title>
+
+<para
+>Авторами create_makefile є &David.Faure; &David.Faure.mail; та інші особи. Автором цієї сторінки довідника є <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+>, сторінку було створено для системи Debian GNU/Linux (але її можна використовувати і у інших системах).</para>
+</refsect1>
+</refentry>

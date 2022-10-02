@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>qtdoc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>qtdoc</command
+></refname>
+<refpurpose
+>Opent een &Qt;-documentatiepagina in &konqueror;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>qtdoc</command
+> <group
+><option
+><replaceable
+>klassenaam</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>qtdoc</command
+> opent een documentatiepagina van &Qt; in &konqueror;. Wanneer een <replaceable
+>klassenaam</replaceable
+> is gegeven, zal het de documentatiepaginapagina voor die klasse openen. Het zal anders de hoofdpagina tonen van de documentatie. <replaceable
+>klassenaam</replaceable
+> is hoofdlettergevoelig.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Omgeving</title>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>QTDIR</envar
+></term>
+<listitem
+><para
+>De map waarin &Qt; is geïnstalleerd. De hoofdpagina van de documentatie wordt verwacht onder <filename class="directory"
+>$<envar
+>QTDIR</envar
+>/doc/html/</filename
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Voorbeelden</title>
+
+<para
+>Om de documentatie te tonen voor de klasse <classname
+>QString</classname
+>:</para>
+<screen
+><userinput
+><command
+>qtdoc</command
+> <option
+>QString</option
+></userinput
+></screen>
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+
+<para
+>kdedoc(1), assistant(1)</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>De manpage werd geschreven door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

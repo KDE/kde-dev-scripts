@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-06</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>Stampa la voce di log dell'ultimo deposito di un file.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>nonefile</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>cvslastlog</command
+> mostra il log associato con l'ultimo deposito di CVS del file specificato. Dipende dalla versione del file locale, non da quella sul server. </para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+</refentry>

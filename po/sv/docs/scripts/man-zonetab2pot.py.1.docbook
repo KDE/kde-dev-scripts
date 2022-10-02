@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Konverterar en lista med tidszoner till en PO-filmall.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>tidszonlista</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> läser tidszonlistan given på kommandoraden och konverterar den till en gettext meddelandefilmall (PO-filmall) som innehåller namnen på de enskilda tidszonerna. </para>
+
+<para
+>Den givna tidszonlistan ska ha samma format som systemets zone.tab. Om ingen tidszonlista anges på kommandoraden, används <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>Den nya PO-filmallen skrivs ut på standardutmatningen.</para>
+
+<para
+>Verktyget är en del av KDE:s programvaruutvecklingsmiljö. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+
+<para
+>zonetab2pot.py är skrivet av <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Den här manualsidan är framtagen av <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

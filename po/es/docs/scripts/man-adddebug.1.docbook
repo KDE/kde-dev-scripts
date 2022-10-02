@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Modifica archivo(s) <filename
+>Makefile</filename
+>(s) para añadir información de depurado</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>adddebug</command
+> modifica el archivo <filename
+>Makefile</filename
+> en el directorio actual (y opcionalmente en sus subdirectorios) para añadir información de depurado (<option
+>-g3</option
+>).También elimina las optimizaciones (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciones</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Mantiene las optimizaciones (no elimina las opciones <option
+>-O[1-9]?</option
+> ausentes por omisión)</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Busa recursivamente archivos <filename
+>Makefile</filename
+> a través de todos los subdirectorios del directorio actual. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>Compila sin definir NDEBUG y NO_DEBUG (hace que funcionen las llamadas a <function
+>kdDebug</function
+>).</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

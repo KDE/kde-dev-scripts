@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analizza gli indirizzi di ritorno di file di log di dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>log di dmalloc</replaceable
+> <command
+>eseguibile</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>extend_dmalloc</command
+> eseguirà <command
+>gdb</command
+>(1) per avere informazioni sui valori di ritorno da un file di log di <command
+>dmalloc</command
+>(1). In modo particolare, esaminerà ogni linea <literal
+>ra=</literal
+> e proverà a ricavare i corrispondenti numeri di linea</para>
+
+<para
+>L'argomento <option
+><command
+>eseguibile</command
+></option
+> deve essere l'eseguibile che ha generato il log <filename
+>log di dmalloc</filename
+>.</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Note</title>
+<para
+>Puoi anche ridirezionare l'output di <command
+>extend_dmalloc</command
+> su file, dato che sembra che <command
+>gdb</command
+> richieda l'inserimento di un "invio" come se fossi alla fine di una pagina. </para
+> 
+</refsect1>
+
+</refentry>

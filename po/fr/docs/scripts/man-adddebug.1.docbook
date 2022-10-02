@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07-03-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Modifie le ou les <filename
+>Makefile</filename
+> pour ajouter des informations de déboguage.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>adddebug</command
+> modifie le <filename
+>Makefile</filename
+> dans le dossier actuel (et optionnellement dans ses sous-dossiers) pour y ajouter des informations de déboguage (<option
+>-g3</option
+>). Il enlèvera également les optimisations (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Options</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Conserve les optimisations (n'enlève pas les drapeaux <option
+>-O[1-9] ?</option
+> qui le sont par défaut).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Cherche de manière récursive dans tous les sous-dossiers du dossier courant et travaille sur chaque <filename
+>Makefile</filename
+> trouvé. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>compile sans définir NDEBUG et NO_DEBUG (rend les appels à <function
+>kdDebug</function
+> fonctionnels).</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Galician  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 de marzo de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Modifica os <filename
+>Makefile</filename
+>s para engadir información de depuración</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrición</title>
+
+<para
+><command
+>adddebug</command
+> modifica o <filename
+>Makefile</filename
+> no directorio actual (e opcionalmente nos subdirectorios) para engadirlle información de depuración (<option
+>-g3</option
+>). Tamén eliminará optimizacións (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Esta utilidade forma parte do Kit de Desenvolvimento de Sóftware de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcións</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Manten as optimizacións (non elimina as bandeiras <option
+>-O[1-9]?</option
+> que por omisión son eliminadas).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Procura recursivamente en todos os subdirectorios do directorio actual e opera en cada <filename
+>Makefile</filename
+> que atope. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>compila sen definir NDEBUG e NO_DEBUG (fai que as as chamadas a <function
+>kDebug</function
+> funcionen)</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

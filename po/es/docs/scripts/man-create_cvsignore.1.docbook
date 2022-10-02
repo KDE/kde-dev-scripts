@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>Crea un archivo .cvsignore preliminario en el directorio actual.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>create_cvsignore</command
+> sirve para crear un archivo <filename
+>.cvsignore</filename
+> preliminario en el directorio actual. Realiza esta operación en base al contenido del archivo <filename
+>Makefile.am</filename
+>.</para>
+
+<para
+>Si existe, no se eliminará ninguna línea del archivo <filename
+>.cvsignore</filename
+>. en caso de no existir se añadirá al repositorio.</para>
+
+<para
+>Observe que necesitará un archivo <filename
+>Makefile.am</filename
+> en su directorio actual para que el programa funcione.</para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de &kde;.</para>
+
+</refsect1>
+
+</refentry>

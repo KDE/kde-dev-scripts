@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 de abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Reduz o número de #includes em arquivo de código do &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>arquivo</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>fixincludes</command
+> tenta reduzir o número de inclusões (#include) nos arquivos de código em C++. Muito do processamento dele é específico do código do &kde; e, como tal, poderá não funcionar tão bem com o código dos aplicativos não-&kde;.</para>
+
+<para
+>Os seguintes problemas são identificados pelo <command
+>fixincludes</command
+>:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>A inclusão de arquivos que já não sejam suportados, mas que ainda existam por compatibilidade com versões mais antigas do Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Incluir o mesmo arquivo várias vezes. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Existe também um modo experimental que tenta remover cada um dos #include's de cada vez (com algumas exceções) para ver se o código ainda compila. Lembre-se de que este modo experimental irá modificar o código original. </para>
+
+<para
+>Por padrão, o código não será modificado; os problemas identificados simplesmente serão apresentados no 'standard output'. </para>
+
+<para
+>A lista de arquivos de C++ a examinar deverá ser indicada na linha de comando. Se não forem indicados arquivos, todo o código em C++ dentro e/ou abaixo da pasta atual será examinado (com a exceção das pastas cujo <filename
+>Makefile.am</filename
+> contenha <option
+>-UQT_NO_COMPAT</option
+> ou <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software do KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opções</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Modo descritivo. Será mostrada alguma informação adicional de depuração no 'standard output'.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>O modo experimental, tal como foi descrito, em detalhe. Lembre-se que esta opção implica a <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Assim como escreve as mensagens no 'standard output', efetua de fato as modificações ao código original, de modo a corrigir os problemas encontrados.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+>O <command
+>fixincludes</command
+> foi criado por Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

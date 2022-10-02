@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Estrae le stringhe di messaggi da interfacce grafiche e da file RC di interfacce grafiche</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>nomefile</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>extractrc</command
+> cerca tutti i tag di testo e altre stringhe di messaggi nei file specificati e scrive su standard output le corrispondenti chiamate i18n() cosicché xgettext può interpretarle.</para>
+
+<para
+>Può leggere file di interfaccia grafica di <application
+>designer</application
+> (&Qt;/&kde;) e file RC di interfaccia grafica in &XML;. </para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;. </para>
+
+</refsect1>
+
+</refentry>

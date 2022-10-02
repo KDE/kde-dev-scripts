@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 d'abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analitza les adreces retornades des de fitxers de registre de dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>registre_dmalloc</replaceable
+> <command
+>binari</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>extend_dmalloc</command
+> executarà <command
+>gdb</command
+>(1) per a obtenir informació d'una adreça de retorn des d'un registre de <command
+>dmalloc</command
+>(1). Concretament, s'examinarà qualsevol línia <literal
+>ra=</literal
+> intentant obtenir el seu corresponent número de línia.</para>
+
+<para
+>L'argument <option
+><command
+>binari</command
+></option
+> s'haurà de correspondre amb el binari que ha generat el registre <filename
+>dmalloc-log</filename
+>.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Notes</title>
+<para
+>És possible que vulgueu redirigir l'eixida de <command
+>extend_dmalloc</command
+> cap a un fitxer, d'altra manera <command
+>gdb</command
+> semblarà esperar un retorn com si estigués al final d'una pàgina. </para
+> 
+</refsect1>
+
+</refentry>

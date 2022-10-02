@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Riduce il numero di #include nei file sorgenti di &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>fixincludes</command
+> prova a ridurre il numero di #include nei file sorgenti C++. La maggior parte del suo lavoro è specifico per i sorgenti di &kde; e per questo potrebbe non funzionare correttamente con sorgenti di applicazioni non &kde;.</para>
+
+<para
+><command
+>fixincludes</command
+> identifica i seguenti problemi:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Inclusione di header che non sono più supportati ma che ancora esistono per compatibilità con versioni più vecchie di Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Inclusione dello stesso file più volte. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>C'è anche una modalità sperimentale che prova a rimuovere un #include per volta (con alcune eccezioni) per vedere se il sorgente compila ancora. Nota che questa modalità sperimentale modificherà i sorgenti originali. </para>
+
+<para
+>In maniera predefinita i sorgenti non saranno modificati; i problemi rilevati saranno semplicemente riportati sullo standard output. </para>
+
+<para
+>La lista dei sorgenti C++ da esaminare dovrebbe essere specificata a riga di comando. Se non viene specificato alcun file, saranno esaminati tutti i sorgenti C++ nella directory specificata o in sottodirectory della stessa (ad eccezione delle directory il cui <filename
+>Makefile.am</filename
+> contiene <option
+>-UQT_NO_COMPAT</option
+> o <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opzioni</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Modalità prolissa. Viene scritto output aggiuntivo per il debug sullo standard output.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Modalità sperimentale, come descritto in dettaglio sopra. Nota che questa opzione implica <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Oltre a scrivere messaggi sullo standard output, modifica realmente i sorgenti originali per correggere qualsiasi problema riscontrato.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autori</title>
+<para
+><command
+>fixincludes</command
+> è stato scritto da Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

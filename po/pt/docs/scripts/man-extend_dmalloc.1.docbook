@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 de Abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analisa os  endereços de retorno de ficheiros de registo dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>registo-dmalloc</replaceable
+> <command
+>binário</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>extend_dmalloc</command
+> irá executar o <command
+>gdb</command
+>(1) para obter informações sobre os endereços devolvidos num ficheiro de registo do <command
+>dmalloc</command
+>(1). Especificamente, ele irá examinar as linhas <literal
+>ra=</literal
+> e tentará obter os números de linha correspondentes</para>
+
+<para
+>O argumento <option
+><command
+>binário</command
+></option
+> deverá ser o executável que gerou o registo <filename
+>registo-dmalloc</filename
+>.</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Notas</title>
+<para
+>Poderá querer direccionar o resultado do <command
+>extend_dmalloc</command
+> para um ficheiro, caso contrário o <command
+>gdb</command
+> parece ficar à espera de algum retorno, como se estivesse no fim de uma página. </para
+> 
+</refsect1>
+
+</refentry>

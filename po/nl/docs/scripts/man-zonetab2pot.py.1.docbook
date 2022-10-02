@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Converteert een tijdzonelijst naar een sjabloon voor een po-bestand</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>tijdzonelijst</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> leest de tijdzonelijst gegeven op de commandoregel en converteert het naar een gettext-message-bestand (PO-sjabloonbestand) die de namen bevat van de individuele tijdzones. </para>
+
+<para
+>De gegeven tijdzonelijst zou in hetzelfde formaat moeten zijn als de zone.tab van het systeem. Als er geen tijdzonelijst is gespecificeerd op de commandoregel, dan wordt <filename
+>/usr/share/zoneinfo/zone.tab</filename
+> gebruikt.</para>
+
+<para
+>Het nieuwe PO-sjabloonbestand zal naar standaard uitvoer worden geschreven.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>zonetab2pot.py is geschreven door <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>De manpage werd geschreven door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

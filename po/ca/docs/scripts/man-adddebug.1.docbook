@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 de març de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Modifica els <filename
+>Makefile</filename
+> per afegir informació de depuració</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>adddebug</command
+> modifica el fitxer <filename
+>Makefile</filename
+> en el directori actual (i opcionalment en els seus subdirectoris) per afegir informació de depuració (<option
+>-g3</option
+>). També elimina les optimitzacions (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Manté les optimitzacions (no elimina les opcions <option
+>-O[1-9]?</option
+>, per omissió les elimina).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Cerca recursivament a través de tots els subdirectoris del directori actual i opera a sobre de cada fitxer <filename
+>Makefile</filename
+> que troba. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>Compila sense definir NDEBUG i NO_DEBUG (fa que funcionin les crides a <function
+>kDebug</function
+>).</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

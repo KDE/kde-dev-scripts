@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>Voorlopig bestand .cvsignore in de huidige map aangemaakt</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>create_cvsignore</command
+> wordt gebruikt om een voorlopig bestand <filename
+>.cvsignore</filename
+> in de huidige map aan te maken. Het doet dat gebaseerd op bepaalde inhoud in <filename
+>Makefile.am</filename
+></para>
+
+<para
+>Er zullen geen regels worden verwijderd uit een bestaande <filename
+>.cvsignore</filename
+>. Als er nog geen bestand <filename
+>.cvsignore</filename
+> is, dan zal het worden toegevoegd aan de cvs-repository.</para>
+
+<para
+>Merk op dat u een bestand <filename
+>Makefile.am</filename
+> in de huidige map moet hebben voor dit hulpmiddel om het te laten werken.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+</refentry>

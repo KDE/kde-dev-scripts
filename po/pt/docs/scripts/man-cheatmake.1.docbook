@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de Março de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>engana o <command
+>make</command
+> de forma a que este não reconstrua certos ficheiros</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>ficheiro</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>ficheiro</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>cheatmake</command
+> é usado para poupar tempo na recompilação. Consegue enganar o 'make' ao saltar os ficheiros que não tenham mudado de forma significativa. Isto pode ser usado, quando você muda um comentário num ficheiro mas mais nada de código em si.</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opções</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>ficheiro</replaceable
+></term>
+<listitem
+><para
+>Esconde o facto de que o ficheiro foi modificado colocando a sua data no passado. Utilize com cuidado!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Lista que ficheiros <command
+>make</command
+> actualmente precisa de reconstruir</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>ficheiro</replaceable
+></term>
+<listitem
+><para
+>Explica porque tem tem reconstruir o ficheiro</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Ambiente</title>
+
+<para
+>Uma das variáveis seguintes (mas não ambas) deverão ser alteradas, se a pasta de código for diferente da pasta de compilação. Se a pasta de compilação for apenas uma subpasta da pasta de código, deverá ser usada a variável mais simples <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que a pasta de compilação está na subpasta da pasta de código. Por exemplo, se a pasta de código for a <filename class="directory"
+>kdesdk</filename
+> e a pasta de compilação for a <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, então o <envar
+>OBJ_SUBDIR</envar
+> deverá ser igual a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Uma expressão de <command
+>sed</command
+> que é usada para transformar a pasta de origem na pasta de compilação. Por exemplo, se a pasta de código for a <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, então a <envar
+>OBJ_REPLACEMENT</envar
+> deverá ser igual a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja Também</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>O <command
+>cheatmake</command
+> foi criado por &David.Faure; &David.Faure.mail;. Esta página do manual foi preparada pelo <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema <acronym
+>GNU</acronym
+>/&Linux; da Debian (embora possa ser usado por outros).</para>
+
+</refsect1>
+
+</refentry>

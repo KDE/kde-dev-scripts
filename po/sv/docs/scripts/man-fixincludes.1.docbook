@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Reducera antalet #include i &kde;-källkodsfiler</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>fil</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>fixincludes</command
+> försöker reducera antalet #include i C++ källkodsfiler. Det mesta av dess behandling är specifik för &kde;-källkod, och kanske inte fungerar så bra med källkod för program utanför &kde;.</para>
+
+<para
+>Följande problem identifieras av <command
+>fixincludes</command
+>:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Inkluderade deklarationsfiler som inte längre stöds men som finns för att fungera ihop med äldre Qt- och KDE-versioner.</para>
+</listitem>
+<listitem>
+<para
+>Inkludering av samma fil flera gånger. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Det finns också ett experimentellt läge som försöker ta bort varje #include en i taget (med några oviktiga undantag) för att se om källkoden fortfarande kan kompileras. Observera ett detta experimentella läge ändrar ursprunglig källkod. </para>
+
+<para
+>Normalt ändras inte källkoden. De identifierade problemen skrivs helt enkelt ut på standardutmatningen. </para>
+
+<para
+>Listan med C++ filer att undersöka ska anges på kommandoraden. Om inga filer anges, undersöks all C++ källkod i eller under nuvarande katalog (med undantag av kataloger vars <filename
+>Makefile.am</filename
+> innehåller <option
+>UQT_NO_COMPAT</option
+> eller <option
+>-UKDE_NO_COMPAT</option
+>).</para>
+
+<para
+>Verktyget är en del av KDE:s programvaruutvecklingsmiljö. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Väljare</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Informativt läge. Ytterligare felsökningsutmatning skrivs ut på standardutmatningen.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Experimentellt läge, som beskrivet ovan med fler detaljer. Observera att väljaren också betyder <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Förutom att skriva meddelanden på standardutmatningen, ändra verkligen den ursprungliga källkoden för att rätta eventuella problem som hittades.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+<para
+><command
+>fixincludes</command
+> är skrivet av Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

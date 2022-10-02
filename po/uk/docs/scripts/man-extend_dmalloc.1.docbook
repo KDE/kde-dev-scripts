@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Аналізує адреси повернення з файлів журналу dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>журнал-dmalloc</replaceable
+> <command
+>бінарний_файл</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+><command
+>extend_dmalloc</command
+> запустить <command
+>gdb</command
+>(1) для отримання інформації про адреси повернення з файла журналу <command
+>dmalloc</command
+>(1). Зокрема ця команда перевірить всі рядки на <literal
+>ra=</literal
+> і спробує отримати відповідні номери рядків</para>
+
+<para
+>Аргументом <option
+><command
+>бінарний_файл</command
+></option
+> має бути назва бінарного файла, за яким було створено журнал <filename
+>dmalloc-log</filename
+>.</para>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Нотатки</title>
+<para
+>Ймовірно, вам захочеться вивести дані з <command
+>extend_dmalloc</command
+> до файла, оскільки у іншому випадку <command
+>gdb</command
+> надсилатиме запит повернення так, наче у кінці сторінки. </para
+> 
+</refsect1>
+
+</refentry>

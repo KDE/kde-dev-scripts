@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Informes sobre módulos &CVS; sin conexión.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>directorio</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+>&cvscheck; le proporciona información acerca de su copia local de &CVS; sin necesidad de conectarse a internet. Esto hace que sea extremedamente rápido.</para>
+
+<para
+>Se procesará el directorio dado así como todos sus subdirectorios. Si no se da ninguno se usará el actual y sus subdirectorios.</para>
+
+<para
+>Cada archivo con un estado interesante se señalará con uno de los siguientes caracteres:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>&CVS; no conoce dicho archivo</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>El archivo ha sido modificado por usted.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Es <emphasis
+>posible</emphasis
+> que usted haya modificado el archivo en su copia de trabajo. Debería ejecutar <command
+>diff</command
+> con el servidor para asegurarse.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>El archivo presenta un conflicto lo que le impide ser entregado al &CVS;.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>El archivo está en el &CVS; pero no en su directorio de trabajo.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Este archivo tiene una etiqueta &CVS; inusual</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Ha ejecutado <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> sobre dicho archivo pero todavía no la ha entregado.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Ha ejecutado <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> sobre dicho archivo pero todavía no la ha entregado.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Vea también</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>cvscheck fue escrito &Dirk.Mueller; &Dirk.Mueller.mail; y &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Página de manual preparada por <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para Debian GNU/Linux system (pero puede ser usada en cualquier otro sistema) </para>
+</refsect1>
+
+</refentry>

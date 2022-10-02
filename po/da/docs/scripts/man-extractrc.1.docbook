@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Udtræk meddelelsestrenge fra UI og RC-filer for den grafiske grænseflade</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>filnavn</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>extractrc</command
+> finder alle tekstmærker og andre meddelelsestrenge i givne filer og skriver tilsvarende i18n()-kald til standardudskriften så xgettext kan tolke dem.</para>
+
+<para
+>Det forstår både (&Qt;/&kde;) <application
+>Designer</application
+> <acronym
+>UI</acronym
+>-filer og &XML; RC-filer. </para>
+
+<para
+>Værktøjet er en del af KDE's programmeludviklingsmiljø. </para>
+
+</refsect1>
+
+</refentry>

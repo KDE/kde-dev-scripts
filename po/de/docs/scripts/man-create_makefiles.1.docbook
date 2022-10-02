@@ -1,0 +1,149 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Erzeugt alle <filename
+>Makefile</filename
+>s unterhalb eines Ordners neu.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>ordner</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+>&create_makefiles; erzeugt alle <filename
+>Makefile</filename
+>s in <replaceable
+>ordner</replaceable
+> und seinen Unterordnern neu und verwendet dazu die <filename
+>Makefile.am</filename
+>-Vorlagedateien.</para>
+
+<para
+>Dieses Skript muss im Basisordner ausgeführt werden (wo sich das Skript <quote
+>configure</quote
+> befindet). Das Skript braucht weniger Zeit, als wenn configure erneut ausgeführt werden würde.</para>
+
+<para
+>Wenn Sie unterschiedliche Quelltext-Ordner und Kompilier-Ordner verwenden (siehe die unten stehenden Umgebungsvariablen), wird davon ausgegangen, dass alle <filename
+>Makefile.am</filename
+>- und <filename
+>Makefile.in</filename
+>-Dateien in den Quelltext-Ordner und alle <filename
+>Makefile</filename
+>-Dateien in den Kompilier-Ordner gehören.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Umgebungsvariablen</title>
+<para
+>Sie sollten eine der beiden Variablen (aber niemals beide) setzen, wenn sich der Quelltext-Ordner vom Kompilier-Ordner unterscheidet. Wenn der Kompilier-Ordner einfach ein Unterordner des Quelltext-Ordners ist, sollte die einfachere Variable <envar
+>OBJ_SUBDIR</envar
+> verwendet werden. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Gibt an, dass der Kompilier-Ordner der angegebene Unterordner des Quelltext-Ordners ist. Wenn der Quelltextordner beispielsweise <filename class="directory"
+>kdesdk</filename
+> lautet und der Kompilier-Ordner <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> lautet, dann sollte <envar
+>OBJ_SUBDIR</envar
+> auf <parameter
+>obj-i386-linux</parameter
+> eingestellt werden.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ein <command
+>sed</command
+>-Ausdruck zur Umsetzung des Quelltext-Ordners in den Kompilier-Ordner. Wenn der Quelltext-Ordner beispielsweise <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> ist, dann sollte <envar
+>OBJ_REPLACEMENT</envar
+> auf <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+> eingestellt werden.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Siehe auch</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autoren</title>
+
+<para
+>&create_makefiles; wurde von &David.Faure; &David.Faure.mail; geschrieben.</para>
+
+<para
+>Diese Handbuchseite wurde von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> für Debian GNU/Linux geschrieben (darf aber auch von anderen verwendet werden).</para>
+ 
+</refsect1>
+
+</refentry>

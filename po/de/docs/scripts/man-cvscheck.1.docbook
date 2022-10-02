@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Erzeugt einen Offline-Statusbericht für eine lokal vorhandene &CVS;-Arbeitskopie.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+>&cvscheck; gibt Informationen über den Status Ihrer lokalen &CVS;-Arbeitskopie aus, ohne dazu über das Netzwerk mit dem Server kommunizieren zu müssen. Daher ist es besonders schnell und spart Netzwerk-Bandbreite.</para>
+
+<para
+>Der angegebene Ordner und alle seine Unterordner werden rekursiv abgearbeitet. Wenn kein Ordner angegeben wird, so wird der aktuelle Ordner mit seinen Unterordnern verwendet.</para>
+
+<para
+>Jede Datei mit besonderem Status wird mit einem Status-Zeichen vor dem Dateinamen ausgegeben. Die folgenden Status-Zeichen sind möglich.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Die Datei ist nicht im &CVS;.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Die Datei enthält definitiv lokale Änderungen</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Die Datei enthält <emphasis
+>möglicherweise</emphasis
+> lokale Änderungen. Sie sollten dies mittels <emphasis
+>diff</emphasis
+> zum Server überprüfen.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Die Datei steht im Konflikt mit dem &CVS; und kann daher nicht eingespielt werden.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Die Datei befindet sich im &CVS;, fehlt aber in Ihrer lokalen Arbeitskopie.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Die Datei hat ein ungewöhnliches &CVS;-Sticky-Tag.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Sie haben für die Datei <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> ausgeführt, die Änderungen aber noch nicht übertragen (commited).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Sie haben für die Datei <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> ausgeführt, die Änderungen aber noch nicht übertragen (commited).</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Siehe auch</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autoren</title>
+
+<para
+>cvscheck wurde von &Dirk.Mueller; &Dirk.Mueller.mail; und &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail; geschrieben.</para>
+
+<para
+>Diese Handbuchseite wurde von <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> für Debian GNU/Linux geschrieben (darf aber auch von anderen verwendet werden). </para>
+</refsect1>
+
+</refentry>

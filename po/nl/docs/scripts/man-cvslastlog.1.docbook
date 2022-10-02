@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-06</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>Toont de logregel voor de laatste 'commit' van een bestand.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>bestandsnaam</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>cvslastlog</command
+> toont de logregel behorende bij de laatste 'cvs commit' voor het gegeven bestand. Het hangt af van de versie van het lokale bestand, niet van die op de server. </para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+</refentry>

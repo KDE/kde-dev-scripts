@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>täusche <command
+>make</command
+> so, dass bestimmte Dateien nicht neu erstellt werden</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+><command
+>cheatmake</command
+> wird benutzt, wenn Sie beim Neukompilieren Zeit sparen wollen. Es täuscht make dahingehend, dass Dateien übersprungen werden, an denen keine besonderen Änderungen vorgenommen wurden, zum Beispiel, wenn Sie in einem Quelltext nur einen Kommentar geändert haben.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Aufrufparameter</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Verhindert, dass die Änderung der Datei erkannt wird, indem der Zeitstempel zurückdatiert wird. Verwenden Sie diese Funktion mit Vorsicht.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Gibt eine Liste der Dateien aus, die von <command
+>make</command
+> neu erstellt werden würden.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Beschreibt, aus welchem Grund diese Datei neu erstellt werden muss.</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Umgebung</title>
+
+<para
+>Eine der folgenden Variablen (aber nicht beide) sollte gesetzt sein, wenn das Verzeichnis, in dem der Erstellungsvorgang stattfindet nicht mit dem Quelltextverzeichnis übereinstimmt. Handelt es sich beim Erstellungsverzeichnis um ein Unterverzeichnis des Quelltextverzeichnisses, sollte die einfachere Variable <envar
+>OBJ_SUBDIR</envar
+> verwendet werden. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Zeigt an, dass das Erstellungsverzeichnis im angegebenen Unterverzeichnis des Quelltextverzeichnisses liegt. Ist das Quelltextverzeichnis beispielsweise <filename class="directory"
+>kdesdk</filename
+> und das Erstellungsverzeichnis <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, sollte <envar
+>OBJ_SUBDIR</envar
+> auf den Wert <parameter
+>obj-i386-linux</parameter
+> gesetzt werden.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ein <command
+>sed</command
+>-Ausdruck, der zum Umwandeln des Quelltextverzeichnisses in das Erstellungsverzeichnis benutzt wird. Wenn beispielsweise das Quelltextverzeichnis <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> ist, sollte <envar
+>OBJ_REPLACEMENT</envar
+> auf <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+> gesetzt werden.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Siehe auch</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autoren</title>
+
+<para
+><command
+>cheatmake</command
+> wurde von &David.Faure; &David.Faure.mail; geschrieben. Diese MAN-Page wurde von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> für das Debian <acronym
+>GNU</acronym
+>/&Linux; System erstellt (kann aber auch von anderen System benutzt werden).</para>
+
+</refsect1>
+
+</refentry>

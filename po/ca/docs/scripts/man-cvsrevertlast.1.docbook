@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2 de febrer de 2005</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>Reverteix fitxers al CVS per una versió</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>nom_fitxer</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+>cvsrevertlast és emprat per a revertir tots els fitxers sobre la línia d'ordres per una versió en el CVS. Els fitxers no seran entregats.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veure també</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

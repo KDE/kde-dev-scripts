@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Offline statusrapport voor bestanden in een 'checked-out' &CVS;-module.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>map</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+>&cvscheck; drukt informatie over de status van uw lokale &CVS;-checkout zonder met de server contact op te nemen. Dit betekent dat het erg snel is en geen netwerkverbinding nodig heeft.</para>
+
+<para
+>De gegeven map en alle submappen zullen recursief worden afgewerkt. Als er geen map is gegeven, dan zal de huidige map en zijn submappen worden gebruikt.</para>
+
+<para
+>Elk bestand met een interessante status zal worden afgedrukt met voor de naam een statusteken. De statustekens zijn als volgt.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Het bestand is onbekend in &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Het bestand is definitief lokaal gewijzigd</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>He bestand <emphasis
+>kan</emphasis
+> lokale wijzigingen bevatten. U zou <command
+>diff</command
+> met de server moeten doen om er zeker van te zijn.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Het bestand heeft een &CVS;-conflict en kan dus niet worden vastgelegd (committed).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Dit bestand zit in &CVS; maar ontbreekt in uw lokale 'checkout'.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Dit bestand heeft een ongebruikelijke 'sticky' &CVS;-tag.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>U hebt een <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> voor dit bestand gedaan, maar het is nog niet vastgelegd (committed).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>U hebt een <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> voor dit bestand gedaan, maar het is nog niet vastgelegd (committed).</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>cvscheck is geschreven door &Dirk.Mueller; &Dirk.Mueller.mail; en &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Deze manpagina is gemaakt door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> voor het Debian GNU/Linux systeem (maar kan worden gebruikt door anderen). </para>
+</refsect1>
+
+</refentry>

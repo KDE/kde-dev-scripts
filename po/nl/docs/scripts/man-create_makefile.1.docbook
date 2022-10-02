@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Maakt <filename
+>Makefile.in</filename
+> en <filename
+>Makefile</filename
+> aan uit een <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>relatief_pad/Makefile</replaceable
+></group
+> <group
+><replaceable
+>relatief_pad</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>create_makefile</command
+> maakt de bestanden <filename
+>Makefile.in</filename
+> en <filename
+>Makefile</filename
+> aan in een submap met een bestand <filename
+>Makefile.am</filename
+>. Dit script spaart tijd vergeleken met het geheel opnieuw uitvoeren van configure</para>
+
+<para
+>Merk op dat u het pad naar de gewenste <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> moet opgeven (hoewel de uiteindelijke <filename
+>/Makefile</filename
+> mag worden weggelaten).</para>
+
+<para
+>Dit script kan worden uitgevoerd vanuit de topmap (die <filename
+>configure</filename
+>) bevat of vanuit een van zijn submappen.</para>
+
+<para
+>Als de bronmap verschillende is van de bouwmap (zie de onderstaande omgevingsvariabelen), dan wordt aangenomen dat de bestanden <filename
+>Makefile.am</filename
+> en <filename
+>Makefile.in</filename
+> onder de bronmap thuishoren en dat het bestand <filename
+>Makefile</filename
+> onder de bouwmapthuishoort. </para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Omgeving</title>
+
+<para
+>Een van de volgende variabelen (maar niet beiden) zou ingesteld moeten zijn als de bronmap verschilt van de bouwmap. Als de bouwmap eenvoudig een submap is van de bronmap, dan zou de eenvoudige variabele <envar
+>OBJ_SUBDIR</envar
+> moeten worden gebruikt. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Geeft aan dat de bouwmap zich in de gegeven submap van de bronmap bevindt. Bijvoorbeeld, als de bronmap <filename class="directory"
+>kdesdk</filename
+> is en de bouwmap is <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, dan zou <envar
+>OBJ_SUBDIR</envar
+> ingesteld moeten worden op <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Een <command
+>sed</command
+> expressie die wordt gebruikt om de bronmap om te vormen in de bouwmap. Bijvoorbeeld, als de bronmap <filename class="directory"
+>~/src/kdesdk</filename
+> is en de bouwmap is <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, dan zou <envar
+>OBJ_REPLACEMENT</envar
+> ingesteld moeten worden op <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>create_makefile is geschreven door &David.Faure; &David.Faure.mail; en anderen. Deze man-pagina is gemaakt door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> voor het Debian GNU/Linux systeem (maar mag worden gebruikt door anderen).</para>
+</refsect1>
+</refentry>

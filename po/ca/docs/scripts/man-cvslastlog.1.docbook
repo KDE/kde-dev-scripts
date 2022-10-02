@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>6 d'abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>Imprimeix el registre per a l'última entrega d'un fitxer.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>nom_fitxer</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>cvslastlog</command
+> mostra el registre associat amb l'última entrega al CVS per al fitxer indicat. Aquest dependrà de la versió local del fitxer, no de la que hi ha al servidor. </para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+
+</refsect1>
+
+</refentry>

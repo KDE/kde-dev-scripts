@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cxxmetric</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cxxmetric</command
+></refname>
+<refpurpose
+>Enkelt källkodsmått för C och C++</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cxxmetric</command
+> <group
+><option
+><replaceable
+>fil</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+>cxxmetric räknar antal rader kod, kommentarer och mellanrum, och beräknar diverse annan statistik för varje given källkodsfil. Källkodsfilerna måste vara skrivna i C eller C++.</para>
+
+<para
+>Verktyget är en del av KDE:s programvaruutvecklingsmiljö. </para
+> 
+
+</refsect1>
+
+</refentry>

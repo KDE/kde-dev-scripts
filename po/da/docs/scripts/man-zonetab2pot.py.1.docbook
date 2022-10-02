@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>7. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Konverterer en liste med tidszoner til en PO-fil-skabelon.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>tidszoneliste</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> læser tidszonelisten givet på kommandolinjen og konverterer den til en gettext meddelelsefilskabelon (PO-fil-skabelon) som indeholder navnene på de enkelte tidszoner. </para>
+
+<para
+>Den givne tidszoneliste skal have samme format som systemets zone.tab. Hvis ingen tidszoneliste angives på kommandolinjen, bruges <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>Den nye PO-fil-skabelon udskrives på standardudskriften.</para>
+
+<para
+>Værktøjet er en del af KDE's programmeludviklingsmiljø. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Forfattere</title>
+
+<para
+>zonetab2pot.py er skrevet af <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Denne manualside er skrevet af <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>08-03-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>Dupe <command
+>make</command
+> afin de ne pas reconstruire certains fichiers</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>fichier</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>fichier</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>cheatmake</command
+> est utilisé pour gagner du temps lors des recompilations. Il peut duper make afin d'ignorer les fichiers qui n'ont pas changé de manière significative. Ceci peut être utilisé par exemple lorsque vous changez un commentaire dans un fichier, sans en avoir modifié le code.</para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels de &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Options</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>fichier</replaceable
+></term>
+<listitem
+><para
+>Masque le fait que ce fichier a changé en plaçant l'horodatage dans le passé. À utiliser avec précaution ! </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Liste les fichiers que <command
+>make</command
+> doit reconstruire</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>fichier</replaceable
+></term>
+<listitem
+><para
+>Explique pourquoi make doit reconstruire le fichier</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Environnement</title>
+
+<para
+>Une des variables suivantes (mais pas les deux) doit être réglée si le dossier des sources est différent du dossier de construction. Si le dossier de construction est simplement un sous-dossier du dossier contenant les sources, la simple variable <envar
+>OBJ_SUBDIR</envar
+> doit être utilisée. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indique que le dossier de construction est dans le sous-dossier donné du dossier contenant les sources. Par exemple, si le dossier de sources est <filename class="directory"
+>kdesdk</filename
+> et que le dossier de construction est <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, alors <envar
+>OBJ_SUBDIR</envar
+> doit être mise à <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Une expression <command
+>sed</command
+> qui est utilisée pour transformer le dossier des sources en dossier de construction. Par exemple, si le dossier des sources est <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, alors <envar
+>OBJ_REPLACEMENT</envar
+> devrait être réglée à <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Voir aussi</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+><command
+>cheatmake</command
+> a été écrit par &David.Faure; &David.Faure.mail;. Cette page de manuel a été préparée par <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> pour le système <acronym
+>GNU</acronym
+>/&Linux; Debian (mais peut être utilisé par d'autres).</para>
+
+</refsect1>
+
+</refentry>

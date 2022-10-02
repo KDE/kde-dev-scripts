@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de março de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>Faz com que o <command
+>make</command
+> não recompile determinados arquivos</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>arquivo</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>arquivo</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>cheatmake</command
+> é usado para poupar tempo ao recompilar. Ele pode fazer com que o 'make' pule os arquivos que não foram modificados de uma maneira transparente. Isto pode ser usado por exemplo quando você muda um comentário em um arquivo mas nenhuma parte do código atual.</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opções</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>arquivo</replaceable
+></term>
+<listitem
+><para
+>Oculta o fato de que o arquivo foi mudado configurando a estampa de tempo no passado. Use isto com cuidado!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Lista quais arquivos o <command
+>make</command
+> precisa atualmente recompilar</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>arquivo</replaceable
+></term>
+<listitem
+><para
+>Explica porque o 'make' deve recompilar o arquivo</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Ambiente</title>
+
+<para
+>Uma das seguintes variáveis (mas não ambas) deve ser configurada se o diretório fonte for diferente do diretório de compilação. Se o diretório de compilação é simplesmente um subdiretório do diretório fonte, a variável mais simples <envar
+>OBJ_SUBDIR</envar
+> deve ser usada. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que o diretório de compilação está no subdiretório fornecido do diretório fonte. Por exemplo, se o diretório fonte é <filename class="directory"
+>kdesdk</filename
+> e o diretório de compilação é <filename class="directory"
+>kdesdk/obj-386-linux</filename
+>, então o <envar
+>OBJ_SUBDIR</envar
+> deve ser configurado como <parameter
+>obj-386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Uma expressão <command
+>sed</command
+> que é usada para transformar o diretório fonte em diretório de compilação. Por exemplo, se o diretório fonte é <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, então <envar
+>OBJ_REPLACEMENT</envar
+> deve ser configurado como <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja também</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>O <command
+>cheatmake</command
+> foi escrito por &David.Faure; &David.Faure.mail;. Esta página de manual foi preparada por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema Debian <acronym
+>GNU</acronym
+>/&Linux; (mas pode ser usada pelos outros).</para>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Ändrar <filename
+>Makefile</filename
+> för att lägga till avlusningsinformation</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>adddebug</command
+> ändrar <filename
+>Makefile</filename
+> i nuvarande katalog (och valfritt i dess underkataloger) för att lägga till avlusningsinformation (<option
+>-g3</option
+>). Det tar också bort optimering (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Verktyget är en del av &kde;:s programvaruutvecklingsmiljö.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Väljare</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Behåll optimering (ta inte bort flaggan <option
+>-O[1-9]?</option
+> som normalt tas bort).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Sök rekursivt igenom alla underkataloger till nuvarande katalog och utför åtgärden för varje <filename
+>Makefile</filename
+> som hittas. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>Kompilera utan att NDEBUG och NO_DEBUG är definierade (gör att anrop till <function
+>kDebug</function
+> fungerar).</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

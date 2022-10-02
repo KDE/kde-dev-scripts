@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>08-04-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Détecte les dossiers sources anciens dans l'arbre CVS.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>pruneemptydirs</command
+> est utilisé pour nettoyer un arbre CVS local. Il détecte les dossiers contenant des restes de vieux fichiers qui ont été supprimés depuis le CVS. Ces vieux dossiers font souvent échoués la compilation. Le dossier courant et tous les sous-dossiers seront examinés.</para>
+
+<para
+>Remarquez que cet outil ne supprime rien. Il imprime simplement ce qu'il va faire en une série de commandes de suppression. Vous pouvez copier et coller ces commandes, ou les utiliser pour évaluation dans un script.</para>
+
+<para
+>Cet outil fonctionne mieux si le dossier source n'est pas le même que le dossier de compilation, car il n'imprime pas les dossiers contenant les anciens exécutables.</para>
+
+<para
+>Ce utilitaire est un élément du kit de développement logiciel de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Options</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Pour le moment, l'option supprime les fichiers au lieu de simplement les imprimer. Utilisez cette option avec méfiance.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+><command
+>pruneemptydirs</command
+> a été écrit par &David.Faure; &David.Faure.mail;</para>
+<para
+>Le manuel a été écrit par <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

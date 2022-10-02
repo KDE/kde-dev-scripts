@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Modifica i <filename
+>Makefile</filename
+> per aggiungere informazioni per il debug</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>adddebug</command
+> modifica il <filename
+>Makefile</filename
+> nella directory corrente (e anche nelle sue sottodirectory) per aggiungere informazioni per il debug (<option
+>-g3</option
+>). Rimuoverà anche le ottimizzazioni (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opzioni</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Mantiene le ottimizzazioni (non rimuove le opzioni <option
+>-O[1-9]?</option
+> che normalmente vengono rimosse).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Cerca ricorsivamente in tutte le sottodirectory della directory corrente e agisce su ogni <filename
+>Makefile</filename
+> trovato. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>compila senza che vengano definiti NDEBUG e NO_DEBUG (fa sì che le chiamate a <function
+>kdDebug</function
+> funzionino)</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

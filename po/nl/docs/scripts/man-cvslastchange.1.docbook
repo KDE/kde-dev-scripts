@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvslastchange "<command
+>cvslastchange</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvslastchange;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvslastchange;</refname>
+<refpurpose
+>De laatste wijziging die is vastgelegd in &CVS; voor een bestand tonen</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvslastchange; <group
+><replaceable
+>bestand</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+>&cvslastchange; toont de laatst vastgelegde wijziging voor een bestand in &CVS;. Het gebruikt hier <command
+>cvs diff</command
+> en <command
+>cvs log</command
+> voor.</para>
+
+<para
+>&cvslastchange; werkt op elke &CVS;-branch, niet alleen HEAD.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+
+<para
+>cvslastlog(1) cvsrevertlast(1) cvs(1)</para>
+
+</refsect1>
+
+</refentry>

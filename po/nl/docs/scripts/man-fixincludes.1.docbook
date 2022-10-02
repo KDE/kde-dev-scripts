@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Verlaagt het aantal #includes in de bronbestanden van &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>fixuifiles</command
+> probeert het aantal #includes in C++-bronbestanden te verlagen. Deze procedure is specifiek voor KDE-bronnen en het hoeft dus niet goed te werken voor bronnen die niet bij KDE horen.</para>
+
+<para
+>De volgende probleemgevallen kunnen gevonden worden door <command
+>fixuifiles</command
+>:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Ingevoegde headers die niet langer meer ondersteund worden, maar enkel bestaan om oudere Qt/KDE-versies te ondersteunen;</para>
+</listitem>
+<listitem>
+<para
+>Het invoegen van dezelfde header in hetzelfde bestand. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Er is ook een experimentele modus, welke probeert één voor één een header te verwijderen en controleert of het bestand nog steeds compileert. Opmerking: deze experimentele modus past de originele broncode aan. </para>
+
+<para
+>De bronbestanden zullen standaard niet aangepast worden, de gevonden probleemgevallen zullen naar de standaard uitvoer geschreven worden. </para>
+
+<para
+>De lijst van C++-bestanden dient op de commandoregel opgegeven te worden. Wanneer er geen bestanden gegeven zijn, zullen alle C++-bronnen in de huidige map of in onderliggende mappen gecontroleerd worden (met uitzondering van mappen welke een <filename
+>Makefile.am</filename
+> hebben die <option
+>-UQT_NO_COMPAT</option
+> of <option
+>-UKDE_NO_COMPAT</option
+> bevatten).</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opties</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Veel informatie op standaard uitvoer. Extra debuginformatie zal getoond worden op de standaard uitvoer.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Experimentele modus, zoals deze hierboven werd beschreven. Deze optie neemt ook automatisch de optie <option
+>--modify</option
+> mee.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Naast het tonen van de uitvoer op de standaard uitvoer, zullen alle probleemgevallen ook meteen opgelost worden in de bronbestanden.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+<para
+><command
+>fixuifiles</command
+> is geschreven door Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

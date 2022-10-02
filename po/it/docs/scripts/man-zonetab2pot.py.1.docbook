@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Converte una lista di fusi orari in un file PO modello.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>lista-fusi-orari</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> legge la lista di fusi orari specificata via riga di comando e la converte in un file di messaggi gettext (file PO) modello contenente i nomi dei singoli fusi orari. </para>
+
+<para
+>La lista di fusi orari specificata dovrebbe avere lo stesso formato del file di sistema zone.tab. Se non viene specificata alcuna lista di fusi orari, sarà usato <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>Il nuovo file PO modello sarà inviato sullo standard output.</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Autori</title>
+
+<para
+>zonetab2pot.py è stato scritto da <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Questa pagina di manuale è stata scritta da <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

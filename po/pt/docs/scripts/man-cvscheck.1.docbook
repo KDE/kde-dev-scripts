@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de Março de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Relatório de estado, sem ligação ao servidor, para ficheiros num módulo de &CVS;.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O &cvscheck; imprime informações sobre o estado da sua versão local ('checkout') do &CVS; sem comunicar com o servidor. Isto significa que é extremamente rápido e não precisa de uma ligação de rede.</para>
+
+<para
+>A pasta indicada e as suas subpastas serão processados de forma recursiva. Se não indicada qualquer pasta, será usada a pasta actual e as suas subpastas.</para>
+
+<para
+>Todos os ficheiros com um estado interessante serão impressos com um carácter de estado à frente do seu nome. Os caracteres de estado são os seguintes.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>O ficheiro não é conhecido pelo &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>O ficheiro foi realmente modificado localmente</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>O ficheiro <emphasis
+>pode</emphasis
+> ter modificações locais. Deve fazer <command
+>diff</command
+> com o servidor para verificar.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>O ficheiro tem um conflito com o &CVS; e por isso não pode ser enviado.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>O ficheiro está no &CVS; mas não está na sua cópia local.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>O ficheiro tem uma marca &CVS; fixa anormal.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Você  fez <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> a teste ficheiro, mas ainda não o enviou.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Você  fez <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> a teste ficheiro, mas ainda não o enviou.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja Também</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>cvscheck foi escrito por &Dirk.Mueller; &Dirk.Mueller.mail; e Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Esta página de manual foi preparada por <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema Debian GNU/Linux (mas pode ser utilizada por outros). </para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Crea archivos<filename
+>Makefile.in</filename
+> y <filename
+>Makefile</filename
+> a partir de un archivo <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>rutarelativa/Makefile</replaceable
+></group
+> <group
+><replaceable
+>rutarelativa</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>create_makefile</command
+> crea el archivo <filename
+>Makefile.in</filename
+> y <filename
+>Makefile</filename
+> en un subdirectorio que contiene un archivo <filename
+>Makefile.am</filename
+>. Este script se ejecuta en menos tiempo que configure.</para>
+
+<para
+>Observe que tendrá que proporcionar la ruta relativa al <filename
+>makefile</filename
+> en cuestión <filename
+>Makefile.am</filename
+> (aunque el último <filename
+>Makefile</filename
+> puede omitirse)</para>
+
+<para
+>Este guion puede ejecutarse desde el directorio padre (el que contiene el archivo <filename
+>configure</filename
+>) o uno de sus subdirectorios.</para>
+
+<para
+>Si el directorio del código fuente no es el mismo que el de compilación (vea las variables de entorno más abajo), se asumirá que <filename
+>Makefile.am</filename
+> y <filename
+>Makefile.in</filename
+> están en el directorio del código fuente y el <filename
+>Makefile</filename
+> pertenece al directorio de compilación. </para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Entorno</title>
+
+<para
+>Una de las siguientes variables (per no las dos) debería estar definida si el directorio del código fuente es diferente al de compilación. Si el directorio de compilación es un subdirectorio en el código fuente, es preferible usar la variable <envar
+>OBJ_SUBDIR</envar
+> </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que el directorio de compilación está en dicho subdirectorio dentro del de código fuente. Por ejemplo, si el directorio del código está en <filename class="directory"
+>kdesdk</filename
+> y el de compilación en <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, debería asignarse el valor  <parameter
+>obj-i386-linux</parameter
+> a la variable <envar
+>OBJ_SUBDIR</envar
+> </para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Expresión de <command
+>sed</command
+> para transformar el directorio del código fuente en el de compilación. Por ejemplo, si el directorio es <filename class="directory"
+>~/src/kdesdk</filename
+> y el directorio de compilación es <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, el valor de la variable <envar
+>OBJ_REPLACEMENT</envar
+> debería ser <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Vea también</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>Escrito por &David.Faure; &David.Faure.mail; y otros. Esta página de manual fue preparada por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.orgbab@debian.org</email
+> para el sistema operativo Debian GNU/Linux aunque puede usarse en cualquier otro.</para>
+</refsect1>
+</refentry>

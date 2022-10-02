@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cxxmetric</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cxxmetric</command
+></refname>
+<refpurpose
+>Enkel kildekodemetrik for C og C++</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cxxmetric</command
+> <group
+><option
+><replaceable
+>fil</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+>cxxmetric tæller antal linjer af kode, kommentarer og mellemrum, og beregner diverse anden statistik for hver given kildekodefil. Kildekodefilerne skal være skrevet i C eller C++.</para>
+
+<para
+>Værktøjet er en del af KDE's programmeludviklingsmiljø. </para
+> 
+
+</refsect1>
+
+</refentry>

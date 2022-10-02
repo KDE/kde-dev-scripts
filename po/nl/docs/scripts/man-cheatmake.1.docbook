@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>maak <command
+>make</command
+> wijs bepaalde bestanden niet opnieuw te bouwen</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>bestand</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>bestand</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>cheatmake</command
+> wordt gebruikt om tijd te sparen bij opnieuw compileren. Het kan make wijsmaken bepaalde bestanden over te slaan die niet belangrijk genoeg zijn gewijzigd. Dit kan bijvoorbeeld worden gebruikt wanneer u commentaar in een bestand hebt gewijzigd maar geen code.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opties</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>bestand</replaceable
+></term>
+<listitem
+><para
+>Verbergt het feit dat het bestand was gewijzigd door het tijdstip van laatste wijziging in het verleden te zetten. Wees hier voorzichtig mee!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>tonen</option
+></term>
+<listitem
+><para
+>Toont welke bestanden <command
+>make</command
+> nu nodig vindt om opnieuw te bouwen</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>bestand</replaceable
+></term>
+<listitem
+><para
+>Legt uit waarom make het bestand opnieuw moet bouwen</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Omgeving</title>
+
+<para
+>Een van de volgende variabelen (maar niet beiden) zou ingesteld moeten zijn als de bronmap verschilt van de bouwmap. Als de bouwmap eenvoudig een submap is van de bronmap, dan zou de eenvoudige variabele <envar
+>OBJ_SUBDIR</envar
+> moeten worden gebruikt. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Geeft aan dat de bouwmap in de gegeven submap van de bronmap is. Bijvoorbeeld, als de bronmap <filename class="directory"
+>kdesdk</filename
+> is en de bouwmap is <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, dan zou <envar
+>OBJ_SUBDIR</envar
+> moeten worden gezet op <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Een <command
+>sed</command
+> uitdrukking die wordt gebruikt om de bronmap om te vormen in de bouwmap. Bijvoorbeeld, als de bronmap <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> is, dan zou <envar
+>OBJ_REPLACEMENT</envar
+> gezet moeten worden op <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+><command
+>cheatmake</command
+> is geschreven door &David.Faure; &David.Faure.mail;. Deze man-pagina is gemaakt door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> voor het Debian <acronym
+>GNU</acronym
+>/&Linux; systeem (maar mag worden gebruikt door anderen).</para>
+
+</refsect1>
+
+</refentry>

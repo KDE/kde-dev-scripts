@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8. marts, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Offline statusrapport for filer i et &CVS;-modul der er tjekket ud.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>katalog</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+>&cvscheck; skriver information om status ud for din lokale kopi af &CVS; uden at kommunikere med serveren. Det betyder at det er yderst hurtigt og ikke kræver en netværksforbindelse.</para>
+
+<para
+>Det givne katalog og alle dets underkataloger behandles rekursivt. Hvis intet katalog angives, bruges nuværende katalog og dets underkataloger rekursivt.</para>
+
+<para
+>Hver fil med interessant status skrives ud med et statustegn foran sit navn. Statustegnene er følgende:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Filen er ikke kendt i &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Filen er helt sikkert lokalt ændret</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Filen <emphasis
+>kan</emphasis
+> have lokale ændringer. Du bør udføre kommandoen <command
+>diff</command
+> med serveren for at være sikker.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Filen har en &CVS;-konflikt og kan derfor ikke arkiveres.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Filen er i &CVS; men mangler i din lokale kopi.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Filen har et usædvanligt klæbrigt &CVS;-mærke.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Du har gjort <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> for filen, men har endnu ikke arkiveret den.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Du har gjort <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> for filen, men har endnu ikke arkiveret den.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Se også</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Forfattere</title>
+
+<para
+>cvscheck er skrevet af &Dirk.Mueller; &Dirk.Mueller.mail; og Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Denne manualsidee er skrevet af <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> for Debians GNU/Linux-system (men kan bruges af andre). </para>
+</refsect1>
+
+</refentry>

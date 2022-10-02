@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>8 d'abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Detecta directoris amb contingut inútil a un arbre de CVS.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>pruneemptydirs</command
+> és usat per a netejar un arbre de CVS local. Detecta directoris amb fitxers obsolets o buits que ja han estat eliminats del CVS. Algunes vegades aquests directoris provoquen problemes durant la compilació. Examina el directori actual junt amb tots els seus subdirectoris.</para>
+
+<para
+>Tingueu present que aquesta eina no elimina res, simplement imprimeix el que s'hauria de fer en una sèrie d'ordres «remove». Els podeu copiar i enganxar o usar-los amb «eval» en un script.</para>
+
+<para
+>Aquesta aplicació funciona millor si el directori de compilació no coincideix amb el de les fonts, atès que no mostra directoris amb executables antics.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Realment elimina directament en comptes de simplement mostrar el que s'hauria de fer. Useu aquesta opció amb molta cura.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+
+<para
+><command
+>pruneemptydirs</command
+> ha estat escrit per en &David.Faure; &David.Faure.mail;</para>
+<para
+>Aquesta pàgina del manual ha estat preparada per en <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

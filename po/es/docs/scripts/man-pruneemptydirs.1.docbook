@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Detecta directorios con contenido inútil en el CVS.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>pruneemptydirs</command
+> sirve para limpiar su copia local de CVS. Detecta directorios con archivos obsoletos o vacíos que ya han sido borrados del CVS. Algunas veces dichos directorios provocan problemas durante la compilación. Examina el direactorio actual y todos sus subdirectorios.</para>
+
+<para
+>Observe que esta herramienta no borra nada, simplemente imprime lo que -cree que- debería hacerse en una serie de comandos. Puede copiarlos y pegarlo o ejecutarlos en un script.</para>
+
+<para
+>Esta aplicación funciona mejor si el directorio de compilación no coincide con el de los fuentes, dado que no muestra directorios con viejos ejecutables.</para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de KDE.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciones</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Borrar directamente en lugar de simplemente mostrar lo que debería borrarse. Úselo con precaución.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+><command
+>pruneemptydirs</command
+> fue escrito por &David.Faure; &David.Faure.mail;</para>
+<para
+>Está página de manual fue escrita por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

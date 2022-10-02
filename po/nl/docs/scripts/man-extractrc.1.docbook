@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Extraheer message-tekenreeksen uit UI en GUI-RC bestanden</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>bestandsnaam</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>extractrc</command
+> zoekt naar alle teksttags en andere message-tekenreeksen in het gegeven bestand en schrijft de overeenkomstige i18n() aanroepen naar standaarduitvoer zodat xgettext ze kan ontleden.</para>
+
+<para
+>Het begrijpt zowel (&Qt;/&kde;) <acronym
+>UI</acronym
+> bestanden en &XML; GUI-RC bestanden van <application
+>designer</application
+>. </para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;. </para>
+
+</refsect1>
+
+</refentry>

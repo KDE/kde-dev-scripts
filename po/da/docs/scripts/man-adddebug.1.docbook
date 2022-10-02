@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7. marts, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Ændrer <filename
+>Makefile</filename
+> for at tilføje fejlsøgningsinformation</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>adddebug</command
+> ændrer <filename
+>Makefile</filename
+> i nuværende katalog (og valgfrit i dets underkataloger) for at tilføje fejlsøgningsinformation (<option
+>-g3</option
+>). Det fjerner også bort optimering (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Tilvalg</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Behold optimering (fjern ikke flaget <option
+>-O[1-9]?</option
+> som normalt fjernes).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Søg rekursivt gennem alle underkataloger for nuværende mappe og udfør handlingen for hver <filename
+>Makefile</filename
+> som findes. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>Kompilér uden at NDEBUG og NO_DEBUG er defineret (gør at kald til <function
+>kDebug</function
+> virker).</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

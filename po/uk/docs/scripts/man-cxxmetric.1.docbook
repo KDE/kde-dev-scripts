@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cxxmetric</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cxxmetric</command
+></refname>
+<refpurpose
+>Проста метрика кодів мовами програмування C і C++</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cxxmetric</command
+> <group
+><option
+><replaceable
+>файл</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>cxxmetric підраховує кількість рядків коду, коментарів і порожніх рядків, а також обчислює інші статистичні дані щодо кожного вказаного файла коду. Мовами програмування, якими написано код, мають бути C або C++.</para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE. </para
+> 
+
+</refsect1>
+
+</refentry>

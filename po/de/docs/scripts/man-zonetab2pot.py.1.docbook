@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Wandelt eine Zeitzonenliste in eine PO-Datei um.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>Zeitzonen-Liste</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> liest eine Zeitzonen-Liste von der Befehlszeile ein und wandelt sie in eine POT-Vorlagendatei im Gettext-Format um, die dann die Namen der individuellen Zeitzonen enthält. </para>
+
+<para
+>Die angegebene Zeitzonen-Liste sollte im gleichen Format vorliegen wie die Datei zone.tab des Systems. Wenn keine Zeitzonen-Liste auf der Befehlszeile angegeben wird, wird stattdessen <filename
+>/usr/share/zoneinfo/zone.tab</filename
+> verwendet.</para>
+
+<para
+>Die neue POT-Datei wird auf die Standard-Ausgabe ausgegeben.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Autoren</title>
+
+<para
+>zonetab2pot.py wurde geschrieben von <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Diese Handbuchseite wurde geschrieben von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

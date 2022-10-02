@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>7 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Перетворює список часових поясів на шаблон файлів PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>список_часових_поясів</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> читає вказаний з командного рядка список часових поясів і перетворює його на шаблон файлів повідомлень gettext (файл PO), у якому містяться назви окремих часових поясів. </para>
+
+<para
+>Вказаний список часових поясів слід записувати у тому ж форматі, що і системний zone.tab. Якщо у командному рядку не буде вказано списку часових поясів, буде використано файл <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>Створений файл шаблону файлів PO буде записано до стандартного виводу.</para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+
+<para
+>Автором zonetab2pot.py є <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Цю сторінку довідника було підготовлено <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

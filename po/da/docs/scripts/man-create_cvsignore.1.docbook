@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>8. marts, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>Opret en foreløbig .cvsignore i nuværende katalog</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>create_cvsignore</command
+> bruges for at oprette en foreløbig <filename
+>.cvsignore</filename
+> i nuværende katalog. Det gør dette baseret på en del af indholdet det finder i <filename
+>Makefile.am</filename
+>.</para>
+
+<para
+>Ingen linjer fjernes fra nogen eksisterende <filename
+>.cvsignore</filename
+>. Hvis der ikke allerede er en <filename
+>.cvsignore</filename
+>-fil, tilføjes  den til CVS-arkivet.</para>
+
+<para
+>Bemærk at der skal være en <filename
+>Makefile.am</filename
+> i nuværende katalog for at værktøjet skal virke.</para>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+</refentry>

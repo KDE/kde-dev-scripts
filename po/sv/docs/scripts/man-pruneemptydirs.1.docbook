@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Hittar föråldrade källkodskataloger i ett CVS-träd</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>pruneemptydirs</command
+> används för att städa upp ett lokalt CVS-träd. Det detekterar kataloger som innehåller rester av gamla saker som har tagits bort från CVS. Sådana gamla kataloger förstör ofta kompilering. Nuvarande katalog och alla kataloger under den undersöks.</para>
+
+<para
+>Observera att verktyget inte tar bort någonting. Det skriver helt enkelt ut vad som ska göras som en serie med borttagningskommandon. Du kan kopiera och klistra in kommandona, eller använda dem med eval i ett skript.</para>
+
+<para
+>Verktyget fungerar bättre om källkodskatalogen inte är samma som byggkatalogen, eftersom det inte skriver ut kataloger som innehåller gamla körbara filer.</para>
+
+<para
+>Verktyget är en del av KDE:s programvaruutvecklingsmiljö.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Väljare</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Utför verkligen borttagningarna istället för att bara skriva ut dem. Använd väljaren med försiktighet.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+
+<para
+><command
+>pruneemptydirs</command
+> är skrivet av &David.Faure; &David.Faure.mail;</para>
+<para
+>Den här manualsidan är framtagen av <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

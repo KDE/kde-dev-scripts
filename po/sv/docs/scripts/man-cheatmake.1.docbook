@@ -1,0 +1,191 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>lura <command
+>make</command
+> att inte bygga om vissa filer</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>fil</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>fil</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>cheatmake</command
+> används för att spara tid vid omkompilering. Det kan lura make att hoppa över filer som inte har ändrats på ett meningsfullt sätt. Det kan till exempel användas när du ändrar en kommentar i en fil, men inte själva koden.</para>
+
+<para
+>Verktyget är en del av &kde;:s programvaruutvecklingsmiljö. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Väljare</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>fil</replaceable
+></term>
+<listitem
+><para
+>Döljer faktum att filen ändrades genom att ställa in tidsstämpeln till det förgångna. Använd med försiktighet!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Listar vilka filer som <command
+>make</command
+> för närvarande behöver bygga om</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>fil</replaceable
+></term>
+<listitem
+><para
+>Förklarar varför make måste bygga om filen</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Miljö</title>
+
+<para
+>En av följande variabler (men inte båda) ska vara angiven om källkodskatalogen är skild från byggkatalogen. Om byggkatalogen helt enkelt är en underkatalog till källkodskatalogen, ska den enklare variabeln <envar
+>OBJ_SUBDIR</envar
+> användas. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Anger att byggkatalogen finns i den angivna underkatalogen i källkodskatalogen. Om källkodskatalogen till exempel är <filename class="directory"
+>kdesdk</filename
+> och byggkatalogen är <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, så ska <envar
+>OBJ_SUBDIR</envar
+> ställas in till <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ett <command
+>sed</command
+>-uttryck som används för att transformera källkodskatalogen till byggkatalogen. Om källkodskatalogen till exempel är <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> då ska <envar
+>OBJ_REPLACEMENT</envar
+> ställas in till <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Se också</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+
+<para
+><command
+>cheatmake</command
+> är skrivet av &David.Faure; &David.Faure.mail;. Den här manualsidan är framtagen av <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> för Debians GNU/Linux-system (men kan användas av andra).</para>
+
+</refsect1>
+
+</refentry>

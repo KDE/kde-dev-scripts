@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analyseer terugkeer-adressen uit dmalloc-logbestanden.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>dmalloc-log</replaceable
+> <command
+>binary</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>extend_dmalloc</command
+> voert <command
+>gdb</command
+>(1) uit om informatie over de terugkeer-adressen uit een <command
+>dmalloc</command
+>(1)-logbestand. Het zal specifiek elke <literal
+>ra=</literal
+> regels onderzoeken en de overeenkomstige regelnummers proberen te verkrijgen</para>
+
+<para
+>Het argument <option
+><command
+>binary</command
+></option
+> moet het binaire programma zijn dat het logbestand <filename
+>dmalloc-log</filename
+> heeft gemaakt.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Notities</title>
+<para
+>Het beste is om de uitvoer van <command
+>extend_dmalloc</command
+> naar een bestand te sturen, omdat <command
+>gdb</command
+> anders schint te vragen om een Return alsof u aan het eind van een pagina bent. </para
+> 
+</refsect1>
+
+</refentry>

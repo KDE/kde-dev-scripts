@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de març de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>enganya a <command
+>make</command
+> perquè no reconstrueixi certs fitxers.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>fitxer</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>fitxer</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+>L'ordre <command
+>cheatmake</command
+> s'usa per estalviar temps durant les recompilacions. Podeu enganyar a «make» perquè passi per alt els fitxers amb modificacions que no tinguin importància com per exemple quan afegiu comentaris al codi real.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>fitxer</replaceable
+></term>
+<listitem
+><para
+>Ocult el fet que el fitxer ha canviat establint la marca de temps en un moment anterior. Empreu-ho amb cura!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Llista quins fitxers necessitarà reconstruir <command
+>make</command
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>fitxer</replaceable
+></term>
+<listitem
+><para
+>Explica la raó per la qual «make» necessita reconstruir un determinat fitxer.</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Entorn</title>
+
+<para
+>Hauria de configurar-se una de les variables següents (però no ambdues) si el directori font és diferent del que realitzareu la compilació. Si el directori de compilació és un subdirectori dintre del codi font, haureu d'usar la variable <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que el directori de compilació està en un subdirectori a dins del codi font. Per exemple, si el directori del codi font és <filename class="directory"
+>kdesdk</filename
+> i el de compilació <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, aleshores <envar
+>OBJ_SUBDIR</envar
+> haurà d'estar establerta a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Per a transformar el directori del codi font en el de compilació s'empra una expressió de <command
+>sed</command
+>. Per exemple, si el directori de les fonts és <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, aleshores <envar
+>OBJ_REPLACEMENT</envar
+> hauria d'estar establert a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veure també</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+
+<para
+><command
+>cheatmake</command
+> ha estat escrit per en &David.Faure; &David.Faure.mail;. Aquesta pàgina del manual ha estat preparada per en <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> per al sistema Debian <acronym
+>GNU</acronym
+>/&Linux; (però pot ser emprada per d'altres).</para>
+
+</refsect1>
+
+</refentry>

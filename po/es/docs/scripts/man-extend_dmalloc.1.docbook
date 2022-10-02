@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analiza direcciones de retorno de archivos de registro dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>dmalloc-log</replaceable
+> <command
+>binary</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>extend_dmalloc</command
+> ejecutará <command
+>gdb</command
+>(1) para obtener información de una dirección de retorno desde el archivo de registro <command
+>dmalloc</command
+>(1). Concretamente, examinará cualquier línea <literal
+>ra=</literal
+> intentando obtener su correspondiente número de línea.</para>
+
+<para
+>El argumento <option
+><command
+>binary</command
+></option
+> debe corresponder al binario que generó el registro <filename
+>dmalloc-log</filename
+>.</para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de &kde;.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Notas</title>
+<para
+>Es posible que desee redidirgir la salida de  <command
+>extend_dmalloc</command
+> a un archivo, sino <command
+>gdb</command
+> parece esperar un retorno como si estuviera al final de una página. </para
+> 
+</refsect1>
+
+</refentry>

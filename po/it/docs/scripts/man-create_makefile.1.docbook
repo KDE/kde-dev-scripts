@@ -1,0 +1,168 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Crea <filename
+>Makefile.in</filename
+> e <filename
+>Makefile</filename
+> a partire da <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>percorso_relativo/Makefile</replaceable
+></group
+> <group
+><replaceable
+>percorso_relativo</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>create_makefile</command
+> crea i file <filename
+>Makefile.in</filename
+> e <filename
+>Makefile</filename
+> in una sottocartella contenente un file <filename
+>Makefile.am</filename
+>. Questo script fa risparmiare del tempo, rispetto ad una ri-esecuzione completa di configure</para>
+
+<para
+>Nota che devi fornire il percorso ai file <filename
+>Makefile</filename
+> e <filename
+>Makefile.am</filename
+> desiderati (sebbene il <filename
+>/Makefile</filename
+> finale può essere omesso).</para>
+
+<para
+>Questo script può essere eseguito da una cartella di livello più alto (quella contenente <filename
+>configure</filename
+>) o da una delle sue sottocartelle.</para>
+
+<para
+>Se la cartella dei sorgenti è diversa dalla cartella di compilazione (vedi le variabili d'ambiente sotto), sarà assunto che i file <filename
+>Makefile.am</filename
+> e <filename
+>Makefile.in</filename
+> appartengono alla stessa directory dei sorgenti e che il file <filename
+>Makefile</filename
+> appartiene alla cartella di compilazione. </para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Variabili d'ambiente</title>
+
+<para
+>Una delle seguenti variabili (ma non entrambe) dovrebbe essere impostata la cartella dei sorgenti è diversa dalla cartella di compilazione, Se la cartella di compilazione è semplicemente una sottocartella della cartella dei sorgenti, dovrebbe essere usata la variabile più semplice <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica che la cartella di compilazione è nella sottocartella specificata della cartella dei sorgenti. Per esempio, se la cartella dei sorgenti è <filename class="directory"
+>kdesdk</filename
+> e la cartella di compilazione è <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, allora <envar
+>OBJ_SUBDIR</envar
+> dovrebbe essere impostata a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Un'espressione di <command
+>sed</command
+> che viene usata per trasformare la cartella dei sorgenti nella cartella di compilazione. Per esempio, se la cartella dei sorgenti è <filename class="directory"
+>~src/kdesdk</filename
+>, allora <envar
+>OBJ_REPLACEMENT</envar
+> dovrebbe essere impostata a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Vedi anche</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Autori</title>
+
+<para
+>create_makefile è stato scritto da &David.Faure; &David.Faure.mail; e altri. Questa pagina di manuale è stata scritta da <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> per il sistema Debian GNU/Linux (ma può essere usata da altri).</para>
+</refsect1>
+</refentry>

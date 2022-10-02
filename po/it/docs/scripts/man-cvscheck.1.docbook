@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Riepilogo in modalità non in linea dello stato dei file nella copia locale di un modulo &CVS;.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>cartella</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+>&cvscheck; mostra le informazioni sullo stato della tua copia locale &CVS; di lavoro senza comunicare con il server. Ciò significa che è estremamente veloce e non richiede una connessione di rete.</para>
+
+<para
+>Saranno processate ricorsivamente la cartella specificata e le sue sottocartelle. Se non viene specificata alcuna cartella, saranno usate la cartella corrente e, ricorsivamente, le sue sottocartelle.</para>
+
+<para
+>Ogni file con uno stato interessante sarà visualizzato con un carattere di stato davanti al suo name. I caratteri di stato sono i seguenti.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Il file non è conosciuto da &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Il file è sicuramente stato modificato localmente</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Il file <emphasis
+>potrebbe</emphasis
+> essere stato modificato localmente. Dovresti vedere il <command
+>diff</command
+> con il server per esserne sicuro.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Il file ha un conflitto &CVS; e quindi non può essere depositato.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Questo file è in &CVS; ma manca nella tua copia di lavoro locale.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem
+><para
+>Questo file ha un insolito tag &CVS; appiccicoso.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Hai fatto <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> per questo file, ma ancora non hai depositato.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>file.c</filename
+></term>
+<listitem>
+<para
+>Hai fatto <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> per questo file, ma ancora non hai depositato.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Vedi anche</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autori</title>
+
+<para
+>cvscheck è stato scritto da &Dirk.Mueller; &Dirk.Mueller.mail; e &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Questa pagina di manuale è stata scritta da <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> per il sistema Debian GNU/Linux (ma può essere usata da altri). </para>
+</refsect1>
+
+</refentry>

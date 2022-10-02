@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analysera returadresser från dmalloc-loggfiler.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>dmalloc-logg</replaceable
+> <command
+>binärfil</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+><command
+>extend_dmalloc</command
+> kör <command
+>gdb</command
+>(1) för att få information om returadresser från en <command
+>dmalloc</command
+>(1) loggfil. I synnerhet undersöker den alla rader med <literal
+>ra=</literal
+> och försöker hämta motsvarande radnummer.</para>
+
+<para
+>Väljaren <option
+><command
+>binärfil</command
+></option
+> måste vara binärfilen som skapade loggen <filename
+>dmalloc-logg</filename
+>.</para>
+
+<para
+>Verktyget är en del av &kde;:s programvaruutvecklingsmiljö.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Anteckningar</title>
+<para
+>Du bör kanske skicka utmatning från <command
+>extend_dmalloc</command
+> till en fil, eftersom annars verkar <command
+>gdb</command
+> fråga efter ett returtecken, som om du är i slutet av en sida. </para
+> 
+</refsect1>
+
+</refentry>

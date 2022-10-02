@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>8 березня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>Створює попередній файл .cvsignore у поточному каталозі</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+><command
+>create_cvsignore</command
+> використовується для створення попереднього варіанта файла <filename
+>.cvsignore</filename
+> у поточному каталозі. Операції, які виконуються цією програмою засновано на вмісті файла <filename
+>Makefile.am</filename
+></para>
+
+<para
+>З усіх існуючих файлів <filename
+>.cvsignore</filename
+> не буде вилучено жодного рядка. Якщо файла <filename
+>.cvsignore</filename
+> ще не існує, його буде додано до сховища cvs.</para>
+
+<para
+>Зауважте, що для роботи цього інструменту потрібно, щоб у поточному каталозі був файл <filename
+>Makefile.am</filename
+>.</para>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+</refentry>

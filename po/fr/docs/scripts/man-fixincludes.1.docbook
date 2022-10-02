@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07-04-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Réduit le nombre de « #includes » dans les fichiers source de &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>fixincludes</command
+> essaie de réduire le nombre de « #includes » dans les fichiers source C++. Une grande partie de ce traitement est propre aux sources de &kde;, donc il se peut qu'il ne fonctionne pas très bien avec les des applications n'appartenant pas à &kde;.</para>
+
+<para
+>Les problèmes suivants sont identifiés par <command
+>fixincludes</command
+> :</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Inclusion d'en-têtes qui ne sont plus pris en charge mais qui existent pour la compatibilité avec les versions antérieures de Qt/KDE ;</para>
+</listitem>
+<listitem>
+<para
+>Inclusion du même fichier plusieurs fois. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Il existe également un mode expérimental qui essaie de supprimer chaque #include un par un (à quelques exceptions près) pour voir si le source compile toujours. Notez que ce mode expérimental modifiera les sources originaux. </para>
+
+<para
+>Par défaut, les sources ne seront pas modifiés ; les problèmes identifiés seront simplement écrits sur la sortie standard. </para>
+
+<para
+>La liste de sources C++ à examiner devra être indiquée sur la ligne de commande. Si aucun fichier n'est indiqué, tous les sources C++ dans ou sous le dossier actuel seront examinés (à l'exception des dossiers dont le <filename
+>Makefile.am</filename
+> contient <option
+>-UQT_NO_COMPAT</option
+> ou <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels pour KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Options</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Mode verbeux. Une sortie de débogage supplémentaire est écrite sur la sortie standard.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Mode expérimental, comme décrit ci-dessus en détail. Notez que cette option implique <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Identique à l'écriture des messages dans la sortie standard, modifie en réalité les sources originaux pour corriger tout problème trouvé.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+<para
+><command
+>fixincludes</command
+> a été écrit par Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

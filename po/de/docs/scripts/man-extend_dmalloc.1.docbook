@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analysiert Rückgabe-Adressen aus dmalloc-Protokolldateien.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>dmalloc-log</replaceable
+> <command
+>Binärprogramm</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+><command
+>extend_dmalloc</command
+> führt <command
+>gdb</command
+>(1) aus und holt Informationen zu den Rückgabe-Adressen aus einer <command
+>dmalloc</command
+>(1)-Protokolldatei ein. Insbesondere wird jedes Vorkommen von <literal
+>ra=</literal
+> untersucht und die zugehörige Zeilennummer ermittelt.</para>
+
+<para
+>Das Argument <option
+><command
+>Binärdateiprogramm</command
+></option
+> muss das Programm sein, welches <filename
+>dmalloc-log</filename
+> erzeugt hat.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Anmerkungen</title>
+<para
+>Sie sollten die Ausgabe von <command
+>extend_malloc</command
+> in eine Datei umleiten, weil <command
+>gdb</command
+> sonst auf das Betätigen der Eingabetaste wartet, so als hätte die Ausgabe das Ende einer Seite erreicht. </para
+> 
+</refsect1>
+
+</refentry>

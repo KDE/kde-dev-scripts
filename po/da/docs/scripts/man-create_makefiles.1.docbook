@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8. marts, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Genopretter alle <filename
+>Makefile</filename
+> under et katalog</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>katalog</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+>&create_makefiles; genopretter alle <filename
+>Makefile</filename
+> i <replaceable
+>katalog</replaceable
+> og dets underkataloger (rekursivt) ud fra de tilsvarende <filename
+>Makefile.am</filename
+> skabeloner.</para>
+
+<para
+>Scriptet skal køres fra topniveaukataloget (det som indeholder configure). Scriptet sparer tid sammenlignet med at køre configure fuldstændigt om igen.</para>
+
+<para
+>Hvis kildekodekataloget adskiller sig fra byggekataloget (se miljøvariablerne nedenfor), antages at hver <filename
+>Makefile.am</filename
+> og <filename
+>Makefile.in</filename
+> hører hjemme under kildekodekataloget og at hver <filename
+>Makefile</filename
+> hører hjemme under byggekataloget.</para>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Miljø</title>
+<para
+>En af de følgende variabler (men ikke begge) skal være angivet hvis kildekodekataloget er forskelligt fra byggekataloget. Hvis byggekataloget helt enkelt er et underkatalog af kildekodekataloget, skal den simplere variabel <envar
+>OBJ_SUBDIR</envar
+> bruges. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Angiver at byggekataloget er i det angivne underkatalog i kildekodekataloget. Hvis kildekodekataloget for eksempel er <filename class="directory"
+>kdesdk</filename
+> og byggekataloget er <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, så skal <envar
+>OBJ_SUBDIR</envar
+> indstilles til <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Et <command
+>sed</command
+>-udtryk som bruges til at transformere kildekodekataloget til byggekataloget. Hvis kildekodekataloget for eksempel er <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> så skal <envar
+>OBJ_REPLACEMENT</envar
+> indstilles til <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Se også</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Forfattere</title>
+
+<para
+>&create_makefiles; er skrevet af &David.Faure; &David.Faure.mail;.</para>
+
+<para
+>Denne manualside er skrevet af <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> for Debians GNU/Linux-system (men kan bruges af andre).</para>
+ 
+</refsect1>
+
+</refentry>

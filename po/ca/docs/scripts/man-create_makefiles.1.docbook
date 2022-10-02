@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de març de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Recrea tots els fitxers <filename
+>Makefile</filename
+> sota un determinat directori</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+>&create_makefiles; recrea tots els fitxers <filename
+>Makefile</filename
+> en <replaceable
+>dir</replaceable
+> i els seus corresponents subdirectoris (recursivament) des de les plantilles <filename
+>Makefile.am</filename
+> corresponents.</para>
+
+<para
+>Aquest script s'haurà d'executar des del directori superior (el que contingui el fitxer «configure»). Estalviareu temps si executeu aquest script en comptes de tornar a executar «configure».</para>
+
+<para
+>Si el directori del codi font no és el mateix que a on es realitza la compilació (vegeu les variables d'entorn més avall); s'assumirà que cada fitxer <filename
+>Makefile.am</filename
+> i <filename
+>Makefile.in</filename
+> pertanyen al directori de les fonts i que cada fitxer <filename
+>Makefile</filename
+> pertany al directori de compilació.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Entorn</title>
+<para
+>Hauria de configurar-se una de les variables següents (però no ambdues) si el directori font és diferent del que realitzareu la compilació. Si el directori de compilació és un subdirectori dintre del codi font, haureu d'usar la variable <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que el directori de compilació està en un subdirectori a dins del codi font. Per exemple, si el directori del codi font és <filename class="directory"
+>kdesdk</filename
+> i el de compilació <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, aleshores <envar
+>OBJ_SUBDIR</envar
+> haurà d'estar establerta a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Per a transformar el directori del codi font en el de compilació s'empra una expressió de <command
+>sed</command
+>. Per exemple, si el directori de les fonts és <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, aleshores <envar
+>OBJ_REPLACEMENT</envar
+> hauria d'estar establert a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vegeu també</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+
+<para
+>&create_makefiles; ha estat escrit per en &David.Faure; &David.Faure.mail;.</para>
+
+<para
+>Aquesta pàgina del manual ha estat preparada per en <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> per al sistema Debian GNU/Linux (però pot ser emprada per d'altres).</para>
+ 
+</refsect1>
+
+</refentry>

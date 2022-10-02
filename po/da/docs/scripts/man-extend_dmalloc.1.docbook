@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>Analysér returadresser fra dmalloc-logfiler.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>dmalloc-logg</replaceable
+> <command
+>binærfil</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>extend_dmalloc</command
+> kør <command
+>gdb</command
+>(1) for at få information om returadresser fra en <command
+>dmalloc</command
+>(1) logfil. I særdeleshed undersøger den alle linjer med <literal
+>ra=</literal
+> og forsøger hente tilsvarende linjenummer.</para>
+
+<para
+>Argumentet <option
+><command
+>binærfil</command
+></option
+> skal være den binære fil som oprettede loggen <filename
+>dmalloc-logg</filename
+>.</para>
+
+<para
+>Værktøjet er en del af &kde;'s programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>Noter</title>
+<para
+>Du bør måske sende udskrift fra <command
+>extend_dmalloc</command
+> til en fil, eftersom <command
+>gdb</command
+> ellers synes at spørge efter et returtegn, som om du er ved slutningen af en side. </para
+> 
+</refsect1>
+
+</refentry>

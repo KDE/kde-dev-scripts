@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>07-04-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Convertit une liste de fuseau horaire vers un modèle de fichier PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>timezone-list</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> lit la liste de fuseau horaire donnée par la ligne de commande et la convertit en un modèle de fichier de message Gettext (fichier PO) contenant les noms des fuseaux horaires individuels. </para>
+
+<para
+>La liste de fuseaux horaires doit être dans le même format que le système zone.tab. Si aucune liste de fuseaux horaires n'est spécifiée dans la ligne de commande, <filename
+>/usr/share/zoneinfo/zone.tab</filename
+> sera utilisé.</para>
+
+<para
+>Le nouveau modèle de fichier PO sera écrit vers la sortie standard.</para>
+
+<para
+>Cet utilitaire est un élément du kit de développement logiciel de KDE. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>zonetab2pot.py a été écrit par <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Le manuel a été écrit par <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % German "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Spürt verwaiste Quelltext-Ordner in einem CVS-System auf.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschreibung</title>
+
+<para
+><command
+>pruneemptydirs</command
+> wird zum Aufräumen einer lokalen CVS-Arbeitskopie verwendet. Es spürt Ordner mit Überresten von Code-Teilen auf, die bereits aus dem CVS-System entfernt wurden. Solche Überbleibsel verursachen oftmals Fehler beim Kompilieren. Durchsucht wird der aktuelle und alle darunterliegenden Ordner.</para>
+
+<para
+>Dieses Werkzeug entfernt nichts, sondern listet nur eine Reihe Befehle auf, mit denen die Überbleibsel entfernt werden könnten. Sie können diese Befehle kopieren und einfügen oder mittels eval in einem Skript weiterverwenden.</para>
+
+<para
+>Dieses Werkzeug funktioniert besser, wenn der Quellordner nicht zum Kompilieren verwendet wird, weil das Programm dann keine Ordner mit alten Binärdateien ausgibt.</para>
+
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Optionen</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Die gefundenen Dateien tatsächlich löschen, anstatt sie nur aufzulisten. Verwenden Sie diese Option mit Bedacht.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autoren</title>
+
+<para
+><command
+>pruneemptydirs</command
+> wurde von &David.Faure; &David.Faure.mail; geschrieben.</para>
+<para
+>Diese Handbuchseite wurde geschrieben von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

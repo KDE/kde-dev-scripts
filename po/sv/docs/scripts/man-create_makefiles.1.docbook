@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Skapar om alla <filename
+>Makefile</filename
+> under en katalog</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>katalog</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+
+<para
+>&create_makefiles; skapar om alla <filename
+>Makefile</filename
+> i <replaceable
+>katalog</replaceable
+> och dess underkataloger (rekursivt) från motsvarande <filename
+>Makefile.am</filename
+> mallar.</para>
+
+<para
+>Skriptet måste köras från toppnivåkatalogen (den som innehåller configure). Skriptet sparar tid jämfört med att köra om configure helt och hållet.</para>
+
+<para
+>Om källkodskatalogen skiljer sig från byggkatalogen (se miljövariablerna nedan), antas att varje <filename
+>Makefile.am</filename
+> och <filename
+>Makefile.in</filename
+> hör hemma under källkodskatalogen och att varje <filename
+>Makefile</filename
+> hör hemma under byggkatalogen.</para>
+
+<para
+>Verktyget är en del av &kde;:s programvaruutvecklingsmiljö.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Miljö</title>
+<para
+>En av följande variabler (men inte båda) ska vara angiven om källkodskatalogen är skild från byggkatalogen. Om byggkatalogen helt enkelt är en underkatalog till källkodskatalogen, ska den enklare variabeln <envar
+>OBJ_SUBDIR</envar
+> användas. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Anger att byggkatalogen finns i den angivna underkatalogen i källkodskatalogen. Om källkodskatalogen till exempel är <filename class="directory"
+>kdesdk</filename
+> och byggkatalogen är <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, så ska <envar
+>OBJ_SUBDIR</envar
+> ställas in till <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ett <command
+>sed</command
+>-uttryck som används för att transformera källkodskatalogen till byggkatalogen. Om källkodskatalogen till exempel är <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> då ska <envar
+>OBJ_REPLACEMENT</envar
+> ställas in till <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Se också</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+
+<para
+>&create_makefiles; är skrivet av &David.Faure; &David.Faure.mail;.</para>
+
+<para
+>Den här manualsidan är framtagen av <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> för Debians GNU/Linux-system (men kan användas av andra).</para>
+ 
+</refsect1>
+
+</refentry>

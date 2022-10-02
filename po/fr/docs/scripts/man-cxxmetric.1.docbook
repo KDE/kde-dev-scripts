@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07-04-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cxxmetric</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cxxmetric</command
+></refname>
+<refpurpose
+>Simple mesureur de source C et C++</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cxxmetric</command
+> <group
+><option
+><replaceable
+>fichier</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+>cxxmetric compte le nombre de lignes de code, de commentaires et d'espaces et calcule diverses statistiques pour chaque fichier source. Les fichiers doivent être en C ou C++.</para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels de KDE. </para
+> 
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07-04-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Extrait les chaînes de messages depuis les fichiers UI et GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>fichier</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>extractrc</command
+> cherche toutes les balises et autres chaînes de messages dans les fichiers donnés et écrit les appels i18n() correspondant sur la sortie standard afin que xgettext puisse les vérifier.</para>
+
+<para
+>Il comprend à la fois les fichiers <acronym
+>UI</acronym
+> de (&Qt;/&kde;) <application
+>designer</application
+> et les fchiers &XML; GUI-R. </para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels de KDE. </para>
+
+</refsect1>
+
+</refentry>

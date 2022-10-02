@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Зменшує кількість оголошень #include у файлах початкових кодів &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>файл</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>Команда <command
+>fixincludes</command
+> намагається зменшити кількість інструкцій #include у файлах початкових кодів мовою програмування C++. Більшість з функцій цієї команди є специфічною для початкових кодів &kde;, а отже, ця команда може не працювати належним чином для програм, які не належать &kde;.</para>
+
+<para
+>За допомогою <command
+>fixincludes</command
+> можна виявити такі проблеми:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Включення файлів заголовків, які більше не підтримуються, але які існують для сумісності зі старішими версіями Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Повторне включення того самого файла. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Існує також експериментальний режим, у якому програма намагається вилучати по одній інструкції #include за раз (за декількома винятками), а потім визначає, чи може бути скомпільовано початковий код. Зауважте, що за використання цього експериментального режиму буде змінено початкові коди програми. </para>
+
+<para
+>У типовому режимі початкові коди змінено не буде, про виявлені проблеми буде просто повідомлено до стандартного виводу. </para>
+
+<para
+>Список початкових кодів мовою C++, які слід перевірити, слід визначати за допомогою командного рядка. Якщо не буде вказано файлів, буде перевірено всі файли початкових кодів C++ у поточному каталозі та всіх його підкаталогах (за винятком тих файлів, чий файл <filename
+>Makefile.am</filename
+> містить параметри <option
+>-UQT_NO_COMPAT</option
+> і <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Параметри</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Докладний режим. Додаткову інформацію для усунення вад буде записано до стандартного виводу.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Експериментальний режим, який було докладно описано вище. Зауважте, що за використання цього параметра буде автоматично додано параметр <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Окрім виведення повідомлень до стандартного виводу, змінити файли початкових кодів, щоб усунути всі знайдені проблеми.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+<para
+>Автором <command
+>fixincludes</command
+> є Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

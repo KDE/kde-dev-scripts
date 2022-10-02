@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2 лютого 2005 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>Замінює файли у CVS на попередні версії</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>назва_файла</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>cvsrevertlast використовується для заміни всіх файлів з командного рядка на попередні версії у CVS. У процесі виконання файли не буде передано до сховища.</para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Прочитайте також</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Danish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>8. april, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Finder forældede kildekodekataloger i et CVS-træ</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivelse</title>
+
+<para
+><command
+>pruneemptydirs</command
+> bruges til at rydde op i et lokalt CVS-træ. Det detekterer kataloger som indeholder rester af gamle ting som er fjernet  fra CVS. Sådanne gamle kataloger forstyrrer ofte kompilering. Nuværende katalog og alle underkataloger undersøges.</para>
+
+<para
+>Bemærk at værktøjet ikke fjerner noget. Det skriver blot  ud hvad som skal gøres som en serie med fjernelseskommandoer. Du kan kopiere og indsætte kommandoerne, eller bruge dem med eval i et script.</para>
+
+<para
+>Værktøjet virker bedre hvis kildekodekataloget ikke er det samme som byggekataloget, eftersom det ikke skriver kataloger ud som indeholder gamle kørbare filer.</para>
+
+<para
+>Værktøjet er en del af KDE's programmeludviklingsmiljø.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Tilvalg</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Udfører egentlig fjernelse i stedet for at kun skrive dem. Brug dette flag med forsigtighed.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Forfattere</title>
+
+<para
+><command
+>pruneemptydirs</command
+> er skrevet af &David.Faure; &David.Faure.mail;</para>
+<para
+>Denne manualside er skrevet af <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

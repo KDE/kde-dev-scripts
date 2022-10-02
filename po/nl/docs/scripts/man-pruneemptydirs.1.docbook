@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Detecteert ongebruikte bronmappen in een CVS-boomstructuur</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+
+<para
+><command
+>pruneemptydirs</command
+> wordt gebruikt om een lokale CVS-boomstructuur op te schonen. Het detecteert mappen die overblijfselen van oude zaken die uit de CVS zijn verwijderd. Zulke verouderde mappen breken vaak het compileren. De huidige map en alle mappen eronder zullen worden bekeken.</para>
+
+<para
+>Merk op dat dit hulpmiddel niets verwijdert; het toont wat er is te doen, als een serie van verwijdercommando's. U kunt deze commando's kopiëren en plakken of met eval in een script gebruiken.</para>
+
+<para
+>Dit hulpmiddel werkt beter als de bronmap niet hetzelfde is als de bouwmap, omdat het geen mappen zal weergeven die oude uitvoerbare bestanden bevatten.</para>
+
+<para
+>Dit hulpmiddel is een onderdeel van het software-ontwikkelpakket van &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opties</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>De verwijderingen echt uitvoeren in plaats van ze af te drukken. Wees voorzichtig met deze optie.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+><command
+>pruneemptydirs</command
+> is geschreven door &David.Faure; &David.Faure.mail;</para>
+<para
+>De manpagina werd geschreven door <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>08-03-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Crée <filename
+>Makefile.in</filename
+> et <filename
+>Makefile</filename
+> à partir d'un <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>emplacement_relatif/Makefile</replaceable
+></group
+> <group
+><replaceable
+>emplacement_relatif</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+><command
+>create_makefile</command
+> crée les fichiers <filename
+>Makefile.in</filename
+> et <filename
+>Makefile</filename
+> dans un sous-dossier contenant un <filename
+>Makefile.am</filename
+>. Ce script permet de gagner du temps par rapport à une ré-exécution complète du configure.</para>
+
+<para
+>Remarquez que vous devez fournir l'emplacement vers le <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> souhaité (bien que le <filename
+>/Makefile</filename
+> final puisse être omis).</para>
+
+<para
+>Le script doit être lancé depuis le dossier racine (celui contenant le <filename
+>configure</filename
+>) ou depuis l'un de ses sous-dossiers.</para>
+
+<para
+>Si le dossier des sources est différent de celui de la construction (voir les variables d'environnement ci-dessous), il sera supposé que <filename
+>Makefile.am</filename
+> et <filename
+>Makefile.in</filename
+> se trouvent sous le dossier des sources et que le <filename
+>Makefile</filename
+> se trouve sous le dossier de construction. </para>
+
+<para
+>Cet utilitaire fait partie du kit de développement de logiciels de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Environnement</title>
+
+<para
+>Une des variables suivantes (mais pas les deux) doit être réglée si le dossier des sources est différent du dossier de construction. Si le dossier de construction est simplement un sous-dossier du dossier contenant les sources, la simple variable <envar
+>OBJ_SUBDIR</envar
+> doit être utilisée. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indique que le dossier de construction est dans le sous-dossier donné du dossier contenant les sources. Par exemple, si le dossier de sources est <filename class="directory"
+>kdesdk</filename
+> et que le dossier de construction est <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, alors <envar
+>OBJ_SUBDIR</envar
+> devrait être définit à <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Une expression <command
+>sed</command
+> qui est utilisée pour transformer le dossier des sources en dossier de construction. Par exemple, si le dossier des sources est <filename class="directory"
+>~/src/kdesdk</filename
+> et le dossier de construction est <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, ensuite <envar
+>OBJ_REPLACEMENT</envar
+> devrait être définit à <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Voir aussi</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>create_makefile a été écrit par &David.Faure; &David.Faure.mail; et d'autres. Cette page de manuel a été préparée par <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> pour le système <acronym
+>GNU</acronym
+>/&Linux; Debian (mais peut être utilisé par d'autres).</para>
+</refsect1>
+</refentry>

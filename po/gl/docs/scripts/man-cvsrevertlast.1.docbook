@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Galician  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>6 de abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>Reverte os ficheiros no CVS unha revisión cara tras</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>nomeFicheiro</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrición</title>
+
+<para
+>cvsrevertlast é usado para votar unha versión cara trás no CVS todos os ficheiros na liña de comandos. Os ficheiros non serán entregados.</para>
+
+<para
+>Esta utilidade forma parte do Kit de Desenvolvimento de Sóftware de KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Consulte tamén</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

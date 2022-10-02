@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Reduce la cantidad de #includes en el código de &kde;.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>fixincludes</command
+> intenta reducir el número de #includes en los archivos de código fuente de C++. La mayor parte del procesamiento que realiza es específico para &kde; por tanto es posible que no funcione tan bien en código ajeno a &kde;.</para>
+
+<para
+><command
+>fixincludes</command
+> es cpaz de identificar los siguientes problemas.</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Presencia de encabezados obsoletos pero todavía presentes para mantener la compatibilidad con antiguas versiones de Qt/KDE.</para>
+</listitem>
+<listitem>
+<para
+>Líneas repetidas. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Dispone también de un mdo experimental que intenta eliminar un #include cada vez (con algunas excepciones) para comprobar si el código sigue compilando. Observe que esto modifica el código fuente original. </para>
+
+<para
+>por omisión, no se modifican los archivos originales, simplemente se muestran por la salida estándar los problemas identificados. </para>
+
+<para
+>Deberá indicar la lista de archivos de C++ a analizar mediante la línea de comandos. Si no se indica ningún archivo, se examinarán los del directorio actual y sus subdirectorios (salvo aquellos cuyo <filename
+>Makefile.am</filename
+> contenga las opciones <option
+>-UQT_NO_COMPAT</option
+> o <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciones</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Modo informativo. Muestra información de depurado adicional.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Modo experimental, ha sido descrito detalladamente antes. Observe que esta opción implica <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Al mismo tiempo que escribe los mensajes por la salida estándar, se modifica el código original para solucionar cualquier problema encontrado.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+><command
+>fixincludes</command
+> fue escrito por Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

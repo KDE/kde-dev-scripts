@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Rileva vecchie cartelle in un albero di CVS</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>pruneemptydirs</command
+> è usato per fare pulizia in un albero locale di CVS. Rileva le cartelle contenenti resti di vecchi file che sono stati rimossi da CVS. Tali vecchie cartelle spesso danno problemi durante la compilazione. Saranno esaminate la cartella corrente e tutte le sottocartelle che vi appartengono.</para>
+
+<para
+>Nota che questo strumento non rimuove nulla; semplicemente, scrive ciò che deve essere fatto come serie di comandi. Puoi copiare e incollare questi comandi, o usarli con eval in uno script.</para>
+
+<para
+>Questo strumento funziona meglio se la cartella dei sorgenti non è la stessa della cartella di compilazione, dato che non stamperò cartelle contenenti vecchi eseguibili.</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opzioni</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Esegue la vera rimozione invece di scrivere solamente le cartelle. Usa questa opzione con cura.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autori</title>
+
+<para
+><command
+>pruneemptydirs</command
+> è stato scritto da &David.Faure; &David.Faure.mail;</para>
+<para
+>Questa pagina di manuale è stata scritta da <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

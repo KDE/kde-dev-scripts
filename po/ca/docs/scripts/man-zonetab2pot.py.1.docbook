@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>7 d'abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Converteix una llista de zones de temps en un fitxer PO plantilla.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>llista_zones_temps</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> llegeix la llista de zones horàries que proporcionada en la línia d'ordres i la converteix en una plantilla en format de gettext (fitxer PO) contingent els noms de cadascuna de les zones horàries. </para>
+
+<para
+>La zona horària proporcionada haurà d'estar en el mateix format que el «zone.tab» del sistema. Si no s'especifica cap llista de zones horàries a la línia d'ordres, s'usarà <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>El nou fitxer PO serà escrit a l'eixida estàndard del sistema.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+
+<para
+>zonetab2pot.py ha estat escrit per en <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Aquesta pàgina del manual ha estat preparada per en <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

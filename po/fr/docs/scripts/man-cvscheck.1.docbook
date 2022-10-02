@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % French "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>08-03-2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Rapport d'état hosr-ligne pour les fichiers dans un module &CVS; téléchargé.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>dossier</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+
+<para
+>&cvscheck; affiche des infomations sur l'état de votre copie locale &CVS; dans communiquer avec le serveur. Ceci signifie que c'est extrêmement rapide et ne nécessite pas une connexion réseau.</para>
+
+<para
+>Le dossier spécifié et tous ces sous-dossiers seront traités récursivement. Si aucun dossier n'est donné, le dossier actuel et ses sous-dossiers seront utilisés.</para>
+
+<para
+>Chaque fichier avec un état intéressant sera affiché avec un caractère d'état placé devant son nom. Les caractères d'état sont les suivants : </para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+> ?</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Le fichier est inconnu de &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Le fichier est modifié localement avec certitude</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Le fichier <emphasis
+>peut</emphasis
+> avoir été modifié localement. Vous devriez faire un <command
+>diff</command
+> avec le serveur pour vous en assurer.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Le fichier comporte un conflit &CVS; et ne peut donc pas être validé.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Ce fichier est dans le &CVS;, mais ne fait pas partie de votre copie locale.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem
+><para
+>Le fichier a un marqueur rémanent &CVS; inhabituel.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Vous avez fait un <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> pour ce fichier, mais vous ne l'avez pas envore validé.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>fichier.c</filename
+></term>
+<listitem>
+<para
+>Vous avez fait un <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> pour ce fichier, mais vous ne l'avez pas envore validé.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Cet utilitaire fait partie di kit de développement de logiciels de &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Voir aussi</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+
+<para
+>cvscheck a été écrit par &Dirk.Mueller; &Dirk.Mueller.mail; et &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Cette page de manuel a été préparée par <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> pour le système Debian GNU/Linux (mais peut être utilisée par d'autres). </para>
+</refsect1>
+
+</refentry>

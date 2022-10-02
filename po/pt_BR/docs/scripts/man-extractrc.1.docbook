@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 de abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Extrai mensagens de arquivo UI e GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>arquivo</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>extractrc</command
+> obtém todas as marcas de texto e de outras mensagens nos arquivos indicados e escreve as mensagens correspondentes do i18n() no 'standard output', para que o 'xgettext' as consiga processar.</para>
+
+<para
+>Ele reconhece arquivos (&Qt;/&kde;) <application
+>designer</application
+> <acronym
+>UI</acronym
+> e arquivos &XML; GUI-RC. </para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software do KDE. </para>
+
+</refsect1>
+
+</refentry>

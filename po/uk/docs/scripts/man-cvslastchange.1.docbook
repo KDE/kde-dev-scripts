@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvslastchange "<command
+>cvslastchange</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>8 березня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvslastchange;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvslastchange;</refname>
+<refpurpose
+>Показує останні зміни, внесені до &CVS; для файла</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvslastchange; <group
+><replaceable
+>файл</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>&cvslastchange; показує останні зміни, внесені до &CVS; для файла. Для виконання своїх функцій команда використовує <command
+>cvs diff</command
+> і <command
+>cvs log</command
+>.</para>
+
+<para
+>&cvslastchange; працює з усіма гілками &CVS;, не тільки з HEAD.</para>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Прочитайте також</title>
+
+<para
+>cvslastlog(1) cvsrevertlast(1) cvs(1)</para>
+
+</refsect1>
+
+</refentry>

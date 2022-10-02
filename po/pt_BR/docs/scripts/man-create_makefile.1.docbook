@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de março de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Cria o <filename
+>Makefile.in</filename
+> e <filename
+>Makefile</filename
+> a partir de um <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>caminho_relativo/Makefile</replaceable
+></group
+> <group
+><replaceable
+>caminho_relativo</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>create_makefile</command
+> cria o <filename
+>Makefile.in</filename
+> e <filename
+>Makefile</filename
+> em um subdiretório contendo um <filename
+>Makefile.am</filename
+>. Este script poupa o tempo de re-executar o configure completamente.</para>
+
+<para
+>Observe que você deve fornecer o caminho para o <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> desejado (apesar do <filename
+>/Makefile</filename
+> final poder ser omitido).</para>
+
+<para
+>Este script pode ser rodado a partir do diretório de nível superior (o que contém o <filename
+>configure</filename
+>) ou a partir de um dos seus subdiretórios.</para>
+
+<para
+>Se o diretório fonte for diferente do diretório de compilação (veja as variáveis de ambiente abaixo), será considerado que o <filename
+>Makefile.am</filename
+> e <filename
+>Makefile.in</filename
+> está abaixo do diretório fonte e que o <filename
+>Makefile</filename
+> está abaixo do diretório de compilação. </para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Ambiente</title>
+
+<para
+>Uma das seguintes variáveis (mas não ambas) deve ser configurada se o diretório fonte for diferente do diretório de compilação. Se o diretório de compilação é simplesmente um subdiretório do diretório fonte, a variável mais simples <envar
+>OBJ_SUBDIR</envar
+> deve ser usada. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que o diretório de compilação está no subdiretório fornecido do diretório fonte. Por exemplo, se o diretório fonte é <filename class="directory"
+>kdesdk</filename
+> e o diretório de compilação é <filename class="directory"
+>kdesdk/obj-386-linux</filename
+>, então o <envar
+>OBJ_SUBDIR</envar
+> deve ser configurado como <parameter
+>obj-386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Uma expressão <command
+>sed</command
+> que é usada para transformar o diretório fonte em diretório de compilação. Por exemplo, se o diretório fonte é <filename class="directory"
+>~/src/kdesdk</filename
+> e o diretório de compilação é <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, então <envar
+>OBJ_REPLACEMENT</envar
+> deve ser configurado como <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja também</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>O <command
+>create_makefile</command
+> foi escrito por &David.Faure; &David.Faure.mail;, juntamente com outras pessoas. Esta página de manual foi preparada por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema Debian <acronym
+>GNU</acronym
+>/&Linux; (mas também pode ser usada pelos outros).</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,191 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Italian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>inganna <command
+>make</command
+> non facendogli ricreare alcuni file</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrizione</title>
+
+<para
+><command
+>cheatmake</command
+> è usato per risparmiare tempo durante una ricompilazione. Può ingannare make facendogli saltare dei file che non sono cambiati in modo significativo. Ciò può essere usato per esempio quando modifichi un commento in un file ma niente codice.</para>
+
+<para
+>Questa applicazione è parte del pacchetto di sviluppo software di &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opzioni</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Nasconde il fatto che il file è cambiato impostando la data nel passato. Usa con cautela!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Elenca quali file <command
+>make</command
+> attualmente deve ricreare</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Spiega perché make deve ricreare file</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Variabili d'ambiente</title>
+
+<para
+>Una delle seguenti variabili (ma non entrambe) dovrebbe essere impostata la cartella dei sorgenti è diversa dalla cartella di compilazione, Se la cartella di compilazione è semplicemente una sottocartella della cartella dei sorgenti, dovrebbe essere usata la variabile più semplice <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica che la cartella di compilazione è nella sottocartella specificata della cartella dei sorgenti. Per esempio, se la cartella dei sorgenti è <filename class="directory"
+>kdesdk</filename
+> e la cartella di compilazione è <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, allora <envar
+>OBJ_SUBDIR</envar
+> dovrebbe essere impostata a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Un'espressione di <command
+>sed</command
+> che viene usata per trasformare la cartella dei sorgenti nella cartella di compilazione. Per esempio, se la cartella dei sorgenti è <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, allora <envar
+>OBJ_REPLACEMENT</envar
+> dovrebbe essere impostata a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Vedi anche</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autori</title>
+
+<para
+><command
+>cheatmake</command
+> è stato scritto da &David.Faure; &David.Faure.mail;. Questa pagina di manuale è stata scritta da <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> per il sistema Debian GNU/Linux (ma può essere usata da altri).</para>
+
+</refsect1>
+
+</refentry>

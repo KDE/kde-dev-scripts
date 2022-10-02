@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>8 de març de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>Crea un fitxer .cvsignore preliminar en el directori actual.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>create_cvsignore</command
+> s'usa per a crear un fitxer <filename
+>.cvsignore</filename
+> preliminar en el directori actual. Realitza aquesta operació basant-se en el contingut del fitxer <filename
+>Makefile.am</filename
+>.</para>
+
+<para
+>no s'eliminarà cap línia dels fitxers <filename
+>.cvsignore</filename
+> existents. Si no existeix s'afegirà un fitxer <filename
+>.cvsignore</filename
+> al repositori de cvs.</para>
+
+<para
+>Tingueu present que caldrà un fitxer <filename
+>Makefile.am</filename
+> en el directori actual perquè aquesta eina funcioni.</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>
+
+</refsect1>
+
+</refentry>

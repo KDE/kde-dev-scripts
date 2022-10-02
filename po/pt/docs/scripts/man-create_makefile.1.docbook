@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 de Março de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Cria um <filename
+>Makefile.in</filename
+> e um <filename
+>Makefile</filename
+> de um <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>localização_relativa/Makefile</replaceable
+></group
+> <group
+><replaceable
+>localização_relativa</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O <command
+>create_makefile</command
+> cria os ficheiros <filename
+>Makefile.in</filename
+> e <filename
+>Makefile</filename
+> numa subpasta que contenha o <filename
+>Makefile.am</filename
+>. Este programa poupa tempo em comparação com uma execução nova do 'configure'</para>
+
+<para
+>Repare que tem de indicar o local dos ficheiros <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> desejados (ainda que o <filename
+>/Makefile</filename
+> final possa ser omitido).</para>
+
+<para
+>Este programa poderá ser executado na pasta de topo (a que contém o <filename
+>configure</filename
+> ou a partir de uma das suas subpastas.</para>
+
+<para
+>Se a pasta de código for diferente da pasta de compilação (veja as variáveis de ambiente em baixo), assume-se que o <filename
+>Makefile.am</filename
+> e o <filename
+>Makefile.in</filename
+> estão sob a pasta de código e que o <filename
+>Makefile</filename
+> se encontra sob a pasta de compilação. </para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Ambiente</title>
+
+<para
+>Uma das variáveis seguintes (mas não ambas) deverão ser alteradas, se a pasta de código for diferente da pasta de compilação. Se a pasta de compilação for apenas uma subpasta da pasta de código, deverá ser usada a variável mais simples <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Indica que a pasta de compilação está na subpasta da pasta de código. Por exemplo, se a pasta de código for a <filename class="directory"
+>kdesdk</filename
+> e a pasta de compilação for a <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, então o <envar
+>OBJ_SUBDIR</envar
+> deverá ser igual a <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Uma expressão de <command
+>sed</command
+> que é usada para transformar a pasta de origem na pasta de compilação. Por exemplo, se a pasta de código for a <filename class="directory"
+>~/src/kdesdk</filename
+> e a pasta de compilação for a <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, então a <envar
+>OBJ_REPLACEMENT</envar
+> deverá ser igual a <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja Também</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>O 'create_makefile' foi criado por &David.Faure; &David.Faure.mail; e por outras pessoas. Esta página foi preparada por <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> para o sistema GNU/Linux da Debian (mas poderá ser usado por outros).</para>
+</refsect1>
+</refentry>

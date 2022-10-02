@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 d'abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Redueix el nombre de #includes en els fitxers font del &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>fitxer</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+
+<para
+><command
+>fixincludes</command
+> intenta reduir el nombre de #includes en els fitxers de codi font de C++. La majoria del processament que realitza és específic per a &kde; i per això és possible que no funcioni tan bé sobre fonts d'aplicacions no &kde;.</para>
+
+<para
+>Els següents problemes són identificats per <command
+>fixincludes</command
+>:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Incloure capçaleres que ja no estan suportades però que existeixen per compatibilitat amb antigues versions de Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Incloure el mateix fitxer múltiples vegades. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>També disposa d'un mode experimental que intenta eliminar un #include cada vegada (amb algunes excepcions) per a comprovar si el codi segueix compilant. Tingueu present que això modifica el codi font original. </para>
+
+<para
+>Per omissió, no es modifiquen els fitxers originals, simplement s'escriuen a l'eixida estàndard. </para>
+
+<para
+>La llista de fitxers de C++ a analitzar haurà de ser indicada mitjançant la línia d'ordres. Si no s'indica cap fitxer, s'examinaran els del directori actual junt amb els seus subdirectoris (menys els que en el seu fitxer <filename
+>Makefile.am</filename
+> contingui les opcions <option
+>-UQT_NO_COMPAT</option
+> o <option
+>-UKDE_NO_COMPAT</option
+>).</para>
+
+<para
+>Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Mode informatiu. Mostra informació de depuració addicional escrivint-la a l'eixida estàndard.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Mode experimental, ja ha estat descrit amb detall abans. Tingueu present que aquesta opció implica <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Alhora que escriu els missatges a través de l'eixida estàndard, es modifica el codi original per a solucionar qualsevol problema trobat.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+<para
+><command
+>fixincludes</command
+> ha estat escrit per en Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

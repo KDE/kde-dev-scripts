@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Видобуває рядки повідомлень з файлів UI і GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>назва_файла</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+><command
+>extractrc</command
+> знаходить всі текстові мітки і інші рядки повідомлень у вказаних файлах і записує відповідні виклики i18n() до стандартного виводу так, щоб їх можна було обробити за допомогою xgettext.</para>
+
+<para
+>Програма сприймає як файли (&Qt;/&kde;) <acronym
+>UI</acronym
+> <application
+>designer</application
+>, так і файли GUI-RC &XML;. </para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE. </para>
+
+</refsect1>
+
+</refentry>

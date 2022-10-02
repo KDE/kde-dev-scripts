@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 березня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>Змінює файли <filename
+>Makefile</filename
+> так, щоб додавалася інформація для налагоджування</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+><command
+>adddebug</command
+> змінює файли <filename
+>Makefile</filename
+> у поточному каталозі (і, якщо вказано, у підкаталогах) так, щоб додати до файлів, які буде отримано в результаті збирання, інформацію для налагоджування (<option
+>-g3</option
+>). Цей інструмент також вилучає прапорці оптимізації (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>Цей інструмент є частиною набору засобів &kde; для розробки програмного забезпечення.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Параметри</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>Зберігати параметри оптимізації (не вилучати прапорці <option
+>-O[1-9]?</option
+>, які буде типово вилучено).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>Виконати рекурсивний пошук у всіх підкаталогах поточного каталогу і обробити всі знайдені файли <filename
+>Makefile</filename
+>. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>компілювати без визначення NDEBUG і NO_DEBUG (робить можливими виклики <function
+>kDebug</function
+>)</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>

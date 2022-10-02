@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>8 квітня 2003 року</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Виявляє нечинні каталоги вихідних кодів у дереві CVS</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+
+<para
+>Команда <command
+>pruneemptydirs</command
+> використовується для очищення локального дерева CVS. За її допомогою можна виявити каталоги, у яких містяться застарілі елементи, які було вилучено з CVS. Такі нечинні каталоги часто спричиняють помилки під час компіляції. Програма перевіряє наявність таких каталогів у поточному каталозі та всіх його підкаталогах.</para>
+
+<para
+>Зауважте, що сама програма нічого не вилучає, — вона просто виводить інструкції з вилучення у вигляді відповідних команд. Ви можете скопіювати і виконати ці команди, або використати їх за допомогою eval у скрипті.</para>
+
+<para
+>Цей інструмент працюватиме краще, якщо каталог вихідних кодів відрізняється від каталогу збирання, оскільки в такому разі команда не виводитиме каталогів, у яких містяться застарілі виконувані файли.</para>
+
+<para
+>Цей інструмент є частиною набору для розробки програмного забезпечення KDE.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Параметри</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Виконує дії з вилучення замість простого виведення відповідних команд. Будьте обережні з використанням цього параметра.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+
+<para
+>Автором <command
+>pruneemptydirs</command
+> є &David.Faure; &David.Faure.mail;</para>
+<para
+>Цю сторінку довідника було підготовлено <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

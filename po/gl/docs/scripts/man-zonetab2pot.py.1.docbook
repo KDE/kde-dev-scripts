@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Galician  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>7 de abril de 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Converte unha lista de zonas horarias nun modelo de ficheiro PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>listaZonasHorarias</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrición</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> é a lista de zonas horarias dada na liña de comandos e cónvertea nun ficheiro modelo de mensaxes gettext que contén os nomes de cada zona horaria. </para>
+
+<para
+>A lista de zonas horarias resultantes debe ter o mesmo formato que o ficheiro zone.tab do sistema. Se non se indica nengunha lista de zonas horarias na liña de comandos, será usara <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>O novo ficheiro modelo será escrito na saída estándar.</para>
+
+<para
+>Esta utilidade forma parte do Kit de Desenvolvimento de Sóftware de KDE. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+
+<para
+>zonetab2pot.py foi escrito por <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>Esta páxina de manual foi elaborada por <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

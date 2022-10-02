@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>xx de xx de xxxx</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>Reverte os ficheiros no CVS para a versão anterior</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>ficheiro</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+
+<para
+>O 'cvsrevertlast' é usado para reverter todos os ficheiros, na linha de comandos, para a versão anterior no CVS. Os ficheiros não serão enviados ('committed').</para>
+
+<para
+>Este utilitário faz parte do Kit de Desenvolvimento de Software do KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Veja Também</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

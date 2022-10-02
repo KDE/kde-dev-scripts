@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Extrae cadenas de texto de archivos UI y GUI-RC.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>archivo</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+
+<para
+><command
+>extractrc</command
+> busca las etiquetas textuales y otros mensajes en el archivo dado y escribe las correspondientes llamadas i18n() a la salida estándar para que xgettext pueda parsearla.</para>
+
+<para
+>Maneja archivos (&Qt;/&kde;) <acronym
+>UI</acronym
+> de <application
+>designer</application
+> y &XML; GUI-RC. </para>
+
+<para
+>Esta herramienta forma parte del kit de desarrollo de KDE. </para>
+
+</refsect1>
+
+</refentry>
