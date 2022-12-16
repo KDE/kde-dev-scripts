@@ -1,6 +1,0 @@
-#compdef kdeinit4_wrapper
-
-# Yes, this could be improved
-
-_arguments \
-	'*::arguments: _normal'
