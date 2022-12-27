@@ -50,13 +50,13 @@ sub extraVariableFromUiFile($$)
 sub diffFile
 {
     if ( system("git rev-parse --is-inside-work-tree 2>/dev/null >/dev/null") == 0 ) {
-        system( qw(git diff --), $@ );
+        system( qw(git diff --), @_ );
     } elsif ( system("svn info 2>/dev/null >/dev/null") == 0 ) {
-        system( qw(svn diff), $@ );
+        system( qw(svn diff), @_ );
     } elsif ( system("hg identify 2>/dev/null >/dev/null") == 0 ) {
-        system( qw(hg diff), $@ );
+        system( qw(hg diff), @_ );
     } elsif ( -d "CVS" ) {
-        system( qw(cvs diff -up), $@ );
+        system( qw(cvs diff -up), @_ );
     }
 }
 

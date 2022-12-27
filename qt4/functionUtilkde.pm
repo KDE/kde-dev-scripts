@@ -6,13 +6,13 @@ use strict;
 sub diffFile
 {
 	if (-d ".svn") {
-		system(qw(svn diff), $@);
+		system(qw(svn diff), @_);
 	} elsif (-d "CVS") {
-		system(qw(cvs diff -up), $@);
+		system(qw(cvs diff -up), @_);
 	} elsif (-d ".git") {
-                system(qw(git diff), $@);
+                system(qw(git diff), @_);
 	}
-	warn "files to commit: $@\n";
+	warn "files to commit: @_\n";
 }
 
 sub selectHeaderFile
