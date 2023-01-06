@@ -1,123 +1,64 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author
-><personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-> <email
->bab@debian.org</email
-></author>
-<date
->2003-03-07</date>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>2003-03-07</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->adddebug</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>adddebug</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->adddebug</command
-></refname>
-<refpurpose
->Modifiziert <filename
->Makefile</filename
->(s), um Debug-Informationen hinzuzufügen.</refpurpose>
+<refname><command>adddebug</command></refname>
+<refpurpose>Modifies <filename>Makefile</filename>(s) to add debug info</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis
-><command
->adddebug</command
-> <group
-><option
->-k</option
-></group
-> <group
-><option
->-r</option
-></group
-> <group
-><option
->-n</option
-></group
-> </cmdsynopsis>
+<cmdsynopsis>
+<command>adddebug</command>
+<group><option>-k</option></group>
+<group><option>-r</option></group>
+<group><option>-n</option></group>
+</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
+<title>Description</title>
 
-<para
-><command
->adddebug</command
-> modifiziert <filename
->Makefile</filename
-> im aktuellen Verzeichnis (und optional in den Unterverzeichnissen), damit Debug-Informationen (<option
->-g3</option
->) hinzugefügt werden. Außerdem werden Optimierungen ausgeschaltet (<option
->-O[1-9]</option
->).</para>
+<para><command>adddebug</command> modifies the
+<filename>Makefile</filename> in the current directory (and optionally
+in its subdirectories) to add debug info (<option>-g3</option>). It
+will also remove optimisations (<option>-O[1-9]</option>).</para>
 
-<para
->Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+<para>This utility is part of the &kde; Software Development Kit.</para>
 
 </refsect1>
 
 <refsect1>
-<title
->Aufrufparameter</title>
+<title>Options</title>
 
 <variablelist>
 <varlistentry>
-<term
-><option
->-k</option
-></term>
-<listitem
-><para
->Optimierungen beibehalten (die Aufrufparameter <option
->-O[1-9]</option
-> werden nicht entfernt)</para>
+<term><option>-k</option></term>
+<listitem><para>Keep optimisations (do not remove <option>-O[1-9]?</option> flags which are removed by default).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term
-><option
->-r</option
-></term>
+<term><option>-r</option></term>
 <listitem>
-<para
->Suche rekursiv in allen Unterverzeichnissen des aktuellen Verzeichnisses und ändere alle gefundenen <filename
->Makefile</filename
->s. </para>
+<para>Recursively search through all subdirectories of the current directory and operate on every <filename>Makefile</filename> that is found. </para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term
-><option
->-n</option
-></term>
-<listitem
-><para
->kompiliere ohne Definierung von NDEBUG und NO_DEBUG (bewirkt, dass Aufrufe von <function
->kdDebug</function
-> funktionieren).</para
-></listitem>
+<term><option>-n</option></term>
+<listitem><para>compile without NDEBUG and NO_DEBUG being defined (makes <function>kDebug</function> calls work)</para></listitem>
 </varlistentry>
 </variablelist>
 </refsect1>

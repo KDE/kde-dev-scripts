@@ -1,110 +1,69 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author
-><personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-><email
->bab@debian.org</email
-></author>
-<date
->2003-04-08</date>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></author>
+<date>2003-04-08</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->pruneemptydirs</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>pruneemptydirs</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->pruneemptydirs</command
-></refname>
-<refpurpose
->Spürt verwaiste Quelltext-Ordner in einem CVS-System auf.</refpurpose>
+<refname><command>pruneemptydirs</command></refname>
+<refpurpose>Detects stale source directories in a CVS tree</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis
-><command
->pruneemptydirs</command
-> <group
-><option
->-f</option
-></group
-> </cmdsynopsis>
+<cmdsynopsis>
+<command>pruneemptydirs</command>
+<group><option>-f</option></group>
+</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
+<title>Description</title>
 
-<para
-><command
->pruneemptydirs</command
-> wird zum Aufräumen einer lokalen CVS-Arbeitskopie verwendet. Es spürt Ordner mit Überresten von Code-Teilen auf, die bereits aus dem CVS-System entfernt wurden. Solche Überbleibsel verursachen oftmals Fehler beim Kompilieren. Durchsucht wird der aktuelle und alle darunterliegenden Ordner.</para>
+<para><command>pruneemptydirs</command> is used to clean up a local
+CVS tree. It detects directories containing remnants of old stuff
+which has been removed from the CVS. Such stale directories often
+break compilation. The current directory and all directories beneath
+it will be examined.</para>
 
-<para
->Dieses Werkzeug entfernt nichts, sondern listet nur eine Reihe Befehle auf, mit denen die Überbleibsel entfernt werden könnten. Sie können diese Befehle kopieren und einfügen oder mittels eval in einem Skript weiterverwenden.</para>
+<para>Note that this tool does not remove anything; it simply prints
+what to do as a series of remove commands. You can copy and paste
+these commands, or use them with eval in a script.</para>
 
-<para
->Dieses Werkzeug funktioniert besser, wenn der Quellordner nicht zum Kompilieren verwendet wird, weil das Programm dann keine Ordner mit alten Binärdateien ausgibt.</para>
+<para>This tool works better if the source directory is not the same
+as the build directory, since it will not print directories containing
+old executables.</para>
 
-<para
->Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+<para>This utility is part of the KDE Software Development Kit.</para>
 
 </refsect1>
 
 <refsect1>
-<title
->Optionen</title>
+<title>Options</title>
 
 <variablelist>
 <varlistentry>
-<term
-><option
->-f</option
-></term>
-<listitem
-><para
->Die gefundenen Dateien tatsächlich löschen, anstatt sie nur aufzulisten. Verwenden Sie diese Option mit Bedacht.</para
-></listitem>
+<term><option>-f</option></term>
+<listitem><para>Actually perform the deletions instead of just printing them out.  Use this option with care.</para></listitem>
 </varlistentry>
 </variablelist>
 
 </refsect1>
 
 <refsect1>
-<title
->Autoren</title>
+<title>Authors</title>
 
-<para
-><command
->pruneemptydirs</command
-> wurde von &David.Faure; &David.Faure.mail; geschrieben.</para>
-<para
->Diese Handbuchseite wurde geschrieben von <personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-><email
->bab@debian.org</email
-></para>
+<para><command>pruneemptydirs</command> was written by &David.Faure; &David.Faure.mail;</para>
+<para>This manual page was prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname><email>bab@debian.org</email></para>
 </refsect1>
 
 </refentry>

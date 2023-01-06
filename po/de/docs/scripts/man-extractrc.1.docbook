@@ -1,73 +1,45 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author
-><personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-> <email
->bab@debian.org</email
-></author>
-<date
->2003-04-07</date>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>2003-04-07</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->extractrc</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>extractrc</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->extractrc</command
-></refname>
-<refpurpose
->Extrahiert Nachrichten aus UI- und GUI-RC-Dateien.</refpurpose>
+<refname><command>extractrc</command></refname>
+<refpurpose>Extract message strings from UI and GUI-RC files</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis
-><command
->extractrc</command
-> <group
-><option
-><replaceable
->filename</replaceable
-></option
-></group
-> </cmdsynopsis>
+<cmdsynopsis>
+<command>extractrc</command>
+
+<group><option><replaceable>filename</replaceable></option></group>
+</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
+<title>Description</title>
 
-<para
-><command
->extractrc</command
-> findet alle Textmarkierungen und andere Nachrichtenzeichenfolgen in den angegebenen Dateien und schreibt die entsprechenden i18n-Aufrufe in die Standardausgabe, sodass sie von xgettext eingelesen werden können.</para>
+<para><command>extractrc</command> finds all text tags and other
+message strings in the given files and writes the corresponding i18n()
+calls to standard output so that xgettext can parse them.</para>
 
-<para
->Das Skript versteht sowohl (Qt/&kde;) die <application
->UI</application
->-Dateien von <application
->designer</application
-> als auch GUI-RC-Dateien im &XML;-Format. </para>
+<para>It understands both (&Qt;/&kde;)
+<application>designer</application>'s <acronym>UI</acronym> files and
+&XML; GUI-RC files. </para>
 
-<para
->Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
+<para>This utility is part of the KDE Software Development Kit. </para>
 
 </refsect1>
 

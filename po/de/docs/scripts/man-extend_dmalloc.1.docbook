@@ -1,97 +1,54 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author
-><personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-> <email
->bab@debian.org</email
-></author>
-<date
->2003-04-07</date>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>2003-04-07</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->extend_dmalloc</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>extend_dmalloc</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->extend_dmalloc</command
-></refname>
-<refpurpose
->Analysiert Rückgabe-Adressen aus dmalloc-Protokolldateien.</refpurpose>
+<refname><command>extend_dmalloc</command></refname>
+<refpurpose>Analyze return-addresses from dmalloc logfiles.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis
-><command
->extend_dmalloc</command
-> <group
-><option
-><replaceable
->dmalloc-log</replaceable
-> <command
->Binärprogramm</command
-></option
-></group
-> </cmdsynopsis>
+<cmdsynopsis>
+<command>extend_dmalloc</command>
+<group><option><replaceable>dmalloc-log</replaceable> <command>binary</command></option></group>
+</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
+<title>Description</title>
 
-<para
-><command
->extend_dmalloc</command
-> führt <command
->gdb</command
->(1) aus und holt Informationen zu den Rückgabe-Adressen aus einer <command
->dmalloc</command
->(1)-Protokolldatei ein. Insbesondere wird jedes Vorkommen von <literal
->ra=</literal
-> untersucht und die zugehörige Zeilennummer ermittelt.</para>
+<para><command>extend_dmalloc</command> will run <command>gdb</command>(1) to get information on the return-addresses from a <command>dmalloc</command>(1) logfile. Specifically it will examine any <literal>ra=</literal> lines and try to get the corresponding line numbers</para>
 
-<para
->Das Argument <option
-><command
->Binärdateiprogramm</command
-></option
-> muss das Programm sein, welches <filename
->dmalloc-log</filename
-> erzeugt hat.</para>
+<para>The argument
+<option><command>binary</command></option>
+must be the binary that generated the log
+<filename>dmalloc-log</filename>.</para>
 
-<para
->Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+<para>This utility is part of the &kde; Software Development
+Kit.</para>
 
 </refsect1>
 
 
 <refsect1>
-<title
->Anmerkungen</title>
-<para
->Sie sollten die Ausgabe von <command
->extend_malloc</command
-> in eine Datei umleiten, weil <command
->gdb</command
-> sonst auf das Betätigen der Eingabetaste wartet, so als hätte die Ausgabe das Ende einer Seite erreicht. </para
-> 
+<title>Notes</title>
+<para>You may wish to direct the output from
+<command>extend_dmalloc</command> to a file, since otherwise
+<command>gdb</command> seems to prompt for a return as if you are at
+the end of a page. </para> 
 </refsect1>
 
 </refentry>

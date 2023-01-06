@@ -2,77 +2,48 @@
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
 <!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
 <!ENTITY qtoptions SYSTEM "qtoptions.docbook">
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author
-><personname
-><firstname
->Ben</firstname
-><surname
->Burton</surname
-></personname
-> <email
->bab@debian.org</email
-></author>
-<date
->2003-03-08</date>
+<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
+<email>bab@debian.org</email></author>
+<date>2003-03-08</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->create_cvsignore</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>create_cvsignore</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->create_cvsignore</command
-></refname>
-<refpurpose
->Erstellt eine vorläufige .cvsignore im aktuellen Verzeichnis</refpurpose>
+<refname><command>create_cvsignore</command></refname>
+<refpurpose>Create preliminary .cvsignore in the current directory</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <cmdsynopsis>
-<command
->createcvsignore</command>
+<command>createcvsignore</command>
 </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
+<title>Description</title>
 
-<para
-><command
->create_cvsignore</command
-> wird zum Erstellen einer vorläufigen <filename
->.cvsignore</filename
-> im aktuellen Verzeichnis benutzt. Die Erstellung erfolgt anhand bestimmter Inhalte, die das Skript in <filename
->Makefile.am</filename
-> vorfindet.</para>
+<para><command>create_cvsignore</command> is used to create a
+preliminary <filename>.cvsignore</filename> in the current directory.
+It does this based on certain contents it finds in
+<filename>Makefile.am</filename></para>
 
-<para
->Es werden keine Zeilen bestehender <filename
->.cvsignore</filename
->-Dateien entfernt. Ist noch keine <filename
->.cvsignore</filename
-> vorhanden, wird diese automatisch zum cvs-Archiv hinzugefügt.</para>
+<para>No lines will be removed from any existing
+<filename>.cvsignore</filename>.  If there is not already a
+<filename>.cvsignore</filename> file, it will be added to the cvs
+repository.</para>
 
-<para
->Beachten Sie, dass dieses Hilfsprogramm eine <filename
->Makefile.am</filename
-> im aktuellen Verzeichnis voraussetzt.</para>
+<para>Note that you must have a <filename>Makefile.am</filename> in the current directory for this tool to work.</para>
 
-<para
->Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
+<para>This utility is part of the &kde; Software Development Kit.</para>
 
 </refsect1>
 
