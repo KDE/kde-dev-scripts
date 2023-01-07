@@ -1,51 +1,78 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY cvslastchange "<command>cvslastchange</command>">
-<!ENTITY CVS "<acronym>CVS</acronym>">
-<!ENTITY % English "INCLUDE">
+<!ENTITY cvslastchange "<command
+>cvslastchange</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
-<email>bab@debian.org</email></author>
-<date>2003-03-08</date>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-08</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle>&cvslastchange;</refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+>&cvslastchange;</refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>&cvslastchange;</refname>
-<refpurpose>Display the last change committed to &CVS; for a file</refpurpose>
+<refname
+>&cvslastchange;</refname>
+<refpurpose
+>Zeigt die zuletzt in das &CVS;-System eingespielte Änderung an einer Datei an.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-&cvslastchange;
-<group><replaceable>file</replaceable></group>
-</cmdsynopsis>
+<cmdsynopsis
+>&cvslastchange; <group
+><replaceable
+>file</replaceable
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para>&cvslastchange; displays the last change committed to &CVS; for
-a file.  It uses <command>cvs diff</command> and <command>cvs
-log</command> to do this.</para>
+<para
+>&cvslastchange; zeigt die letzte Änderung an einer Datei im &CVS;-System an. Dazu werden die Befehle <command
+>cvs diff</command
+> und <command
+>cvs log</command
+> verwendet. </para>
 
-<para>&cvslastchange; works on any &CVS; branch, not just HEAD.</para>
+<para
+>&cvslastchange; funktioniert mit jeder &CVS;-Verzweigung (branch), nicht nur mit HEAD.</para>
 
-<para>This utility is part of the &kde; Software Development Kit.</para>
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
 
 </refsect1>
 
 <refsect1>
-<title>See Also</title>
+<title
+>Siehe auch</title>
 
-<para>cvslastlog(1) cvsrevertlast(1) cvs(1)</para>
+<para
+>cvslastlog(1) cvsrevertlast(1) cvs(1)</para>
 
 </refsect1>
 

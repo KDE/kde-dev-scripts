@@ -1,42 +1,65 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % English "INCLUDE">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
-<email>bab@debian.org</email></author>
-<date>2003-04-07</date>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>cxxmetric</command></refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+><command
+>cxxmetric</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>cxxmetric</command></refname>
-<refpurpose>Simple source metrics for C and C++</refpurpose>
+<refname
+><command
+>cxxmetric</command
+></refname>
+<refpurpose
+>Einfache Quelltext-Statistiken für C und C++.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-<command>cxxmetric</command>
-
-<group><option><replaceable>file</replaceable></option></group>
-
-</cmdsynopsis>
+<cmdsynopsis
+><command
+>cxxmetric</command
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para>cxxmetric counts lines of code, comment and blank space and
-calculates various other statistics for each given source file. Source
-files must be in C or C++.</para>
+<para
+>cxxmetric zählt die Quelltextzeilen, Kommentare und Leerzeichen, und bestimmt weitere Statistiken für jede Quelltextdatei. Es muss sich um Quelltexte für C oder C++ handeln.</para>
 
-<para>This utility is part of the KDE Software Development Kit. </para> 
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para
+> 
 
 </refsect1>
 

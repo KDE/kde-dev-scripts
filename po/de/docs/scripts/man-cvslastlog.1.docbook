@@ -1,41 +1,66 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % English "INCLUDE">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
-<email></email></author>
-<date>2003-04-06</date>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-06</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>cvslastlog</command></refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>cvslastlog</command></refname>
-<refpurpose>Prints the log entry for the last commit for a file.</refpurpose>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>Gibt den Kommentar zum letzten Einspielvorgang einer Datei aus.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-<command>cvslastlog</command>
-
-<group><option><replaceable>filename</replaceable></option></group>
-</cmdsynopsis>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>filename</replaceable
+></option
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para><command>cvslastlog</command> shows the log associated with the
-last CVS commit for the given file. It depends on the version of the
-local file, not the one on the server. </para>
+<para
+><command
+>cvslastlog</command
+> zeigt den Kommentar an, der beim letzten Einspielvorgang für die angegebene Datei vergeben wurde. Hierbei wird auf die Version der lokalen Datei zurückgegriffen, nicht auf die Version auf dem Server. </para>
 
-<para>This utility is part of the &kde; Software Development Kit.</para>
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
 
 </refsect1>
 

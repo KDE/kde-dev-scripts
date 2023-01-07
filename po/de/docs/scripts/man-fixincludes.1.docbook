@@ -1,98 +1,166 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % English "INCLUDE">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<author><personname><firstname>Ben</firstname><surname>Burton</surname></personname>
-<email>bab@debian.org</email></author>
-<date>2003-04-07</date>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>fixincludes</command></refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>fixincludes</command></refname>
-<refpurpose>Reduce the number of #includes in &kde; source files</refpurpose>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Reduziert die Anzahl der #includes in den Quelltexten von &kde;.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-<command>fixincludes</command>
-<group><option>-v, --verbose</option></group>
-<group><option>-e, --experimental</option></group>
-<group><option>-m, --modify</option></group>
-<group><option><replaceable>file</replaceable></option></group>
-<group><option>--help</option></group>
-</cmdsynopsis>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para><command>fixincludes</command> tries to reduce the number of
-#includes in C++ source files.  Much of it's processing is specific to
-&kde; sources and so it might not work so well with sources for
-non-&kde; applications.</para>
+<para
+><command
+>fixincludes</command
+> versucht die Anzahl der #include-Anweisungen in den C++-Quelltexten zu verringern. Die Verarbeitung ist auf &kde;-Quelltexte zugeschnitten, sodass dieses Skript mit den Quelltexten anderer Anwendungen nicht so gut funktioniert. </para>
 
-<para>The following problems are identified by <command>fixincludes</command>:</para>
+<para
+>Die folgenden Probleme werden von <command
+>fixincludes</command
+> erkannt:</para>
 
 <itemizedlist>
 <listitem>
-<para>Including headers that are no longer supported but which exist for compatibility with older Qt/KDE versions;</para>
+<para
+>Eingebundene Header, die nicht mehr unterstützt werden, aber aus Kompatibilitätsgründen zu älteren Versionen von Qt oder KDE noch vorhanden sind.</para>
 </listitem>
 <listitem>
-<para>Including the same file multiple times. </para>
+<para
+>Das mehrfache Einbinden derselben Datei. </para>
 </listitem>
 </itemizedlist>
 
-<para>There is also an experimental mode which tries removing each
-#include one at a time (with a few exceptions) to see whether the
-source still compiles. Note that this experimental mode will modify
-the original sources. </para>
+<para
+>Es steht auch ein experimenteller Modus zur Verfügung, der durch das probeweise Entfernen von #include-Anweisungen (mit einigen Ausnahmen) festzustellen versucht, ob der Quellcode noch übersetzbar ist. Beachten Sie, dass dieser Modus die Quelltexte ändert. </para>
 
-<para>By default the sources will not be modified; the identified
-problems will simply be written to standard output. </para>
+<para
+>In der Voreinstellung werden die Quelltext nicht geändert, die festgestellten Probleme werden nur auf die Standardausgabe ausgegeben. </para>
 
-<para>The list of C++ sources to examine should be given on the
-command-line. If no files are given, all C++ sources in or beneath the
-current directory will be examined (with the exception of directories
-whose <filename>Makefile.am</filename> contains
-<option>-UQT_NO_COMPAT</option> or
-<option>-UKDE_NO_COMPAT</option>)</para>
+<para
+>Die Liste der zu untersuchenden C++-Quelltext sollte auf der Befehlszeile übergeben werden. Fehlt diese Angabe, werden alle C++-Quelltext innerhalb des aktuellen Verzeichnisses und dessen Unterordnern untersucht. (Hierbei gilt eine Ausnahme für Verzeichnisse, deren <filename
+>Makefile.am</filename
+> die Optionen <option
+>-UQT_NO_COMPAT</option
+> oder <option
+>-UKDE_NO_COMPAT</option
+> enthält.</para>
 
-<para>This utility is part of the KDE Software Development Kit. </para>
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
 
 </refsect1>
 
 <refsect1>
-<title>Options</title>
+<title
+>Optionen</title>
 
 <variablelist>
 <varlistentry>
-<term><option>-v, --verbose</option></term>
-<listitem><para>Verbose mode.  Additional debugging output is written to standard output.</para></listitem>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Ausführlichere Modus. Zusätzliche Informationen werden auf der Standardausgabe ausgegeben.</para
+></listitem>
 </varlistentry>
 <varlistentry>
-<term><option>-e, --experimental</option></term>
-<listitem><para>Experimental mode, as described above in detail. Note that this option implies <option>--modify</option>.</para></listitem>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Experimenteller Modus, wie bereits beschrieben. Beachten Sie, dass dieser Modus die Option <option
+>--modify</option
+> beinhaltet.</para
+></listitem>
 </varlistentry>
 <varlistentry>
-<term><option>-m, --modify</option></term>
-<listitem><para>As well as writing messages to standard output, actually modify the original sources to fix any problems that were found.</para></listitem>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Neben der Ausgabe der Meldungen auf die Standardausgabe, werden die festgestellten Probleme in den Quelltexten behoben.</para
+></listitem>
 </varlistentry>
 </variablelist>
 
 </refsect1>
 
 <refsect1>
-<title>Authors</title>
-<para><command>fixincludes</command> was written by Dirk Mueller <email>mueller@kde.org</email>. 
-</para>
+<title
+>Autoren</title>
+<para
+><command
+>fixincludes</command
+> wurde von Dirk Mueller <email
+>mueller@kde.org</email
+> geschrieben. </para>
 </refsect1>
 
 </refentry>

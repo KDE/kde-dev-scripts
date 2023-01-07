@@ -2,92 +2,167 @@
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
 <!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
 <!ENTITY qtoptions SYSTEM "qtoptions.docbook">
-<!ENTITY % English "INCLUDE">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<date>2003-03-08</date>
+<date
+>2003-03-08</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>create_makefile</command></refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>create_makefile</command></refname>
-<refpurpose>Creates <filename>Makefile.in</filename> and <filename>Makefile</filename> from a <filename>Makefile.am</filename></refpurpose>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Erstellt <filename
+>Makefile.in</filename
+> und <filename
+>Makefile</filename
+> aus einer <filename
+>Makefile.am</filename
+>.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-<command>create_makefile</command>
-<group><replaceable>relativepath/Makefile</replaceable></group>
-<group><replaceable>relativepath</replaceable></group>
-</cmdsynopsis>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>relativepath/Makefile</replaceable
+></group
+> <group
+><replaceable
+>relativepath</replaceable
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para><command>create_makefile</command> creates the
-<filename>Makefile.in</filename> and <filename>Makefile</filename> in
-a subdirectory containing a <filename>Makefile.am</filename>.  This
-script saves time compared to re-running configure completely</para>
+<para
+><command
+>create_makefile</command
+> erstellt <filename
+>Makefile.in</filename
+> und<filename
+>Makefile</filename
+> in Unterordnern, die eine <filename
+>Makefile.am</filename
+> enthalten. Dieses Skript spart Zeit gegenüber dem Aufruf von configure.</para>
 
-<para>Note that you must supply the path to the desired
-<filename>Makefile</filename> <filename>Makefile.am</filename> (though
-the final <filename>/Makefile</filename> may be omitted).</para>
+<para
+>Beachten Sie, dass Sie den Pfad zum gewünschten <filename
+>Makefile</filename
+> angegeben müssen (allerdings kann das abschließende <filename
+>/Makefile</filename
+> ausgelassen werden)..</para>
 
-<para>This script may be run from the toplevel directory (the one
-containing <filename>configure</filename>) or from one of it's
-subdirectories.</para>
+<para
+>Sie können dieses Skript im Hauptordner (der die Datei <filename
+>configure</filename
+> enthält) oder in einem der Unterordner aufrufen.</para>
 
-<para>If the source directory is different from the build directory
-(see the environment variables below), it will be assumed that the
-<filename>Makefile.am</filename> and <filename>Makefile.in</filename>
-belong beneath the source directory and that the
-<filename>Makefile</filename> belongs beneath the build
-directory. </para>
+<para
+>Wenn Sie unterschiedliche Ordner für Quelltexte und das Erstellen (siehe die später erläuterten Umgebungsvariablen) verwenden, wird vorausgesetzt, dass <filename
+>Makefile.am</filename
+> und <filename
+>Makefile.in</filename
+> unterhalb des Quelltextordners liegen und <filename
+>Makefile</filename
+> zum Ordner für den Erstellungsvorgang gehört. </para>
 
-<para>This utility is part of the &kde; Software Development Kit.</para>
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge.</para>
 
 </refsect1>
 
 <refsect1>
-<title>Environment</title>
+<title
+>Umgebung</title>
 
-<para>One of the following variables (but not both) should be set if
-the source directory is different from the build directory. If the
-build directory is simply a subdirectory of the source directory, the
-simpler variable <envar>OBJ_SUBDIR</envar> should be used. </para>
+<para
+>Wenn Sie unterschiedliche Ordner für die Quelltexte und das Erstellen verwenden, muss eine der folgenden Variablen (aber nicht beide!) gesetzt werden. Wenn der Ordner für den Erstellungsvorgang ein Unterordner des Quelltextordners ist, sollten Sie die Variable <envar
+>OBJ_SUBDIR</envar
+> verwenden. </para>
 
 <variablelist>
 <varlistentry>
-<term><envar>OBJ_SUBJDIR</envar></term>
-<listitem><para>Indicates that the build directory is in the given subdirectory of the source directory. For instance, if the source directory is <filename class="directory">kdesdk</filename> and the build directory is <filename class="directory">kdesdk/obj-i386-linux</filename>, then <envar>OBJ_SUBDIR</envar> should be set to <parameter>obj-i386-linux</parameter>.</para></listitem>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Zeigt an, dass der Ordner für das Erstellen im angegebenen Unterordner des Quelltextordners liegt. Wenn beispielsweise der Quelltextordner <filename class="directory"
+>kdesdk</filename
+> und der Ordner für das Erstellen <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> sind, sollte <envar
+>OBJ_SUBDIR</envar
+> auf den Wert <parameter
+>obj-i386-linux</parameter
+> gesetzt werden.</para
+></listitem>
 </varlistentry>
 <varlistentry>
-<term><envar>OBJ_REPLACEMENT</envar></term>
-<listitem><para>A <command>sed</command> expression that is used to transform the source directory into the build directory. For instance, if the source directory is <filename class="directory">~/src/kdesdk</filename> and the build directory is <filename class="directory">~/src/kdesdk-obj</filename>, then <envar>OBJ_REPLACEMENT</envar> should be set to <parameter>s#kdesdk#kdesdk-obj#</parameter>.</para></listitem>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ein <command
+>sed</command
+>-Ausdruck zur Umsetzung des Quelltext-Ordners in den Kompilier-Ordner. Wenn der Quelltext-Ordner beispielsweise <filename class="directory"
+>~/src/kdesdk</filename
+> und der Kompilier-Ordner <filename class="directory"
+>~/src/kdesdk-obj</filename
+> ist, dann sollte <envar
+>OBJ_REPLACEMENT</envar
+> auf <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+> eingestellt werden.</para
+></listitem>
 </varlistentry>
 </variablelist>
 
 </refsect1>
 
 <refsect1>
-<title>See Also</title>
+<title
+>Siehe auch</title>
 
-<para>create_makefiles(1)</para>
+<para
+>create_makefiles(1)</para>
 </refsect1>
 <refsect1>
-<title>Authors</title>
+<title
+>Autoren</title>
 
-<para>create_makefile was written by &David.Faure; &David.Faure.mail; and
- others.  This manual page was prepared by
- <personname><firstname>Ben</firstname><surname>Burton</surname></personname>
- <email>bab@debian.org</email> for the Debian GNU/Linux system (but may be
- used by others).</para>
+<para
+>Das Skript create_makefile wurde von &David.Faure;&David.Faure.mail; und anderen geschrieben. Diese Man-Page wurde von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+> für das Debian GNU/Linux-System verfasst (kann aber auch von anderen verwendet werden).</para>
 </refsect1>
 </refentry>

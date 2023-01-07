@@ -1,81 +1,159 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % English "INCLUDE">
+<!ENTITY % German "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<date>2003-03-08</date>
+<date
+>2003-03-08</date>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle><command>cheatmake</command></refentrytitle>
-<manvolnum>1</manvolnum>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname><command>cheatmake</command></refname>
-<refpurpose>fool <command>make</command> into not rebuilding certain files</refpurpose>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>täusche <command
+>make</command
+> so, dass bestimmte Dateien nicht neu erstellt werden</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis>
-<command>cheatmake</command>
-
-<group><option>hidechange</option> <replaceable>file</replaceable></group>
-<group><option>show</option></group>
-<group><option>why</option> <replaceable>file</replaceable></group>
-</cmdsynopsis>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></group
+> </cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title>Description</title>
+<title
+>Beschreibung</title>
 
-<para><command>cheatmake</command> is used to save time when
-recompiling. It can fool make into skipping files that haven't changed
-in a meaningful way. This can be used for instance when you change a
-comment in a file but none of the actual code.</para>
+<para
+><command
+>cheatmake</command
+> wird benutzt, wenn Sie beim Neukompilieren Zeit sparen wollen. Es täuscht make dahingehend, dass Dateien übersprungen werden, an denen keine besonderen Änderungen vorgenommen wurden, zum Beispiel, wenn Sie in einem Quelltext nur einen Kommentar geändert haben.</para>
 
-<para>This utility is part of the &kde; Software Development Kit. </para>
+<para
+>Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
 
 </refsect1>
 
 <refsect1>
-<title>Options</title>
+<title
+>Aufrufparameter</title>
 
 <variablelist>
 <varlistentry>
-<term><option>hidechange</option> <replaceable>file</replaceable></term>
-<listitem><para>Hides the fact that file was changed by setting the timestamp into the past.  Use with care!</para>
+<term
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Verhindert, dass die Änderung der Datei erkannt wird, indem der Zeitstempel zurückdatiert wird. Verwenden Sie diese Funktion mit Vorsicht.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><option>show</option></term>
-<listitem><para>Lists what files <command>make</command> currently needs to rebuild</para></listitem>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Gibt eine Liste der Dateien aus, die von <command
+>make</command
+> neu erstellt werden würden.</para
+></listitem>
 </varlistentry>
 <varlistentry>
-<term><option>why</option> <replaceable>file</replaceable></term>
-<listitem><para>Explains why make must rebuild file</para></listitem>
+<term
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Beschreibt, aus welchem Grund diese Datei neu erstellt werden muss.</para
+></listitem>
 </varlistentry>
 </variablelist>
 </refsect1>
 
 <refsect1>
-<title>Environment</title>
+<title
+>Umgebung</title>
 
-<para>One of the following variables (but not both) should be set if
-the source directory is different from the build directory. If the
-build directory is simply a subdirectory of the source directory, the
-simpler variable <envar>OBJ_SUBDIR</envar> should be used. </para>
+<para
+>Eine der folgenden Variablen (aber nicht beide) sollte gesetzt sein, wenn das Verzeichnis, in dem der Erstellungsvorgang stattfindet nicht mit dem Quelltextverzeichnis übereinstimmt. Handelt es sich beim Erstellungsverzeichnis um ein Unterverzeichnis des Quelltextverzeichnisses, sollte die einfachere Variable <envar
+>OBJ_SUBDIR</envar
+> verwendet werden. </para>
 
 <variablelist>
 <varlistentry>
-<term><envar>OBJ_SUBJDIR</envar></term>
-<listitem><para>Indicates that the build directory is in the given subdirectory of the source directory. For instance, if the source directory is <filename class="directory">kdesdk</filename> and the build directory is <filename class="directory">kdesdk/obj-i386-linux</filename>, then <envar>OBJ_SUBDIR</envar> should be set to <parameter>obj-i386-linux</parameter>.</para></listitem>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Zeigt an, dass das Erstellungsverzeichnis im angegebenen Unterverzeichnis des Quelltextverzeichnisses liegt. Ist das Quelltextverzeichnis beispielsweise <filename class="directory"
+>kdesdk</filename
+> und das Erstellungsverzeichnis <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, sollte <envar
+>OBJ_SUBDIR</envar
+> auf den Wert <parameter
+>obj-i386-linux</parameter
+> gesetzt werden.</para
+></listitem>
 </varlistentry>
 <varlistentry>
-<term><envar>OBJ_REPLACEMENT</envar></term>
-<listitem><para>A <command>sed</command> expression that is used to transform the source directory into the build directory.  For instance, if the source directory is <filename class="directory">kdesdk/obj-i386-linux</filename>, then <envar>OBJ_REPLACEMENT</envar> should be set to <parameter>s#kdesdk#kdesdk-obj#</parameter>.</para>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Ein <command
+>sed</command
+>-Ausdruck, der zum Umwandeln des Quelltextverzeichnisses in das Erstellungsverzeichnis benutzt wird. Wenn beispielsweise das Quelltextverzeichnis <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+> ist, sollte <envar
+>OBJ_REPLACEMENT</envar
+> auf <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+> gesetzt werden.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -83,20 +161,32 @@ simpler variable <envar>OBJ_SUBDIR</envar> should be used. </para>
 </refsect1>
 
 <refsect1>
-<title>See Also</title>
+<title
+>Siehe auch</title>
 
-<para>make(1)</para>
+<para
+>make(1)</para>
 
 </refsect1>
 
 <refsect1>
-<title>Authors</title>
+<title
+>Autoren</title>
 
-<para><command>cheatmake</command> was written by &David.Faure; &David.Faure.mail;.  This manual page was
-prepared by <personname><firstname>Ben</firstname><surname>Burton</surname></personname>
-<email>bab@debian.org</email> for the Debian
-<acronym>GNU</acronym>/&Linux; system (but may be used by
-others).</para>
+<para
+><command
+>cheatmake</command
+> wurde von &David.Faure; &David.Faure.mail; geschrieben. Diese MAN-Page wurde von <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> für das Debian <acronym
+>GNU</acronym
+>/&Linux; System erstellt (kann aber auch von anderen System benutzt werden).</para>
 
 </refsect1>
 
