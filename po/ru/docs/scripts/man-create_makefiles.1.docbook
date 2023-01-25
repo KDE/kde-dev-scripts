@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY create_makefiles "<command
+>create_makefiles</command
+>">
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 марта 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&create_makefiles;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&create_makefiles;</refname>
+<refpurpose
+>Повторно создаёт все файлы <filename
+>Makefile</filename
+> в каталоге и его подкаталогах</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&create_makefiles; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>&create_makefiles; повторно создаёт все файлы <filename
+>Makefile</filename
+> в <replaceable
+>каталоге</replaceable
+> и (рекурсивно) его подкаталогах с помощью соответствующих шаблонов <filename
+>Makefile.am</filename
+>.</para>
+
+<para
+>Этот сценарий необходимо запускать в каталоге верхнего уровня (том, который содержит configure). Этот сценарий позволяет сэкономить время, не запуская configure повторно.</para>
+
+<para
+>Если каталог исходного кода отличается от каталога сборки (см. переменные окружения ниже), предполагается, что каждый файл <filename
+>Makefile.am</filename
+> и <filename
+>Makefile.in</filename
+> должен находиться в каталоге исходного кода, а каждый файл <filename
+>Makefile</filename
+> — в каталоге сборки.</para>
+
+<para
+>Эта утилита является частью пакета &kde; Software Development Kit.</para>
+</refsect1>
+
+
+<refsect1>
+<title
+>Окружение</title>
+<para
+>Необходимо указать одну из следующих переменных (но не обе), если каталог с исходным кодом отличается от каталога сборки. Если каталог сборки представляет собой просто подкаталог каталога с исходным кодом, следует использовать более простую переменную <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Обозначает, что каталог сборки находится в указанном подкаталоге каталога с исходным кодом. Например, если каталог с исходным кодом — это <filename class="directory"
+>kdesdk</filename
+>, а каталог сборки — это <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, то переменную <envar
+>OBJ_SUBDIR</envar
+> следует установить в значение <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Выражение <command
+>sed</command
+>, которое используется для преобразования каталога с исходным кодом в каталог сборки. Например, если каталог с исходным кодом — это <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, то переменную <envar
+>OBJ_REPLACEMENT</envar
+> следует установить в значение <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Смотрите также</title>
+
+<para
+>create_makefile(1) make(2)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Авторы</title>
+
+<para
+>Автор &create_makefiles; — &David.Faure; &David.Faure.mail;.</para>
+
+<para
+>Man-страницу подготовил <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> для системы Debian GNU/Linux (но ей можно воспользоваться и в других системах).</para>
+ 
+</refsect1>
+
+</refentry>

@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 апреля 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Уменьшить количество объявлений #include в файлах исходного кода &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>файл</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>Команда <command
+>fixincludes</command
+> пытается уменьшить количество объявлений #include в файлах исходного кода на языке C++. Большинство функций этой команды предназначены для исходного кода &kde;; следовательно, она может не работать должным образом для программ, не относящихся к &kde;.</para>
+
+<para
+>С помощью команды <command
+>fixincludes</command
+> можно выявить следующие проблемы:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Включение файлов заголовков, которые больше не поддерживаются, но существуют для обеспечения совместимости с более старыми версиями Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Неоднократное включение одного и того же файла. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Также имеется экспериментальный режим: объявления #include удаляются по одному за раз (за некоторыми исключениями) для проверки того, продолжает ли компилироваться исходный код. Обратите внимание, что использование этого экспериментального режима приведёт к изменению первоначального исходного кода. </para>
+
+<para
+>По умолчанию исходный код не будет изменён; обнаруженные проблемы просто будут переданы на стандартный вывод. </para>
+
+<para
+>В командной строке следует указать список файлов исходного кода на языке C++, которые должны быть проверены. Если файлы не указаны, будут проверены все файлы исходного кода на языке C++, находящиеся в текущем каталоге или его подкаталогах (за исключением тех каталогов, где файл <filename
+>Makefile.am</filename
+> содержит опцию <option
+>-UQT_NO_COMPAT</option
+> или <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Эта утилита является частью пакета KDE Software Development Kit. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Опции</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Режим подробной информации. Дополнительный отладочный вывод передаётся на стандартный вывод.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Экспериментальный режим, описание которого приводилось выше. Обратите внимание, что при использовании этой опции будет автоматически добавлена опция <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Как передать сообщения на стандартный вывод, так и действительно изменить первоначальный исходный код для устранения обнаруженных проблем.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Авторы</title>
+<para
+>Автор команды <command
+>fixincludes</command
+> — Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

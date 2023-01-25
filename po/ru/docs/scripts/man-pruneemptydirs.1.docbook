@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>8 апреля 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>Определяет устаревшие каталоги исходного кода в дереве CVS</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>Команда <command
+>pruneemptydirs</command
+> используется для очистки локального дерева CVS. Она обнаруживает каталоги, содержащие устаревшие элементы, которые были удалены из CVS. Такие устаревшие каталоги часто приводят к сбоям при компиляции. Команда проверяет текущий каталог и все его подкаталоги.</para>
+
+<para
+>Обратите внимание, что эта утилита ничего не удаляет; она просто выводит перечень необходимых действий (команд удаления). Можно либо скопировать и вставить эти команды, либо воспользоваться ими с помощью eval в сценарии.</para>
+
+<para
+>Эта утилита работает лучше, если каталог исходного кода отличается от каталога сборки, так как не будет выведен перечень каталогов, содержащих старые исполняемые файлы.</para>
+
+<para
+>Эта утилита является частью пакета KDE Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Опции</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>Фактически выполняет удаление, а не просто выводит список соответствующих команд. Используйте эту опцию с осторожностью.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Авторы</title>
+
+<para
+>Автор команды <command
+>pruneemptydirs</command
+> — &David.Faure; &David.Faure.mail;</para>
+<para
+>Man-страницу подготовил <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

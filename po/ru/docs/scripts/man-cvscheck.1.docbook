@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 марта 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Создаёт отчет о состоянии файлов в модуле хранилища &CVS; без сетевого соединения.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>каталог</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>&cvscheck; выводит информацию о состоянии локального хранилища &CVS; без обмена данными с сервером. Соответствующие операции выполняются очень быстро и не требуют наличия сетевого соединения.</para>
+
+<para
+>Указанный каталог и все его подкаталоги будут обработаны рекурсивно. Если каталог не указан, будет выполнена рекурсивная обработка текущего каталога и всех его подкаталогов.</para>
+
+<para
+>Будет выведено имя каждого файла с изменившимся состоянием (перед именем будет показан символ состояния). Символы состояния приводятся далее.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Этот файл неизвестен &CVS;.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл точно был изменён локально.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл, <emphasis
+>возможно</emphasis
+>, содержит локальные изменения. Чтобы убедиться в этом, необходимо выполнить команду <command
+>diff</command
+> для сравнения с версией на сервере.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Файл конфликтует с &CVS;; следовательно, его фиксация невозможна.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Этот файл есть в &CVS;, но отсутствует в локальном хранилище.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>У этого файла необычная липкая метка &CVS;.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Вы выполнили команду <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> для этого файла, но ещё не выполнили его фиксацию.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Вы выполнили команду <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> для этого файла, но ещё не выполнили его фиксацию.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Эта утилита является частью пакета &kde; Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Смотрите также</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Авторы</title>
+
+<para
+>Авторы cvscheck — &Dirk.Mueller; &Dirk.Mueller.mail; и &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>Man-страницу подготовил <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> для системы Debian GNU/Linux (но ей можно воспользоваться и в других системах). </para>
+</refsect1>
+
+</refentry>
