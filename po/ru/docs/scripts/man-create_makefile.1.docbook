@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>8 марта 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>Создаёт файлы <filename
+>Makefile.in</filename
+> и <filename
+>Makefile</filename
+> на основе файла <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>относительный_путь/Makefile</replaceable
+></group
+> <group
+><replaceable
+>относительный_путь</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>Команда <command
+>create_makefile</command
+> создаёт файлы <filename
+>Makefile.in</filename
+> и <filename
+>Makefile</filename
+> в подкаталоге, содержащем файл <filename
+>Makefile.am</filename
+>. Этот сценарий позволяет сэкономить время, не запуская configure повторно</para>
+
+<para
+>Обратите внимание, что необходимо указать путь к нужному <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> (но итоговый <filename
+>/Makefile</filename
+> можно не указывать).</para>
+
+<para
+>Этот сценарий можно выполнить в каталоге верхнего уровня (том, который содержит файл <filename
+>configure</filename
+>) или в одном из его подкаталогов.</para>
+
+<para
+>Если каталог исходного кода отличается от каталога сборки (см. переменные окружения ниже), предполагается, что <filename
+>Makefile.am</filename
+> и <filename
+>Makefile.in</filename
+> должны находиться в каталоге исходного кода, а <filename
+>Makefile</filename
+> — в каталоге сборки. </para>
+
+<para
+>Эта утилита является частью пакета &kde; Software Development Kit.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Окружение</title>
+
+<para
+>Необходимо указать одну из следующих переменных (но не обе), если каталог с исходным кодом отличается от каталога сборки. Если каталог сборки представляет собой просто подкаталог каталога с исходным кодом, следует использовать более простую переменную <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Обозначает, что каталог сборки находится в указанном подкаталоге каталога с исходным кодом. Например, если каталог с исходным кодом — это <filename class="directory"
+>kdesdk</filename
+>, а каталог сборки — это <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, то переменную <envar
+>OBJ_SUBDIR</envar
+> следует установить в значение <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Выражение <command
+>sed</command
+>, которое используется для преобразования каталога с исходным кодом в каталог сборки. Например, если каталог с исходным кодом — это <filename class="directory"
+>~/src/kdesdk</filename
+>, а каталог сборки — это <filename class="directory"
+>~/src/kdesdk-obj</filename
+>, то переменную <envar
+>OBJ_REPLACEMENT</envar
+> следует установить в значение <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Смотрите также</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>Авторы</title>
+
+<para
+>Авторы команды create_makefile — &David.Faure; &David.Faure.mail; и другие. Man-страницу подготовил <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> для системы Debian GNU/Linux (но ей можно воспользоваться и в других системах).</para>
+</refsect1>
+</refentry>

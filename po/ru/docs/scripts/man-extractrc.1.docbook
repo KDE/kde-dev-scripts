@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>7 апреля 2003 г.</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Извлечь строки сообщений из файлов UI и GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>имя_файла</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+
+<para
+>Команда <command
+>extractrc</command
+> находит все текстовые метки и другие строки сообщений в указанных файлах и передаёт соответствующие вызовы i18n() на стандартный вывод, чтобы их можно было обработать с помощью xgettext.</para>
+
+<para
+>Программа работает как с файлами (&Qt;/&kde;) <acronym
+>UI</acronym
+> <application
+>designer</application
+>, так и с файлами and GUI-RC &XML;. </para>
+
+<para
+>Эта утилита является частью пакета KDE Software Development Kit. </para>
+
+</refsect1>
+
+</refentry>
