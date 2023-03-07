@@ -34,7 +34,7 @@
 >cvslastlog</command
 ></refname>
 <refpurpose
->Imprimeix el registre per a l'última entrega d'un fitxer.</refpurpose>
+>Imprimeix el registre per a l'última comissió d'un fitxer.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -57,7 +57,7 @@
 <para
 ><command
 >cvslastlog</command
-> mostra el registre associat amb l'última entrega al CVS per al fitxer indicat. Aquest dependrà de la versió local del fitxer, no de la que hi ha al servidor. </para>
+> mostra el registre associat amb l'última comissió al CVS per al fitxer indicat. Aquest dependrà de la versió local del fitxer, no de la que hi ha al servidor. </para>
 
 <para
 >Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;.</para>

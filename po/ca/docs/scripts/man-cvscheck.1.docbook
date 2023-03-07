@@ -101,7 +101,7 @@
 ></term>
 <listitem>
 <para
->El fitxer està en conflicte amb el &CVS; no es pot entregar de cap manera.</para>
+>El fitxer està en conflicte amb el &CVS; no es pot cometre de cap manera.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -143,7 +143,7 @@
 > <option
 >add</option
 ></userinput
-> per aquest fitxer, però encara no l'heu entregat.</para>
+> per aquest fitxer, però encara no l'heu comès.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -161,7 +161,7 @@
 > <option
 >rm</option
 ></userinput
-> per aquest fitxer, però encara no l'heu entregat.</para>
+> per aquest fitxer, però encara no l'heu comès.</para>
 </listitem>
 </varlistentry>
 </variablelist>
