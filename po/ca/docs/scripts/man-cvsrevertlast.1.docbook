@@ -55,7 +55,7 @@
 >Descripció</title>
 
 <para
->cvsrevertlast és emprat per a revertir tots els fitxers sobre la línia d'ordres per una versió en el CVS. Els fitxers no seran entregats.</para>
+>cvsrevertlast és emprat per a revertir tots els fitxers sobre la línia d'ordres per una versió en el CVS. Els fitxers no seran comesos.</para>
 
 <para
 >Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para>

@@ -36,7 +36,7 @@
 <refname
 >&cvslastchange;</refname>
 <refpurpose
->Mostra l'últim canvi a un fitxer entregat al &CVS;</refpurpose>
+>Mostra l'últim canvi a un fitxer comès al &CVS;</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -53,7 +53,7 @@
 >Descripció</title>
 
 <para
->&cvslastchange; mostra l'últim canvi fet a un fitxer entregat al &CVS;. Per a fer això s'usa <command
+>&cvslastchange; mostra l'últim canvi fet a un fitxer comès al &CVS;. Per a fer això s'usa <command
 >cvs diff</command
 > i <command
 >cvs log</command
