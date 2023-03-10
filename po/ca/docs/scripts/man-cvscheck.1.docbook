@@ -26,7 +26,7 @@
 <refname
 >&cvscheck;</refname>
 <refpurpose
->Informes sense connexió a sobre de l'estat de mòduls &CVS;.</refpurpose>
+>Informes sense connexió sobre de l'estat de mòduls &CVS; extrets.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -43,7 +43,7 @@
 >Descripció</title>
 
 <para
->&cvscheck; imprimeix informació a sobre de l'estat de la vostra còpia local de &CVS; sense comunicar-se amb el servidor. Això el torna extremadament ràpid, atès que no li cal connexió a la xarxa.</para>
+>&cvscheck; imprimeix informació sobre de l'estat de la vostra extracció local de &CVS; sense comunicar-se amb el servidor. Això el torna extremadament ràpid, atès que no li cal connexió a la xarxa.</para>
 
 <para
 >El directori indicat serà processat junt amb tots els seus subdirectoris. Si no n'indiqueu cap, s'usarà el directori actual i els seus subdirectoris.</para>
@@ -113,7 +113,7 @@
 ></term>
 <listitem>
 <para
->El fitxer està en el &CVS; però falta en el vostre repositori local.</para>
+>El fitxer està en el &CVS; però falta en la vostra extracció local.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
