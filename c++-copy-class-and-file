@@ -16,13 +16,16 @@ else
     newfile=`echo $newname | tr A-Z a-z`
 fi
 
-echo "Copying $oldfile.{cpp,h} to $newfile.{cpp,h}"
-
 if [ ! -f $newfile.h ]; then
+    echo "Copying $oldfile.{cpp,h} to $newfile.{cpp,h}"
     cp $oldfile.h $newfile.h
     cp $oldfile.cpp $newfile.cpp
     if [ -f ${oldfile}_p.h ]; then
         cp ${oldfile}_p.h ${newfile}_p.h
+    fi
+    if [ -f ${oldfile}.ui ]; then
+        echo "Copying $oldfile.ui to $newfile.ui"
+        cp ${oldfile}.ui ${newfile}.ui
     fi
 
     git add $newfile.h
