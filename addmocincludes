@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2023 Friedrich W. H. Kossebau <kossebau@kde.org>
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Tool to check if any sources have moc includes for headers need moc-generated code.
+# Generates include statements matching CMake's automoc moc file naming pattern
+# and appends them at the end of source files, with candidate chosen by:
+# * same source directory
+# * same basename or, if the header's basename ends with "_p", same basename without that suffix
+#
+# Usage: ./addmocincludes [--dry]
+# To be called in the toplevel directory of the sources to cover
+#
+# To check if all moc files are covered by explicit includes, one can run this on the toplevel
+# build directory and test for "0" result:
+# $ find . -name mocs_compilation.cpp -exec cat {} \; | grep "#include" | wc -l
+
+filesGettingMoced="$(grep --files-with-matches --recursive --extended-regexp 'Q_OBJECT|Q_GADGET|Q_NAMESPACE')"
+
+# mm as used with Objective C++
+cppExts="cpp cc cxx c++ mm"
+
+dryRun=
+if [[ ${1} == "--dry" ]]; then
+    dryRun=1
+fi
+
+for fileName in ${filesGettingMoced}; do
+    ext="${fileName##*.}"
+    # is not a header?
+    if ! [[ "${ext}" =~ ^(h|H|hh|h++|hm|hpp|hxx|txx)$ ]]; then
+        continue
+    fi
+
+    # look for paired source file
+    sourceFileName=
+    basename="${fileName%.*}"
+    # if private header, also check for source file without _p suffix
+    if [[ "${basename}" == *_p ]]; then
+        cppBasenames="${basename} ${basename%??}"
+    else
+        cppBasenames="${basename}"
+    fi
+
+    for cppBasename in ${cppBasenames}; do
+        for cppExt in ${cppExts}; do
+            cppFile="${cppBasename}.${cppExt}";
+            if [[ -f "${cppFile}" ]]; then
+                sourceFileName=${cppFile}
+                break
+            fi
+        done
+        if [ -n "${sourceFileName}" ]; then
+            break
+        fi
+    done
+
+    # no paired source file found?
+    if [ -z "${sourceFileName}" ]; then
+        if [[ ${dryRun} ]]; then
+            echo "${fileName}: NOT FOUND a matching source file for a moc include";
+        fi
+        continue
+    fi
+
+    # drop path & use default cpp suffix, as used by cmake's automoc
+    mocIncludeFile="moc_${basename##*/}.cpp"
+    mocIncludeStatement="#include \"${mocIncludeFile}\""
+    # TODO: escaping somehow fails, tried: hasIncludeStatement="$(grep --quiet '${mocIncludeStatement@Q}' '${sourceFileName}')"
+    if grep --quiet "#include \"${mocIncludeFile}\"" "${sourceFileName}"; then
+        hasIncludeStatement=1
+    else
+        hasIncludeStatement=
+    fi
+
+    if [[ ${hasIncludeStatement} ]]; then
+        if [[ ${dryRun} ]]; then
+            echo "${fileName}: HAS moc include in ${sourceFileName}:";
+        fi
+    else
+        # TODO: test if something else already has a matching include?
+        if [[ ${dryRun} ]]; then
+            echo "${fileName}: MISSES moc include in ${sourceFileName}";
+        else
+            echo "${fileName}: addding moc include in ${sourceFileName}:";
+            echo "" >> ${sourceFileName}
+            echo "${mocIncludeStatement}" >> ${sourceFileName}
+        fi
+    fi
+done
