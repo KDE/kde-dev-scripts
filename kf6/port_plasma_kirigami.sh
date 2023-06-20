@@ -5,7 +5,7 @@ git grep -l "PlasmaCore.Theme.NormalColorGroup" | xargs perl -pi -e 's,PlasmaCor
 git grep -l "PlasmaCore.ColorScope.colorGroup" | xargs perl -pi -e 's,PlasmaCore.ColorScope.colorGroup,Kirigami.Theme.colorSet,g'
 git grep -l "PlasmaCore.ColorScope.inherit" | xargs perl -pi -e 's,PlasmaCore.ColorScope.inherit,Kirigami.Theme.inherit,g'
 git grep -l "PlasmaCore.Units.largeSpacing" | xargs perl -pi -e 's,PlasmaCore.Units.largeSpacing,Kirigami.Units.gridUnit,g'
-git grep -l "PlasmaCore.Units.roundToIconSize" | xargs perl -pi -e 's,PlasmaCore.Units.roundToIconSize,Kirigami.Units.roundedIconSize,g'
+git grep -l "PlasmaCore.Units.roundToIconSize" | xargs perl -pi -e 's,PlasmaCore.Units.roundToIconSize,Kirigami.Units.iconSizes.roundedIconSize,g'
 git grep -l "height: PlasmaCore.Units.roundToIconSize" | xargs perl -pi -e 's,height: PlasmaCore.Units.roundToIconSize\(.*\),height: Kirigami.Units.iconSizes.sizeForLabels,g'
 git grep -l "PlasmaCore.Units.devicePixelRatio" | xargs perl -pi -e 's,PlasmaCore.Units.devicePixelRatio,1,g'
 git grep -l "PlasmaCore.Units." | xargs perl -pi -e 's,PlasmaCore.Units.,Kirigami.Units.,g'
