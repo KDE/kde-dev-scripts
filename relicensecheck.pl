@@ -415,7 +415,6 @@ my %old_license_table = (
     'mvaldenegro'   => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'mwoehlke'      => ['gplv23', 'lgplv23'                      ],
     'nielsslot'     => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
-    'okellogg'      => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'onurf'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'orzel'         => ['gplv23', 'lgplv23', 'gplv2+', 'lgplv2+' ],
     'ossi'          => [                     'gplv2+', 'lgplv2+' ],
