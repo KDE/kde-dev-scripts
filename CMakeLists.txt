@@ -75,6 +75,7 @@ install(FILES
 endif()
 
 install(PROGRAMS
+  addmocincludes
   create_makefile
   makeobj
   cvscheck
