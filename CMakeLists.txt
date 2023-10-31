@@ -55,7 +55,6 @@ install(PROGRAMS
   optimizegraphics
   nonsvnlist
   pruneemptydirs
-  qtdoc
   svnbackport
   svnforwardport
   svnchangesince
