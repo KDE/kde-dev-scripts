@@ -106,6 +106,7 @@ install(PROGRAMS
   grantlee_strings_extractor.py
   clean-forward-declaration.sh
   clean-includes.sh
+  port_new_gitlab_ci_template.sh
   DESTINATION ${KDE_INSTALL_BINDIR})
 
 # SKIP_PO_INSTALL
