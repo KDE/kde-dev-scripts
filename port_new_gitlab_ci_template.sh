@@ -13,6 +13,7 @@ else
     perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows-qt6.yml,    - /gitlab-templates/windows-qt6.yml,' .gitlab-ci.yml
     perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml,    - /gitlab-templates/reuse-lint.yml,' .gitlab-ci.yml
     perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/android-qt6.yml,    - /gitlab-templates/android-qt6.yml,' .gitlab-ci.yml
+    perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6-static.yml,    - /gitlab-templates/linux-qt6-static.yml,' .gitlab-ci.yml    
 
     perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml,    - /gitlab-templates/linux.yml,' .gitlab-ci.yml
     perl -pi -e 's,- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml,    - /gitlab-templates/freebsd.yml,' .gitlab-ci.yml
