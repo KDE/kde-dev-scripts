@@ -36,7 +36,7 @@
 <refpurpose
 >Modifie le ou les <filename
 >Makefile</filename
-> pour ajouter des informations de déboguage.</refpurpose>
+> pour ajouter des informations de débogage.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -67,7 +67,7 @@
 >adddebug</command
 > modifie le <filename
 >Makefile</filename
-> dans le dossier actuel (et optionnellement dans ses sous-dossiers) pour y ajouter des informations de déboguage (<option
+> dans le dossier actuel (et optionnellement dans ses sous-dossiers) pour y ajouter des informations de débogage (<option
 >-g3</option
 >). Il enlèvera également les optimisations (<option
 >-O[1-9]</option
@@ -114,7 +114,7 @@
 ></term>
 <listitem
 ><para
->compile sans définir NDEBUG et NO_DEBUG (rend les appels à <function
+>compile sans définir « NDEBUG » et « NO_DEBUG » (rend les appels à <function
 >kdDebug</function
 > fonctionnels).</para
 ></listitem>

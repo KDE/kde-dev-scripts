@@ -26,7 +26,7 @@
 <refname
 >&cvscheck;</refname>
 <refpurpose
->Rapport d'état hosr-ligne pour les fichiers dans un module &CVS; téléchargé.</refpurpose>
+>Rapport d'état hors-ligne pour les fichiers dans un module &CVS; téléchargé.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -43,7 +43,7 @@
 >Description</title>
 
 <para
->&cvscheck; affiche des infomations sur l'état de votre copie locale &CVS; dans communiquer avec le serveur. Ceci signifie que c'est extrêmement rapide et ne nécessite pas une connexion réseau.</para>
+>&cvscheck; affiche des informations sur l'état de votre copie locale &CVS; dans communiquer avec le serveur. Ceci signifie que c'est extrêmement rapide et ne nécessite pas une connexion réseau.</para>
 
 <para
 >Le dossier spécifié et tous ces sous-dossiers seront traités récursivement. Si aucun dossier n'est donné, le dossier actuel et ses sous-dossiers seront utilisés.</para>
@@ -143,7 +143,7 @@
 > <option
 >add</option
 ></userinput
-> pour ce fichier, mais vous ne l'avez pas envore validé.</para>
+> pour ce fichier, mais vous ne l'avez pas encore validé.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -161,13 +161,13 @@
 > <option
 >rm</option
 ></userinput
-> pour ce fichier, mais vous ne l'avez pas envore validé.</para>
+> pour ce fichier, mais vous ne l'avez pas encore validé.</para>
 </listitem>
 </varlistentry>
 </variablelist>
 
 <para
->Cet utilitaire fait partie di kit de développement de logiciels de &kde;.</para>
+>Cet utilitaire fait partie du kit de développement de logiciels de &kde;.</para>
 
 </refsect1>
 
