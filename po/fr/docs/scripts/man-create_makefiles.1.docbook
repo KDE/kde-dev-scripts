@@ -42,7 +42,7 @@
 >Description</title>
 
 <para
->&create_makefiles; recréetous les <filename
+>&create_makefiles; recréez tous les <filename
 >Makefile</filename
 > dans <replaceable
 >dossier</replaceable
@@ -51,7 +51,7 @@
 > correspondants.</para>
 
 <para
->Ce script doit être exécuté depuis le dossier racine (celui contenant le configure). Il permet de gagner du temps par rapport à une réexécution complète du configure.</para>
+>Ce script doit être exécuté depuis le dossier racine (celui contenant le configure). Il permet de gagner du temps par rapport à une ré-exécution complète du configure.</para>
 
 <para
 >Si le dossier des sources est différent de celui de la construction (voir les variables d'environnement ci-dessous), il sera supposé que <filename

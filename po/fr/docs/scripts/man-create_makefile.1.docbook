@@ -41,11 +41,11 @@
 >create_makefile</command
 > <group
 ><replaceable
->emplacement_relatif/Makefile</replaceable
+>emplacement-relatif/Makefile</replaceable
 ></group
 > <group
 ><replaceable
->emplacement_relatif</replaceable
+>emplacement-relatif</replaceable
 ></group
 > </cmdsynopsis>
 </refsynopsisdiv>

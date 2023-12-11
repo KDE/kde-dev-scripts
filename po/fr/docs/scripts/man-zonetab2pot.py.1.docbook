@@ -60,7 +60,7 @@
 > lit la liste de fuseau horaire donnée par la ligne de commande et la convertit en un modèle de fichier de message Gettext (fichier PO) contenant les noms des fuseaux horaires individuels. </para>
 
 <para
->La liste de fuseaux horaires doit être dans le même format que le système zone.tab. Si aucune liste de fuseaux horaires n'est spécifiée dans la ligne de commande, <filename
+>La liste de fuseaux horaires doit être dans le même format que le fichier du système « zone.tab ». Si aucune liste de fuseaux horaires n'est spécifiée dans la ligne de commandes, le fichier <filename
 >/usr/share/zoneinfo/zone.tab</filename
 > sera utilisé.</para>
 
