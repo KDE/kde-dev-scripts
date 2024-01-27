@@ -36,7 +36,7 @@
 <refpurpose
 >Modifica els <filename
 >Makefile</filename
-> per afegir informació de depuració</refpurpose>
+> per a afegir informació de depuració</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -67,7 +67,7 @@
 >adddebug</command
 > modifica el fitxer <filename
 >Makefile</filename
-> en el directori actual (i opcionalment en els seus subdirectoris) per afegir informació de depuració (<option
+> en el directori actual (i opcionalment en els seus subdirectoris) per a afegir informació de depuració (<option
 >-g3</option
 >). També elimina les optimitzacions (<option
 >-O[1-9]</option
