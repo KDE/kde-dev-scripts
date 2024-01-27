@@ -59,7 +59,7 @@
 <para
 >L'ordre <command
 >cheatmake</command
-> s'usa per estalviar temps durant les recompilacions. Podeu enganyar a «make» perquè passi per alt els fitxers amb modificacions que no tinguin importància com per exemple quan afegiu comentaris al codi real.</para>
+> s'usa per a estalviar temps durant les recompilacions. Podeu enganyar a «make» perquè passi per alt els fitxers amb modificacions que no tinguin importància com per exemple quan afegiu comentaris al codi real.</para>
 
 <para
 >Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para>
