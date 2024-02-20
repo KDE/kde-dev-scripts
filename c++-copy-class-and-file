@@ -70,4 +70,4 @@ perl -pi -e "s/$oldinclguard/$newinclguard/g" $newfile.h
 # Update includes in cpp file
 perl -pi -e 's/\b'$oldfile'\.h/'$newfile'\.h/' $newfile.cpp
 perl -pi -e 's/\b'$oldfile'\.moc/'$newfile'\.moc/' $newfile.cpp
-
+perl -pi -e 's/\b'moc_$oldfile'\.cpp/'moc_$newfile'\.cpp/' $newfile.cpp
