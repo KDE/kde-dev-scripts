@@ -461,6 +461,12 @@ test_include() {
 							       remove_include;
 						       fi
 						       ;;
+					       QWindow)
+						       number=$(grep -Ec "windowHandle()" "$file");
+                                                       if test "$number" = 0 ; then
+                                                               remove_include;
+                                                       fi
+                                                       ;;
 					       QtTest)
 						       number=$(grep -Ec "QCOMPARE|QVERIFY|QTEST_GUILESS_MAIN|QTEST" "$file");
 						       if test "$number" = 0 ; then
