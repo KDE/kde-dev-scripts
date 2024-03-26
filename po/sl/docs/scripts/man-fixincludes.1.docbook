@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07.04.2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>Zmanjšajte število #includes v &kde; izvornih datotekah</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>file</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+
+<para
+><command
+>fixincludes</command
+> poskuša zmanjšati število #includes v izvornih datotekah C++. Velik del njegove obdelave je specifičen za vire &kde;, zato morda ne bo deloval tako dobro z viri za ne&kde; aplikacije.</para>
+
+<para
+><command
+>fixincludes</command
+> prepozna naslednje težave:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>Vključno z glavami, ki niso več podprte, vendar obstajajo zaradi združljivosti s starejšimi različicami Qt/KDE;</para>
+</listitem>
+<listitem>
+<para
+>Večkratna vključitev iste datoteke. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>Obstaja tudi poskusni način, ki poskuša odstraniti vsak #include enega za drugim (z nekaj izjemami), da vidi, ali se izvor še vedno prevaja. Upoštevajte, da bo ta poskusni način spremenil izvirne vire. </para>
+
+<para
+>Viri privzeto ne bodo spremenjeni; ugotovljene težave bodo preprosto zapisane v standardni izhod. </para>
+
+<para
+>Seznam virov C++, ki jih je treba pregledati, mora biti podan v ukazni vrstici. Če ni podana nobena datoteka, bodo pregledani vsi izvori C++ v trenutnem imeniku ali pod njim (z izjemo imenikov, katerih <filename
+>Makefile.am</filename
+> vsebuje <option
+>-UQT_NO_COMPAT</option
+> ali <option
+>- UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>Ta pripomoček je del kompleta za razvoj programske opreme KDE. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Možnosti</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>Besedni način. Dodaten izhod za odpravljanje napak se zapiše v standardni izhod.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>Eksperimentalni način, kot je podrobno opisano zgoraj. Upoštevajte, da ta možnost implicira <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>Poleg pisanja sporočil v standardni izhod dejansko spremeni izvirne vire, da odpravi morebitne odkrite težave.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+<para
+><command
+>fixincludes</command
+> je napisal Dirk Mueller <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

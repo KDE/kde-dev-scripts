@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>07.04.2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>Ekstrahira nize sporočil iz datotek UI in GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>filename</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+
+<para
+><command
+>extractrc</command
+> najde vse besedilne oznake in druge nize sporočil v danih datotekah in zapiše ustrezne klice i18n() v standardni izhod, tako da jih lahko xgettext razčleni.</para>
+
+<para
+>Razume obe (&Qt;/&kde;) datoteke <acronym
+>UI</acronym
+> <application
+>designer</application
+> in &XML; datoteke GUI-RC. </para>
+
+<para
+>Ta pripomoček je del kompleta za razvoj programske opreme KDE. </para>
+
+</refsect1>
+
+</refentry>
