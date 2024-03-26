@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 project(kde-dev-scripts)
 
 set(REQUIRED_QT_VERSION "5.15.2")
