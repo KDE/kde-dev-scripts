@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>07.04.2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>Pretvori seznam časovnih pasov v predlogo datoteke PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>timezone-list</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+
+<para
+><command
+>zonetab2pot.py</command
+> prebere seznam časovnih pasov, podan v ukazni vrstici, in ga pretvori v predlogo datoteke sporočila gettext (PO-datoteka), ki vsebuje imena posameznih časovnih pasov. </para>
+
+<para
+>Podani seznam časovnih pasov mora biti v enaki obliki kot sistemski zone.tab. Če v ukazni vrstici ni podanega seznama časovnih pasov, bo uporabljen <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>Nova predloga datoteke PO bo zapisana v standardni izhod.</para>
+
+<para
+>Ta pripomoček je del kompleta za razvoj programske opreme KDE. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+
+<para
+>zonetab2pot.py je napisal <personname
+><firstname
+>Lukas</firstname
+><surname
+>Tinkl</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>To stran priročnika je pripravil <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

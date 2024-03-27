@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>08.03.2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>Poročilo o stanju brez povezave za datoteke v odjavljenem &CVS; modulu.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>dir</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+
+<para
+>&cvscheck; natisne informacije o statusu vašega lokalne &CVS; izdaje brez komunikacije s strežnikom. To pomeni, da je izjemno hiter in ne potrebuje omrežne povezave.</para>
+
+<para
+>Dani imenik in vsi njegovi podimeniki bodo obdelani rekurzivno. Če imenik ni podan, bodo uporabljeni trenutni imenik in njegovi rekurzivni podimeniki.</para>
+
+<para
+>Vsaka datoteka z zanimivim statusom bo natisnjena s statusnim znakom pred imenom. Statusni znaki so naslednji.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>&CVS; datoteke ne pozna.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Datoteka je zagotovo lokalno spremenjena</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Datoteka <emphasis
+>lahko</emphasis
+> vsebuje lokalne spremembe. Morali bi uporabiti <command
+>diff</command
+> s strežnikom, da se prepričate.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Datoteka ima &CVS; konflikt in je zato ni mogoče potrditi.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Ta datoteka je v &CVS; vendar manjka na vaši lokalni izdaji.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>Ta datoteka ima nenavadno lepljivo &CVS; oznako.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Naredili ste <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> za to datoteko, vendar je še niste potrdili.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>Naredili ste <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> za to datoteko, vendar je še niste potrdili.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Ta pripomoček je del programa &kde; Software Development Kit. (Komplet za razvoj programske opreme).</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Poglejte tudi</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+
+<para
+>cvscheck je napisal &Dirk.Mueller; &Dirk.Mueller.mail; in &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>To stran priročnika je pripravil <personname
+><firstname
+>Ben</firstname
+> <surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> za sistem Debian GNU/Linux (vendar lahko uporabljajo drugi). </para>
+</refsect1>
+
+</refentry>
