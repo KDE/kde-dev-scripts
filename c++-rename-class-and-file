@@ -102,3 +102,4 @@ fi
 # Update include in cpp file
 perl -pi -e 's/\b'$oldfile'\.h/'$newfile'\.h/;s/\b'$oldfile'_p\.h/'$newfile'_p\.h/' $newfile.cpp
 
+perl -pi -e 's/\b'moc_$oldfile'\.cpp/'moc_$newfile'\.cpp/' $newfile.cpp
