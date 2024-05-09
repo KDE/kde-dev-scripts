@@ -36,7 +36,7 @@
 >create_cvsignore</command
 ></refname>
 <refpurpose
->Crée le .cvsignore préliminaire dans le dossier courant</refpurpose>
+>Crée le fichier « .cvsignore » préliminaire dans le dossier courant</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
