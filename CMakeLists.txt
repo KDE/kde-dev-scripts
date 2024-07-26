@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 project(kde-dev-scripts)
 
-set(REQUIRED_QT_VERSION "5.15.2")
+set(REQUIRED_QT_VERSION "6.7")
+set(KF_MIN_VERSION "6.4.0")
 
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
@@ -9,15 +10,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 include(FeatureSummary)
 include(KDEInstallDirs)
 
-if (QT_MAJOR_VERSION STREQUAL "6")
-    set(KF_MIN_VERSION "5.240.0")
-    set(KF_MAJOR_VERSION "6")
-else()
-    set(KF_MAJOR_VERSION "5")
-endif()
-
-
-find_package(KF${KF_MAJOR_VERSION} COMPONENTS DocTools)
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS DocTools)
 
 # Note that all of these files should be *scripts* that do not require
 # compilation, therefore we simply install them. We split out Bourne shell
@@ -28,7 +21,7 @@ find_package(KF${KF_MAJOR_VERSION} COMPONENTS DocTools)
 if(UNIX)
 #shell program
 
-if(TARGET KF${KF_MAJOR_VERSION}::DocTools)
+if(TARGET KF6::DocTools)
   add_subdirectory(doc)
   kdoctools_install(po)
 endif()
