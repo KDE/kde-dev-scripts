@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>08.03.2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>pretentaj ukaz <command
+>make</command
+>, da določenih datotek ne zgradi znova</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+
+<para
+><command
+>cheatmake</command
+> se uporablja za prihranek časa pri ponovnem prevajanju. Lahko zavede program make, da preskoči datoteke, ki se niso bistveno spremenile. To lahko uporabite na primer, ko spremenite komentar v datoteki, ne pa tudi dejanske kode.</para>
+
+<para
+>Ta pripomoček je del programa &kde; Software Development Kit. (Komplet za razvoj programske opreme). </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Možnosti</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Skrije dejstvo, da je bila datoteka spremenjena z nastavitvijo časovnega žiga v preteklosti. Uporabljajte previdno!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>Navaja, katere datoteke mora <command
+>make</command
+> trenutno obnoviti</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>file</replaceable
+></term>
+<listitem
+><para
+>Pojasnjuje, zakaj mora make znova zgraditi datoteko</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Okolje</title>
+
+<para
+>Eno od naslednjih spremenljivk (vendar ne obeh) je treba nastaviti, če se izvorni imenik razlikuje od imenika gradnje. Če je gradbeni imenik preprosto podimenik izvornega imenika, je treba uporabiti enostavnejšo spremenljivko <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>Označuje, da je gradbeni imenik v danem podimeniku izvornega imenika. Na primer, če je izvorni imenik <filename class="directory"
+>kdesdk</filename
+> in je gradbeni imenik <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, potem <envar
+> OBJ_SUBDIR</envar
+> mora biti nastavljen na <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>Izraz <command
+>sed</command
+>, ki se uporablja za pretvorbo izvornega imenika v gradbeni imenik. Na primer, če je izvorni imenik <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>, mora biti <envar
+>OBJ_REPLACEMENT</envar
+> nastavljen na <parameter
+>s#kdesdk#kdesdk- obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Poglejte tudi</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+
+<para
+><command
+>cheatmake</command
+> je napisal &David.Faure; &David.Faure.mail;. To stran priročnika je pripravil <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> za Debian <acronym
+>GNU</acronym
+>/&Linux; sistem (vendar ga lahko uporabljajo drugi).</para>
+
+</refsect1>
+
+</refentry>
