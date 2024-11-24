@@ -16,7 +16,7 @@
 # build directory and test for "0" result:
 # $ find . -name mocs_compilation.cpp -exec cat {} \; | grep "#include" | wc -l
 
-filesGettingMoced="$(grep --files-with-matches --recursive --extended-regexp 'Q_OBJECT|Q_GADGET|Q_NAMESPACE' | egrep -v build)"
+filesGettingMoced="$(grep --files-with-matches --recursive --extended-regexp '^\s*Q_OBJECT|^\s*Q_GADGET|^\s*Q_NAMESPACE' | egrep -v build)"
 
 # mm as used with Objective C++
 cppExts="cpp cc cxx c++ mm"
