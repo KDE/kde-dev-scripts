@@ -102,9 +102,9 @@
 ></term>
 <listitem>
 <para
->Cherche de manière récursive dans tous les sous-dossiers du dossier courant et travaille sur chaque <filename
+>Cherche de manière récursive dans tous les sous-dossiers du dossier courant et travaille sur tous les fichiers <filename
 >Makefile</filename
-> trouvé. </para>
+> trouvés. </para>
 </listitem>
 </varlistentry>
 <varlistentry>

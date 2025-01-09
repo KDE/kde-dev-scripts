@@ -92,7 +92,7 @@
 </itemizedlist>
 
 <para
->Il existe également un mode expérimental qui essaie de supprimer chaque #include un par un (à quelques exceptions près) pour voir si le source compile toujours. Notez que ce mode expérimental modifiera les sources originaux. </para>
+>Il existe également un mode expérimental essayant de supprimer tous les fichiers « #include » un par un (à quelques exceptions près) pour voir si le source compile toujours. Notez que ce mode expérimental modifiera les sources originaux. </para>
 
 <para
 >Par défaut, les sources ne seront pas modifiés ; les problèmes identifiés seront simplement écrits sur la sortie standard. </para>
