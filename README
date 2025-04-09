@@ -194,6 +194,9 @@ kdesrc-build	Updates and recompiles a local KDE source tree.
 gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
 		extract scoped messages
 
+matrix_colored_paste.sh	Converts copied selection from Konsole into colorized html for
+        pasting into Martix chat (https://community.kde.org/Matrix).
+
 ----------------
 Looking to add a script?
 
