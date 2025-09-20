@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Laurent Montel <montel@kde.org> (2014-2022)
-# cd <directory> ; kde-dev-scripts/kf5/clean-includes.sh
+# Laurent Montel <montel@kde.org> (2014-2025)
+# cd <directory> ; kde-dev-scripts/clean-includes.sh
 
 
 remove_include() {
