@@ -110,7 +110,10 @@ test_include() {
 						       number=$(grep -c "QT_VERSION_CHECK"  "$file");
 						       echo "QObject $number";
 						       if test "$number" = 0 ; then
-							       remove_include;
+							       number=$(grep -Ec "Q_GADGET"  "$file");
+                                                               if test "$number" = 0 ; then
+                                                                       remove_include;
+                                                               fi
 						       fi
 						       ;;
 
