@@ -143,7 +143,10 @@ test_include() {
 						       number=$(grep -c qApp  "$file");
 						       echo "qApp $number";
 						       if test "$number" = 0 ; then
-							       remove_include;
+							       number=$(grep -c qGuiApp  "$file");
+							       if test "$number" = 0 ; then
+									remove_include;
+								fi
 						       fi
 						       ;;
 					       QGuiApplication)
@@ -168,6 +171,12 @@ test_include() {
 							       remove_include;
 						       fi
 						       ;;
+                                              QSqlError)
+                                                       number=$(grep -c "lastError()"  "$file");
+                                                       if test "$number" = 0 ; then
+                                                               remove_include;
+                                                       fi
+                                                       ;; 
 					       QDBusPendingCall)
 						       number=$(grep -c "QDBusConnection::sessionBus().asyncCall"  "$file");
 						       if test "$number" = 0 ; then
