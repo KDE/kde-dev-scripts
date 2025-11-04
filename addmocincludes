@@ -71,7 +71,11 @@ for fileName in ${filesGettingMoced}; do
     if grep --quiet "#include \"${mocIncludeFile}\"" "${sourceFileName}"; then
         hasIncludeStatement=1
     else
-        hasIncludeStatement=
+	if grep --quiet "#include <${mocIncludeFile}>" "${sourceFileName}"; then
+	   hasIncludeStatement=1
+        else
+           hasIncludeStatement=
+	fi
     fi
 
     if [[ ${hasIncludeStatement} ]]; then
