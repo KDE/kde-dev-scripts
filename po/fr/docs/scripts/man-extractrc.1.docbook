@@ -34,7 +34,7 @@
 >extractrc</command
 ></refname>
 <refpurpose
->Extrait les chaînes de messages depuis les fichiers UI et GUI-RC</refpurpose>
+>Extrait les chaines de messages depuis les fichiers UI et GUI-RC</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -57,7 +57,7 @@
 <para
 ><command
 >extractrc</command
-> cherche toutes les balises et autres chaînes de messages dans les fichiers donnés et écrit les appels i18n() correspondant sur la sortie standard afin que xgettext puisse les vérifier.</para>
+> cherche toutes les balises et autres chaines de messages dans les fichiers donnés et écrit les appels i18n() correspondant sur la sortie standard afin que xgettext puisse les vérifier.</para>
 
 <para
 >Il comprend à la fois les fichiers <acronym
