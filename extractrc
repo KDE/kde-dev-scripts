@@ -28,6 +28,7 @@ i18n() calls so that xgettext can parse them.
 --ignore-no-input : Do not warn if there were no filenames specified
 --help|?          : Display this summary
 --no-unescape-xml : Don't do xml unescaping
+--strip-cdata     : Remove <![CDATA[..]]> from strings if found
 
 EOF
 
@@ -115,6 +116,7 @@ GetOptions ( "tag=s"       => \my @opt_extra_tags,
              "language=s"  => \my $opt_language,
              "ignore-no-input" => \my $opt_ignore_no_input,
              "no-unescape-xml" => \my $opt_no_unescape_xml,
+             "strip-cdata" => \my $opt_strip_cdata,
              "help|?"      => \&usage );
 
 unless( @ARGV )
@@ -174,6 +176,12 @@ sub dummy_call_infix {
     }
     if (defined $text) {
         $text = escape_uic_to_c($text);
+        if ($opt_strip_cdata) {
+            if ($text =~ /^<!\[CDATA\[/ and $text =~ /\]]>\z/ ) {
+                $text = substr($text, 0, length($text) - 3);
+                $text = substr($text, 9);
+            }
+        }
         if (defined $ctxt) {
             $ctxt = escape_uic_to_c($ctxt);
             print qq|i18nc("$ctxt", "$text")$stend\n|;
