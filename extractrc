@@ -177,10 +177,7 @@ sub dummy_call_infix {
     if (defined $text) {
         $text = escape_uic_to_c($text);
         if ($opt_strip_cdata) {
-            if ($text =~ /^<!\[CDATA\[/ and $text =~ /\]]>\z/ ) {
-                $text = substr($text, 0, length($text) - 3);
-                $text = substr($text, 9);
-            }
+            $text =~ s/<!\[CDATA\[(.*?)]]>/$1/gs;
         }
         if (defined $ctxt) {
             $ctxt = escape_uic_to_c($ctxt);
