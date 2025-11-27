@@ -171,13 +171,16 @@ sub escape_uic_to_c ($) {
 
 sub dummy_call_infix {
     my ($cstart, $stend, $ctxt, $text, @cmnts) = @_;
-    for my $cmnt (@cmnts) {
-        print qq|$cstart $cmnt\n|;
-    }
     if (defined $text) {
         $text = escape_uic_to_c($text);
         if ($opt_strip_cdata) {
             $text =~ s/<!\[CDATA\[(.*?)]]>/$1/gs;
+            if ($text eq '') {
+                return
+            }
+        }
+        for my $cmnt (@cmnts) {
+            print qq|$cstart $cmnt\n|;
         }
         if (defined $ctxt) {
             $ctxt = escape_uic_to_c($ctxt);
