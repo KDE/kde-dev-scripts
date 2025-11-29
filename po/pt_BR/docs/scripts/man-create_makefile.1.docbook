@@ -61,7 +61,7 @@
 >Makefile.in</filename
 > e <filename
 >Makefile</filename
-> em um subdiretório contendo um <filename
+> em uma subpasta contendo um <filename
 >Makefile.am</filename
 >. Este script poupa o tempo de re-executar o configure completamente.</para>
 
@@ -75,18 +75,18 @@
 > final poder ser omitido).</para>
 
 <para
->Este script pode ser rodado a partir do diretório de nível superior (o que contém o <filename
+>Este script pode ser rodado a partir da pasta de nível superior (o que contém o <filename
 >configure</filename
 >) ou a partir de um dos seus subdiretórios.</para>
 
 <para
->Se o diretório fonte for diferente do diretório de compilação (veja as variáveis de ambiente abaixo), será considerado que o <filename
+>Se a pasta fonte for diferente da pasta de compilação (veja as variáveis de ambiente abaixo), será considerado que o <filename
 >Makefile.am</filename
 > e <filename
 >Makefile.in</filename
-> está abaixo do diretório fonte e que o <filename
+> está abaixo da pasta fonte e que o <filename
 >Makefile</filename
-> está abaixo do diretório de compilação. </para>
+> está abaixo da pasta de compilação. </para>
 
 <para
 >Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
