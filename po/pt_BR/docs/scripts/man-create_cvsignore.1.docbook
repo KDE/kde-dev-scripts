@@ -36,7 +36,7 @@
 >create_cvsignore</command
 ></refname>
 <refpurpose
->Cria um .cvsignore preliminar no diretório atual</refpurpose>
+>Cria um .cvsignore preliminar na pasta atual</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -55,7 +55,7 @@
 >create_cvsignore</command
 > é usado para criar um <filename
 >.cvsignore</filename
-> preliminar no diretório atual. Ele faz isto baseado em determinado conteúdo que ele encontra no <filename
+> preliminar na pasta atual. Ele faz isto baseado em determinado conteúdo que ele encontra no <filename
 >Makefile.am</filename
 ></para>
 
@@ -69,7 +69,7 @@
 <para
 >Observe que você deve ter um <filename
 >Makefile.am</filename
-> no diretório atual para esta ferramenta funcionar.</para>
+> na pasta atual para esta ferramenta funcionar.</para>
 
 <para
 >Este utilitário faz parte do Kit de Desenvolvimento de Software (SDK) do &kde;.</para>
