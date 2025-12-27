@@ -4,7 +4,7 @@
 # cd <directory> ; ./clean-forward-declaration.sh 
 
 #list all .h files.
-list=`find -name '*.h' | egrep -v '(\.svn|build)'`;
+list=`find -name '*.h' -o -iname '*.hpp' | egrep -v '(\.svn|build)'`;
  # list=`ls *.H | egrep -v '(\.svn|build)'`;
 for file in $list ; do
 	#get class line (don't get it when we have "friend"/"template" or "public" word or *Private class)
