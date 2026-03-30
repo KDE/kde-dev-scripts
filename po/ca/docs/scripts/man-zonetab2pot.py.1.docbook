@@ -34,7 +34,7 @@
 >zonetab2pot.py</command
 ></refname>
 <refpurpose
->Converteix una llista de zones de temps en un fitxer PO plantilla.</refpurpose>
+>Converteix una llista de fusos horaris en una plantilla de fitxer PO.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -44,7 +44,7 @@
 > <group
 ><option
 ><replaceable
->llista_zones_temps</replaceable
+>llista_fusos_horaris</replaceable
 ></option
 ></group
 > </cmdsynopsis>
@@ -57,18 +57,18 @@
 <para
 ><command
 >zonetab2pot.py</command
-> llegeix la llista de zones horàries que proporcionada en la línia d'ordres i la converteix en una plantilla en format de gettext (fitxer PO) contingent els noms de cadascuna de les zones horàries. </para>
+> llegeix la llista de fusos horaris proporcionada en la línia d'ordres i la converteix en una plantilla en format de gettext (fitxer PO) contenint els noms de cadascun dels fusos horaris. </para>
 
 <para
->La zona horària proporcionada haurà d'estar en el mateix format que el «zone.tab» del sistema. Si no s'especifica cap llista de zones horàries a la línia d'ordres, s'usarà <filename
+>El fus horari proporcionat haurà d'estar en el mateix format que el «zone.tab» del sistema. Si no s'especifica cap llista de fusos horaris a la línia d'ordres, s'usarà <filename
 >/usr/share/zoneinfo/zone.tab</filename
 >.</para>
 
 <para
->El nou fitxer PO serà escrit a l'eixida estàndard del sistema.</para>
+>El fitxer PO nou s'escriurà a l'eixida estàndard del sistema.</para>
 
 <para
->Aquesta utilitat forma part del joc de desenvolupament de programari del &kde;. </para
+>Aquesta utilitat forma part del conjunt de desenvolupament de programari de &kde;. </para
 > 
 
 </refsect1>
