@@ -1,6 +1,6 @@
 Stuff in this directory:
 
-=== DEBUGGING SUPPORT
+## DEBUGGING SUPPORT
 
 adddebug        Modifies the Makefile to add debug info (-g)
 
@@ -14,7 +14,7 @@ extend_dmalloc	Script to run gdb on return-addresses
 
 kdekillall	Kills the process "kdeinit: <process> with signal <signal>
 
-=== PROGRAMMING SUPPORT
+## PROGRAMMING SUPPORT
 
 cheatmake	Helper for saving time when recompiling, skipping files that
 		haven't changed in a meaningful way (e.g. if you only change
@@ -46,7 +46,7 @@ krazy-licensecheck Runs the Krazy2 license checker on a list of source files
 kde-spellcheck.pl A script to check source code for misspelings and optionally
 		correct them.
 
-=== MODERNIZATION SCRIPTS
+## MODERNIZATION SCRIPTS
 
 rc2kcfgxt.pl	Reads an existing KConfig rc file and creates a best-guess
 		version of a KConfigXT XML file.
@@ -57,7 +57,7 @@ kdelnk2desktop.py Converts old-style .kdelnk files to their modern .desktop
 qt4/		Directory containing scripts used to automatically convert
 		KDE 3 source to the KDE 4 equivalent.
 
-=== USEFUL DATA FOR EXTERNAL PROGRAMS
+## USEFUL DATA FOR EXTERNAL PROGRAMS
 
 kde-devel-emacs.el An emacs file that contains many helpful functions and key bindings
 		A must for anyone using [X]Emacs to develop KDE/Qt/C++ applications.
@@ -72,7 +72,7 @@ kde.supp	Some valgrind suppressions handy for ignoring stuff we do not
 
 completions/	Contains useful scripts to enhance the auto-complete feature of some shells.
 
-=== INFORMATION EXTRACTION
+## INFORMATION EXTRACTION
 
 alldcop.rb	Shows an pseudo-XML representation of the DCOP interfaces for
 		currently-running KDE applications.  Does not require
@@ -123,8 +123,9 @@ rename_source_files Python script to automatically rename a file in Subversion,
 		also taking care to rename the file in Makefile.am and updating
 		#include lines.
 
-=== SOURCE CONTROL UTILITIES (CVS and Subversion)
-=== All CVS utilities have a corresponding svn version.
+## SOURCE CONTROL UTILITIES (CVS and Subversion)
+
+*All CVS utilities have a corresponding svn version.*
 
 colorcvs        Colourises CVS commands.
 
@@ -181,7 +182,7 @@ cvslastreferenced Goes through the whole history of a file to find all modificat
 
 wcgrep Useful for grepping in a subversion working copy.
 
-=== KDE BUILD SCRIPTS
+## KDE BUILD SCRIPTS
 
 build-progress.sh Displays the progress of kde-build, times needed to complete each
 		step. And sets the title bar of the terminal to the directory that
@@ -189,7 +190,7 @@ build-progress.sh Displays the progress of kde-build, times needed to complete e
 
 kdesrc-build	Updates and recompiles a local KDE source tree.
 
-=== OTHERS
+## OTHERS
 
 gettext.patch	Patch for gettext-0.10.35 to give xgettext the functionality to
 		extract scoped messages
