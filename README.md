@@ -1,5 +1,7 @@
 Stuff in this directory:
 
+[TOC]
+
 ## DEBUGGING SUPPORT
 
 adddebug        Modifies the Makefile to add debug info (-g)
