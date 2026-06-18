@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# Laurent Montel <montel@kde.org> (2014-2025)
+# Laurent Montel <montel@kde.org> (2014-2026)
 # cd <directory> ; kde-dev-scripts/clean-includes.sh
+# use -hpp if headers uses .hpp extension
 
 
 remove_include() {
@@ -36,6 +37,12 @@ file_header() {
 }
 
 test_include() {
+    local use_hpp=$1
+    if [ "$use_hpp" = true ]; then
+       extension=".hpp";
+	else
+	   extension=".h";
+	fi
 	for file in $path/* ;
 	do
 		if [[ $file == *"build"* ]]; then
@@ -55,7 +62,7 @@ test_include() {
 			new=$(echo "$new" |perl -pi -e 's!<!!g');
 			new=$(echo "$new" |perl -pi -e 's!>!!g');
 
-			newname=$(echo "$new" |perl -pi -e 's!.h!!');
+			newname=$(echo "$new" |perl -pi -e 's!$extension!!');
 
 
        echo "before go : $new";
@@ -64,7 +71,7 @@ test_include() {
 			originalStr=$i;
 			newname=$(echo "$i" | sed 's,.*/,,');
 
-	       newname=$(echo "$newname" |perl -pi -e 's!.h!!');
+	       newname=$(echo "$newname" |perl -pi -e 's!$extension!!');
            if test 1 ; then
 		       echo "egal $i";
 		       number=$(grep -c "$newname" "$file");
@@ -502,5 +509,23 @@ done;
 }
 
 path=$PWD;
-test_include
+if [ $# -eq 0 ]; then
+  test_include false
+else
+  while getopts ":hpp" opt; do
+    case $opt in
+      hpp)
+        test_include
+        ;;
+      \?)
+        echo "Option invalide : -$OPTARG" >&2
+        exit 1
+        ;;
+    esac
+  done
+  # Supprime les options traitées
+  shift $((OPTIND-1))
+  test_include "$use_hpp"
+fi
+
 git diff .
