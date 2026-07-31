@@ -55,7 +55,7 @@
 >create_cvsignore</command
 > wird zum Erstellen einer vorläufigen <filename
 >.cvsignore</filename
-> im aktuellen Verzeichnis benutzt. Die Erstellung erfolgt anhand bestimmter Inhalte, die das Skript in <filename
+> im aktuellen Verzeichnis verwendet. Die Erstellung erfolgt anhand bestimmter Inhalte, die das Skript in <filename
 >Makefile.am</filename
 > vorfindet.</para>
 

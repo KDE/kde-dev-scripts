@@ -55,7 +55,7 @@
 >Beschreibung</title>
 
 <para
->cvsrevertlast wird dazu benutzt, alle Dateien, die auf der Befehlszeile angegeben wurden auf die vorletzte Version im CVS zurückzusetzen. Die Dateien werden nicht eingespielt.</para>
+>cvsrevertlast wird dazu verwendet, alle Dateien, die auf der Befehlszeile angegeben wurden auf die vorletzte Version im CVS zurückzusetzen. Die Dateien werden nicht eingespielt.</para>
 
 <para
 >Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>

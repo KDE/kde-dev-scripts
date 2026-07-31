@@ -59,7 +59,7 @@
 <para
 ><command
 >cheatmake</command
-> wird benutzt, wenn Sie beim Neukompilieren Zeit sparen wollen. Es täuscht make dahingehend, dass Dateien übersprungen werden, an denen keine besonderen Änderungen vorgenommen wurden, zum Beispiel, wenn Sie in einem Quelltext nur einen Kommentar geändert haben.</para>
+> wird verwendet, wenn Sie beim Neukompilieren Zeit sparen möchten. Es täuscht make dahingehend, dass Dateien übersprungen werden, an denen keine besonderen Änderungen vorgenommen wurden, zum Beispiel, wenn Sie in einem Quelltext nur einen Kommentar geändert haben.</para>
 
 <para
 >Dieses Hilfsprogramm ist Teil der &kde; Software-Entwicklungswerkzeuge. </para>
@@ -147,7 +147,7 @@
 ><para
 >Ein <command
 >sed</command
->-Ausdruck, der zum Umwandeln des Quelltextverzeichnisses in das Erstellungsverzeichnis benutzt wird. Wenn beispielsweise das Quelltextverzeichnis <filename class="directory"
+>-Ausdruck, der zum Umwandeln des Quelltextverzeichnisses in das Erstellungsverzeichnis verwendet wird. Wenn beispielsweise das Quelltextverzeichnis <filename class="directory"
 >kdesdk/obj-i386-linux</filename
 > ist, sollte <envar
 >OBJ_REPLACEMENT</envar
@@ -186,7 +186,7 @@
 >bab@debian.org</email
 > für das Debian <acronym
 >GNU</acronym
->/&Linux; System erstellt (kann aber auch von anderen System benutzt werden).</para>
+>/&Linux; System erstellt (kann aber auch von anderen System verwendet werden).</para>
 
 </refsect1>
 
