@@ -53,7 +53,7 @@
 <para
 >Dieses Skript muss im Basisordner ausgeführt werden (wo sich das Skript <quote
 >configure</quote
-> befindet). Das Skript braucht weniger Zeit, als wenn configure erneut ausgeführt werden würde.</para>
+> befindet). Das Skript benötigt weniger Zeit, als wenn configure erneut ausgeführt werden würde.</para>
 
 <para
 >Wenn Sie unterschiedliche Quelltext-Ordner und Kompilier-Ordner verwenden (siehe die unten stehenden Umgebungsvariablen), wird davon ausgegangen, dass alle <filename
