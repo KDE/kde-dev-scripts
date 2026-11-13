@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>zonetab2pot.py</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>zonetab2pot.py</command
+></refname>
+<refpurpose
+>يحول قائمة مناطق زمنية إلى قالب ملف PO.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>zonetab2pot.py</command
+> <group
+><option
+><replaceable
+>قائمة-المناطق-الزمنية</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يقرأ <command
+>zonetab2pot.py</command
+> قائمة المناطق الزمنية المعطاة في سطر الأوامر ويحولها إلى قالب ملف رسائل gettext (ملف PO) يحتوي على أسماء المناطق الزمنية الفردية. </para>
+
+<para
+>يجب أن تكون قائمة المناطق الزمنية المعطاة بنفس تنسيق zone.tab النظام. إذا لم تُحدد قائمة مناطق زمنية في سطر الأوامر، فسيُستخدم <filename
+>/usr/share/zoneinfo/zone.tab</filename
+>.</para>
+
+<para
+>سيُكتب قالب ملف PO الجديد إلى المخرج المعياري.</para>
+
+<para
+>هذه الأداة جزء من مجموعة تطوير برمجيات كيدي. </para
+> 
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+
+<para
+>zonetab2pot.py كُتب بواسطة <personname
+><firstname
+>لوكاس</firstname
+><surname
+>تينكل</surname
+></personname
+><email
+>lukas@kde.org</email
+></para>
+<para
+>صفحة الدليل هذه أُعدت بواسطة <personname
+><firstname
+>بن</firstname
+><surname
+>بيرتون</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>pruneemptydirs</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>pruneemptydirs</command
+></refname>
+<refpurpose
+>يكتشف أدلة المصدر القديمة في شجرة CVS</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>pruneemptydirs</command
+> <group
+><option
+>-f</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يُستخدم <command
+>pruneemptydirs</command
+> لتنظيف شجرة CVS محلية. يكتشف هذا الأمر الأدلة التي تحتوي على بقايا مواد قديمة أُزيلت من CVS. غالبًا ما تعطل هذه الأدلة القديمة عملية الترجمة. سيُفحص الدليل الحالي وجميع الأدلة الفرعية تحته.</para>
+
+<para
+>لاحظ أن هذه الأداة لا تزيل أي شيء؛ بل تطبع فقط ما يجب فعله كسلسلة من أوامر الإزالة. يمكنك نسخ هذه الأوامر ولصقها، أو استخدامها مع eval في سكريبت.</para>
+
+<para
+>تعمل هذه الأداة بشكل أفضل إذا لم يكن دليل المصدر هو نفسه دليل البناء، لأنها لن تطبع الأدلة التي تحتوي على ملفات تنفيذية قديمة.</para>
+
+<para
+>هذه الأداة جزء من حزمة تطوير برمجيات كيدي.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>خيارات</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-f</option
+></term>
+<listitem
+><para
+>نفّذ عمليات الحذف فعلًا بدلًا من طباعتها فقط. استخدم هذا الخيار بحذر.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+
+<para
+>كُتب <command
+>pruneemptydirs</command
+> بواسطة &David.Faure; &David.Faure.mail;</para>
+<para
+>أُعدت صفحة الدليل هذه بواسطة <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+><email
+>bab@debian.org</email
+></para>
+</refsect1>
+
+</refentry>

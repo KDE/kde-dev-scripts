@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_makefile</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_makefile</command
+></refname>
+<refpurpose
+>ينشئ <filename
+>Makefile.in</filename
+> و<filename
+>Makefile</filename
+> من <filename
+>Makefile.am</filename
+></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>create_makefile</command
+> <group
+><replaceable
+>مسارنسبي/Makefile</replaceable
+></group
+> <group
+><replaceable
+>مسارنسبي</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>ينشئ <command
+>create_makefile</command
+> الملفين <filename
+>Makefile.in</filename
+> و<filename
+>Makefile</filename
+> في دليل فرعي يحتوي على <filename
+>Makefile.am</filename
+>. يوفر هذا السكربت وقتًا مقارنة بإعادة تشغيل configure بالكامل</para>
+
+<para
+>لاحظ أنه يجب توفير المسار إلى <filename
+>Makefile</filename
+> <filename
+>Makefile.am</filename
+> المطلوب (وإن كان يمكن حذف <filename
+>/Makefile</filename
+> النهائي).</para>
+
+<para
+>يمكن تشغيل هذا السكربت من الدليل الأعلى (الذي يحتوي على <filename
+>configure</filename
+>) أو من أحد أدلته الفرعية.</para>
+
+<para
+>إذا كان دليل المصدر مختلفًا عن دليل البناء (انظر متغيرات البيئة أدناه)، فسيُفترض أن <filename
+>Makefile.am</filename
+> و<filename
+>Makefile.in</filename
+> يقعان تحت دليل المصدر وأن <filename
+>Makefile</filename
+> يقع تحت دليل البناء. </para>
+
+<para
+>هذه الأداة جزء من &kde; مجموعة أدوات تطوير البرمجيات.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>البيئة</title>
+
+<para
+>يجب تعيين أحد المتغيرين التاليين (وليس كليهما) إذا كان دليل المصدر مختلفًا عن دليل البناء. إذا كان دليل البناء مجرد دليل فرعي لدليل المصدر، فيجب استخدام المتغير الأبسط <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>يشير إلى أن دليل البناء موجود في الدليل الفرعي المعطى لدليل المصدر. على سبيل المثال، إذا كان دليل المصدر هو <filename class="directory"
+>kdesdk</filename
+> ودليل البناء هو <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>، فيجب تعيين <envar
+>OBJ_SUBDIR</envar
+> إلى <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>تعبير <command
+>sed</command
+> يُستخدم لتحويل دليل المصدر إلى دليل البناء. على سبيل المثال، إذا كان دليل المصدر هو <filename class="directory"
+>~/src/kdesdk</filename
+> ودليل البناء هو <filename class="directory"
+>~/src/kdesdk-obj</filename
+>، فيجب تعيين <envar
+>OBJ_REPLACEMENT</envar
+> إلى <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>انظر أيضًا</title>
+
+<para
+>create_makefiles(1)</para>
+</refsect1>
+<refsect1>
+<title
+>المؤلفون</title>
+
+<para
+>كُتب create_makefile بواسطة &David.Faure; &David.Faure.mail; وآخرين. أُعدت صفحة الدليل هذه بواسطة <personname
+><firstname
+>بن</firstname
+><surname
+>بيرتون</surname
+></personname
+> <email
+>bab@debian.org</email
+> لنظام دبيان جنو/لينكس (وإن كان يمكن استخدامها من قبل الآخرين).</para>
+</refsect1>
+</refentry>

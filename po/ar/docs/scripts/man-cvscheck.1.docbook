@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY cvscheck "<command
+>cvscheck</command
+>">
+<!ENTITY CVS "<acronym
+>CVS</acronym
+>">
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+>&cvscheck;</refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+>&cvscheck;</refname>
+<refpurpose
+>تقرير حالة غير متصل للملفات في وحدة &CVS; مسحوبة.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+>&cvscheck; <group
+><replaceable
+>دليل</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يطبع &cvscheck; معلومات حول حالة السحب المحلي لـ &CVS; دون التواصل مع الخادم. هذا يعني أنه سريع للغاية ولا يتطلب اتصالًا بالشبكة.</para>
+
+<para
+>سيتم معالجة الدليل المعطى وجميع أدلته الفرعية بشكل تكراري. إذا لم يُعطَ دليل، فسيُستخدم الدليل الحالي وأدلته الفرعية المتكررة.</para>
+
+<para
+>سيُطبع كل ملف ذو حالة مثيرة للاهتمام بحرف حالة أمام اسمه. أحرف الحالة هي كما يلي.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><returnvalue
+>?</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>الملف غير معروف لـ &CVS;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>M</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>الملف معدّل محليًا بالتأكيد</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>m</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>الملف <emphasis
+>قد</emphasis
+> يكون لديه تغييرات محلية. ينبغي أن تجري <command
+>diff</command
+> مع الخادم للتأكد.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>C</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>الملف لديه تعارض في &CVS; وبالتالي لا يمكن إيداعه.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>U</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>هذا الملف موجود في &CVS; لكنه مفقود في السحب المحلي الخاص بك.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>T</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem
+><para
+>هذا الملف لديه وسم &CVS; لزج غير اعتيادي.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>A</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>لقد نفذت <userinput
+><command
+>cvs</command
+> <option
+>add</option
+></userinput
+> لهذا الملف، لكنك لم تودعه بعد.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><returnvalue
+>R</returnvalue
+> <filename
+>foobar.c</filename
+></term>
+<listitem>
+<para
+>لقد نفذت <userinput
+><command
+>cvs</command
+> <option
+>rm</option
+></userinput
+> لهذا الملف، لكنك لم تودعه بعد.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>هذه الأداة جزء من &kde; مجموعة أدوات تطوير البرمجيات.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>انظر أيضًا</title>
+
+<para
+>cvs(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+
+<para
+>كتب cvscheck بواسطة &Dirk.Mueller; &Dirk.Mueller.mail; و &Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para>
+
+<para
+>أُعدت صفحة الدليل هذه بواسطة <personname
+><firstname
+>بن</firstname
+> <surname
+>بيرتون</surname
+></personname
+> <email
+>bab@debian.org</email
+> لنظام دبيان غنو/لينكس (لكن قد يستخدمها آخرون). </para>
+</refsect1>
+
+</refentry>

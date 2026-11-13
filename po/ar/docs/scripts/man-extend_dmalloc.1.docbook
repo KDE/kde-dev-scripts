@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extend_dmalloc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extend_dmalloc</command
+></refname>
+<refpurpose
+>حلل عناوين الإرجاع من سجلات dmalloc.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extend_dmalloc</command
+> <group
+><option
+><replaceable
+>سجل-dmalloc</replaceable
+> <command
+>ثنائي</command
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>سيعمل <command
+>extend_dmalloc</command
+> على تشغيل <command
+>gdb</command
+>(1) للحصول على معلومات عن عناوين الإرجاع من ملف سجل <command
+>dmalloc</command
+>(1). تحديدًا، سيفحص أي أسطر <literal
+>ra=</literal
+> ويحاول الحصول على أرقام الأسطر المقابلة</para>
+
+<para
+>يجب أن تكون الوسيطة <option
+><command
+>ثنائي</command
+></option
+> هي الثنائي الذي أنشأ السجل <filename
+>سجل-dmalloc</filename
+>.</para>
+
+<para
+>هذه الأداة جزء من &kde; مجموعة أدوات تطوير البرمجيات.</para>
+
+</refsect1>
+
+
+<refsect1>
+<title
+>ملاحظات</title>
+<para
+>قد ترغب في توجيه مخرجات <command
+>extend_dmalloc</command
+> إلى ملف، لأن <command
+>gdb</command
+> يبدو أنه يطلب إرجاعًا كما لو كنت في نهاية صفحة. </para
+> 
+</refsect1>
+
+</refentry>

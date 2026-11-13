@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>adddebug</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>adddebug</command
+></refname>
+<refpurpose
+>يعدّل <filename
+>Makefile</filename
+>ات لإضافة معلومات التنقيح</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>adddebug</command
+> <group
+><option
+>-k</option
+></group
+> <group
+><option
+>-r</option
+></group
+> <group
+><option
+>-n</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يعدّل الأمر <command
+>adddebug</command
+> ملف <filename
+>Makefile</filename
+> في الدليل الحالي (واختياريًا في أدلته الفرعية) لإضافة معلومات التنقيح (<option
+>-g3</option
+>). كما يزيل التحسينات (<option
+>-O[1-9]</option
+>).</para>
+
+<para
+>هذه الأداة جزء من مجموعة تطوير برمجيات &kde;.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>خيارات</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-k</option
+></term>
+<listitem
+><para
+>أبقِ التحسينات (لا تزل أعلام <option
+>-O[1-9]?</option
+> التي تُزال مبدئيًا).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-r</option
+></term>
+<listitem>
+<para
+>ابحث تكراريًا عبر جميع الأدلة الفرعية للدليل الحالي واعمل على كل ملف <filename
+>Makefile</filename
+> يُعثر عليه. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-n</option
+></term>
+<listitem
+><para
+>ترجم دون تعريف NDEBUG وNO_DEBUG (يجعل استدعاءات <function
+>kDebug</function
+> تعمل)</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+</refentry>
