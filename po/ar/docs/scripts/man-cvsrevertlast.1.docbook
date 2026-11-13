@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2005-02-02</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvsrevertlast</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvsrevertlast</command
+></refname>
+<refpurpose
+>استعادة الملفات في CVS بإصدار واحد</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvsrevertlast</command
+> <group
+><option
+><replaceable
+>اسم_الملف</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يُستخدم cvsrevertlast لاستعادة جميع الملفات في سطر الأوامر بإصدار واحد في CVS. لن تُرسَم الملفات.</para>
+
+<para
+>هذه الأداة جزء من حزمة تطوير برمجيات كيدي. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>انظر أيضًا</title>
+
+<para
+>cvsblame(1)</para>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cheatmake</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cheatmake</command
+></refname>
+<refpurpose
+>خداع <command
+>make</command
+> لعدم إعادة بناء ملفات معينة</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cheatmake</command
+> <group
+><option
+>hidechange</option
+> <replaceable
+>ملف</replaceable
+></group
+> <group
+><option
+>show</option
+></group
+> <group
+><option
+>why</option
+> <replaceable
+>ملف</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يُستخدم <command
+>cheatmake</command
+> لتوفير الوقت عند إعادة الترجمة. يمكنه خداع make لتخطي الملفات التي لم تتغير بشكل جوهري. يمكن استخدام هذا مثلًا عندما تغير تعليقًا في ملف دون أي تغيير في الكود الفعلي.</para>
+
+<para
+>هذه الأداة جزء من &kde; Software Development Kit. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>خيارات</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>hidechange</option
+> <replaceable
+>ملف</replaceable
+></term>
+<listitem
+><para
+>يخفي حقيقة تغيير الملف بتعيين الطابع الزمني إلى الماضي. استخدم بحذر!</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>show</option
+></term>
+<listitem
+><para
+>يسرد الملفات التي يحتاج <command
+>make</command
+> حاليًا إلى إعادة بنائها</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>why</option
+> <replaceable
+>ملف</replaceable
+></term>
+<listitem
+><para
+>يشرح لماذا يجب على make إعادة بناء الملف</para
+></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>البيئة</title>
+
+<para
+>يجب تعيين أحد المتغيرين التاليين (وليس كليهما) إذا كان دليل المصدر مختلفًا عن دليل البناء. إذا كان دليل البناء مجرد دليل فرعي لدليل المصدر، فيجب استخدام المتغير الأبسط <envar
+>OBJ_SUBDIR</envar
+>. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><envar
+>OBJ_SUBJDIR</envar
+></term>
+<listitem
+><para
+>يشير إلى أن دليل البناء موجود في الدليل الفرعي المعطى لدليل المصدر. مثلًا، إذا كان دليل المصدر هو <filename class="directory"
+>kdesdk</filename
+> ودليل البناء هو <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>، فيجب تعيين <envar
+>OBJ_SUBDIR</envar
+> إلى <parameter
+>obj-i386-linux</parameter
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><envar
+>OBJ_REPLACEMENT</envar
+></term>
+<listitem
+><para
+>تعبير <command
+>sed</command
+> يُستخدم لتحويل دليل المصدر إلى دليل البناء. مثلًا، إذا كان دليل المصدر هو <filename class="directory"
+>kdesdk/obj-i386-linux</filename
+>، فيجب تعيين <envar
+>OBJ_REPLACEMENT</envar
+> إلى <parameter
+>s#kdesdk#kdesdk-obj#</parameter
+>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>انظر أيضًا</title>
+
+<para
+>make(1)</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+
+<para
+>كُتب <command
+>cheatmake</command
+> بواسطة &David.Faure; &David.Faure.mail;. أُعدت صفحة الدليل هذه بواسطة <personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+> لنظام Debian <acronym
+>GNU</acronym
+>/&Linux; (ولكن يمكن استخدامها من قبل الآخرين).</para>
+
+</refsect1>
+
+</refentry>

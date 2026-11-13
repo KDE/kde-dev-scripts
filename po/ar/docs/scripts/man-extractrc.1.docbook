@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>extractrc</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>extractrc</command
+></refname>
+<refpurpose
+>استخرج سلاسل الرسائل من ملفات واجهة المستخدم وملفات GUI-RC</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>extractrc</command
+> <group
+><option
+><replaceable
+>اسم_الملف</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يجد <command
+>extractrc</command
+> كل وسوم النص وسلاسل الرسائل الأخرى في الملفات المعطاة، ويكتب استدعاءات i18n() المطابقة إلى المخرج المعياري ليتمكن xgettext من تحليلها.</para>
+
+<para
+>يفهم هذا الأمر كلًا من ملفات <acronym
+>UI</acronym
+> الخاصة بـ <application
+>المصمم</application
+> (&Qt;/&kde;) وملفات &XML; GUI-RC. </para>
+
+<para
+>هذه الأداة جزء من مجموعة تطوير برمجيات كيدي. </para>
+
+</refsect1>
+
+</refentry>

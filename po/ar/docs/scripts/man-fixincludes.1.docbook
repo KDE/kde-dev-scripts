@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-04-07</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>fixincludes</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>fixincludes</command
+></refname>
+<refpurpose
+>قلِّل عدد #includes في ملفات مصدر &kde;</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>fixincludes</command
+> <group
+><option
+>-v, --verbose</option
+></group
+> <group
+><option
+>-e, --experimental</option
+></group
+> <group
+><option
+>-m, --modify</option
+></group
+> <group
+><option
+><replaceable
+>ملف</replaceable
+></option
+></group
+> <group
+><option
+>--help</option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يحاول <command
+>fixincludes</command
+> تقليل عدد #includes في ملفات مصدر C++. معظم معالجته خاصة بمصادر &kde;، لذا قد لا يعمل جيدًا مع مصادر تطبيقات غير &kde;.</para>
+
+<para
+>تُحدَّد المشكلات التالية بواسطة <command
+>fixincludes</command
+>:</para>
+
+<itemizedlist>
+<listitem>
+<para
+>تضمين ملفات رأس لم تعد مدعومة ولكنها موجودة للتوافق مع إصدارات Qt/KDE الأقدم؛</para>
+</listitem>
+<listitem>
+<para
+>تضمين الملف نفسه مرات متعددة. </para>
+</listitem>
+</itemizedlist>
+
+<para
+>يوجد أيضًا وضع تجريبي يحاول إزالة كل #include واحدًا تلو الآخر (مع بعض الاستثناءات) لمعرفة ما إذا كان المصدر لا يزال يُترجم. لاحظ أن هذا الوضع التجريبي سيُعدِّل المصادر الأصلية. </para>
+
+<para
+>افتراضيًا، لن تُعدَّل المصادر؛ ستُكتب المشكلات المحددة ببساطة إلى المخرجات القياسية. </para>
+
+<para
+>يجب تقديم قائمة مصادر C++ المراد فحصها في سطر الأوامر. إذا لم تُعطَ أي ملفات، فسيُفحَص جميع مصادر C++ في الدليل الحالي أو أسفله (باستثناء الدلائل التي يحتوي <filename
+>Makefile.am</filename
+> فيها على <option
+>-UQT_NO_COMPAT</option
+> أو <option
+>-UKDE_NO_COMPAT</option
+>)</para>
+
+<para
+>هذه الأداة جزء من مجموعة تطوير برمجيات كيدي. </para>
+
+</refsect1>
+
+<refsect1>
+<title
+>خيارات</title>
+
+<variablelist>
+<varlistentry>
+<term
+><option
+>-v, --verbose</option
+></term>
+<listitem
+><para
+>الوضع المفصَّل. تُكتب مخرجات تنقيح إضافية إلى المخرجات القياسية.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-e, --experimental</option
+></term>
+<listitem
+><para
+>الوضع التجريبي، كما هو موصوف بالتفصيل أعلاه. لاحظ أن هذا الخيار يستلزم <option
+>--modify</option
+>.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><option
+>-m, --modify</option
+></term>
+<listitem
+><para
+>بالإضافة إلى كتابة الرسائل إلى المخرجات القياسية، يُعدِّل المصادر الأصلية فعليًا لإصلاح أي مشكلات وُجدت.</para
+></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+<para
+>كُتب <command
+>fixincludes</command
+> بواسطة ديرك مولر <email
+>mueller@kde.org</email
+>. </para>
+</refsect1>
+
+</refentry>

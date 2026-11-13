@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY kdeoptions SYSTEM "kdeoptions.docbook">
+<!ENTITY qtoptions SYSTEM "qtoptions.docbook">
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+>bab@debian.org</email
+></author>
+<date
+>2003-03-08</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>create_cvsignore</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>create_cvsignore</command
+></refname>
+<refpurpose
+>أنشئ ملف .cvsignore مبدئي في الدليل الحالي</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command
+>createcvsignore</command>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يُستخدم <command
+>create_cvsignore</command
+> لإنشاء ملف <filename
+>.cvsignore</filename
+> مبدئي في الدليل الحالي. يفعل ذلك بناءً على محتويات معينة يجدها في <filename
+>Makefile.am</filename
+></para>
+
+<para
+>لن تُحذف أي أسطر من أي ملف <filename
+>.cvsignore</filename
+> موجود. إن لم يكن هناك ملف <filename
+>.cvsignore</filename
+> موجود، سيُضاف إلى مستودع cvs.</para>
+
+<para
+>لاحظ أنه يجب أن يكون لديك ملف <filename
+>Makefile.am</filename
+> في الدليل الحالي لكي تعمل هذه الأداة.</para>
+
+<para
+>هذه الأداة جزء من &kde; Software Development Kit.</para>
+
+</refsect1>
+
+</refentry>

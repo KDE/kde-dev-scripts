@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author
+><personname
+><firstname
+>Ben</firstname
+><surname
+>Burton</surname
+></personname
+> <email
+></email
+></author>
+<date
+>2003-04-06</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>cvslastlog</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>cvslastlog</command
+></refname>
+<refpurpose
+>يطبع مدخلة السجل لآخر إيداع لملف.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>cvslastlog</command
+> <group
+><option
+><replaceable
+>اسم_الملف</replaceable
+></option
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+
+<para
+>يُظهر <command
+>cvslastlog</command
+> السجل المرتبط بآخر إيداع في CVS للملف المُعطى. يعتمد على إصدار الملف المحلي، وليس الموجود على الخادم. </para>
+
+<para
+>هذه الأداة جزء من &kde; Software Development Kit.</para>
+
+</refsect1>
+
+</refentry>
